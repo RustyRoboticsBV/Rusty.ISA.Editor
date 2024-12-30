@@ -1,0 +1,9 @@
+[submodule "Submodules/Cutscenes"]
+	path = Submodules/Cutscenes
+	url = https://github.com/RustyRoboticsBV/Rusty.Cutscenes.git
+[submodule "Submodules/EditorUI"]
+	path = Submodules/EditorUI
+	url = https://github.com/RustyRoboticsBV/Rusty.EditorUI.git
+[submodule "Submodules/Graphs"]
+	path = Submodules/Graphs
+	url = https://github.com/RustyRoboticsBV/Rusty.Graphs.git
