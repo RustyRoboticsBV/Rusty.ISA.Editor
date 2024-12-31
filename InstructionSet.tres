@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=6 format=3 uid="uid://dnt3g5dpjm0pd"]
+
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_qwukw"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
+
+[sub_resource type="Resource" id="Resource_s23li"]
+script = ExtResource("1_qwukw")
+Priority = -1
+MinWidth = 128
+MainColor = Color(0.411765, 1, 0.411765, 1)
+TextColor = Color(1, 1, 1, 1)
+
+[sub_resource type="Resource" id="Resource_2poj5"]
+script = ExtResource("2_uguea")
+Opcode = "ABC"
+Parameters = []
+DisplayName = "A B C"
+Description = "The alphabet is pretty neat."
+Category = "THINGAMAGIC"
+Implementation = ""
+EditorNode = SubResource("Resource_s23li")
+Preview = []
+PreInstructions = []
+
+[resource]
+script = ExtResource("1_1x08l")
+Definitions = [SubResource("Resource_2poj5")]

@@ -7,3 +7,6 @@
 [submodule "Submodules/Graphs"]
 	path = Submodules/Graphs
 	url = https://github.com/RustyRoboticsBV/Rusty.Graphs.git
+[submodule "Submodules/Xml"]
+	path = Submodules/Xml
+	url = https://github.com/RustyRoboticsBV/Rusty.Xml.git
