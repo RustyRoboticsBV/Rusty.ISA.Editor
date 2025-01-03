@@ -84,6 +84,7 @@ namespace Rusty.CutsceneEditor
 
             // Add child rule inspector.
             ChildRuleInspector = Create(InstructionSet, Rule.Type);
+            ChildRuleInspector.LocalIndentation = 10;
             Add(ChildRuleInspector);
 
             if (!Rule.StartEnabled)

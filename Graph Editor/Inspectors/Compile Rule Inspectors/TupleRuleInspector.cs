@@ -1,5 +1,6 @@
 ﻿using Rusty.Cutscenes;
 using Rusty.EditorUI;
+using System.Collections.Generic;
 
 namespace Rusty.CutsceneEditor
 {
@@ -36,11 +37,13 @@ namespace Rusty.CutsceneEditor
         {
             if (base.CopyStateFrom(other))
             {
-                ChildRules = new Inspector[Count];
+                List<Inspector> childRules = new();
                 for (int i = 0; i < Count; i++)
                 {
-                    ChildRules[i] = this[i] as Inspector;
+                    if (GetAt(i) is Inspector inspector)
+                        childRules.Add(inspector);
                 }
+                ChildRules = childRules.ToArray();
                 return true;
             }
             else
@@ -60,6 +63,15 @@ namespace Rusty.CutsceneEditor
 
             // Set name.
             Name = $"TupleRule ({Rule.Id})";
+
+            // Add label.
+            if (Rule.DisplayName != "")
+            {
+                LabelElement title = new();
+                title.Name = "Title";
+                title.LabelText = Rule.DisplayName;
+                Add(title);
+            }
 
             // Add child rule inspectors.
             ChildRules = new Inspector[Rule.Types.Length];

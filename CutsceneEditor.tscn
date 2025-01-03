@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://dofwqxu5phpon"]
 
 [ext_resource type="Script" path="res://Graph Editor/CutsceneEditor.cs" id="1_jfu4d"]
-[ext_resource type="Script" path="res://Graph Editor/Inspectors/InspectorResizer.cs" id="2_61cpq"]
 [ext_resource type="Script" path="res://Graph Editor/GraphEdit/CutsceneGraphEdit.cs" id="3_mbpx3"]
+[ext_resource type="Script" path="res://Graph Editor/Resizer/InspectorResizer.cs" id="3_pvjr1"]
 [ext_resource type="Resource" uid="uid://dnt3g5dpjm0pd" path="res://InstructionSet.tres" id="4_ggl3d"]
 
 [node name="CutsceneEditor" type="VBoxContainer" node_paths=PackedStringArray("OpenButton", "OpenDialog", "SaveButton", "SaveDialog", "DebugCompileButton", "DebugDecompileButton", "Inspector", "GraphEdit")]
@@ -82,8 +82,8 @@ layout_mode = 2
 
 [node name="InspectorResizer" type="VSeparator" parent="HBoxContainer" node_paths=PackedStringArray("Target")]
 layout_mode = 2
-script = ExtResource("2_61cpq")
-Target = NodePath("../Inspector/ScrollContainer")
+script = ExtResource("3_pvjr1")
+Target = NodePath("../Inspector")
 
 [node name="CutsceneGraphEdit" type="GraphEdit" parent="HBoxContainer" node_paths=PackedStringArray("PropertiesInspector")]
 layout_mode = 2

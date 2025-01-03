@@ -98,6 +98,7 @@ namespace Rusty.CutsceneEditor
             for (int i = 0; i < Rule.Types.Length; i++)
             {
                 ChildInspectors[i] = Create(InstructionSet, Rule.Types[i]);
+                ChildInspectors[i].LocalIndentation = 10;
                 Add(ChildInspectors[i]);
                 if (Rule.StartSelected != i)
                     ChildInspectors[i].Hide();
