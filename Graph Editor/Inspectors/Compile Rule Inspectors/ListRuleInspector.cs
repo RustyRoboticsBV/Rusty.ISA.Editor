@@ -42,18 +42,28 @@ namespace Rusty.CutsceneEditor
                 return false;
         }
 
+        public override CompileRuleInspector[] GetActiveSubInspectors()
+        {
+            CompileRuleInspector[] childInspectors = new CompileRuleInspector[ListElement.Count];
+            for (int i = 0; i < ListElement.Count; i++)
+            {
+                childInspectors[i] = ListElement[i][0] as CompileRuleInspector;
+            }
+            return childInspectors;
+        }
+
         /* Protected methods. */
-        protected override void Init(CompileRule resource)
+        protected override void Init()
         {
             // Base compile rule inspector init.
-            base.Init(resource);
+            base.Init();
 
             // Set name.
-            Name = $"ListRule ({resource.Id})";
+            Name = $"ListRule ({Rule.Id})";
 
             // Add list element.
             ListElement = new ListElement();
-            ListElement.HeaderText = resource.DisplayName;
+            ListElement.HeaderText = Rule.DisplayName;
             ListElement.Template = Create(InstructionSet, Rule.Type);
             Add(ListElement);
         }

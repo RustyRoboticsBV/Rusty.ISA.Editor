@@ -9,6 +9,17 @@ namespace Rusty.CutsceneEditor
     public partial class FloatSliderParameterInspector : ParameterInspector
     {
         /* Public properties. */
+        /// <summary>
+        /// The parameter definition visualized by this inspector.
+        /// </summary>
+        public new FloatSliderParameter Definition
+        {
+            get => base.Definition as FloatSliderParameter;
+            set => base.Definition = value;
+        }
+        /// <summary>
+        /// The value of the stored parameter.
+        /// </summary>
         public float Value
         {
             get => FloatSliderField.Value;
@@ -48,17 +59,17 @@ namespace Rusty.CutsceneEditor
         }
 
         /* Protected methods. */
-        protected override void Init(ParameterDefinition resource)
+        protected override void Init()
         {
             // Base parameter inspector init.
-            base.Init(resource);
+            base.Init();
 
             // Set name.
-            Name = $"FloatSliderParameter ({resource.Id})";
+            Name = $"FloatSliderParameter ({Definition.Id})";
 
             // Add float slider field.
             FloatSliderField = new();
-            FloatSliderField.LabelText = resource.DisplayName;
+            FloatSliderField.LabelText = Definition.DisplayName;
             Add(FloatSliderField);
         }
     }

@@ -7,7 +7,7 @@ namespace Rusty.CutsceneEditor
     /// <summary>
     /// A cutscene instruction compile rule inspector.
     /// </summary>
-    public abstract partial class CompileRuleInspector : Inspector<CompileRule>
+    public abstract partial class CompileRuleInspector : Inspector
     {
         /* Constructors. */
         public CompileRuleInspector() : base() { }
@@ -19,9 +19,14 @@ namespace Rusty.CutsceneEditor
 
         /* Public methods. */
         /// <summary>
+        /// Gets the child rule inspector(s) that are currently active, if any.
+        /// </summary>
+        public abstract Inspector[] GetActiveSubInspectors();
+
+        /// <summary>
         /// Create a compile rule inspector of some type.
         /// </summary>
-        public static CompileRuleInspector Create(InstructionSet instructionSet, CompileRule compileRule)
+        public static Inspector Create(InstructionSet instructionSet, CompileRule compileRule)
         {
             switch (compileRule)
             {
@@ -34,7 +39,7 @@ namespace Rusty.CutsceneEditor
                 case ListRule listRule:
                     return new ListRuleInspector(instructionSet, listRule);
                 case PreInstruction preInstruction:
-                    return new PreInstructionInspector(instructionSet, preInstruction);
+                    return new PreInstructionInspector(instructionSet, instructionSet[preInstruction.Opcode]);
                 default:
                     throw new ArgumentException($"Compile rule '{compileRule}' has an illegal type '{compileRule.GetType().Name}'.");
             }

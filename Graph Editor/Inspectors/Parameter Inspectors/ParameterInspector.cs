@@ -6,8 +6,18 @@ namespace Rusty.CutsceneEditor
     /// <summary>
     /// A cutscene instruction parameter inspector.
     /// </summary>
-    public abstract partial class ParameterInspector : Inspector<ParameterDefinition>
+    public abstract partial class ParameterInspector : Inspector
     {
+        /* Public properties. */
+        /// <summary>
+        /// The parameter definition visualized by this inspector.
+        /// </summary>
+        public ParameterDefinition Definition
+        {
+            get => Resource as ParameterDefinition;
+            set => Resource = value;
+        }
+
         /* Constructors. */
         public ParameterInspector() : base() { }
 

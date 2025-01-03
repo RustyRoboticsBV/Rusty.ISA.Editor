@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=20 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=34 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_qwukw"]
@@ -8,7 +8,10 @@
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/LineParameter.cs" id="3_fplrf"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/MultilineParameter.cs" id="4_ua166"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/PreInstruction.cs" id="6_8mjxr"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/OptionRule.cs" id="7_d1ujo"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/ListRule.cs" id="7_tiswy"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/ChoiceRule.cs" id="9_rsl07"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/TupleRule.cs" id="9_xyppv"]
 
 [sub_resource type="Resource" id="Resource_s23li"]
 script = ExtResource("1_qwukw")
@@ -42,6 +45,23 @@ Id = "body"
 DisplayName = "Body"
 Description = ""
 
+[sub_resource type="Resource" id="Resource_ibt6m"]
+resource_name = "Option(SEL)"
+script = ExtResource("6_8mjxr")
+Id = "window"
+DisplayName = ""
+Description = ""
+Opcode = "SEL"
+
+[sub_resource type="Resource" id="Resource_1ynrp"]
+resource_name = "Option(SEL)"
+script = ExtResource("7_d1ujo")
+Id = "select_window"
+DisplayName = "Select Window"
+Description = ""
+Type = SubResource("Resource_ibt6m")
+StartEnabled = false
+
 [sub_resource type="Resource" id="Resource_0omty"]
 script = ExtResource("6_8mjxr")
 Id = "choice"
@@ -50,12 +70,69 @@ Description = ""
 Opcode = "CTX"
 
 [sub_resource type="Resource" id="Resource_qp3j0"]
+resource_name = "List(CTX)"
 script = ExtResource("7_tiswy")
-Id = "list(CTX)"
+Id = "choices"
 DisplayName = "Dialog Choices"
 Description = ""
 Type = SubResource("Resource_0omty")
 AddButtonText = "Add Choice"
+PreviewSeparator = "
+"
+
+[sub_resource type="Resource" id="Resource_vskw8"]
+script = ExtResource("6_8mjxr")
+Id = "SEL"
+DisplayName = "SEL"
+Description = ""
+Opcode = "SEL"
+
+[sub_resource type="Resource" id="Resource_mv7gr"]
+script = ExtResource("6_8mjxr")
+Id = "CTX"
+DisplayName = "CTX"
+Description = ""
+Opcode = "CTX"
+
+[sub_resource type="Resource" id="Resource_3d4mu"]
+script = ExtResource("9_xyppv")
+Id = "ttest"
+DisplayName = "TTest"
+Description = ""
+Types = [SubResource("Resource_vskw8"), SubResource("Resource_mv7gr")]
+PreviewSeparator = "
+"
+
+[sub_resource type="Resource" id="Resource_tf083"]
+script = ExtResource("7_d1ujo")
+Id = "otest"
+DisplayName = "OTest"
+Description = ""
+Type = SubResource("Resource_3d4mu")
+StartEnabled = false
+
+[sub_resource type="Resource" id="Resource_5nqbd"]
+script = ExtResource("6_8mjxr")
+Id = "CTX"
+DisplayName = "CTX"
+Description = ""
+Opcode = "CTX"
+
+[sub_resource type="Resource" id="Resource_bcbfy"]
+script = ExtResource("9_rsl07")
+Id = "ctest"
+DisplayName = "CTest"
+Description = ""
+Types = [SubResource("Resource_tf083"), SubResource("Resource_5nqbd")]
+StartSelected = 0
+
+[sub_resource type="Resource" id="Resource_qk2bj"]
+script = ExtResource("7_tiswy")
+Id = "ltext"
+DisplayName = "LTest"
+Description = ""
+Type = SubResource("Resource_bcbfy")
+AddButtonText = "Add Item"
 PreviewSeparator = "
 "
 
@@ -71,7 +148,7 @@ Category = "Dialog"
 Implementation = ""
 EditorNode = SubResource("Resource_s23li")
 Preview = []
-PreInstructions = [SubResource("Resource_qp3j0")]
+PreInstructions = [SubResource("Resource_1ynrp"), SubResource("Resource_qp3j0"), SubResource("Resource_qk2bj")]
 
 [sub_resource type="Resource" id="Resource_x3ncc"]
 resource_name = "text"
@@ -102,6 +179,24 @@ Implementation = ""
 Preview = []
 PreInstructions = []
 
+[sub_resource type="Resource" id="Resource_101mj"]
+script = ExtResource("3_fplrf")
+DefaultValue = "main"
+Id = "window"
+DisplayName = "Window"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_ehv4j"]
+script = ExtResource("2_uguea")
+Opcode = "SEL"
+Parameters = [SubResource("Resource_101mj")]
+DisplayName = ""
+Description = ""
+Category = ""
+Implementation = ""
+Preview = []
+PreInstructions = []
+
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_2poj5"), SubResource("Resource_cgh5n")]
+Definitions = [SubResource("Resource_2poj5"), SubResource("Resource_cgh5n"), SubResource("Resource_ehv4j")]

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Godot;
 using Rusty.Cutscenes;
 using Rusty.EditorUI;
 
@@ -8,14 +7,21 @@ namespace Rusty.CutsceneEditor
     /// <summary>
     /// A cutscene instruction inspector.
     /// </summary>
-    public partial class InstructionInspector : Inspector<InstructionDefinition>
+    public abstract partial class InstructionInspector : Inspector
     {
+        /* Public properties */
+        /// <summary>
+        /// The instruction definition visualized by this inspector.
+        /// </summary>
+        public InstructionDefinition Definition
+        {
+            get => Resource as InstructionDefinition;
+            set => Resource = value;
+        }
+
         /* Private properties. */
-        private LabeledIcon Title { get; set; }
-        private LineField Label { get; set; }
         private List<ParameterInspector> Parameters { get; set; } = new();
-        private List<CompileRuleInspector> CompileRules { get; set; } = new();
-        private bool PreInstruction { get; set; }
+        private List<Inspector> CompileRules { get; set; } = new();
 
         /* Constructors. */
         public InstructionInspector() : base() { }
@@ -26,31 +32,10 @@ namespace Rusty.CutsceneEditor
         public InstructionInspector(InstructionInspector other) : base(other) { }
 
         /* Public methods. */
-        public void RemoveTitleAndLabel()
-        {
-            Remove(Title);
-            Remove(Label);
-            PreInstruction = true;
-        }
-
-        public override Element Duplicate()
-        {
-            return new InstructionInspector(this);
-        }
-
         public override bool CopyStateFrom(Element other)
         {
             if (base.CopyStateFrom(other) && other is InstructionInspector otherInspector)
             {
-                PreInstruction = otherInspector.PreInstruction;
-
-                // Find title element and label field.
-                if (!PreInstruction)
-                {
-                    Title = this[0] as LabeledIcon;
-                    Label = this[1] as LineField;
-                }
-
                 // Find parameter & compile rule inspectors.
                 for (int i = 0; i < Count; i++)
                 {
@@ -66,29 +51,16 @@ namespace Rusty.CutsceneEditor
         }
 
         /* Protected methods. */
-        protected override void Init(InstructionDefinition resource)
+        protected override void Init()
         {
             // Base inspector init.
-            base.Init(resource);
+            base.Init();
 
             // Set name.
-            Name = $"InstructionInspector ({resource.Opcode})";
-
-            // Add title text.
-            Title = new();
-            Title.LabelText = resource.DisplayName;
-            Title.Value = resource.Icon;
-            Title.Name = "Title";
-            Add(Title);
-
-            // Add label field.
-            Label = new();
-            Label.LabelText = "Label";
-            Label.Name = "Name";
-            Add(Label);
+            Name = $"InstructionInspector ({Definition.Opcode})";
 
             // Add parameters.
-            foreach (ParameterDefinition parameter in resource.Parameters)
+            foreach (ParameterDefinition parameter in Definition.Parameters)
             {
                 ParameterInspector parameterInspector = ParameterInspector.Create(InstructionSet, parameter);
                 Parameters.Add(parameterInspector);
@@ -96,9 +68,9 @@ namespace Rusty.CutsceneEditor
             }
 
             // Add compile rules.
-            foreach (CompileRule compileRule in resource.PreInstructions)
+            foreach (CompileRule compileRule in Definition.PreInstructions)
             {
-                CompileRuleInspector compileRuleInspector = CompileRuleInspector.Create(InstructionSet, compileRule);
+                Inspector compileRuleInspector = CompileRuleInspector.Create(InstructionSet, compileRule);
                 CompileRules.Add(compileRuleInspector);
                 Add(compileRuleInspector);
             }

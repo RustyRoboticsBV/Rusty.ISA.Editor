@@ -10,6 +10,17 @@ namespace Rusty.CutsceneEditor
     public partial class ColorParameterInspector : ParameterInspector
     {
         /* Public properties. */
+        /// <summary>
+        /// The parameter definition visualized by this inspector.
+        /// </summary>
+        public new ColorParameter Definition
+        {
+            get => base.Definition as ColorParameter;
+            set => base.Definition = value;
+        }
+        /// <summary>
+        /// The value of the stored parameter.
+        /// </summary>
         public Color Value
         {
             get => ColorField.Value;
@@ -47,17 +58,17 @@ namespace Rusty.CutsceneEditor
         }
 
         /* Protected methods. */
-        protected override void Init(ParameterDefinition resource)
+        protected override void Init()
         {
             // Base parameter inspector init.
-            base.Init(resource);
+            base.Init();
 
             // Set name.
-            Name = $"ColorParameter ({resource.Id})";
+            Name = $"ColorParameter ({Definition.Id})";
 
             // Add Color field.
             ColorField = new();
-            ColorField.LabelText = resource.DisplayName;
+            ColorField.LabelText = Definition.DisplayName;
             Add(ColorField);
         }
     }

@@ -9,6 +9,17 @@ namespace Rusty.CutsceneEditor
     public partial class LineParameterInspector : ParameterInspector
     {
         /* Public properties. */
+        /// <summary>
+        /// The parameter definition visualized by this inspector.
+        /// </summary>
+        public new LineParameter Definition
+        {
+            get => base.Definition as LineParameter;
+            set => base.Definition = value;
+        }
+        /// <summary>
+        /// The value of the stored parameter.
+        /// </summary>
         public string Value
         {
             get => LineField.Value;
@@ -46,17 +57,17 @@ namespace Rusty.CutsceneEditor
         }
 
         /* Protected methods. */
-        protected override void Init(ParameterDefinition resource)
+        protected override void Init()
         {
             // Base parameter inspector init.
-            base.Init(resource);
+            base.Init();
 
             // Set name.
-            Name = $"LineParameter ({resource.Id})";
+            Name = $"LineParameter ({Definition.Id})";
 
             // Add line field.
             LineField = new();
-            LineField.LabelText = resource.DisplayName;
+            LineField.LabelText = Definition.DisplayName;
             Add(LineField);
         }
     }

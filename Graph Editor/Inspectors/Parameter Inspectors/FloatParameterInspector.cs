@@ -9,6 +9,17 @@ namespace Rusty.CutsceneEditor
     public partial class FloatParameterInspector : ParameterInspector
     {
         /* Public properties. */
+        /// <summary>
+        /// The parameter definition visualized by this inspector.
+        /// </summary>
+        public new FloatParameter Definition
+        {
+            get => base.Definition as FloatParameter;
+            set => base.Definition = value;
+        }
+        /// <summary>
+        /// The value of the stored parameter.
+        /// </summary>
         public float Value
         {
             get => FloatField.Value;
@@ -46,17 +57,17 @@ namespace Rusty.CutsceneEditor
         }
 
         /* Protected methods. */
-        protected override void Init(ParameterDefinition resource)
+        protected override void Init()
         {
             // Base parameter inspector init.
-            base.Init(resource);
+            base.Init();
 
             // Set name.
-            Name = $"FloatParameter ({resource.Id})";
+            Name = $"FloatParameter ({Definition.Id})";
 
             // Add float field.
             FloatField = new();
-            FloatField.LabelText = resource.DisplayName;
+            FloatField.LabelText = Definition.DisplayName;
             Add(FloatField);
         }
     }

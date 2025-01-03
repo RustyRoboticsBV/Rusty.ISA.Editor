@@ -8,6 +8,16 @@ namespace Rusty.CutsceneEditor
     /// </summary>
     public partial class OutputParameterInspector : ParameterInspector
     {
+        /* Public properties. */
+        /// <summary>
+        /// The parameter definition visualized by this inspector.
+        /// </summary>
+        public new OutputParameter Definition
+        {
+            get => base.Definition as OutputParameter;
+            set => base.Definition = value;
+        }
+
         /* Constructors. */
         public OutputParameterInspector() : base() { }
 
@@ -23,13 +33,13 @@ namespace Rusty.CutsceneEditor
         }
 
         /* Protected methods. */
-        protected override void Init(ParameterDefinition resource)
+        protected override void Init()
         {
             // Base parameter inspector init.
-            base.Init(resource);
+            base.Init();
 
             // Set name.
-            Name = $"OutputParameter ({resource.Id})";
+            Name = $"OutputParameter ({Definition.Id})";
 
             // Hide this inspector.
             Hide();

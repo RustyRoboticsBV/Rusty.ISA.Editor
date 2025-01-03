@@ -9,6 +9,17 @@ namespace Rusty.CutsceneEditor
     public partial class IntParameterInspector : ParameterInspector
     {
         /* Public properties. */
+        /// <summary>
+        /// The parameter definition visualized by this inspector.
+        /// </summary>
+        public new IntParameter Definition
+        {
+            get => base.Definition as IntParameter;
+            set => base.Definition = value;
+        }
+        /// <summary>
+        /// The value of the stored parameter.
+        /// </summary>
         public int Value
         {
             get => IntField.Value;
@@ -46,17 +57,17 @@ namespace Rusty.CutsceneEditor
         }
 
         /* Protected methods. */
-        protected override void Init(ParameterDefinition resource)
+        protected override void Init()
         {
             // Base parameter inspector init.
-            base.Init(resource);
+            base.Init();
 
             // Set name.
-            Name = $"IntParameter ({resource.Id})";
+            Name = $"IntParameter ({Definition.Id})";
 
             // Add int field.
             IntField = new();
-            IntField.LabelText = resource.DisplayName;
+            IntField.LabelText = Definition.DisplayName;
             Add(IntField);
         }
     }

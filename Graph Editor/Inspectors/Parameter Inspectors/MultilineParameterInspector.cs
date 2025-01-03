@@ -9,6 +9,17 @@ namespace Rusty.CutsceneEditor
     public partial class MultilineParameterInspector : ParameterInspector
     {
         /* Public properties. */
+        /// <summary>
+        /// The parameter definition visualized by this inspector.
+        /// </summary>
+        public new MultilineParameter Definition
+        {
+            get => base.Definition as MultilineParameter;
+            set => base.Definition = value;
+        }
+        /// <summary>
+        /// The value of the stored parameter.
+        /// </summary>
         public string Value
         {
             get => MultilineField.Value;
@@ -46,17 +57,17 @@ namespace Rusty.CutsceneEditor
         }
 
         /* Protected methods. */
-        protected override void Init(ParameterDefinition resource)
+        protected override void Init()
         {
             // Base parameter inspector init.
-            base.Init(resource);
+            base.Init();
 
             // Set name.
-            Name = $"MultilineParameter ({resource.Id})";
+            Name = $"MultilineParameter ({Definition.Id})";
 
             // Add multiline field.
             MultilineField = new();
-            MultilineField.LabelText = resource.DisplayName;
+            MultilineField.LabelText = Definition.DisplayName;
             MultilineField.Height = 128f;
             Add(MultilineField);
         }

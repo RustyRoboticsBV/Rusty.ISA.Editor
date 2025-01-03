@@ -16,6 +16,7 @@ namespace Rusty.CutsceneEditor
 
         /* Private properties. */
         private OptionField OptionField { get; set; }
+        private Inspector[] ChildRules { get; set; }
 
         /* Constructors. */
         public TupleRuleInspector() : base() { }
@@ -35,25 +36,38 @@ namespace Rusty.CutsceneEditor
         {
             if (base.CopyStateFrom(other))
             {
-                OptionField = GetAt(0) as OptionField;
+                ChildRules = new Inspector[Count];
+                for (int i = 0; i < Count; i++)
+                {
+                    ChildRules[i] = this[i] as Inspector;
+                }
                 return true;
             }
             else
                 return false;
         }
 
+        public override Inspector[] GetActiveSubInspectors()
+        {
+            return ChildRules;
+        }
+
         /* Protected methods. */
-        protected override void Init(CompileRule resource)
+        protected override void Init()
         {
             // Base compile rule inspector init.
-            base.Init(resource);
+            base.Init();
 
             // Set name.
-            Name = $"TupleRule ({resource.Id})";
+            Name = $"TupleRule ({Rule.Id})";
 
-            // Add option element.
-            OptionField = new();
-            Add(OptionField);
+            // Add child rule inspectors.
+            ChildRules = new Inspector[Rule.Types.Length];
+            for (int i = 0; i < Rule.Types.Length; i++)
+            {
+                ChildRules[i] = Create(InstructionSet, Rule.Types[i]);
+                Add(ChildRules[i]);
+            }
         }
     }
 }

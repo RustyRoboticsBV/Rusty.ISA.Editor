@@ -30,7 +30,7 @@ namespace Rusty.CutsceneEditor
             DebugCompileButton.Pressed += OnDebugCompile;
             DebugDecompileButton.Pressed += OnDebugDecompile;
 
-            Inspector.AddChild(new InstructionInspector(InstructionSet, InstructionSet["TXT"]));
+            Inspector.AddChild(new NodeInstructionInspector(InstructionSet, InstructionSet["TXT"]));
         }
 
         /* Private methods. */
