@@ -1,19 +1,26 @@
 #if TOOLS
 using Godot;
+using Rusty.Cutscenes;
+using Rusty.Cutscenes.Editor;
 
 namespace Rusty.CutsceneEditor
 {
-	[GlobalClass]
-	public partial class CutsceneEditor : VBoxContainer
-	{
+    [GlobalClass]
+    public partial class CutsceneEditor : VBoxContainer
+    {
+        /* Public properties. */
         [Export] public Button OpenButton { get; private set; }
         [Export] public FileDialog OpenDialog { get; private set; }
-		[Export] public Button SaveButton { get; private set; }
+        [Export] public Button SaveButton { get; private set; }
         [Export] public FileDialog SaveDialog { get; private set; }
         [Export] public Button DebugCompileButton { get; private set; }
         [Export] public Button DebugDecompileButton { get; private set; }
+        [Export] public VBoxContainer Inspector { get; private set; }
         [Export] public CutsceneGraphEdit GraphEdit { get; private set; }
 
+        [Export] public InstructionSet InstructionSet { get; set; }
+
+        /* Godot overrides. */
         public override void _EnterTree()
         {
             OpenButton.Pressed += OnOpen;
@@ -22,8 +29,11 @@ namespace Rusty.CutsceneEditor
             SaveDialog.FileSelected += OnSaveFileSelected;
             DebugCompileButton.Pressed += OnDebugCompile;
             DebugDecompileButton.Pressed += OnDebugDecompile;
+
+            Inspector.AddChild(new InstructionInspector(InstructionSet, InstructionSet["TXT"]));
         }
 
+        /* Private methods. */
         private void OnOpen()
         {
             OpenDialog.Popup();

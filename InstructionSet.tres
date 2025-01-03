@@ -1,28 +1,107 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=6 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=20 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_qwukw"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/OutputParameter.cs" id="2_1oqv3"]
+[ext_resource type="Texture2D" uid="uid://dg0q26v3yiiue" path="res://icon.svg" id="2_tvfno"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/LineParameter.cs" id="3_fplrf"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/MultilineParameter.cs" id="4_ua166"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/PreInstruction.cs" id="6_8mjxr"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/ListRule.cs" id="7_tiswy"]
 
 [sub_resource type="Resource" id="Resource_s23li"]
 script = ExtResource("1_qwukw")
 Priority = -1
 MinWidth = 128
-MainColor = Color(0.411765, 1, 0.411765, 1)
+MainColor = Color(0.21, 0.460167, 1, 1)
 TextColor = Color(1, 1, 1, 1)
 
+[sub_resource type="Resource" id="Resource_r1nq3"]
+resource_name = "speaker"
+script = ExtResource("2_1oqv3")
+OverrideDefaultOutput = false
+UseParameterAsLabel = ""
+Id = "speaker"
+DisplayName = "Speaker"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_xms77"]
+resource_name = "mood"
+script = ExtResource("3_fplrf")
+DefaultValue = "Neutral"
+Id = "mood"
+DisplayName = "Mood"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_q587n"]
+resource_name = "body"
+script = ExtResource("4_ua166")
+DefaultValue = "Blah, blah, blah..."
+Id = "body"
+DisplayName = "Body"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_0omty"]
+script = ExtResource("6_8mjxr")
+Id = "choice"
+DisplayName = "Choice"
+Description = ""
+Opcode = "CTX"
+
+[sub_resource type="Resource" id="Resource_qp3j0"]
+script = ExtResource("7_tiswy")
+Id = "list(CTX)"
+DisplayName = "Dialog Choices"
+Description = ""
+Type = SubResource("Resource_0omty")
+AddButtonText = "Add Choice"
+PreviewSeparator = "
+"
+
 [sub_resource type="Resource" id="Resource_2poj5"]
+resource_name = "TXT"
 script = ExtResource("2_uguea")
-Opcode = "ABC"
-Parameters = []
-DisplayName = "A B C"
-Description = "The alphabet is pretty neat."
-Category = "THINGAMAGIC"
+Opcode = "TXT"
+Parameters = [SubResource("Resource_r1nq3"), SubResource("Resource_xms77"), SubResource("Resource_q587n")]
+Icon = ExtResource("2_tvfno")
+DisplayName = "Set Text"
+Description = "Write text to the selected dialog window."
+Category = "Dialog"
 Implementation = ""
 EditorNode = SubResource("Resource_s23li")
+Preview = []
+PreInstructions = [SubResource("Resource_qp3j0")]
+
+[sub_resource type="Resource" id="Resource_x3ncc"]
+resource_name = "text"
+script = ExtResource("3_fplrf")
+DefaultValue = "Blah..."
+Id = "text"
+DisplayName = "Text"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_so2et"]
+resource_name = "target_label"
+script = ExtResource("2_1oqv3")
+OverrideDefaultOutput = true
+UseParameterAsLabel = "text"
+Id = "target_label"
+DisplayName = "Target Label"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_cgh5n"]
+resource_name = "CTX"
+script = ExtResource("2_uguea")
+Opcode = "CTX"
+Parameters = [SubResource("Resource_x3ncc"), SubResource("Resource_so2et")]
+DisplayName = "Dialog Choice"
+Description = ""
+Category = "Dialog"
+Implementation = ""
 Preview = []
 PreInstructions = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_2poj5")]
+Definitions = [SubResource("Resource_2poj5"), SubResource("Resource_cgh5n")]
