@@ -26,6 +26,11 @@ namespace Rusty.CutsceneEditor
             get => ColorField.Value;
             set => ColorField.Value = value;
         }
+        public override object ValueObj
+        {
+            get => Value;
+            set => Value = (Color)ValueObj;
+        }
 
         /* Private properties. */
         private ColorField ColorField { get; set; }
@@ -51,6 +56,7 @@ namespace Rusty.CutsceneEditor
         {
             if (base.CopyStateFrom(other) && other is ColorParameterInspector otherInspector)
             {
+                ColorField = GetAt(0) as ColorField;
                 Value = otherInspector.Value;
                 return true;
             }

@@ -25,6 +25,11 @@ namespace Rusty.CutsceneEditor
             get => LineField.Value;
             set => LineField.Value = value;
         }
+        public override object ValueObj
+        {
+            get => Value;
+            set => Value = (string)ValueObj;
+        }
 
         /* Private properties. */
         private LineField LineField { get; set; }
@@ -50,7 +55,7 @@ namespace Rusty.CutsceneEditor
         {
             if (base.CopyStateFrom(other) && other is LineParameterInspector otherInspector)
             {
-                Value = otherInspector.Value;
+                LineField = GetAt(0) as LineField;
                 return true;
             }
             return false;

@@ -8,6 +8,13 @@ namespace Rusty.CutsceneEditor
     /// </summary>
     public partial class NodeInstructionInspector : InstructionInspector
     {
+        /* Public methods. */
+        public string LabelName
+        {
+            get => Label.Value;
+            set => Label.Value = value;
+        }
+
         /* Private properties. */
         private LabeledIcon Title { get; set; }
         private LineField Label { get; set; }

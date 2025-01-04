@@ -17,6 +17,10 @@ namespace Rusty.CutsceneEditor
             get => Resource as ParameterDefinition;
             set => Resource = value;
         }
+        /// <summary>
+        /// The value of this parameter.
+        /// </summary>
+        public abstract object ValueObj { get; set; }
 
         /* Constructors. */
         public ParameterInspector() : base() { }

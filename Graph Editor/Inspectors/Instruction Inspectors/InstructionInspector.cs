@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Godot;
 using Rusty.Cutscenes;
 using Rusty.EditorUI;
 
@@ -37,17 +38,37 @@ namespace Rusty.CutsceneEditor
             if (base.CopyStateFrom(other) && other is InstructionInspector otherInspector)
             {
                 // Find parameter & compile rule inspectors.
+                Parameters.Clear();
+                CompileRules.Clear();
                 for (int i = 0; i < Count; i++)
                 {
                     if (this[i] is ParameterInspector parameterInspector)
                         Parameters.Add(parameterInspector);
                     else if (this[i] is CompileRuleInspector compileRuleInspector)
                         CompileRules.Add(compileRuleInspector);
+                    else if (this[i] is PreInstructionInspector preInstructionInspector)
+                        CompileRules.Add(preInstructionInspector);
                 }
 
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Get a parameter inspector.
+        /// </summary>
+        public ParameterInspector GetParameterInspector(int index)
+        {
+            return Parameters[index];
+        }
+
+        /// <summary>
+        /// Get a compile rule inspector.
+        /// </summary>
+        public Inspector GetCompileRuleInspector(int index)
+        {
+            return CompileRules[index];
         }
 
         /* Protected methods. */

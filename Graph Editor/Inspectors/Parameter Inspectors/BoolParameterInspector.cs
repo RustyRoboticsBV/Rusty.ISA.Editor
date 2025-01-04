@@ -25,6 +25,11 @@ namespace Rusty.CutsceneEditor
             get => CheckBox.Value;
             set => CheckBox.Value = value;
         }
+        public override object ValueObj
+        {
+            get => Value;
+            set => Value = (bool)ValueObj;
+        }
 
         /* Private properties. */
         private CheckBoxField CheckBox { get; set; }
@@ -50,6 +55,7 @@ namespace Rusty.CutsceneEditor
         {
             if (base.CopyStateFrom(other) && other is BoolParameterInspector otherInspector)
             {
+                CheckBox = GetAt(0) as CheckBoxField;
                 Value = otherInspector.Value;
                 return true;
             }

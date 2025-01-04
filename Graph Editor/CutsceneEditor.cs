@@ -19,6 +19,7 @@ namespace Rusty.CutsceneEditor
         [Export] public CutsceneGraphEdit GraphEdit { get; private set; }
 
         [Export] public InstructionSet InstructionSet { get; set; }
+        private NodeInstructionInspector CompileTarget { get; set; }
 
         /* Godot overrides. */
         public override void _EnterTree()
@@ -30,7 +31,8 @@ namespace Rusty.CutsceneEditor
             DebugCompileButton.Pressed += OnDebugCompile;
             DebugDecompileButton.Pressed += OnDebugDecompile;
 
-            Inspector.AddChild(new NodeInstructionInspector(InstructionSet, InstructionSet["TXT"]));
+            CompileTarget = new NodeInstructionInspector(InstructionSet, InstructionSet["TXT"]);
+            Inspector.AddChild(CompileTarget);
         }
 
         /* Private methods. */
@@ -57,6 +59,7 @@ namespace Rusty.CutsceneEditor
         private void OnDebugCompile()
         {
             string str = "";
+            str = Compiler.NodeInstructionCompiler.Compile(CompileTarget).ToString();
             DisplayServer.ClipboardSet(str);
             GD.Print("Debug compilation result saved to clipboard!");
         }

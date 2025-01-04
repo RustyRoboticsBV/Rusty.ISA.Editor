@@ -17,6 +17,11 @@ namespace Rusty.CutsceneEditor
             get => base.Definition as OutputParameter;
             set => base.Definition = value;
         }
+        public override object ValueObj
+        {
+            get => null;
+            set { }
+        }
 
         /* Constructors. */
         public OutputParameterInspector() : base() { }

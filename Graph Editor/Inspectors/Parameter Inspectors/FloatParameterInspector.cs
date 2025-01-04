@@ -25,6 +25,11 @@ namespace Rusty.CutsceneEditor
             get => FloatField.Value;
             set => FloatField.Value = value;
         }
+        public override object ValueObj
+        {
+            get => Value;
+            set => Value = (float)ValueObj;
+        }
 
         /* Private properties. */
         private FloatField FloatField { get; set; }
@@ -50,6 +55,7 @@ namespace Rusty.CutsceneEditor
         {
             if (base.CopyStateFrom(other) && other is FloatParameterInspector otherInspector)
             {
+                FloatField = GetAt(0) as FloatField;
                 Value = otherInspector.Value;
                 return true;
             }

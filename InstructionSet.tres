@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=34 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=45 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_qwukw"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/ListRule.cs" id="7_tiswy"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/ChoiceRule.cs" id="9_rsl07"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/TupleRule.cs" id="9_xyppv"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
 
 [sub_resource type="Resource" id="Resource_s23li"]
 script = ExtResource("1_qwukw")
@@ -20,11 +21,10 @@ MinWidth = 128
 MainColor = Color(0.21, 0.460167, 1, 1)
 TextColor = Color(1, 1, 1, 1)
 
-[sub_resource type="Resource" id="Resource_r1nq3"]
+[sub_resource type="Resource" id="Resource_1l0fw"]
 resource_name = "speaker"
-script = ExtResource("2_1oqv3")
-OverrideDefaultOutput = false
-UseParameterAsLabel = ""
+script = ExtResource("3_fplrf")
+DefaultValue = "Someone"
 Id = "speaker"
 DisplayName = "Speaker"
 Description = ""
@@ -140,7 +140,7 @@ PreviewSeparator = "
 resource_name = "TXT"
 script = ExtResource("2_uguea")
 Opcode = "TXT"
-Parameters = [SubResource("Resource_r1nq3"), SubResource("Resource_xms77"), SubResource("Resource_q587n")]
+Parameters = [SubResource("Resource_1l0fw"), SubResource("Resource_xms77"), SubResource("Resource_q587n")]
 Icon = ExtResource("2_tvfno")
 DisplayName = "Set Text"
 Description = "Write text to the selected dialog window."
@@ -187,6 +187,7 @@ DisplayName = "Window"
 Description = ""
 
 [sub_resource type="Resource" id="Resource_ehv4j"]
+resource_name = "SEL"
 script = ExtResource("2_uguea")
 Opcode = "SEL"
 Parameters = [SubResource("Resource_101mj")]
@@ -197,6 +198,111 @@ Implementation = ""
 Preview = []
 PreInstructions = []
 
+[sub_resource type="Resource" id="Resource_g65gn"]
+script = ExtResource("12_q4rbi")
+DefaultValue = 0
+Id = "x"
+DisplayName = "X"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_1ekkv"]
+script = ExtResource("12_q4rbi")
+DefaultValue = 0
+Id = "y"
+DisplayName = "Y"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_btai4"]
+resource_name = "NOD"
+script = ExtResource("2_uguea")
+Opcode = "NOD"
+Parameters = [SubResource("Resource_g65gn"), SubResource("Resource_1ekkv")]
+DisplayName = ""
+Description = ""
+Category = ""
+Implementation = ""
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_0i3d0"]
+script = ExtResource("3_fplrf")
+DefaultValue = ""
+Id = "name"
+DisplayName = "Name"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_l0vtb"]
+resource_name = "LBL"
+script = ExtResource("2_uguea")
+Opcode = "LBL"
+Parameters = [SubResource("Resource_0i3d0")]
+DisplayName = ""
+Description = ""
+Category = ""
+Implementation = ""
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_hn7y1"]
+resource_name = "OPT"
+script = ExtResource("2_uguea")
+Opcode = "OPT"
+Parameters = []
+DisplayName = ""
+Description = ""
+Category = ""
+Implementation = ""
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_k3g4f"]
+resource_name = "CHO"
+script = ExtResource("2_uguea")
+Opcode = "CHO"
+Parameters = []
+DisplayName = ""
+Description = ""
+Category = ""
+Implementation = ""
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_lgia3"]
+resource_name = "TPL"
+script = ExtResource("2_uguea")
+Opcode = "TPL"
+Parameters = []
+DisplayName = ""
+Description = ""
+Category = ""
+Implementation = ""
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_ascot"]
+resource_name = "LST"
+script = ExtResource("2_uguea")
+Opcode = "LST"
+Parameters = []
+DisplayName = ""
+Description = ""
+Category = ""
+Implementation = ""
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_itw8j"]
+resource_name = "EOR"
+script = ExtResource("2_uguea")
+Opcode = "EOR"
+Parameters = []
+DisplayName = ""
+Description = ""
+Category = ""
+Implementation = ""
+Preview = []
+PreInstructions = []
+
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_2poj5"), SubResource("Resource_cgh5n"), SubResource("Resource_ehv4j")]
+Definitions = [SubResource("Resource_2poj5"), SubResource("Resource_cgh5n"), SubResource("Resource_ehv4j"), SubResource("Resource_btai4"), SubResource("Resource_l0vtb"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]

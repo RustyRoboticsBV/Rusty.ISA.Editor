@@ -25,6 +25,11 @@ namespace Rusty.CutsceneEditor
             get => IntField.Value;
             set => IntField.Value = value;
         }
+        public override object ValueObj
+        {
+            get => Value;
+            set => Value = (int)ValueObj;
+        }
 
         /* Private properties. */
         private IntField IntField { get; set; }
@@ -50,6 +55,7 @@ namespace Rusty.CutsceneEditor
         {
             if (base.CopyStateFrom(other) && other is IntParameterInspector otherInspector)
             {
+                IntField = GetAt(0) as IntField;
                 Value = otherInspector.Value;
                 return true;
             }

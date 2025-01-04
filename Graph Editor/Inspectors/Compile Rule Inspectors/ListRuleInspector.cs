@@ -42,12 +42,12 @@ namespace Rusty.CutsceneEditor
                 return false;
         }
 
-        public override CompileRuleInspector[] GetActiveSubInspectors()
+        public override Inspector[] GetActiveSubInspectors()
         {
-            CompileRuleInspector[] childInspectors = new CompileRuleInspector[ListElement.Count];
+            Inspector[] childInspectors = new Inspector[ListElement.Count];
             for (int i = 0; i < ListElement.Count; i++)
             {
-                childInspectors[i] = ListElement[i][0] as CompileRuleInspector;
+                childInspectors[i] = ListElement[i][0] as Inspector;
             }
             return childInspectors;
         }

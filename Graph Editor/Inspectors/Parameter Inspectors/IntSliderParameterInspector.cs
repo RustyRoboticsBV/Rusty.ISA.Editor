@@ -25,6 +25,11 @@ namespace Rusty.CutsceneEditor
             get => IntSliderField.Value;
             set => IntSliderField.Value = value;
         }
+        public override object ValueObj
+        {
+            get => Value;
+            set => Value = (int)ValueObj;
+        }
 
         /* Private properties. */
         private IntSliderField IntSliderField { get; set; }
@@ -52,6 +57,7 @@ namespace Rusty.CutsceneEditor
         {
             if (base.CopyStateFrom(other) && other is IntSliderParameterInspector otherInspector)
             {
+                IntSliderField = GetAt(0) as IntSliderField;
                 Value = otherInspector.Value;
                 return true;
             }

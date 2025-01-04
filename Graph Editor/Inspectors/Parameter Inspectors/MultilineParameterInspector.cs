@@ -25,6 +25,11 @@ namespace Rusty.CutsceneEditor
             get => MultilineField.Value;
             set => MultilineField.Value = value;
         }
+        public override object ValueObj
+        {
+            get => Value;
+            set => Value = (string)ValueObj;
+        }
 
         /* Private properties. */
         private MultilineField MultilineField { get; set; }
@@ -50,6 +55,7 @@ namespace Rusty.CutsceneEditor
         {
             if (base.CopyStateFrom(other) && other is MultilineParameterInspector otherInspector)
             {
+                MultilineField = GetAt(0) as MultilineField;
                 Value = otherInspector.Value;
                 return true;
             }
