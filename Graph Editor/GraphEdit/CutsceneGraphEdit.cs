@@ -71,11 +71,12 @@ namespace Rusty.CutsceneEditor
             CutsceneGraphNode node = new();
             AddChild(node);
 
+            node.InstructionSet = InstructionSet;
             node.PositionOffset = positionOffset;
 
             node.InspectorWindow = PropertiesInspector;
             if (definition != null)
-                node.Populate(InstructionSet, definition);
+                node.Populate(definition);
             else
                 GD.PrintErr("Tried to spawn a node without an instruction definition.");
 

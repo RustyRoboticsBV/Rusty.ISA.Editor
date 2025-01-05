@@ -1,7 +1,7 @@
 #if TOOLS
 using Godot;
 using Rusty.Cutscenes;
-using Rusty.Cutscenes.Editor;
+using Rusty.CutsceneEditor.Compiler;
 
 namespace Rusty.CutsceneEditor
 {
@@ -9,17 +9,18 @@ namespace Rusty.CutsceneEditor
     public partial class CutsceneEditor : VBoxContainer
     {
         /* Public properties. */
+        [Export] public InstructionSet InstructionSet { get; set; }
+
         [Export] public Button OpenButton { get; private set; }
         [Export] public FileDialog OpenDialog { get; private set; }
         [Export] public Button SaveButton { get; private set; }
         [Export] public FileDialog SaveDialog { get; private set; }
         [Export] public Button DebugCompileButton { get; private set; }
         [Export] public Button DebugDecompileButton { get; private set; }
-        [Export] public VBoxContainer Inspector { get; private set; }
-        [Export] public CutsceneGraphEdit GraphEdit { get; private set; }
 
-        [Export] public InstructionSet InstructionSet { get; set; }
-        private NodeInstructionInspector CompileTarget { get; set; }
+        [Export] public VBoxContainer Inspector { get; private set; }
+
+        [Export] public CutsceneGraphEdit GraphEdit { get; private set; }
 
         /* Godot overrides. */
         public override void _EnterTree()
@@ -30,9 +31,6 @@ namespace Rusty.CutsceneEditor
             SaveDialog.FileSelected += OnSaveFileSelected;
             DebugCompileButton.Pressed += OnDebugCompile;
             DebugDecompileButton.Pressed += OnDebugDecompile;
-
-            CompileTarget = new NodeInstructionInspector(InstructionSet, InstructionSet["TXT"]);
-            Inspector.AddChild(CompileTarget);
         }
 
         /* Private methods. */
@@ -59,7 +57,18 @@ namespace Rusty.CutsceneEditor
         private void OnDebugCompile()
         {
             string str = "";
-            str = Compiler.NodeInstructionCompiler.Compile(CompileTarget).ToString();
+            for (int i = 0; i < GraphEdit.GetChildCount(); i++)
+            {
+                Node node = GraphEdit.GetChild(i);
+                try
+                {
+                    CutsceneGraphNode graphNode = node as CutsceneGraphNode;
+                    if (str != "")
+                        str += "\n";
+                    str += GraphNodeCompiler.GetInstruction(graphNode).ToString();
+                }
+                catch { }
+            }
             DisplayServer.ClipboardSet(str);
             GD.Print("Debug compilation result saved to clipboard!");
         }

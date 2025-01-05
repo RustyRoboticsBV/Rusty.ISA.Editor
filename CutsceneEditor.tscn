@@ -12,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_jfu4d")
+InstructionSet = ExtResource("4_ggl3d")
 OpenButton = NodePath("Buttons/HBoxContainer/Open")
 OpenDialog = NodePath("OpenDialog")
 SaveButton = NodePath("Buttons/HBoxContainer/Save")
@@ -20,7 +21,6 @@ DebugCompileButton = NodePath("Buttons/HBoxContainer/DebugCompile")
 DebugDecompileButton = NodePath("Buttons/HBoxContainer/DebugDecompile")
 Inspector = NodePath("HBoxContainer/Inspector/ScrollContainer/Header/VBoxContainer")
 GraphEdit = NodePath("HBoxContainer/CutsceneGraphEdit")
-InstructionSet = ExtResource("4_ggl3d")
 
 [node name="Buttons" type="MarginContainer" parent="."]
 layout_mode = 2

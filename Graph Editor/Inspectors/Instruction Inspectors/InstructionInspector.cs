@@ -71,6 +71,16 @@ namespace Rusty.CutsceneEditor
             return CompileRules[index];
         }
 
+        public Godot.Collections.Array<ParameterInspector> GetOutputs()
+        {
+            return new();
+        }
+
+        public string[] GetPreviewTerms()
+        {
+            return new string[0];
+        }
+
         /* Protected methods. */
         protected override void Init()
         {

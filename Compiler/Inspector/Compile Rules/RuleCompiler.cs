@@ -4,7 +4,7 @@ using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
-    public abstract class RuleCompiler : InspectorCompiler
+    public abstract class RuleCompiler : Compiler
     {
         /* Public methods. */
         public static SubNode<NodeData> Compile(Inspector inspector)
@@ -12,7 +12,7 @@ namespace Rusty.CutsceneEditor.Compiler
             switch (inspector)
             {
                 case PreInstructionInspector preInspector:
-                    return PreInstructionCompiler.Compile(preInspector);
+                    return InstructionCompiler.Compile(preInspector);
                 case OptionRuleInspector optionInspector:
                     return OptionRuleCompiler.Compile(optionInspector);
                 case ChoiceRuleInspector choiceInspector:

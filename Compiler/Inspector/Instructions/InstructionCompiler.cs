@@ -1,13 +1,12 @@
-﻿using Godot;
-using Rusty.Cutscenes;
+﻿using Rusty.Cutscenes;
 using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
-    public abstract class InstructionCompiler : InspectorCompiler
+    public abstract class InstructionCompiler : Compiler
     {
-        /* Protected methods. */
-        protected static SubNode<NodeData> GetInstruction(InstructionInspector inspector)
+        /* Public methods. */
+        public static SubNode<NodeData> Compile(InstructionInspector inspector)
         {
             // Root instruction.
             InstructionSet set = inspector.InstructionSet;
@@ -21,7 +20,6 @@ namespace Rusty.CutsceneEditor.Compiler
 
                 try
                 {
-                    GD.Print(inspector.Name + ": parameter " + definition.Parameters[i].Id + ": " + inspector.GetParameterInspector(i).ValueObj.ToString());
                     instance.Arguments[i] = inspector.GetParameterInspector(i).ValueObj.ToString();
                 }
                 catch { }
@@ -41,29 +39,6 @@ namespace Rusty.CutsceneEditor.Compiler
             }
 
             return node;
-        }
-
-        protected static RootNode<NodeData> GetNode(NodeInstructionInspector inspector)
-        {
-            InstructionSet set = inspector.InstructionSet;
-            InstructionDefinition definition = set[BuiltIn.NodeOpcode];
-            InstructionInstance instance = new(definition);
-
-            instance.Arguments[definition.GetParameterIndex(BuiltIn.NodeXId)] = "0";
-            instance.Arguments[definition.GetParameterIndex(BuiltIn.NodeYId)] = "0";
-
-            return new(instance.ToString(), new(set, definition, instance));
-        }
-
-        protected static SubNode<NodeData> GetLabel(NodeInstructionInspector inspector)
-        {
-            InstructionSet set = inspector.InstructionSet;
-            InstructionDefinition definition = set[BuiltIn.LabelOpcode];
-            InstructionInstance instance = new(definition);
-
-            instance.Arguments[definition.GetParameterIndex(BuiltIn.LabelNameId)] = inspector.LabelName;
-
-            return new(instance.ToString(), new(set, definition, instance));
         }
     }
 }

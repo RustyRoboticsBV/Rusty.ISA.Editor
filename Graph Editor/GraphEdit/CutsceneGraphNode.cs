@@ -8,10 +8,11 @@ namespace Rusty.CutsceneEditor
     public partial class CutsceneGraphNode : GraphNode
     {
         /* Public properties. */
+        public InstructionSet InstructionSet { get; set; }
         public InstructionDefinition Definition { get; set; }
 
         public VBoxContainer InspectorWindow { get; set; }
-        //public InstructionInspector NodeInspector { get; private set; }
+        public NodeInstructionInspector NodeInspector { get; private set; }
         public Array<NodeSlotPair> Slots { get; private set; } = new();
 
         /* Private properties. */
@@ -24,7 +25,7 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// Creates the editor for an instruction type in its default state.
         /// </summary>
-        public void Populate(InstructionSet instructionSet, InstructionDefinition definition)
+        public void Populate(InstructionDefinition definition)
         {
             if (definition == null)
             {
@@ -70,8 +71,7 @@ namespace Rusty.CutsceneEditor
             CustomMinimumSize = new Vector2(definition.EditorNode.MinWidth, CustomMinimumSize.Y);
 
             // Create inspector.
-            //NodeInspector = new InstructionInspector(32f, 128f, instructionSet);
-            //NodeInspector.SetDefinition(definition);
+            NodeInspector = new NodeInstructionInspector(InstructionSet, Definition);
 
             // Ensure slots.
             EnsureSlots();
@@ -142,10 +142,10 @@ namespace Rusty.CutsceneEditor
         /* Private methods. */
         private void UpdateContents()
         {
-            /*if (NodeInspector.LabelField.Value != "")
-                Title = "[" + NodeInspector.LabelField.Value + "] " + Definition.DisplayName;
+            if (NodeInspector.LabelName != "")
+                Title = "[" + NodeInspector.LabelName + "] " + Definition.DisplayName;
             else
-                Title = Definition.DisplayName;*/
+                Title = Definition.DisplayName;
 
             EnsureSlots();
             UpdatePreview();
@@ -185,15 +185,15 @@ namespace Rusty.CutsceneEditor
             TitleLabel.AddThemeColorOverride("font_color", color);
 
             // Add to inspector.
-            /*if (InspectorWindow != null)
+            if (InspectorWindow != null)
                 InspectorWindow.AddChild(NodeInspector);
             else
-                GD.PrintErr($"Graph node {Name} did not have a reference to the properties drawer container.");*/
+                GD.PrintErr($"Graph node {Name} did not have a reference to the properties drawer container.");
         }
 
         private void RemoveFromInspectorContainer()
         {
-           /* if (Definition == null || NodeInspector == null)
+            if (Definition == null || NodeInspector == null)
                 return;
 
             // Recolor title text.
@@ -206,12 +206,12 @@ namespace Rusty.CutsceneEditor
             if (InspectorWindow != null)
                 InspectorWindow.RemoveChild(NodeInspector);
             else
-                GD.PrintErr($"Graph node {Name} did not have a reference to the properties drawer container.");*/
+                GD.PrintErr($"Graph node {Name} did not have a reference to the properties drawer container.");
         }
 
         private void EnsureSlots()
         {
-            /*if (Definition == null || NodeInspector == null)
+            if (Definition == null || NodeInspector == null)
                 return;
 
             // Get outputs.
@@ -276,12 +276,12 @@ namespace Rusty.CutsceneEditor
 
             // Restore preview.
             if (Preview != null)
-                AddChild(Preview);*/
+                AddChild(Preview);
         }
 
         private void UpdatePreview()
         {
-            /*if (Definition == null || NodeInspector == null)
+            if (Definition == null || NodeInspector == null)
                 return;
 
             if (Preview == null)
@@ -293,7 +293,7 @@ namespace Rusty.CutsceneEditor
             {
                 if (term != null)
                     Preview.Text += term;
-            }*/
+            }
         }
     }
 }
