@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=40 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=41 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_qwukw"]
@@ -33,6 +33,7 @@ Preview = []
 PreInstructions = []
 
 [sub_resource type="Resource" id="Resource_0i3d0"]
+resource_name = "Line: name"
 script = ExtResource("3_fplrf")
 DefaultValue = ""
 Id = "name"
@@ -44,9 +45,9 @@ resource_name = "LBL"
 script = ExtResource("2_uguea")
 Opcode = "LBL"
 Parameters = [SubResource("Resource_0i3d0")]
-DisplayName = ""
+DisplayName = "Label"
 Description = ""
-Category = ""
+Category = "Flow Control"
 Implementation = ""
 Preview = []
 PreInstructions = []
@@ -66,7 +67,7 @@ Opcode = "ERR"
 Parameters = [SubResource("Resource_wdv8u")]
 DisplayName = "Error"
 Description = "Push an error message and stop the cutscene player."
-Category = "FlowControl"
+Category = "Flow Control"
 Implementation = ""
 Preview = []
 PreInstructions = []
@@ -78,24 +79,26 @@ Opcode = "END"
 Parameters = []
 DisplayName = "End"
 Description = "Stop the cutscene player."
-Category = "FlowControl"
+Category = "Flow Control"
 Implementation = ""
 Preview = []
 PreInstructions = []
 
 [sub_resource type="Resource" id="Resource_g65gn"]
+resource_name = "Int: x"
 script = ExtResource("12_q4rbi")
 DefaultValue = 0
 Id = "x"
 DisplayName = "X"
-Description = ""
+Description = "The x-position of the editor node."
 
 [sub_resource type="Resource" id="Resource_1ekkv"]
+resource_name = "Int: y"
 script = ExtResource("12_q4rbi")
 DefaultValue = 0
 Id = "y"
 DisplayName = "Y"
-Description = ""
+Description = "The y-position of the editor node."
 
 [sub_resource type="Resource" id="Resource_btai4"]
 resource_name = "NOD"
@@ -103,7 +106,19 @@ script = ExtResource("2_uguea")
 Opcode = "NOD"
 Parameters = [SubResource("Resource_g65gn"), SubResource("Resource_1ekkv")]
 DisplayName = "Editor Node"
-Description = "A compiler marker that notifies the compiler that the next instruction that isn't part of a collection represents a compiler node."
+Description = "A compiler marker that denotes the beginning of an editor node. All instructions between it and the next EON instruction will be part of the node."
+Category = "Compiler"
+Implementation = ""
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_0ldyk"]
+resource_name = "EON"
+script = ExtResource("2_uguea")
+Opcode = "EON"
+Parameters = []
+DisplayName = "End of Node"
+Description = "A compiler marker that denotes the end of an editor node."
 Category = "Compiler"
 Implementation = ""
 Preview = []
@@ -128,7 +143,7 @@ Opcode = "CHO"
 Parameters = []
 DisplayName = "Choice Rule"
 Description = "A compiler marker that starts a choice collection. It should be followed by an EOR instruction."
-Category = ""
+Category = "Compiler"
 Implementation = ""
 Preview = []
 PreInstructions = []
@@ -140,7 +155,7 @@ Opcode = "TPL"
 Parameters = []
 DisplayName = "Tuple Rule"
 Description = "A compiler marker that starts a tuple collection. It should be followed by an EOR instruction."
-Category = ""
+Category = "Compiler"
 Implementation = ""
 Preview = []
 PreInstructions = []
@@ -152,7 +167,7 @@ Opcode = "LST"
 Parameters = []
 DisplayName = "List Rule"
 Description = "A compiler marker that starts a list collection. It should be followed by an EOR instruction."
-Category = ""
+Category = "Compiler"
 Implementation = ""
 Preview = []
 PreInstructions = []
@@ -164,7 +179,7 @@ Opcode = "EOR"
 Parameters = []
 DisplayName = "End of Rule"
 Description = "A compiler marker that denotes the end of a collection."
-Category = ""
+Category = "Compiler"
 Implementation = ""
 Preview = []
 PreInstructions = []
@@ -298,4 +313,4 @@ PreInstructions = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_yqmpw"), SubResource("Resource_l0vtb"), SubResource("Resource_kgp0a"), SubResource("Resource_hk6h5"), SubResource("Resource_btai4"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_ehv4j"), SubResource("Resource_2poj5"), SubResource("Resource_cgh5n")]
+Definitions = [SubResource("Resource_yqmpw"), SubResource("Resource_l0vtb"), SubResource("Resource_kgp0a"), SubResource("Resource_hk6h5"), SubResource("Resource_btai4"), SubResource("Resource_0ldyk"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_ehv4j"), SubResource("Resource_2poj5"), SubResource("Resource_cgh5n")]

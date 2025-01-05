@@ -18,6 +18,9 @@ namespace Rusty.CutsceneEditor.Compiler
             // Add inspector instruction.
             node.AddChild(InstructionCompiler.Compile(graphNode.NodeInspector));
 
+            // Add end-of-node instruction.
+            node.AddChild(GetEndOfNode(graphNode));
+
             return node;
         }
 
@@ -41,6 +44,15 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionInstance instance = new(definition);
 
             instance.Arguments[definition.GetParameterIndex(BuiltIn.LabelNameId)] = inspector.LabelName;
+
+            return new(instance.ToString(), new(set, definition, instance));
+        }
+
+        private static SubNode<NodeData> GetEndOfNode(CutsceneGraphNode graphNode)
+        {
+            InstructionSet set = graphNode.InstructionSet;
+            InstructionDefinition definition = set[BuiltIn.EndOfNodeOpcode];
+            InstructionInstance instance = new(definition);
 
             return new(instance.ToString(), new(set, definition, instance));
         }
