@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Rusty.Cutscenes;
 using Rusty.Cutscenes.Editor;
 
@@ -43,6 +44,29 @@ namespace Rusty.CutsceneEditor
                 default:
                     throw new ArgumentException($"Compile rule '{compileRule}' has an illegal type '{compileRule.GetType().Name}'.");
             }
+        }
+
+        /// <summary>
+        /// Get all output parameter inspectors associated with this compile rule inspectors and its sub inspectors.
+        /// </summary>
+        public List<ParameterInspector> GetOutputs()
+        {
+            List<ParameterInspector> Outputs = new();
+            Inspector[] subInspectors = GetActiveSubInspectors();
+            for (int i = 0; i < subInspectors.Length; i++)
+            {
+                List<ParameterInspector> preOutputs = new();
+                if (subInspectors[i] is PreInstructionInspector pre)
+                    preOutputs = pre.GetOutputs();
+                else if (subInspectors[i] is CompileRuleInspector rule)
+                    preOutputs = rule.GetOutputs();
+
+                foreach (ParameterInspector output in preOutputs)
+                {
+                    Outputs.Add(output);
+                }
+            }
+            return Outputs;
         }
     }
 }

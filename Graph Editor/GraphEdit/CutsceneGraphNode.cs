@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using System.Collections.Generic;
 using Rusty.Cutscenes;
 
 namespace Rusty.CutsceneEditor
@@ -215,7 +216,7 @@ namespace Rusty.CutsceneEditor
                 return;
 
             // Get outputs.
-            Array<ParameterInspector> outputs = NodeInspector.GetOutputs();
+            List<ParameterInspector> outputs = NodeInspector.GetOutputs();
 
             // Should we keep the main output?
             bool overrideMain = false;

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Godot;
 using Rusty.Cutscenes;
 using Rusty.EditorUI;
 
@@ -71,9 +70,32 @@ namespace Rusty.CutsceneEditor
             return CompileRules[index];
         }
 
-        public Godot.Collections.Array<ParameterInspector> GetOutputs()
+        /// <summary>
+        /// Get all output parameter inspectors of this instruction inspector and its associated compile rule inspectors.
+        /// </summary>
+        public List<ParameterInspector> GetOutputs()
         {
-            return new();
+            List<ParameterInspector> Outputs = new();
+            for (int i = 0; i < Parameters.Count; i++)
+            {
+                if (Parameters[i] is OutputParameterInspector output)
+                    Outputs.Add(output);
+            }
+
+            for (int i = 0; i < CompileRules.Count; i++)
+            {
+                List<ParameterInspector> preOutputs = new();
+                if (CompileRules[i] is PreInstructionInspector pre)
+                    preOutputs = pre.GetOutputs();
+                else if (CompileRules[i] is CompileRuleInspector rule)
+                    preOutputs = rule.GetOutputs();
+
+                foreach (ParameterInspector output in preOutputs)
+                {
+                    Outputs.Add(output);
+                }
+            }
+            return Outputs;
         }
 
         public string[] GetPreviewTerms()
