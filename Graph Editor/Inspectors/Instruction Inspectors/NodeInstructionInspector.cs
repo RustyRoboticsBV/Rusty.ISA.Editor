@@ -18,6 +18,7 @@ namespace Rusty.CutsceneEditor
         /* Private properties. */
         private LabeledIcon Title { get; set; }
         private LineField Label { get; set; }
+        private HSeparatorElement Bottom { get; set; }
 
         /* Constructors. */
         public NodeInstructionInspector() : base() { }
@@ -49,24 +50,35 @@ namespace Rusty.CutsceneEditor
         /* Protected methods. */
         protected override void Init()
         {
-            // Base inspector init.
+            // Base instruction inspector init.
             base.Init();
 
             // Set name.
             Name = $"NodeInstructionInspector ({Definition.Opcode})";
 
             // Add title text.
-            Title = new();
-            Title.LabelText = Definition.DisplayName;
-            Title.Value = Definition.Icon;
-            Title.Name = "Title";
+            Title = new()
+            {
+                Name = "Title",
+                LabelText = Definition.DisplayName,
+                Value = Definition.Icon
+            };
             InsertAt(0, Title);
 
             // Add label field.
-            Label = new();
-            Label.LabelText = "Label";
-            Label.Name = "Name";
+            Label = new()
+            {
+                Name = "Name",
+                LabelText = "Label"
+            };
             InsertAt(1, Label);
+
+            // Add bottom separator.
+            Bottom = new()
+            {
+                Name = "Bottom"
+            };
+            Add(Bottom);
         }
     }
 }

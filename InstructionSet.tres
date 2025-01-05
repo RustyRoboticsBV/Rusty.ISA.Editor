@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=41 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=53 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_qwukw"]
@@ -7,28 +7,40 @@
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/LineParameter.cs" id="3_fplrf"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/MultilineParameter.cs" id="4_ua166"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/PreInstruction.cs" id="6_8mjxr"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/FloatParameter.cs" id="6_eo4x7"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/OptionRule.cs" id="7_d1ujo"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/ListRule.cs" id="7_tiswy"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
 
-[sub_resource type="Resource" id="Resource_wvcvr"]
-resource_name = "Output: target_label"
-script = ExtResource("2_1oqv3")
-OverrideDefaultOutput = true
-UseParameterAsLabel = "target_label"
-Id = "target_label"
-DisplayName = "Target Label"
-Description = "The label that must be jumped to by the cutscene player."
+[sub_resource type="Resource" id="Resource_xui0c"]
+resource_name = "Line: name"
+script = ExtResource("3_fplrf")
+DefaultValue = "Start"
+Id = "name"
+DisplayName = "Name"
+Description = "The name of this start point."
 
-[sub_resource type="Resource" id="Resource_yqmpw"]
-resource_name = "GTO"
+[sub_resource type="Resource" id="Resource_85ea8"]
+resource_name = "STA"
 script = ExtResource("2_uguea")
-Opcode = "GTO"
-Parameters = [SubResource("Resource_wvcvr")]
-DisplayName = "Go-to"
-Description = "Make the cutscene player jump to a specific label instruction with some name."
+Opcode = "STA"
+Parameters = [SubResource("Resource_xui0c")]
+DisplayName = "Start"
+Description = "Marks a point from which the cutscene  can be played."
 Category = "Flow Control"
-Implementation = ""
+Implementation = "Continue();"
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_hk6h5"]
+resource_name = "END"
+script = ExtResource("2_uguea")
+Opcode = "END"
+Parameters = []
+DisplayName = "End"
+Description = "Stop the cutscene player."
+Category = "Flow Control"
+Implementation = "Stop();"
 Preview = []
 PreInstructions = []
 
@@ -46,9 +58,30 @@ script = ExtResource("2_uguea")
 Opcode = "LBL"
 Parameters = [SubResource("Resource_0i3d0")]
 DisplayName = "Label"
-Description = ""
+Description = "Marks a possible target position of a GTO instruction."
 Category = "Flow Control"
-Implementation = ""
+Implementation = "Continue();"
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_wvcvr"]
+resource_name = "Output: target_label"
+script = ExtResource("2_1oqv3")
+OverrideDefaultOutput = true
+UseParameterAsLabel = "target_label"
+Id = "target_label"
+DisplayName = "Target Label"
+Description = "The label that must be jumped to by the cutscene player."
+
+[sub_resource type="Resource" id="Resource_yqmpw"]
+resource_name = "GTO"
+script = ExtResource("2_uguea")
+Opcode = "GTO"
+Parameters = [SubResource("Resource_wvcvr")]
+DisplayName = "Go-to"
+Description = "Make the cutscene player jump to a specific LBL instruction with some name."
+Category = "Flow Control"
+Implementation = "Goto([target_label]);"
 Preview = []
 PreInstructions = []
 
@@ -68,19 +101,8 @@ Parameters = [SubResource("Resource_wdv8u")]
 DisplayName = "Error"
 Description = "Push an error message and stop the cutscene player."
 Category = "Flow Control"
-Implementation = ""
-Preview = []
-PreInstructions = []
-
-[sub_resource type="Resource" id="Resource_hk6h5"]
-resource_name = "END"
-script = ExtResource("2_uguea")
-Opcode = "END"
-Parameters = []
-DisplayName = "End"
-Description = "Stop the cutscene player."
-Category = "Flow Control"
-Implementation = ""
+Implementation = "Error([message]);
+Stop();"
 Preview = []
 PreInstructions = []
 
@@ -112,13 +134,13 @@ Implementation = ""
 Preview = []
 PreInstructions = []
 
-[sub_resource type="Resource" id="Resource_0ldyk"]
-resource_name = "EON"
+[sub_resource type="Resource" id="Resource_adnbf"]
+resource_name = "PRE"
 script = ExtResource("2_uguea")
-Opcode = "EON"
+Opcode = "PRE"
 Parameters = []
-DisplayName = "End of Node"
-Description = "A compiler marker that denotes the end of an editor node."
+DisplayName = "Pre-Instruction Group"
+Description = "A compiler marker that groups subsequent instructions together, wherein the last instruction in the group represents the \"main\" instruction and the rest represent associated pre-instructions. The group should be closed with an EOB instruction."
 Category = "Compiler"
 Implementation = ""
 Preview = []
@@ -130,7 +152,7 @@ script = ExtResource("2_uguea")
 Opcode = "OPT"
 Parameters = []
 DisplayName = "Option Rule"
-Description = "A compiler marker that starts an option collection. It should be followed by an EOR instruction."
+Description = "A compiler marker that starts an option collection. The collection should be closed with an EOB instruction."
 Category = "Compiler"
 Implementation = ""
 Preview = []
@@ -142,7 +164,7 @@ script = ExtResource("2_uguea")
 Opcode = "CHO"
 Parameters = []
 DisplayName = "Choice Rule"
-Description = "A compiler marker that starts a choice collection. It should be followed by an EOR instruction."
+Description = "A compiler marker that starts a choice collection. The collection should be closed with an EOB instruction."
 Category = "Compiler"
 Implementation = ""
 Preview = []
@@ -154,7 +176,7 @@ script = ExtResource("2_uguea")
 Opcode = "TPL"
 Parameters = []
 DisplayName = "Tuple Rule"
-Description = "A compiler marker that starts a tuple collection. It should be followed by an EOR instruction."
+Description = "A compiler marker that starts a tuple collection. The collection should be closed with an EOB instruction."
 Category = "Compiler"
 Implementation = ""
 Preview = []
@@ -166,19 +188,19 @@ script = ExtResource("2_uguea")
 Opcode = "LST"
 Parameters = []
 DisplayName = "List Rule"
-Description = "A compiler marker that starts a list collection. It should be followed by an EOR instruction."
+Description = "A compiler marker that starts a list collection. The collection should be closed with an EOB instruction."
 Category = "Compiler"
 Implementation = ""
 Preview = []
 PreInstructions = []
 
 [sub_resource type="Resource" id="Resource_itw8j"]
-resource_name = "EOR"
+resource_name = "EOB"
 script = ExtResource("2_uguea")
-Opcode = "EOR"
+Opcode = "EOB"
 Parameters = []
-DisplayName = "End of Rule"
-Description = "A compiler marker that denotes the end of a collection."
+DisplayName = "End of Block"
+Description = "A compiler marker that denotes the end of a group of instructions, such as an editor node, a pre-instruction group or a collection."
 Category = "Compiler"
 Implementation = ""
 Preview = []
@@ -200,6 +222,64 @@ DisplayName = "Select Dialog Window"
 Description = ""
 Category = ""
 Implementation = ""
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_x3ncc"]
+resource_name = "text"
+script = ExtResource("3_fplrf")
+DefaultValue = "Blah..."
+Id = "text"
+DisplayName = "Text"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_so2et"]
+resource_name = "target_label"
+script = ExtResource("2_1oqv3")
+OverrideDefaultOutput = true
+UseParameterAsLabel = "text"
+Id = "target_label"
+DisplayName = "Target Label"
+Description = ""
+
+[sub_resource type="Resource" id="Resource_cgh5n"]
+resource_name = "CTX"
+script = ExtResource("2_uguea")
+Opcode = "CTX"
+Parameters = [SubResource("Resource_x3ncc"), SubResource("Resource_so2et")]
+DisplayName = "Add Dialog Choice"
+Description = "Adds a dialog choice to the next TXT instruction."
+Category = "Dialog"
+Implementation = ""
+Preview = []
+PreInstructions = []
+
+[sub_resource type="Resource" id="Resource_jpndk"]
+resource_name = "Line: text"
+script = ExtResource("4_ua166")
+DefaultValue = " Blah..."
+Id = "text"
+DisplayName = "Text"
+Description = "The substring to append to the next line of dialog."
+
+[sub_resource type="Resource" id="Resource_3uqjj"]
+resource_name = "Float: wait_time"
+script = ExtResource("6_eo4x7")
+DefaultValue = 1.0
+Id = "wait_time"
+DisplayName = "Wait Time (s)"
+Description = "The time that the dialog window will wait before the appended text appears."
+
+[sub_resource type="Resource" id="Resource_hgc2x"]
+resource_name = "APN"
+script = ExtResource("2_uguea")
+Opcode = "APN"
+Parameters = [SubResource("Resource_jpndk"), SubResource("Resource_3uqjj")]
+DisplayName = "Append Text"
+Description = "Append the next TXT instruction with additional text."
+Category = "Dialog"
+Implementation = "Push([text]);
+Push([wait_time]);"
 Preview = []
 PreInstructions = []
 
@@ -269,6 +349,25 @@ AddButtonText = "Add Choice"
 PreviewSeparator = "
 "
 
+[sub_resource type="Resource" id="Resource_n7yk1"]
+resource_name = "APN"
+script = ExtResource("6_8mjxr")
+Id = "extension"
+DisplayName = "Extension"
+Description = ""
+Opcode = "APN"
+
+[sub_resource type="Resource" id="Resource_sd1fk"]
+resource_name = "List(APN)"
+script = ExtResource("7_tiswy")
+Id = "extensions"
+DisplayName = "Extensions"
+Description = ""
+Type = SubResource("Resource_n7yk1")
+AddButtonText = "Add Extension"
+PreviewSeparator = "
+"
+
 [sub_resource type="Resource" id="Resource_2poj5"]
 resource_name = "TXT"
 script = ExtResource("2_uguea")
@@ -277,40 +376,51 @@ Parameters = [SubResource("Resource_1l0fw"), SubResource("Resource_xms77"), SubR
 DisplayName = "Set Text"
 Description = "Write text to the selected dialog window."
 Category = "Dialog"
-Implementation = ""
+Implementation = "Push([speaker]);
+Push([mood]);
+Push([body]);"
 EditorNode = SubResource("Resource_s23li")
 Preview = []
-PreInstructions = [SubResource("Resource_1ynrp"), SubResource("Resource_qp3j0")]
+PreInstructions = [SubResource("Resource_1ynrp"), SubResource("Resource_qp3j0"), SubResource("Resource_sd1fk")]
 
-[sub_resource type="Resource" id="Resource_x3ncc"]
-resource_name = "text"
-script = ExtResource("3_fplrf")
-DefaultValue = "Blah..."
-Id = "text"
-DisplayName = "Text"
-Description = ""
+[sub_resource type="Resource" id="Resource_po8sr"]
+script = ExtResource("1_qwukw")
+Priority = -1
+MinWidth = 128
+MainColor = Color(0.411765, 0.411765, 0.411765, 1)
+TextColor = Color(1, 1, 1, 1)
 
-[sub_resource type="Resource" id="Resource_so2et"]
-resource_name = "target_label"
-script = ExtResource("2_1oqv3")
-OverrideDefaultOutput = true
-UseParameterAsLabel = "text"
-Id = "target_label"
-DisplayName = "Target Label"
-Description = ""
+[sub_resource type="Resource" id="Resource_5ywxg"]
+script = ExtResource("6_8mjxr")
+Id = "line"
+DisplayName = "Line"
+Description = "A line of dialog."
+Opcode = "TXT"
 
-[sub_resource type="Resource" id="Resource_cgh5n"]
-resource_name = "CTX"
+[sub_resource type="Resource" id="Resource_ujck7"]
+resource_name = "SEQ"
+script = ExtResource("7_tiswy")
+Id = "lines"
+DisplayName = "Lines of Dialog"
+Description = "The lines of dialog inside this text sequence."
+Type = SubResource("Resource_5ywxg")
+AddButtonText = "Add Line"
+PreviewSeparator = "
+"
+
+[sub_resource type="Resource" id="Resource_jdwf2"]
+resource_name = "SEQ"
 script = ExtResource("2_uguea")
-Opcode = "CTX"
-Parameters = [SubResource("Resource_x3ncc"), SubResource("Resource_so2et")]
-DisplayName = "Add Dialog Choice"
-Description = "Adds a dialog choice to the next TXT instruction."
+Opcode = "SEQ"
+Parameters = []
+DisplayName = "Text Sequence"
+Description = ""
 Category = "Dialog"
 Implementation = ""
+EditorNode = SubResource("Resource_po8sr")
 Preview = []
-PreInstructions = []
+PreInstructions = [SubResource("Resource_ujck7")]
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_yqmpw"), SubResource("Resource_l0vtb"), SubResource("Resource_kgp0a"), SubResource("Resource_hk6h5"), SubResource("Resource_btai4"), SubResource("Resource_0ldyk"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_ehv4j"), SubResource("Resource_2poj5"), SubResource("Resource_cgh5n")]
+Definitions = [SubResource("Resource_85ea8"), SubResource("Resource_hk6h5"), SubResource("Resource_l0vtb"), SubResource("Resource_yqmpw"), SubResource("Resource_kgp0a"), SubResource("Resource_btai4"), SubResource("Resource_adnbf"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_ehv4j"), SubResource("Resource_cgh5n"), SubResource("Resource_hgc2x"), SubResource("Resource_2poj5"), SubResource("Resource_jdwf2")]

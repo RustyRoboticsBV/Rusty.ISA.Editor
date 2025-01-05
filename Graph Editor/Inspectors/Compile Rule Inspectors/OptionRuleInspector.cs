@@ -1,4 +1,5 @@
-﻿using Rusty.Cutscenes;
+﻿using Godot;
+using Rusty.Cutscenes;
 using Rusty.EditorUI;
 using Rusty.Graphs;
 
@@ -38,7 +39,7 @@ namespace Rusty.CutsceneEditor
             if (base.CopyStateFrom(other))
             {
                 CheckBoxField = GetAt(0) as CheckBoxField;
-                ChildRuleInspector = GetAt(1) as CompileRuleInspector;
+                ChildRuleInspector = GetAt(1) as Inspector;
                 return true;
             }
             else

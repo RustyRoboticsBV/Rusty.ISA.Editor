@@ -52,6 +52,17 @@ namespace Rusty.CutsceneEditor
             return childInspectors;
         }
 
+        /* Godot overrides. */
+        public override void _Process(double delta)
+        {
+            base._Process(delta);
+
+            for (int i = 0; i < ListElement.Count; i++)
+            {
+                ListElement[i].HeaderText = $"{Rule.Type.DisplayName} #{i + 1}";;
+            }
+        }
+
         /* Protected methods. */
         protected override void Init()
         {
@@ -62,9 +73,12 @@ namespace Rusty.CutsceneEditor
             Name = $"ListRule ({Rule.Id})";
 
             // Add list element.
-            ListElement = new ListElement();
-            ListElement.HeaderText = Rule.DisplayName;
-            ListElement.Template = Create(InstructionSet, Rule.Type);
+            ListElement = new()
+            {
+                HeaderText = Rule.DisplayName,
+                AddButtonText = Rule.AddButtonText,
+                Template = Create(InstructionSet, Rule.Type)
+            };
             Add(ListElement);
         }
     }

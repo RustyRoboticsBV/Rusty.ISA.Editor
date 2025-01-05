@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://Graph Editor/Resizer/InspectorResizer.cs" id="3_pvjr1"]
 [ext_resource type="Resource" uid="uid://dnt3g5dpjm0pd" path="res://InstructionSet.tres" id="4_ggl3d"]
 
-[node name="CutsceneEditor" type="VBoxContainer" node_paths=PackedStringArray("OpenButton", "OpenDialog", "SaveButton", "SaveDialog", "DebugCompileButton", "DebugDecompileButton", "Inspector", "GraphEdit")]
+[node name="CutsceneEditor" type="VBoxContainer" node_paths=PackedStringArray("OpenButton", "OpenDialog", "SaveButton", "SaveDialog", "DebugCompileButton", "DebugDecompileButton", "GraphEdit")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -19,7 +19,6 @@ SaveButton = NodePath("Buttons/HBoxContainer/Save")
 SaveDialog = NodePath("SaveDialog")
 DebugCompileButton = NodePath("Buttons/HBoxContainer/DebugCompile")
 DebugDecompileButton = NodePath("Buttons/HBoxContainer/DebugDecompile")
-Inspector = NodePath("HBoxContainer/Inspector/ScrollContainer/Header/VBoxContainer")
 GraphEdit = NodePath("HBoxContainer/CutsceneGraphEdit")
 
 [node name="Buttons" type="MarginContainer" parent="."]
@@ -88,6 +87,7 @@ Target = NodePath("../Inspector")
 [node name="CutsceneGraphEdit" type="GraphEdit" parent="HBoxContainer" node_paths=PackedStringArray("PropertiesInspector")]
 layout_mode = 2
 size_flags_horizontal = 3
+scroll_offset = Vector2(0, -8)
 minimap_enabled = false
 show_menu = false
 script = ExtResource("3_mbpx3")
@@ -107,3 +107,6 @@ auto_translate_mode = 1
 initial_position = 1
 size = Vector2i(700, 400)
 ok_button_text = "Save"
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2

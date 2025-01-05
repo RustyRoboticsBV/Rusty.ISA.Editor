@@ -1,5 +1,4 @@
 ﻿using System;
-using Rusty.Cutscenes;
 using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
@@ -24,16 +23,6 @@ namespace Rusty.CutsceneEditor.Compiler
                 default:
                     throw new ArgumentException($"The inspector '{inspector.Name}' was of illegal type '{inspector.GetType().Name}'.");
             }
-        }
-
-        /* Protected methods. */
-        protected static SubNode<NodeData> GetEndOfRule(Inspector inspector)
-        {
-            InstructionSet set = inspector.InstructionSet;
-            InstructionDefinition definition = set[BuiltIn.EndOfRuleOpcode];
-            InstructionInstance instance = new(definition);
-
-            return new(instance.ToString(), new(set, definition, instance));
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[BuiltIn.TupleRuleOpcode];
             InstructionInstance instance = new(definition);
 
-            SubNode<NodeData> tuple = new SubNode<NodeData>(BuiltIn.TupleRuleOpcode, new(set, definition, instance));
+            SubNode<NodeData> tuple = new SubNode<NodeData>(instance.ToString(), new(set, definition, instance));
 
             // Child rules.
             Inspector[] childRules = inspector.GetActiveSubInspectors();
@@ -23,7 +23,7 @@ namespace Rusty.CutsceneEditor.Compiler
             }
 
             // End of rule.
-            tuple.AddChild(GetEndOfRule(inspector));
+            tuple.AddChild(GetEndOfBlock(inspector.InstructionSet));
 
             return tuple;
         }

@@ -11,15 +11,18 @@ namespace Rusty.CutsceneEditor.Compiler
             // Add node instruction.
             RootNode<NodeData> node = GetNode(graphNode);
 
-            // Add (optional) label instruction.
+            // Add label instruction.
+            node.AddChild(GetLabel(graphNode.NodeInspector));
+
+            // Add (optional) start instruction.
             if (graphNode.NodeInspector.LabelName != "")
-                node.AddChild(GetLabel(graphNode.NodeInspector));
+                node.AddChild(GetStart(graphNode.NodeInspector));
 
             // Add inspector instruction.
             node.AddChild(InstructionCompiler.Compile(graphNode.NodeInspector));
 
-            // Add end-of-node instruction.
-            node.AddChild(GetEndOfNode(graphNode));
+            // Add end-of-block instruction.
+            node.AddChild(GetEndOfBlock(graphNode.InstructionSet));
 
             return node;
         }
@@ -37,22 +40,24 @@ namespace Rusty.CutsceneEditor.Compiler
             return new(instance.ToString(), new(set, definition, instance));
         }
 
+        private static SubNode<NodeData> GetStart(NodeInstructionInspector inspector)
+        {
+            InstructionSet set = inspector.InstructionSet;
+            InstructionDefinition definition = set[BuiltIn.StartOpcode];
+            InstructionInstance instance = new(definition);
+
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.StartNameId)] = inspector.LabelName;
+
+            return new(instance.ToString(), new(set, definition, instance));
+        }
+
         private static SubNode<NodeData> GetLabel(NodeInstructionInspector inspector)
         {
             InstructionSet set = inspector.InstructionSet;
             InstructionDefinition definition = set[BuiltIn.LabelOpcode];
             InstructionInstance instance = new(definition);
 
-            instance.Arguments[definition.GetParameterIndex(BuiltIn.LabelNameId)] = inspector.LabelName;
-
-            return new(instance.ToString(), new(set, definition, instance));
-        }
-
-        private static SubNode<NodeData> GetEndOfNode(CutsceneGraphNode graphNode)
-        {
-            InstructionSet set = graphNode.InstructionSet;
-            InstructionDefinition definition = set[BuiltIn.EndOfNodeOpcode];
-            InstructionInstance instance = new(definition);
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.LabelNameId)] = "MISSING_LABEL";
 
             return new(instance.ToString(), new(set, definition, instance));
         }

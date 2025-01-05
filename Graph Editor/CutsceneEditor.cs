@@ -18,8 +18,6 @@ namespace Rusty.CutsceneEditor
         [Export] public Button DebugCompileButton { get; private set; }
         [Export] public Button DebugDecompileButton { get; private set; }
 
-        [Export] public VBoxContainer Inspector { get; private set; }
-
         [Export] public CutsceneGraphEdit GraphEdit { get; private set; }
 
         /* Godot overrides. */
@@ -60,14 +58,19 @@ namespace Rusty.CutsceneEditor
             for (int i = 0; i < GraphEdit.GetChildCount(); i++)
             {
                 Node node = GraphEdit.GetChild(i);
+                if (!(node is CutsceneGraphNode graphNode))
+                    continue;
+
                 try
                 {
-                    CutsceneGraphNode graphNode = node as CutsceneGraphNode;
                     if (str != "")
                         str += "\n";
                     str += GraphNodeCompiler.GetInstruction(graphNode).ToString();
                 }
-                catch { }
+                catch (System.Exception ex)
+                {
+                    GD.PrintErr("COULD NOT COMPILE DUE TO ERROR:\n" + ex);
+                }
             }
             DisplayServer.ClipboardSet(str);
             GD.Print("Debug compilation result saved to clipboard!");

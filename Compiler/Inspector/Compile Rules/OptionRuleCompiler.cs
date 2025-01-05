@@ -13,7 +13,7 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[BuiltIn.OptionRuleOpcode];
             InstructionInstance instance = new(definition);
 
-            SubNode<NodeData> option = new SubNode<NodeData>(BuiltIn.OptionRuleOpcode, new(set, definition, instance));
+            SubNode<NodeData> option = new SubNode<NodeData>(instance.ToString(), new(set, definition, instance));
 
             // Child rules.
             Inspector[] childRules = inspector.GetActiveSubInspectors();
@@ -23,7 +23,7 @@ namespace Rusty.CutsceneEditor.Compiler
             }
 
             // End of rule.
-            option.AddChild(GetEndOfRule(inspector));
+            option.AddChild(GetEndOfBlock(inspector.InstructionSet));
 
             return option;
         }
