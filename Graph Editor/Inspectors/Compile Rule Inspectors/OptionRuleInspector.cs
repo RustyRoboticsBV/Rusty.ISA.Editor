@@ -1,7 +1,6 @@
 ﻿using Godot;
 using Rusty.Cutscenes;
 using Rusty.EditorUI;
-using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor
 {
