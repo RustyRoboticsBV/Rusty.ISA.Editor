@@ -41,6 +41,9 @@ namespace Rusty.CutsceneEditor.Compiler
 
             preInstructionGroup.AddChild(new(instance.ToString(), new(set, definition, instance)));
 
+            // End of pre-instruction group.
+            preInstructionGroup.AddChild(GetEndOfBlock(inspector.InstructionSet));
+
             return preInstructionGroup;
         }
 
