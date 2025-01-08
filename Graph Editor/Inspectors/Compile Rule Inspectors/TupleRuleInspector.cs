@@ -1,6 +1,6 @@
-﻿using Rusty.Cutscenes;
+﻿using System.Collections.Generic;
+using Rusty.Cutscenes;
 using Rusty.EditorUI;
-using System.Collections.Generic;
 
 namespace Rusty.CutsceneEditor
 {

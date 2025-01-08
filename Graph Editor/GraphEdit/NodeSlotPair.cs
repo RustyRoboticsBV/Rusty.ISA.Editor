@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Rusty.CutsceneEditor
 {
     /// <summary>
-    /// An input-output combo element.
+    /// An input/output pair element for cutscene graph nodes.
     /// </summary>
     public partial class NodeSlotPair : HBoxContainer
     {

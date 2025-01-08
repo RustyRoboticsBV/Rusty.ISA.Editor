@@ -1,16 +1,22 @@
 using Godot;
 using Rusty.Cutscenes;
+using System.Collections.Generic;
 
 namespace Rusty.CutsceneEditor
 {
+    /// <summary>
+    /// A graph edit for cutscene nodes.
+    /// </summary>
     [GlobalClass]
     public partial class CutsceneGraphEdit : GraphEdit
     {
         /* Public properties. */
         public static int LineHeight => 32;
-
+        
         [Export] public VBoxContainer PropertiesInspector { get; set; }
         [Export] public InstructionSet InstructionSet { get; set; }
+        
+        public List<CutsceneGraphNode> Nodes { get; } = new();
 
         /* Private properties. */
         private AddNodePopup Popup { get; set; }
@@ -42,6 +48,13 @@ namespace Rusty.CutsceneEditor
 
             Popup.SelectedInstruction += OnPopupSelectedInstruction;
 
+            // Find nodes.
+            foreach (Node child in GetChildren())
+            {
+                if (child is CutsceneGraphNode node)
+                    Nodes.Add(node);
+            }
+
             // Set up events.
             ConnectionRequest += OnConnect;
             DisconnectionRequest += OnDisconnect;
@@ -69,6 +82,7 @@ namespace Rusty.CutsceneEditor
             InstructionInstance[] instances = null)
         {
             CutsceneGraphNode node = new();
+            Nodes.Add(node);
             AddChild(node);
 
             node.InstructionSet = InstructionSet;
@@ -89,7 +103,6 @@ namespace Rusty.CutsceneEditor
         /* Private methods. */
         private void OnPopupSelectedInstruction(InstructionDefinition definition)
         {
-            GD.Print(definition);
             if (definition != null)
             {
                 Vector2 positionOffset = (GetGlobalMousePosition() - GlobalPosition + ScrollOffset) / Zoom;
@@ -138,8 +151,11 @@ namespace Rusty.CutsceneEditor
         {
             foreach (Variant obj in nodes)
             {
+                // Get the node.
                 StringName nodeName = obj.AsStringName();
                 CutsceneGraphNode node = GetNode(nodeName);
+
+                // Disconnect the node from other nodes.
                 for (int i = 0; i < node.Slots.Count; i++)
                 {
                     NodeSlotPair slot = node.Slots[i];
@@ -158,6 +174,9 @@ namespace Rusty.CutsceneEditor
                     if (toSlot != null)
                         OnDisconnect(nodeName, i, toSlot.Node.Name, 0);
                 }
+
+                // Remove from list.
+                Nodes.Remove(node);
             }
         }
 

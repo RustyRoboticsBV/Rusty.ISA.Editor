@@ -2,9 +2,13 @@
 using Godot;
 using Rusty.Cutscenes;
 using Rusty.CutsceneEditor.Compiler;
+using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor
 {
+    /// <summary>
+    /// The cutscene editor window. Contains a set of file buttons, an inspector and a graph edit.
+    /// </summary>
     [GlobalClass]
     public partial class CutsceneEditor : VBoxContainer
     {
@@ -17,6 +21,8 @@ namespace Rusty.CutsceneEditor
         [Export] public FileDialog SaveDialog { get; private set; }
         [Export] public Button DebugCompileButton { get; private set; }
         [Export] public Button DebugDecompileButton { get; private set; }
+
+        [Export] public VBoxContainer Inspector { get;  private set; }
 
         [Export] public CutsceneGraphEdit GraphEdit { get; private set; }
 
@@ -54,24 +60,7 @@ namespace Rusty.CutsceneEditor
 
         private void OnDebugCompile()
         {
-            string str = "";
-            for (int i = 0; i < GraphEdit.GetChildCount(); i++)
-            {
-                Node node = GraphEdit.GetChild(i);
-                if (!(node is CutsceneGraphNode graphNode))
-                    continue;
-
-                try
-                {
-                    if (str != "")
-                        str += "\n";
-                    str += GraphNodeCompiler.GetInstruction(graphNode).ToString();
-                }
-                catch (System.Exception ex)
-                {
-                    GD.PrintErr("COULD NOT COMPILE DUE TO ERROR:\n" + ex);
-                }
-            }
+            string str = GraphEditCompiler.Compile(GraphEdit);
             DisplayServer.ClipboardSet(str);
             GD.Print("Debug compilation result saved to clipboard!");
         }

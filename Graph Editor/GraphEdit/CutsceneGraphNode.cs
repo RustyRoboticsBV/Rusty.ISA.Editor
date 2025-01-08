@@ -5,6 +5,9 @@ using Rusty.Cutscenes;
 
 namespace Rusty.CutsceneEditor
 {
+    /// <summary>
+    /// A graph edit node representing a collection of cutscene instructions.
+    /// </summary>
     [GlobalClass]
     public partial class CutsceneGraphNode : GraphNode
     {

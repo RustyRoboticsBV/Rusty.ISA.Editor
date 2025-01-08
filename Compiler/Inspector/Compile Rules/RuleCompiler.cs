@@ -3,6 +3,9 @@ using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
+    /// <summary>
+    /// A base class for rule inspector compilers.
+    /// </summary>
     public abstract class RuleCompiler : Compiler
     {
         /* Public methods. */

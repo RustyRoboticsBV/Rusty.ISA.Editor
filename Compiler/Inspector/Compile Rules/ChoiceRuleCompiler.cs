@@ -3,6 +3,9 @@ using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
+    /// <summary>
+    /// A compiler that converts a choice rule inspector into a graph node.
+    /// </summary>
     public abstract class ChoiceRuleCompiler : RuleCompiler
     {
         /* Public methods. */

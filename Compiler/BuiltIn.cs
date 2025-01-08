@@ -9,7 +9,7 @@
         // Opcodes.
         public const string StartOpcode = "STA";
         public const string LabelOpcode = "LBL";
-        public const string GoToOpcode = "GTO";
+        public const string GotoOpcode = "GTO";
         public const string ErrorOpcode = "ERR";
         public const string EndOpcode = "END";
 

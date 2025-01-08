@@ -3,6 +3,9 @@ using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
+    /// <summary>
+    /// A compiler that converts instruction inspectors to graph nodes,
+    /// </summary>
     public abstract class InstructionCompiler : Compiler
     {
         /* Public methods. */

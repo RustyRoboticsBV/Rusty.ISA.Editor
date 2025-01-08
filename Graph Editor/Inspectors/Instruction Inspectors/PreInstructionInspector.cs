@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Godot;
-using Rusty.Cutscenes;
+﻿using Rusty.Cutscenes;
 using Rusty.EditorUI;
 
 namespace Rusty.CutsceneEditor

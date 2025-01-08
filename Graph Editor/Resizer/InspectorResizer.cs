@@ -2,6 +2,9 @@ using Godot;
 
 namespace Rusty.Cutscenes.Editor
 {
+    /// <summary>
+    /// A horizontal resizer for the inspector window.
+    /// </summary>
     [GlobalClass]
     public partial class InspectorResizer : VSeparator
     {

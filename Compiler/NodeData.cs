@@ -19,5 +19,10 @@ namespace Rusty.CutsceneEditor.Compiler
             Definition = definition;
             Instance = instance;
         }
+
+        public override string ToString()
+        {
+            return Instance.ToString();
+        }
     }
 }

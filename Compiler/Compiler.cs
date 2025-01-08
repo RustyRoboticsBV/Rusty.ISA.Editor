@@ -4,7 +4,7 @@ using Rusty.Graphs;
 namespace Rusty.CutsceneEditor.Compiler
 {
     /// <summary>
-    /// Base class for all inspector to graph node compiler.
+    /// A base class for all inspector to graph node compilers.
     /// </summary>
     public abstract class Compiler
     {
