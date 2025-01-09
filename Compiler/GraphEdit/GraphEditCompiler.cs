@@ -1,151 +1,12 @@
-﻿using System.Collections.Generic;
-using Godot;
-using Rusty.Cutscenes;
+﻿using Rusty.Cutscenes;
 using Rusty.Graphs;
 using Rusty.Maps;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
-    namespace Rusty.Collections
-    {
-        /// <summary>
-        /// A list that uses a dictionary for faster Contains and IndexOf calls at the cost of slower InsertAt calls. May only
-        /// contain unique values.
-        /// </summary>
-        public class ListDict<T>
-        {
-            /* Public properties. */
-            public int Count => Values.Count;
-
-            /* Private properties. */
-            private List<T> Values { get; } = new();
-            private Dictionary<T, int> Indices { get; } = new();
-
-            /* Constructors. */
-            public ListDict() { }
-
-            /* Indexers. */
-            public T this[int index] => Values[index];
-            public int this[T value] => Indices[value];
-
-            /* Public methods. */
-            public bool Contains(T value)
-            {
-                return Indices.ContainsKey(value);
-            }
-
-            public int IndexOf(T value)
-            {
-                return Indices[value];
-            }
-
-            public void Add(T value)
-            {
-                Indices.Add(value, Values.Count);
-                Values.Add(value);
-            }
-
-            public void Insert(int index, T value)
-            {
-                for (int i = index; i < Values.Count; i++)
-                {
-                    Indices[Values[i]] = i + 1;
-                }
-                Values.Insert(index, value);
-                Indices.Add(value, index);
-            }
-
-            public void Remove(T value)
-            {
-                Values.RemoveAt(Indices[value]);
-                Indices.Remove(value);
-            }
-
-            public void RemoveAt(int index)
-            {
-                Indices.Remove(Values[index]);
-                Values.RemoveAt(index);
-            }
-
-            public void Clear()
-            {
-                Values.Clear();
-                Indices.Clear();
-            }
-        }
-
-        public class Registry<T1, T2>
-        {
-            public ListDict<T1> List1 { get; } = new();
-            public ListDict<T2> List2 { get; } = new();
-
-            /* Constructors. */
-            public Registry() { }
-
-            /* Indexers. */
-            public (T1, T2) this[int index] => new(List1[index], List2[index]);
-            public int this[T1 item] => List1[item];
-            public int this[T2 item] => List2[item];
-
-            /* Public methods. */
-            public bool Contains(T1 item)
-            {
-                return List1.Contains(item);
-            }
-
-            public bool Contains(T2 item)
-            {
-                return List2.Contains(item);
-            }
-
-            public int IndexOf(T1 item)
-            {
-                return List1[item];
-            }
-
-            public int IndexOf(T2 item)
-            {
-                return List2[item];
-            }
-
-            public void Add(T1 item1, T2 item2)
-            {
-                List1.Add(item1);
-                List2.Add(item2);
-            }
-
-            public void Insert(int index, T1 item1, T2 item2)
-            {
-                List1.Insert(index, item1);
-                List2.Insert(index, item2);
-            }
-
-            public void Remove(T1 item)
-            {
-                List2.RemoveAt(IndexOf(item));
-                List1.Remove(item);
-            }
-
-            public void Remove(T2 item)
-            {
-                List1.RemoveAt(IndexOf(item));
-                List2.Remove(item);
-            }
-
-            public void RemoveAt(int index)
-            {
-                List1.RemoveAt(index);
-                List2.RemoveAt(index);
-            }
-
-            public void Clear()
-            {
-                List1.Clear();
-                List2.Clear();
-            }
-        }
-    }
-
+    /// <summary>
+    /// Compile a graph edit into a code string.
+    /// </summary>
     public abstract class GraphEditCompiler : Compiler
     {
         /* Public methods. */
@@ -153,12 +14,13 @@ namespace Rusty.CutsceneEditor.Compiler
         /// Compile a graph edit into a compiler graph that represents the finished program. It consists of the following steps:]
         /// <br/>1. Create non-connected compiler nodes, one for each graph edit node.
         /// <br/>2. Connect all the compiler nodes, according to connections in the graph edit.
-        /// <br/>   2.1 We can insert end nodes while doing this.
         /// <br/>3. Find the start nodes.
         /// <br/>4. Figure out the execution order.
-        /// <br/>   4.1 We can set node labels while doing this.
-        /// <br/>   4.2 We can insert go-to's while doing this.
-        /// <br/>   4.3 We can set output parameter values while doing this.
+        /// <br/>   4.1 Insert end nodes while doing this.
+        /// <br/>   4.2 Insert go-to's while doing this.
+        /// <br/>   4.3 Set node labels while doing this.
+        /// <br/>   4.4 Set output parameter values while doing this.
+        /// <br/>5. Compile to code.
         /// </summary>
         public static string Compile(CutsceneGraphEdit graphEdit)
         {
@@ -171,7 +33,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 graph.AddNode(node);
             }
 
-            // 2. Connect nodes & insert ends.
+            // 2. Connect nodes.
             for (int i = 0; i < graphEdit.Nodes.Count; i++)
             {
                 // Get editor & compiler node.
@@ -181,14 +43,9 @@ namespace Rusty.CutsceneEditor.Compiler
                 // For each output slot...
                 for (int j = 0; j < fromEditorNode.Slots.Count; j++)
                 {
-                    // Add end instruction if necessary.
+                    // Skip empty outputs.
                     if (fromEditorNode.Slots[j].Output == null)
-                    {
-                        RootNode<NodeData> end = CompilerNodeMaker.Create(graphEdit.InstructionSet, BuiltIn.EndOpcode);
-                        graph.AddNode(end);
-
-                        fromCompilerNode.ConnectTo(end);
-                    }
+                        continue;
 
                     // Else, connect nodes.
                     else
@@ -243,12 +100,12 @@ namespace Rusty.CutsceneEditor.Compiler
                     }
                     catch
                     {
-                        code += $"ERR,\"Could not compile node {i}!\"";
+                        code += $"{BuiltIn.ErrorOpcode},\"Could not compile node {i}!\"";
                     }
                 }
                 catch
                 {
-                    code += $"ERR,\"Missing node {i}!\"";
+                    code += $"{BuiltIn.ErrorOpcode},\"Missing node {i}!\"";
                 }
             }
             return code;
@@ -274,8 +131,26 @@ namespace Rusty.CutsceneEditor.Compiler
             {
                 RootNode<NodeData> toNode = node.Outputs[i].ToNode;
 
+                // If there was no successor node, add an end instead.
+                if (toNode == null)
+                {
+                    // Create end node.
+                    RootNode<NodeData> end = CompilerNodeMaker.Create(graph.Data.Set, BuiltIn.EndOpcode);
+                    graph.AddNode(end);
+
+                    // Connect it.
+                    node.Outputs[i].ConnectTo(end);
+
+                    // Add to execution order.
+                    executionOrder.Add(nextLabel, end);
+
+                    // Set the label.
+                    SetLabel(end, nextLabel.ToString());
+                    nextLabel++;
+                }
+
                 // If the target node has been added already, add a go-to instead.
-                if (executionOrder.ContainsRight(toNode))
+                else if (executionOrder.ContainsRight(toNode))
                 {
                     // Create go-to node.
                     RootNode<NodeData> gto = CompilerNodeMaker.Create(graph.Data.Set, BuiltIn.GotoOpcode);
@@ -293,8 +168,7 @@ namespace Rusty.CutsceneEditor.Compiler
                     nextLabel++;
 
                     // Set output parameter.
-                    var outputData = GetOutputData(gto);
-                    SetOutputArgument(outputData, 0, GetLabel(toNode));
+                    SetOutputArguments(gto);
                 }
 
                 // Else, continue with target node.
@@ -303,30 +177,12 @@ namespace Rusty.CutsceneEditor.Compiler
             }
 
             // Set output parameters.
-            var nodeOutputData = GetOutputData(node);
-            for (int i = 0; i < nodeOutputData.ArgumentOutputs.Count; i++)
-            {
-                int outputIndex = i;
-                if (nodeOutputData.HasDefaultOutput)
-                    outputIndex++;
-
-                SetOutputArgument(nodeOutputData, i, GetLabel(node.Outputs[outputIndex].ToNode));                                         
-            }
+            SetOutputArguments(node);
         }
 
-        private static void SetLabel(RootNode<NodeData> node, string value)
-        {
-            try
-            {
-                int labelArgumentIndex = node.Data.Set[BuiltIn.LabelOpcode].GetParameterIndex(BuiltIn.LabelNameId);
-                node.Children[0].Data.Instance.Arguments[labelArgumentIndex] = value;
-            }
-            catch
-            {
-                GD.PrintErr("Could not set label!");
-            }
-        }
-
+        /// <summary>
+        /// Get the label of a node.
+        /// </summary>
         private static string GetLabel(RootNode<NodeData> node)
         {
             try
@@ -340,25 +196,23 @@ namespace Rusty.CutsceneEditor.Compiler
             }
         }
 
-        private static void SetOutputArgument(OutputData<Node<NodeData>> outputData, int argumentOutputIndex, string value)
+        /// <summary>
+        /// Set the label of a node.
+        /// </summary>
+        private static void SetLabel(RootNode<NodeData> node, string value)
         {
-            // Find node and argument index.
-            var argumentOutput = outputData.ArgumentOutputs[argumentOutputIndex];
-            Node<NodeData> node = argumentOutput.Source;
-            int argumentIndex = argumentOutput.ArgumentIndex;
-
-            // Set argument value.
-            node.Data.Instance.Arguments[argumentIndex] = value;
+            try
+            {
+                int labelArgumentIndex = node.Data.Set[BuiltIn.LabelOpcode].GetParameterIndex(BuiltIn.LabelNameId);
+                node.Children[0].Data.Instance.Arguments[labelArgumentIndex] = value;
+            }
+            catch { }
         }
 
-        private static OutputData<Node<NodeData>> GetOutputData(Node<NodeData> node)
-        {
-            OutputData<Node<NodeData>> result = new();
-            FindOutput(node, ref result);
-            return result;
-        }
-
-        private static void FindOutput(Node<NodeData> node, ref OutputData<Node<NodeData>> result)
+        /// <summary>
+        /// Get the output data of a node.
+        /// </summary>
+        private static void GetOutputData(Node<NodeData> node, ref OutputData<Node<NodeData>> result)
         {
             // Handle arguments.
             for (int i = 0; i < node.Data.Definition.Parameters.Length; i++)
@@ -374,8 +228,44 @@ namespace Rusty.CutsceneEditor.Compiler
             // Handle child nodes.
             foreach (SubNode<NodeData> sub in node.Children)
             {
-                FindOutput(sub, ref result);
+                GetOutputData(sub, ref result);
             }
+        }
+
+        /// <summary>
+        /// Set the output arguments of a node.
+        /// </summary>
+        private static void SetOutputArguments(RootNode<NodeData> node)
+        {
+            // Collect output data.
+            OutputData<Node<NodeData>> nodeOutputData = new();
+            GetOutputData(node, ref nodeOutputData);
+
+            // Set arguments.
+            for (int i = 0; i < nodeOutputData.ArgumentOutputs.Count; i++)
+            {
+                // Get output index.
+                int outputIndex = i;
+                if (nodeOutputData.HasDefaultOutput)
+                    outputIndex++;
+
+                // Set argument.
+                SetOutputArgument(nodeOutputData, i, GetLabel(node.Outputs[outputIndex].ToNode));
+            }
+        }
+
+        /// <summary>
+        /// Set an output argument of a node.
+        /// </summary>
+        private static void SetOutputArgument(OutputData<Node<NodeData>> outputData, int argumentOutputIndex, string value)
+        {
+            // Find node and argument index.
+            var argumentOutput = outputData.ArgumentOutputs[argumentOutputIndex];
+            Node<NodeData> node = argumentOutput.Source;
+            int argumentIndex = argumentOutput.ArgumentIndex;
+
+            // Set argument value.
+            node.Data.Instance.Arguments[argumentIndex] = value;
         }
     }
 }
