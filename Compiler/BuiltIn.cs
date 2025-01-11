@@ -16,7 +16,7 @@
         public const string CommentOpcode = "CMT";
         public const string FrameOpcode = "FRM";
         public const string NodeOpcode = "NOD";
-        public const string PreInstructionGroupOpcode = "PRE";
+        public const string PreInstructionBlockOpcode = "PRE";
         public const string OptionRuleOpcode = "OPT";
         public const string ChoiceRuleOpcode = "CHO";
         public const string TupleRuleOpcode = "TPL";

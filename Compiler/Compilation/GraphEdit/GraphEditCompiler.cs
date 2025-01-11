@@ -1,4 +1,7 @@
-﻿using Rusty.Cutscenes;
+﻿using Godot;
+using System;
+using System.Collections.Generic;
+using Rusty.Cutscenes;
 using Rusty.Graphs;
 using Rusty.Maps;
 
@@ -25,7 +28,7 @@ namespace Rusty.CutsceneEditor.Compiler
         public static string Compile(CutsceneGraphEdit graphEdit)
         {
             // 1. Create compiler node graph.
-            Graph<NodeData> graph = new();
+            CompilerGraph graph = new();
             graph.Data.Set = graphEdit.InstructionSet;
             for (int i = 0; i < graphEdit.Nodes.Count; i++)
             {
@@ -43,9 +46,9 @@ namespace Rusty.CutsceneEditor.Compiler
                 // For each output slot...
                 for (int j = 0; j < fromEditorNode.Slots.Count; j++)
                 {
-                    // Skip empty outputs.
+                    // Add empty outputs for non-connected slots.
                     if (fromEditorNode.Slots[j].Output == null)
-                        continue;
+                        fromCompilerNode.ConnectTo(null);
 
                     // Else, connect nodes.
                     else
@@ -74,23 +77,15 @@ namespace Rusty.CutsceneEditor.Compiler
                 ProcessSubGraph(startNode, graph, executionOrder, ref nextLabel);
             }
 
-            // 5. Compile to code.
-            string code = "Opcode";
-            int maxParameterCount = 0;
-            for (int i = 0; i < graphEdit.InstructionSet.Definitions.Length; i++)
-            {
-                int parameterCount = graphEdit.InstructionSet.Definitions[i].Parameters.Length;
-                if (parameterCount > maxParameterCount)
-                    maxParameterCount = parameterCount;
-            }
-            for (int i = 0; i < maxParameterCount; i++)
-            {
-                code += ",Arg" + i;
-            }
+            // Print finished graph.
+            GD.Print("Compiled graph:\n" + graph);
 
+            // 5. Compile to code.
+            string code = "";
             for (int i = 0; i < executionOrder.Count; i++)
             {
-                code += "\n";
+                if (code != "")
+                    code += "\n";
                 try
                 {
                     var node = executionOrder[i];
@@ -116,15 +111,11 @@ namespace Rusty.CutsceneEditor.Compiler
         /// Helper function for step 4 of the compilation process.
         /// It figures out the execution order of the graph, sets labels, inserts go-to's and sets output arguments.
         /// </summary>
-        private static void ProcessSubGraph(RootNode<NodeData> node, Graph<NodeData> graph,
+        private static void ProcessSubGraph(RootNode<NodeData> node, CompilerGraph graph,
             BiDict<int, RootNode<NodeData>> executionOrder, ref int nextLabel)
         {
             // Add to execution order.
-            executionOrder.Add(nextLabel, node);
-
-            // Set label value.
-            SetLabel(node, nextLabel.ToString());
-            nextLabel++;
+            executionOrder.Add(executionOrder.Count, node);
 
             // Continue with output nodes.
             for (int i = 0; i < node.Outputs.Count; i++)
@@ -135,25 +126,21 @@ namespace Rusty.CutsceneEditor.Compiler
                 if (toNode == null)
                 {
                     // Create end node.
-                    RootNode<NodeData> end = CompilerNodeMaker.Create(graph.Data.Set, BuiltIn.EndOpcode);
+                    RootNode<NodeData> end = CompilerNodeMaker.CreateHierarchy(graph.Data.Set, BuiltIn.EndOpcode);
                     graph.AddNode(end);
 
                     // Connect it.
                     node.Outputs[i].ConnectTo(end);
 
                     // Add to execution order.
-                    executionOrder.Add(nextLabel, end);
-
-                    // Set the label.
-                    SetLabel(end, nextLabel.ToString());
-                    nextLabel++;
+                    executionOrder.Add(executionOrder.Count, end);
                 }
 
                 // If the target node has been added already, add a go-to instead.
                 else if (executionOrder.ContainsRight(toNode))
                 {
                     // Create go-to node.
-                    RootNode<NodeData> gto = CompilerNodeMaker.Create(graph.Data.Set, BuiltIn.GotoOpcode);
+                    RootNode<NodeData> gto = CompilerNodeMaker.CreateHierarchy(graph.Data.Set, BuiltIn.GotoOpcode);
                     graph.AddNode(gto);
 
                     // Connect it.
@@ -161,14 +148,10 @@ namespace Rusty.CutsceneEditor.Compiler
                     gto.ConnectTo(toNode);
 
                     // Add to execution order.
-                    executionOrder.Add(nextLabel, gto);
-
-                    // Set the label.
-                    SetLabel(gto, nextLabel.ToString());
-                    nextLabel++;
+                    executionOrder.Add(executionOrder.Count, gto);
 
                     // Set output parameter.
-                    SetOutputArguments(gto);
+                    SetOutputArguments(gto, ref nextLabel);
                 }
 
                 // Else, continue with target node.
@@ -177,7 +160,7 @@ namespace Rusty.CutsceneEditor.Compiler
             }
 
             // Set output parameters.
-            SetOutputArguments(node);
+            SetOutputArguments(node, ref nextLabel);
         }
 
         /// <summary>
@@ -187,12 +170,14 @@ namespace Rusty.CutsceneEditor.Compiler
         {
             try
             {
-                int labelArgumentIndex = node.Data.Set[BuiltIn.LabelOpcode].GetParameterIndex(BuiltIn.LabelNameId);
-                return node.Children[0].Data.Instance.Arguments[labelArgumentIndex];
+                if (node.Children[0].Data.GetOpcode() != BuiltIn.LabelOpcode)
+                    throw new Exception();
+
+                return node.Children[0].Data.GetArgument(BuiltIn.LabelNameId);
             }
             catch
             {
-                return "";
+                return null;
             }
         }
 
@@ -203,16 +188,23 @@ namespace Rusty.CutsceneEditor.Compiler
         {
             try
             {
+                if (node.Children[0].Data.GetOpcode() != BuiltIn.LabelOpcode)
+                    throw new Exception();
+
                 int labelArgumentIndex = node.Data.Set[BuiltIn.LabelOpcode].GetParameterIndex(BuiltIn.LabelNameId);
-                node.Children[0].Data.Instance.Arguments[labelArgumentIndex] = value;
+                node.Children[0].Data.SetArgument(BuiltIn.LabelNameId,  value);
+
             }
-            catch { }
+            catch
+            {
+                node.Children.Insert(0, CompilerNodeMaker.GetLabel(node.Data.Set, value));
+            }
         }
 
         /// <summary>
         /// Get the output data of a node.
         /// </summary>
-        private static void GetOutputData(Node<NodeData> node, ref OutputData<Node<NodeData>> result)
+        private static void GetOutputData(Node<NodeData> node, ref OutputData result)
         {
             // Handle arguments.
             for (int i = 0; i < node.Data.Definition.Parameters.Length; i++)
@@ -235,10 +227,10 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Set the output arguments of a node.
         /// </summary>
-        private static void SetOutputArguments(RootNode<NodeData> node)
+        private static void SetOutputArguments(RootNode<NodeData> node, ref int nextLabel)
         {
             // Collect output data.
-            OutputData<Node<NodeData>> nodeOutputData = new();
+            OutputData nodeOutputData = new();
             GetOutputData(node, ref nodeOutputData);
 
             // Set arguments.
@@ -249,15 +241,23 @@ namespace Rusty.CutsceneEditor.Compiler
                 if (nodeOutputData.HasDefaultOutput)
                     outputIndex++;
 
+                // Add a label to the target node.
+                RootNode<NodeData> toNode = node.Outputs[outputIndex].ToNode;
+                if (GetLabel(toNode) == null)
+                {
+                    SetLabel(toNode, nextLabel.ToString());
+                    nextLabel++;
+                }
+
                 // Set argument.
-                SetOutputArgument(nodeOutputData, i, GetLabel(node.Outputs[outputIndex].ToNode));
+                SetOutputArgument(nodeOutputData, i, GetLabel(toNode));
             }
         }
 
         /// <summary>
         /// Set an output argument of a node.
         /// </summary>
-        private static void SetOutputArgument(OutputData<Node<NodeData>> outputData, int argumentOutputIndex, string value)
+        private static void SetOutputArgument(OutputData outputData, int argumentOutputIndex, string value)
         {
             // Find node and argument index.
             var argumentOutput = outputData.ArgumentOutputs[argumentOutputIndex];

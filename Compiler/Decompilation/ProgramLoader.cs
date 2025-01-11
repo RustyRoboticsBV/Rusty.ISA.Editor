@@ -1,0 +1,169 @@
+﻿using System.Collections.Generic;
+using Godot;
+using Rusty.Csv;
+using Rusty.Cutscenes;
+using Rusty.Graphs;
+
+namespace Rusty.CutsceneEditor.Compiler
+{
+    /// <summary>
+    /// Imports a cutscene program.
+    /// </summary>
+    public abstract class ProgramLoader
+    {
+        /* Public methods. */
+        /// <summary>
+        /// Load a cutscene program file as a cutscene program.
+        /// </summary>
+        public static void Import(CutsceneGraphEdit graphEdit, string filePath)
+        {
+            InstructionSet set = graphEdit.InstructionSet;
+
+            // Decompile instructions.
+            List<InstructionInstance> instructions = Decompile(set, filePath);
+
+            // Create node graph.
+            Graph<NodeData> graph = new();
+            int index = 0;
+            while (index < instructions.Count)
+            {
+                switch (instructions[index].Opcode)
+                {
+                    case BuiltIn.NodeOpcode:
+                    case BuiltIn.PreInstructionBlockOpcode:
+                    case BuiltIn.OptionRuleOpcode:
+                    case BuiltIn.ChoiceRuleOpcode:
+                    case BuiltIn.TupleRuleOpcode:
+                    case BuiltIn.ListRuleOpcode:
+                        graph.AddNode(HandleCollection(set, instructions, ref index));
+                        break;
+                }
+                index++;
+            }
+
+            // Spawn graph edit nodes.
+            for (int i = 0; i < graph.Count; i++)
+            {
+                float x = 0f;
+                try
+                {
+                    x = float.Parse(graph[i].Data.GetArgument(BuiltIn.NodeXId));
+                }
+                catch { }
+
+                float y = 0f;
+                try
+                {
+                    y = float.Parse(graph[i].Data.GetArgument(BuiltIn.NodeYId));
+                }
+                catch { }
+
+                CutsceneGraphNode node = new CutsceneGraphNode()
+                {
+                    InstructionSet = graphEdit.InstructionSet,
+                    Position = new Vector2(x, y)
+                };
+                graphEdit.AddChild(node);
+            }
+        }
+
+        /* Private methods. */
+        private static CompilerNode HandleCollection(InstructionSet set, List<InstructionInstance> instructions, ref int index)
+        {
+            CompilerNode node = null;
+
+            // Handle header.
+            switch (instructions[index].Opcode)
+            {
+                case BuiltIn.NodeOpcode:
+                case BuiltIn.PreInstructionBlockOpcode:
+                case BuiltIn.OptionRuleOpcode:
+                case BuiltIn.ChoiceRuleOpcode:
+                case BuiltIn.TupleRuleOpcode:
+                case BuiltIn.ListRuleOpcode:
+                    node = CompilerNodeMaker.CreateHierarchy(set, instructions[index].Opcode);
+                    break;
+            }
+
+            // Handle subsequent nodes.
+            while (index < instructions.Count)
+            {
+                switch (instructions[index].Opcode)
+                {
+                    case BuiltIn.OptionRuleOpcode:
+                    case BuiltIn.ChoiceRuleOpcode:
+                    case BuiltIn.TupleRuleOpcode:
+                    case BuiltIn.ListRuleOpcode:
+                        node.AddChild(HandleCollection(set, instructions, ref index));
+                        break;
+                    case BuiltIn.EndOfBlockOpcode:
+                        node.AddChild(Create(set, instructions[index].Opcode));
+                        return node;
+                    default:
+                        node.AddChild(Create(set, instructions[index].Opcode));
+                        break;
+                }
+
+                index++;
+            }
+
+            // This shouldn't happen.
+            return node;
+        }
+
+        private static List<InstructionInstance> Decompile(InstructionSet set, string filePath)
+        {
+            // Load as CSV table.
+            CsvTable table = new CsvTable(filePath);
+
+            // Convert to instruction list.
+            List<InstructionInstance> instructions = new();
+            for (int instruction = 0; instruction < table.Height; instruction++)
+            {
+                // Get the opcode.
+                string opcode = table.GetCell(0, instruction);
+
+                // Get the arguments.
+                int parameterCount = table.Width - 1;
+                try
+                {
+                    parameterCount = set[opcode].Parameters.Length;
+                }
+                catch { }
+
+                string[] arguments = new string[parameterCount];
+                for (int arg = 0; arg < parameterCount; arg++)
+                {
+                    try
+                    {
+                        arguments[arg] = table.GetCell(arg + 1, instruction);
+                    }
+                    catch
+                    {
+                        arguments[arg] = "";
+                    }
+                }
+
+                // Create instruction.
+                instructions.Add(new InstructionInstance(opcode, arguments));
+            }
+
+            return instructions;
+        }
+
+        /// <summary>
+        /// Create a sub-node.
+        /// </summary>
+        private static SubNode<NodeData> Create(InstructionSet set, string opcode)
+        {
+            InstructionDefinition definition = set[opcode];
+            InstructionInstance instance = new(definition);
+            return new SubNode<NodeData>(new NodeData(set, definition, instance));
+        }
+
+        private static void ConnectNode(Graph<NodeData> graph, CompilerNode node)
+        {
+
+        }
+    }
+}

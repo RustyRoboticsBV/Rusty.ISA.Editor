@@ -9,6 +9,9 @@ namespace Rusty.CutsceneEditor.Compiler
     public abstract class ListRuleCompiler : RuleCompiler
     {
         /* Public methods. */
+        /// <summary>
+        /// Compile a list rule inspector into a compiler node hierarchy.
+        /// </summary>
         public static SubNode<NodeData> Compile(ListRuleInspector inspector)
         {
             // Main rule.
@@ -16,7 +19,7 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[BuiltIn.ListRuleOpcode];
             InstructionInstance instance = new(definition);
 
-            SubNode<NodeData> list = new SubNode<NodeData>(instance.ToString(), new(set, definition, instance));
+            SubNode<NodeData> list = CompilerNodeMaker.GetListRule(set);
 
             // Child rules.
             Inspector[] childRules = inspector.GetActiveSubInspectors();
@@ -26,7 +29,7 @@ namespace Rusty.CutsceneEditor.Compiler
             }
 
             // End of rule.
-            list.AddChild(GetEndOfBlock(inspector.InstructionSet));
+            list.AddChild(CompilerNodeMaker.GetEndOfBlock(inspector.InstructionSet));
 
             return list;
         }

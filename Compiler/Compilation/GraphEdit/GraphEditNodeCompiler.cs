@@ -11,7 +11,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /// </summary>
         public static RootNode<NodeData> Compile(CutsceneGraphNode graphNode)
         {
-            return CompilerNodeMaker.Create(
+            return CompilerNodeMaker.CreateHierarchy(
                 graphNode.InstructionSet,
                 (int)graphNode.Position.X,
                 (int)graphNode.Position.Y,

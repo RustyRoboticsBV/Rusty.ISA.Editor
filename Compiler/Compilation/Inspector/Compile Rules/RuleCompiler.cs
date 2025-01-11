@@ -9,6 +9,9 @@ namespace Rusty.CutsceneEditor.Compiler
     public abstract class RuleCompiler : Compiler
     {
         /* Public methods. */
+        /// <summary>
+        /// Compile a rule inspector into a compiler node hierarchy.
+        /// </summary>
         public static SubNode<NodeData> Compile(Inspector inspector)
         {
             switch (inspector)

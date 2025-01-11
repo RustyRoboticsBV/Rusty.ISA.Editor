@@ -9,6 +9,9 @@ namespace Rusty.CutsceneEditor.Compiler
     public abstract class ChoiceRuleCompiler : RuleCompiler
     {
         /* Public methods. */
+        /// <summary>
+        /// Compile a choice rule inspector into a compiler node hierarchy.
+        /// </summary>
         public static SubNode<NodeData> Compile(ChoiceRuleInspector inspector)
         {
             // Main rule.
@@ -16,7 +19,7 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[BuiltIn.ChoiceRuleOpcode];
             InstructionInstance instance = new(definition);
 
-            SubNode<NodeData> choice = new SubNode<NodeData>(instance.ToString(), new(set, definition, instance));
+            SubNode<NodeData> choice = CompilerNodeMaker.GetChoiceRule(set);
 
             // Child rules.
             Inspector[] childRules = inspector.GetActiveSubInspectors();
@@ -26,7 +29,7 @@ namespace Rusty.CutsceneEditor.Compiler
             }
 
             // End of rule.
-            choice.AddChild(GetEndOfBlock(inspector.InstructionSet));
+            choice.AddChild(CompilerNodeMaker.GetEndOfBlock(inspector.InstructionSet));
 
             return choice;
         }

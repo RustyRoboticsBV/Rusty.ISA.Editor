@@ -9,6 +9,9 @@ namespace Rusty.CutsceneEditor.Compiler
     public abstract class TupleRuleCompiler : RuleCompiler
     {
         /* Public methods. */
+        /// <summary>
+        /// Compile a tuple rule inspector into a compiler node hierarchy.
+        /// </summary>
         public static SubNode<NodeData> Compile(TupleRuleInspector inspector)
         {
             // Main rule.
@@ -16,7 +19,7 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[BuiltIn.TupleRuleOpcode];
             InstructionInstance instance = new(definition);
 
-            SubNode<NodeData> tuple = new SubNode<NodeData>(instance.ToString(), new(set, definition, instance));
+            SubNode<NodeData> tuple = CompilerNodeMaker.GetTupleRule(set);
 
             // Child rules.
             Inspector[] childRules = inspector.GetActiveSubInspectors();
@@ -26,7 +29,7 @@ namespace Rusty.CutsceneEditor.Compiler
             }
 
             // End of rule.
-            tuple.AddChild(GetEndOfBlock(inspector.InstructionSet));
+            tuple.AddChild(CompilerNodeMaker.GetEndOfBlock(inspector.InstructionSet));
 
             return tuple;
         }

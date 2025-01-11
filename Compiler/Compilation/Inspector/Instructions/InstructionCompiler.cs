@@ -9,6 +9,9 @@ namespace Rusty.CutsceneEditor.Compiler
     public abstract class InstructionCompiler : Compiler
     {
         /* Public methods. */
+        /// <summary>
+        /// Compile an instruction inspector into a compile node hierarchy.
+        /// </summary>
         public static SubNode<NodeData> Compile(InstructionInspector inspector)
         {
             InstructionSet set = inspector.InstructionSet;
@@ -16,7 +19,7 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionInstance instance = new(definition);
 
             // Pre-instruction group.
-            SubNode<NodeData> preInstructionGroup = GetPreInstructionGroup(inspector);
+            SubNode<NodeData> preInstructionGroup = CompilerNodeMaker.GetPreInstructionBlock(set);
 
             // Compile rules.
             for (int i = 0; i < definition.PreInstructions.Length; i++)
@@ -42,22 +45,12 @@ namespace Rusty.CutsceneEditor.Compiler
                 catch { }
             }
 
-            preInstructionGroup.AddChild(new(instance.ToString(), new(set, definition, instance)));
+            preInstructionGroup.AddChild(CompilerNodeMaker.GetInstruction(set, instance));
 
             // End of pre-instruction group.
-            preInstructionGroup.AddChild(GetEndOfBlock(inspector.InstructionSet));
+            preInstructionGroup.AddChild(CompilerNodeMaker.GetEndOfBlock(set));
 
             return preInstructionGroup;
-        }
-
-        /* Private methods. */
-        private static SubNode<NodeData> GetPreInstructionGroup(Inspector inspector)
-        {
-            InstructionSet set = inspector.InstructionSet;
-            InstructionDefinition definition = set[BuiltIn.PreInstructionGroupOpcode];
-            InstructionInstance instance = new(definition);
-
-            return new(instance.ToString(), new(set, definition, instance));
         }
     }
 }
