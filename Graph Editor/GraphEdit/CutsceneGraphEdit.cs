@@ -1,6 +1,6 @@
 using Godot;
-using Rusty.Cutscenes;
 using System.Collections.Generic;
+using Rusty.Cutscenes;
 
 namespace Rusty.CutsceneEditor
 {

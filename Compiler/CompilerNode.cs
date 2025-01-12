@@ -1,5 +1,4 @@
 ﻿using Rusty.Graphs;
-using System;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
@@ -12,6 +11,14 @@ namespace Rusty.CutsceneEditor.Compiler
         public CompilerNode() : base() { }
 
         public CompilerNode(NodeData nodeData) : base(nodeData) { }
+
+        public CompilerNode(SubNode<NodeData> node) : base(node) { }
+
+        /* Casting operators. */
+        public static implicit operator CompilerNode(SubNode<NodeData> node)
+        {
+            return new CompilerNode(node);
+        }
 
         /* Public methods. */
         public override string GetName()

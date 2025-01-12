@@ -2,7 +2,6 @@
 using Godot;
 using Rusty.Cutscenes;
 using Rusty.CutsceneEditor.Compiler;
-using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor
 {
@@ -67,9 +66,9 @@ namespace Rusty.CutsceneEditor
 
         private void OnDebugDecompile()
         {
-            string str = "";
-            DisplayServer.ClipboardSet(str);
-            GD.Print("Debug decompilation result saved to clipboard!");
+            string code = DisplayServer.ClipboardGet();
+            GD.Print("Debug decompilation input loaded from clipboard!");
+            ProgramLoader.Import(GraphEdit, code);
         }
     }
 }
