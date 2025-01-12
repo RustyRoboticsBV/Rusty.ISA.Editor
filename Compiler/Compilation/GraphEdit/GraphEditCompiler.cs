@@ -212,7 +212,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 {
                     if (output.OverrideDefaultOutput)
                         result.HasDefaultOutput = false;
-                    result.ArgumentOutputs.Add(new(node, i));
+                    result.AddOutput(node, i);
                 }
             }
 
@@ -233,7 +233,7 @@ namespace Rusty.CutsceneEditor.Compiler
             GetOutputData(node, ref nodeOutputData);
 
             // Set arguments.
-            for (int i = 0; i < nodeOutputData.ArgumentOutputs.Count; i++)
+            for (int i = 0; i < nodeOutputData.ArgumentCount; i++)
             {
                 // Get output index.
                 int outputIndex = i;
@@ -259,8 +259,8 @@ namespace Rusty.CutsceneEditor.Compiler
         private static void SetOutputArgument(OutputData outputData, int argumentOutputIndex, string value)
         {
             // Find node and argument index.
-            var argumentOutput = outputData.ArgumentOutputs[argumentOutputIndex];
-            Node<NodeData> node = argumentOutput.Source;
+            var argumentOutput = outputData.GetOutput(argumentOutputIndex);
+            Node<NodeData> node = argumentOutput.Node;
             int argumentIndex = argumentOutput.ArgumentIndex;
 
             // Set argument value.

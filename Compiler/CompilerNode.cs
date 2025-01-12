@@ -1,4 +1,5 @@
-﻿using Rusty.Graphs;
+﻿using Rusty.Cutscenes;
+using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
@@ -32,6 +33,14 @@ namespace Rusty.CutsceneEditor.Compiler
                 return $"({labelNode.Data.GetArgument(BuiltIn.LabelNameId)}) {base.GetName()}";
 
             return base.GetName();
+        }
+
+        /// <summary>
+        /// Get the output data of a node.
+        /// </summary>
+        public OutputData GetOutputData()
+        {
+            return GetOutputData(this, null);
         }
 
         /// <summary>
@@ -90,6 +99,7 @@ namespace Rusty.CutsceneEditor.Compiler
             }
         }
 
+        /* Private methods. */
         private SubNode<NodeData> FindSubNode(string opcode)
         {
             for (int i = 0; i < Children.Count; i++)
@@ -98,6 +108,45 @@ namespace Rusty.CutsceneEditor.Compiler
                     return Children[i];
             }
             return null;
+        }
+
+        /// <summary>
+        /// Helper method for GetOutputData. Recursively checks a node and all child nodes.
+        /// </summary>
+        private OutputData GetOutputData(Node<NodeData> node, OutputData result)
+        {
+            // Create new output data object.
+            if (result == null)
+            {
+                result = new OutputData();
+                result.HasDefaultOutput = true;
+            }
+
+            // If end: we don't have a default output.
+            if (IsEnd())
+                result.HasDefaultOutput = false;
+
+            // Else, handle output arguments.
+            else
+            {
+                for (int i = 0; i < node.Data.Definition.Parameters.Length; i++)
+                {
+                    if (node.Data.Definition.Parameters[i] is OutputParameter output)
+                    {
+                        if (output.OverrideDefaultOutput)
+                            result.HasDefaultOutput = false;
+                        result.AddOutput(node, i);
+                    }
+                }
+
+                // Handle child nodes.
+                foreach (SubNode<NodeData> sub in node.Children)
+                {
+                    GetOutputData(sub, result);
+                }
+            }
+
+            return result;
         }
     }
 }
