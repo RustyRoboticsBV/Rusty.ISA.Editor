@@ -50,6 +50,46 @@ namespace Rusty.CutsceneEditor.Compiler
             return FindSubNode(BuiltIn.LabelOpcode);
         }
 
+        public bool IsEnd()
+        {
+            try
+            {
+                for (int i = 0; i < Children.Count; i++)
+                {
+                    for (int j = 0; j < Children[i].Children.Count; j++)
+                    {
+                        if (Children[i].Children[j].Data.GetOpcode() == BuiltIn.EndOpcode)
+                            return true;
+                    }
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool IsGoto()
+        {
+            try
+            {
+                for (int i = 0; i < Children.Count; i++)
+                {
+                    for (int j = 0; j < Children[i].Children.Count; j++)
+                    {
+                        if (Children[i].Children[j].Data.GetOpcode() == BuiltIn.GotoOpcode)
+                            return true;
+                    }
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private SubNode<NodeData> FindSubNode(string opcode)
         {
             for (int i = 0; i < Children.Count; i++)
