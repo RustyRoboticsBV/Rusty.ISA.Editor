@@ -135,11 +135,11 @@ Preview = []
 PreInstructions = []
 
 [sub_resource type="Resource" id="Resource_adnbf"]
-resource_name = "PRE"
+resource_name = "INS"
 script = ExtResource("2_uguea")
-Opcode = "PRE"
+Opcode = "INS"
 Parameters = []
-DisplayName = "Pre-Instruction Group"
+DisplayName = "Instruction Inspector"
 Description = "A compiler marker that starts an instruction group. The last instruction in the group represents the \"main\" instruction, and the rest represent associated pre-instructions. The group should be closed with an EOB instruction."
 Category = "Compiler"
 Implementation = ""

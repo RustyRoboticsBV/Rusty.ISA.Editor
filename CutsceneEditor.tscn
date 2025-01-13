@@ -88,6 +88,7 @@ Target = NodePath("../Inspector")
 [node name="CutsceneGraphEdit" type="GraphEdit" parent="HBoxContainer" node_paths=PackedStringArray("PropertiesInspector")]
 layout_mode = 2
 size_flags_horizontal = 3
+scroll_offset = Vector2(0, -4)
 minimap_enabled = false
 show_menu = false
 script = ExtResource("3_mbpx3")

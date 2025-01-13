@@ -31,7 +31,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 switch (instructions[index].Opcode)
                 {
                     case BuiltIn.NodeOpcode:
-                    case BuiltIn.PreInstructionBlockOpcode:
+                    case BuiltIn.InstructorInspectorOpcode:
                     case BuiltIn.OptionRuleOpcode:
                     case BuiltIn.ChoiceRuleOpcode:
                     case BuiltIn.TupleRuleOpcode:
@@ -144,7 +144,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 switch (instructions[index].Opcode)
                 {
                     case BuiltIn.NodeOpcode:
-                    case BuiltIn.PreInstructionBlockOpcode:
+                    case BuiltIn.InstructorInspectorOpcode:
                     case BuiltIn.OptionRuleOpcode:
                     case BuiltIn.ChoiceRuleOpcode:
                     case BuiltIn.TupleRuleOpcode:

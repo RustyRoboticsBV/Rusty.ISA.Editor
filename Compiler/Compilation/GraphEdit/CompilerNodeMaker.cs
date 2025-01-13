@@ -106,7 +106,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /// </summary>
         public static SubNode<NodeData> GetPreInstructionBlock(InstructionSet set)
         {
-            InstructionDefinition definition = set[BuiltIn.PreInstructionBlockOpcode];
+            InstructionDefinition definition = set[BuiltIn.InstructorInspectorOpcode];
             InstructionInstance instance = new(definition);
 
             return new SubNode<NodeData>(new NodeData(set, definition, instance));
