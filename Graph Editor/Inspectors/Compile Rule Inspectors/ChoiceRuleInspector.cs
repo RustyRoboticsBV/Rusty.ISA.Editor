@@ -13,6 +13,14 @@ namespace Rusty.CutsceneEditor
         /// The compile rule visualized by this inspector.
         /// </summary>
         public ChoiceRule Rule => Resource as ChoiceRule;
+        /// <summary>
+        /// The index of the selected choice.
+        /// </summary>
+        public int Selected
+        {
+            get => OptionField.Value;
+            set => OptionField.Value = value;
+        }
 
         /* Private properties. */
         private OptionField OptionField { get; set; }
@@ -65,6 +73,7 @@ namespace Rusty.CutsceneEditor
             return new Inspector[] { ChildInspectors[OptionField.Value] };
         }
 
+        /* Godot overrides. */
         public override void _Process(double delta)
         {
             base._Process(delta);

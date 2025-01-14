@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Godot;
 using Rusty.Cutscenes;
 using Rusty.EditorUI;
 
@@ -18,6 +20,11 @@ namespace Rusty.CutsceneEditor
             get => Resource as InstructionDefinition;
             set => Resource = value;
         }
+
+        /// <summary>
+        /// The number of compile rule inspectors nested within this inspector.
+        /// </summary>
+        public int CompileRuleInspectorCount => CompileRules.Count;
 
         /* Private properties. */
         private List<ParameterInspector> Parameters { get; set; } = new();
@@ -68,6 +75,17 @@ namespace Rusty.CutsceneEditor
         public Inspector GetCompileRuleInspector(int index)
         {
             return CompileRules[index];
+        }
+
+        /// <summary>
+        /// Set the values of this inspector's nested parameter inspectors.
+        /// </summary>
+        public void SetArguments(InstructionInstance instance)
+        {
+            for (int i = 0; i < Parameters.Count && i < instance.Arguments.Length; i++)
+            {
+                Parameters[i].ValueObj = instance.Arguments[i];
+            }
         }
 
         /// <summary>

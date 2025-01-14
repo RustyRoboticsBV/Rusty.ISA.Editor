@@ -28,7 +28,7 @@ namespace Rusty.CutsceneEditor
         public override object ValueObj
         {
             get => Value;
-            set => Value = (float)ValueObj;
+            set => Value = (float)value;
         }
 
         /* Private properties. */
@@ -60,6 +60,18 @@ namespace Rusty.CutsceneEditor
                 return true;
             }
             return false;
+        }
+
+        public override void SetValue(string str)
+        {
+            try
+            {
+                Value = float.Parse(str);
+            }
+            catch
+            {
+                Value = 0f;
+            }
         }
 
         /* Protected methods. */

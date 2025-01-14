@@ -28,7 +28,7 @@ namespace Rusty.CutsceneEditor
         public override object ValueObj
         {
             get => Value;
-            set => Value = (bool)ValueObj;
+            set => Value = (bool)value;
         }
 
         /* Private properties. */

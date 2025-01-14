@@ -29,7 +29,7 @@ namespace Rusty.CutsceneEditor
         public override object ValueObj
         {
             get => Value;
-            set => Value = (Color)ValueObj;
+            set => Value = (Color)value;
         }
 
         /* Private properties. */
@@ -61,6 +61,11 @@ namespace Rusty.CutsceneEditor
                 return true;
             }
             return false;
+        }
+
+        public override void SetValue(string str)
+        {
+            Value = Color.FromHtml(str);
         }
 
         /* Protected methods. */

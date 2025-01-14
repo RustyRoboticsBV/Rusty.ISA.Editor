@@ -52,6 +52,17 @@ namespace Rusty.CutsceneEditor
             return childInspectors;
         }
 
+        /// <summary>
+        /// Ensure a minimum number of list elements.
+        /// </summary>
+        public void EnsureElements(int count)
+        {
+            while (ListElement.Count < count)
+            {
+                ListElement.Add();
+            }
+        }
+
         /* Godot overrides. */
         public override void _Process(double delta)
         {

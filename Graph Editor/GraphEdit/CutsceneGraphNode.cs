@@ -100,6 +100,9 @@ namespace Rusty.CutsceneEditor
             UpdateContents();
         }
 
+        /// <summary>
+        /// Ensure some number of input/output slot pairs.
+        /// </summary>
         public void EnsureSlots(int count)
         {
             // Make the number of labels match the target number.

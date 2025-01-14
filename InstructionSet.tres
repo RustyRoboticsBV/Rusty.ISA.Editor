@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=53 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=62 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_qwukw"]
@@ -10,6 +10,8 @@
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/FloatParameter.cs" id="6_eo4x7"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/OptionRule.cs" id="7_d1ujo"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/ListRule.cs" id="7_tiswy"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/TupleRule.cs" id="11_ke8cg"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Compile Rules/ChoiceRule.cs" id="12_cl021"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
 
 [sub_resource type="Resource" id="Resource_xui0c"]
@@ -158,11 +160,19 @@ Implementation = ""
 Preview = []
 PreInstructions = []
 
+[sub_resource type="Resource" id="Resource_yjpwf"]
+resource_name = "Int: selected"
+script = ExtResource("12_q4rbi")
+DefaultValue = 0
+Id = "selected"
+DisplayName = "Selected"
+Description = "The selected choice."
+
 [sub_resource type="Resource" id="Resource_k3g4f"]
 resource_name = "CHO"
 script = ExtResource("2_uguea")
 Opcode = "CHO"
-Parameters = []
+Parameters = [SubResource("Resource_yjpwf")]
 DisplayName = "Choice Rule"
 Description = "A compiler marker that starts a choice collection. The collection should be closed with an EOB instruction."
 Category = "Compiler"
@@ -368,6 +378,51 @@ AddButtonText = "Add Extension"
 PreviewSeparator = "
 "
 
+[sub_resource type="Resource" id="Resource_60at0"]
+script = ExtResource("6_8mjxr")
+Id = "CTX"
+DisplayName = "CTX"
+Description = ""
+Opcode = "CTX"
+
+[sub_resource type="Resource" id="Resource_vvb6p"]
+script = ExtResource("6_8mjxr")
+Id = "CTX2"
+DisplayName = "CTX2"
+Description = ""
+Opcode = "CTX"
+
+[sub_resource type="Resource" id="Resource_wfqqi"]
+script = ExtResource("11_ke8cg")
+Id = "test"
+DisplayName = "Test"
+Description = ""
+Types = [SubResource("Resource_60at0"), SubResource("Resource_vvb6p")]
+PreviewSeparator = "
+"
+
+[sub_resource type="Resource" id="Resource_b8cbr"]
+script = ExtResource("6_8mjxr")
+Id = "CTX"
+DisplayName = "CTX"
+Description = ""
+Opcode = "CTX"
+
+[sub_resource type="Resource" id="Resource_n84jq"]
+script = ExtResource("6_8mjxr")
+Id = "CTX2"
+DisplayName = "CTX2"
+Description = ""
+Opcode = "CTX"
+
+[sub_resource type="Resource" id="Resource_57mfu"]
+script = ExtResource("12_cl021")
+Id = "choice"
+DisplayName = "Choice"
+Description = ""
+Types = [SubResource("Resource_wfqqi"), SubResource("Resource_b8cbr"), SubResource("Resource_n84jq")]
+StartSelected = 0
+
 [sub_resource type="Resource" id="Resource_2poj5"]
 resource_name = "TXT"
 script = ExtResource("2_uguea")
@@ -381,7 +436,7 @@ Push([mood]);
 Push([body]);"
 EditorNode = SubResource("Resource_s23li")
 Preview = []
-PreInstructions = [SubResource("Resource_1ynrp"), SubResource("Resource_qp3j0"), SubResource("Resource_sd1fk")]
+PreInstructions = [SubResource("Resource_1ynrp"), SubResource("Resource_qp3j0"), SubResource("Resource_sd1fk"), SubResource("Resource_57mfu")]
 
 [sub_resource type="Resource" id="Resource_po8sr"]
 script = ExtResource("1_qwukw")

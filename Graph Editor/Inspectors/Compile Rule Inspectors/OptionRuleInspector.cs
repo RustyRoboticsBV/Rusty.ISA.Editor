@@ -13,6 +13,14 @@ namespace Rusty.CutsceneEditor
         /// The compile rule visualized by this inspector.
         /// </summary>
         public OptionRule Rule => Resource as OptionRule;
+        /// <summary>
+        /// Whether or not this option rule has its check box foldout ticked.
+        /// </summary>
+        public bool Checked
+        {
+            get => CheckBoxField.Value;
+            set=> CheckBoxField.Value = value;
+        }
 
         /* Private properties. */
         private CheckBoxField CheckBoxField { get; set; }

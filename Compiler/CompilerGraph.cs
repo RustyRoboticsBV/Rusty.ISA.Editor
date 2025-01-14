@@ -7,6 +7,10 @@ namespace Rusty.CutsceneEditor.Compiler
     /// </summary>
     public class CompilerGraph : Graph<NodeData>
     {
+        /* Indexers. */
+        public new CompilerNode this[int index] => base[index] as CompilerNode;
+
+        /* Protected methods. */
         protected override RootNode<NodeData> CreateNode(NodeData data)
         {
             return base.CreateNode(data);

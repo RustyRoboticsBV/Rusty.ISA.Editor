@@ -33,5 +33,9 @@
         public const string FrameNameId = "name";
         public const string NodeXId = "x";
         public const string NodeYId = "y";
+        public const string OptionRuleEnabledId = "enabled";
+        public const string ChoiceRuleSelectedId = "selected";
+        public const string TupleRuleLengthId = "length";
+        public const string ListRuleCountId = "count";
     }
 }

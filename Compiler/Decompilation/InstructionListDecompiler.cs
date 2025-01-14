@@ -1,33 +1,26 @@
-﻿using Godot;
-using System.Collections.Generic;
-using Rusty.Csv;
+﻿using System.Collections.Generic;
 using Rusty.Cutscenes;
-using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
     /// <summary>
-    /// Imports a cutscene program.
+    /// Decompiles a list of cutscene instructions and outputs a compiler graph.
     /// </summary>
-    public abstract class ProgramLoader
+    public abstract class InstructionListDecompiler
     {
         /* Public methods. */
         /// <summary>
-        /// Load a cutscene program file as a cutscene program.
+        /// Decompiles a list of cutscene instructions and outputs a compiler graph.
         /// </summary>
-        public static void Import(CutsceneGraphEdit graphEdit, string code)
+        public static CompilerGraph Decompile(InstructionSet set, List<InstructionInstance> instructions)
         {
-            InstructionSet set = graphEdit.InstructionSet;
-
-            // Decompile instructions.
-            List<InstructionInstance> instructions = Decompile(set, code);
-
             // Create node graph.
-            Graph<NodeData> graph = new();
+            CompilerGraph graph = new();
             Dictionary<string, CompilerNode> labelTable = new();
             int index = 0;
             while (index < instructions.Count)
             {
+                // Create node or node hierarchy from instruction.
                 switch (instructions[index].Opcode)
                 {
                     case BuiltIn.NodeOpcode:
@@ -81,54 +74,10 @@ namespace Rusty.CutsceneEditor.Compiler
                 }
             }
 
-            GD.Print(graph);
-            return;
+            return graph;
         }
 
         /* Private methods. */
-        /// <summary>
-        /// Decompile an instruction program code string into a list of instruction instances.
-        /// </summary>
-        private static List<InstructionInstance> Decompile(InstructionSet set, string code)
-        {
-            // Load as CSV table.
-            CsvTable table = new CsvTable("Program", code);
-
-            // Convert to instruction list.
-            List<InstructionInstance> instructions = new();
-            for (int instruction = 0; instruction < table.Height; instruction++)
-            {
-                // Get the opcode.
-                string opcode = table.GetCell(0, instruction);
-
-                // Get the arguments.
-                int parameterCount = table.Width - 1;
-                try
-                {
-                    parameterCount = set[opcode].Parameters.Length;
-                }
-                catch { }
-
-                string[] arguments = new string[parameterCount];
-                for (int arg = 0; arg < parameterCount; arg++)
-                {
-                    try
-                    {
-                        arguments[arg] = table.GetCell(arg + 1, instruction);
-                    }
-                    catch
-                    {
-                        arguments[arg] = "";
-                    }
-                }
-
-                // Create instruction.
-                instructions.Add(new InstructionInstance(opcode, arguments));
-            }
-
-            return instructions;
-        }
-
         /// <summary>
         /// Convert a collection instruction into a compiler node.
         /// </summary>

@@ -66,9 +66,13 @@ namespace Rusty.CutsceneEditor
 
         private void OnDebugDecompile()
         {
+            InstructionSet set = GraphEdit.InstructionSet;
             string code = DisplayServer.ClipboardGet();
+            CompilerGraph graph = InstructionListDecompiler.Decompile(set, CodeDecompiler.Decompile(set, code));
+            GraphDecompiler.Spawn(GraphEdit, graph);
+
+            GD.Print("Compiler graph:\n" + graph);
             GD.Print("Debug decompilation input loaded from clipboard!");
-            ProgramLoader.Import(GraphEdit, code);
         }
     }
 }

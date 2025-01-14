@@ -60,5 +60,13 @@ namespace Rusty.CutsceneEditor
                     throw new ArgumentException($"Parameter '{parameter}' has an illegal type '{parameter.GetType().Name}'.");
             }
         }
+
+        /// <summary>
+        /// Set the inspector's argument value using a string.
+        /// </summary>
+        public virtual void SetValue(string str)
+        {
+            ValueObj = str;
+        }
     }
 }

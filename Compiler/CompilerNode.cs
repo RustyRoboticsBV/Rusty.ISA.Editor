@@ -99,6 +99,21 @@ namespace Rusty.CutsceneEditor.Compiler
             }
         }
 
+        /// <summary>
+        /// Get the instruction's sub-node.
+        /// </summary>
+        public SubNode<NodeData> GetInstruction()
+        {
+            try
+            {
+                return Children[^2].Children[^2];
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         /* Private methods. */
         private SubNode<NodeData> FindSubNode(string opcode)
         {
