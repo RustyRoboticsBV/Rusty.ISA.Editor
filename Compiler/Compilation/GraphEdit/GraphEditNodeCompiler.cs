@@ -13,8 +13,8 @@ namespace Rusty.CutsceneEditor.Compiler
         {
             return CompilerNodeMaker.CreateHierarchy(
                 graphNode.InstructionSet,
-                (int)graphNode.Position.X,
-                (int)graphNode.Position.Y,
+                (int)graphNode.PositionOffset.X,
+                (int)graphNode.PositionOffset.Y,
                 graphNode.NodeInspector.LabelName,
                 InstructionCompiler.Compile(graphNode.NodeInspector)
             );

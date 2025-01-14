@@ -70,7 +70,14 @@ namespace Rusty.CutsceneEditor
 
         public override Inspector[] GetActiveSubInspectors()
         {
-            return new Inspector[] { ChildInspectors[OptionField.Value] };
+            try
+            {
+                return new Inspector[] { ChildInspectors[OptionField.Value] };
+            }
+            catch
+            {
+                return new Inspector[0];
+            }
         }
 
         /* Godot overrides. */

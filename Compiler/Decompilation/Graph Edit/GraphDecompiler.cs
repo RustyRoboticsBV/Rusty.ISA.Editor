@@ -9,6 +9,7 @@ namespace Rusty.CutsceneEditor.Compiler
     /// </summary>
     public abstract class GraphDecompiler
     {
+        /* Public methods. */
         public static void Spawn(CutsceneGraphEdit graphEdit, CompilerGraph graph)
         {
             Dictionary<CompilerNode, CutsceneGraphNode> nodeMap = new();
@@ -86,6 +87,7 @@ namespace Rusty.CutsceneEditor.Compiler
             }
         }
 
+        /* Private methods. */
         private static void HandleInstruction(InstructionInspector inspector, Node<NodeData> node)
         {
             // Set parameter inspectors.
