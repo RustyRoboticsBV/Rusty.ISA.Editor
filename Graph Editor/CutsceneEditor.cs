@@ -46,6 +46,7 @@ namespace Rusty.CutsceneEditor
                 GD.Print("Definition " + i + ": " + GeneratedSet.Definitions[i]);
             }
             GraphEdit.InstructionSet = GeneratedSet;
+            InstructionSetCompiler.Compile(GeneratedSet, ".godot/Definitions/InstructionSet.zip");
         }
 
         /* Private methods. */
