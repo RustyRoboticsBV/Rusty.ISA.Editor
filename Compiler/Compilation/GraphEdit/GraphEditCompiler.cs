@@ -40,7 +40,7 @@ namespace Rusty.CutsceneEditor.Compiler
             {
                 // Get editor & compiler node.
                 CutsceneGraphNode fromEditorNode = graphEdit.Nodes[i];
-                RootNode<NodeData> fromCompilerNode = graph[i];
+                CompilerNode fromCompilerNode = graph[i];
 
                 // For each output slot...
                 for (int j = 0; j < fromEditorNode.Slots.Count; j++)
@@ -54,7 +54,7 @@ namespace Rusty.CutsceneEditor.Compiler
                     {
                         CutsceneGraphNode toEditorNode = fromEditorNode.Slots[j].Output.Node;
                         int toNodeIndex = graphEdit.Nodes.IndexOf(toEditorNode);
-                        RootNode<NodeData> toCompilerNode = graph[toNodeIndex];
+                        CompilerNode toCompilerNode = graph[toNodeIndex];
 
                         fromCompilerNode.ConnectTo(toCompilerNode);
                     }
@@ -65,11 +65,11 @@ namespace Rusty.CutsceneEditor.Compiler
             int[] startNodes = graph.FindStartNodes();
 
             // 4. Figure out execution order, set labels, insert go-to's and set output arguments.
-            BiDict<int, RootNode<NodeData>> executionOrder = new();
+            BiDict<int, CompilerNode> executionOrder = new();
             int nextLabel = 0;
             for (int i = 0; i < startNodes.Length; i++)
             {
-                RootNode<NodeData> startNode = graph[startNodes[i]];
+                CompilerNode startNode = graph[startNodes[i]];
                 if (executionOrder.ContainsRight(startNode))
                     continue;
 
@@ -110,8 +110,8 @@ namespace Rusty.CutsceneEditor.Compiler
         /// Helper function for step 4 of the compilation process.
         /// It figures out the execution order of the graph, sets labels, inserts go-to's and sets output arguments.
         /// </summary>
-        private static void ProcessSubGraph(RootNode<NodeData> node, CompilerGraph graph,
-            BiDict<int, RootNode<NodeData>> executionOrder, ref int nextLabel)
+        private static void ProcessSubGraph(CompilerNode node, CompilerGraph graph,
+            BiDict<int, CompilerNode> executionOrder, ref int nextLabel)
         {
             // Add to execution order.
             executionOrder.Add(executionOrder.Count, node);
@@ -119,13 +119,13 @@ namespace Rusty.CutsceneEditor.Compiler
             // Continue with output nodes.
             for (int i = 0; i < node.Outputs.Count; i++)
             {
-                RootNode<NodeData> toNode = node.Outputs[i].ToNode;
+                CompilerNode toNode = node.Outputs[i].ToNode as CompilerNode;
 
                 // If there was no successor node, add an end instead.
                 if (toNode == null)
                 {
                     // Create end node.
-                    RootNode<NodeData> end = CompilerNodeMaker.CreateHierarchy(graph.Data.Set, BuiltIn.EndOpcode);
+                    CompilerNode end = CompilerNodeMaker.CreateHierarchy(graph.Data.Set, BuiltIn.EndOpcode);
                     graph.AddNode(end);
 
                     // Connect it.
@@ -139,7 +139,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 else if (executionOrder.ContainsRight(toNode))
                 {
                     // Create go-to node.
-                    RootNode<NodeData> gto = CompilerNodeMaker.CreateHierarchy(graph.Data.Set, BuiltIn.GotoOpcode);
+                    CompilerNode gto = CompilerNodeMaker.CreateHierarchy(graph.Data.Set, BuiltIn.GotoOpcode);
                     graph.AddNode(gto);
 
                     // Connect it.
@@ -165,7 +165,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Get the label of a node.
         /// </summary>
-        private static string GetLabel(RootNode<NodeData> node)
+        private static string GetLabel(CompilerNode node)
         {
             try
             {
@@ -183,7 +183,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Set the label of a node.
         /// </summary>
-        private static void SetLabel(RootNode<NodeData> node, string value)
+        private static void SetLabel(CompilerNode node, string value)
         {
             try
             {
@@ -201,36 +201,12 @@ namespace Rusty.CutsceneEditor.Compiler
         }
 
         /// <summary>
-        /// Get the output data of a node.
-        /// </summary>
-        private static void GetOutputData(Node<NodeData> node, ref OutputData result)
-        {
-            // Handle arguments.
-            for (int i = 0; i < node.Data.Definition.Parameters.Length; i++)
-            {
-                if (node.Data.Definition.Parameters[i] is OutputParameter output)
-                {
-                    if (output.OverrideDefaultOutput)
-                        result.HasDefaultOutput = false;
-                    result.AddOutput(node, i);
-                }
-            }
-
-            // Handle child nodes.
-            foreach (SubNode<NodeData> sub in node.Children)
-            {
-                GetOutputData(sub, ref result);
-            }
-        }
-
-        /// <summary>
         /// Set the output arguments of a node.
         /// </summary>
-        private static void SetOutputArguments(RootNode<NodeData> node, ref int nextLabel)
+        private static void SetOutputArguments(CompilerNode node, ref int nextLabel)
         {
             // Collect output data.
-            OutputData nodeOutputData = new();
-            GetOutputData(node, ref nodeOutputData);
+            OutputData nodeOutputData = node.GetOutputData();
 
             // Set arguments.
             for (int i = 0; i < nodeOutputData.ArgumentCount; i++)
@@ -241,7 +217,7 @@ namespace Rusty.CutsceneEditor.Compiler
                     outputIndex++;
 
                 // Add a label to the target node.
-                RootNode<NodeData> toNode = node.Outputs[outputIndex].ToNode;
+                CompilerNode toNode = node.Outputs[outputIndex].ToNode as CompilerNode;
                 if (GetLabel(toNode) == null)
                 {
                     SetLabel(toNode, nextLabel.ToString());

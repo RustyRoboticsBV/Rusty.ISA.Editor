@@ -146,10 +146,10 @@ namespace Rusty.CutsceneEditor.Compiler
             {
                 for (int i = 0; i < node.Data.Definition.Parameters.Length; i++)
                 {
+                    if (node.Data.Definition.HideDefaultOutput)
+                        result.HasDefaultOutput = false;
                     if (node.Data.Definition.Parameters[i] is OutputParameter output)
                     {
-                        if (output.OverrideDefaultOutput)
-                            result.HasDefaultOutput = false;
                         result.AddOutput(node, i);
                     }
                 }

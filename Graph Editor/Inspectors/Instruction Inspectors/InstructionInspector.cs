@@ -139,7 +139,7 @@ namespace Rusty.CutsceneEditor
             }
 
             // Add compile rules.
-            foreach (CompileRule compileRule in Definition.PreInstructions)
+            foreach (CompileRule compileRule in Definition.CompileRules)
             {
                 Inspector compileRuleInspector = CompileRuleInspector.Create(InstructionSet, compileRule);
                 CompileRules.Add(compileRuleInspector);

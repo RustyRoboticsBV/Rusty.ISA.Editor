@@ -22,7 +22,7 @@ namespace Rusty.CutsceneEditor.Compiler
             SubNode<NodeData> preInstructionGroup = CompilerNodeMaker.GetPreInstructionBlock(set);
 
             // Compile rules.
-            for (int i = 0; i < definition.PreInstructions.Length; i++)
+            for (int i = 0; i < definition.CompileRules.Length; i++)
             {
                 try
                 {

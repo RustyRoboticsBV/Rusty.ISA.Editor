@@ -225,22 +225,14 @@ namespace Rusty.CutsceneEditor
             List<ParameterInspector> outputs = NodeInspector.GetOutputs();
 
             // Should we keep the main output?
-            bool overrideMain = false;
-            foreach (ParameterInspector output in outputs)
-            {
-                if (output.Definition is OutputParameter outputParam && outputParam.OverrideDefaultOutput)
-                {
-                    overrideMain = true;
-                    break;
-                }
-            }
+            bool hideMain = Definition.HideDefaultOutput;
 
             // Temporarily remove preview.
             if (Preview != null)
                 RemoveChild(Preview);
 
             // Set slot count.
-            int slotCount = overrideMain ? outputs.Count : outputs.Count + 1;
+            int slotCount = hideMain ? outputs.Count : outputs.Count + 1;
 
             // Always ensure at least one input and output.
             if (slotCount < 1)
@@ -270,7 +262,7 @@ namespace Rusty.CutsceneEditor
             // Rename slots.
             for (int i = 0; i < Slots.Count; i++)
             {
-                if (overrideMain)
+                if (hideMain)
                     Slots[i].RightText.Text = outputs[i].Definition.DisplayName;
                 else
                 {

@@ -2,6 +2,7 @@
 using Godot;
 using Rusty.Cutscenes;
 using Rusty.CutsceneEditor.Compiler;
+using Rusty.CutsceneEditor.InstructionSets;
 
 namespace Rusty.CutsceneEditor
 {
@@ -25,6 +26,9 @@ namespace Rusty.CutsceneEditor
 
         [Export] public CutsceneGraphEdit GraphEdit { get; private set; }
 
+        /* Private methods. */
+        private InstructionSet GeneratedSet { get; set; }
+
         /* Godot overrides. */
         public override void _EnterTree()
         {
@@ -34,6 +38,14 @@ namespace Rusty.CutsceneEditor
             SaveDialog.FileSelected += OnSaveFileSelected;
             DebugCompileButton.Pressed += OnDebugCompile;
             DebugDecompileButton.Pressed += OnDebugDecompile;
+
+            // Build instruction set.
+            GeneratedSet = InstructionSetBuilder.Build(InstructionSet, ".godot/Definitions");
+            for (int i = 0; i < GeneratedSet.Definitions.Length; i++)
+            {
+                GD.Print("Definition " + i + ": " + GeneratedSet.Definitions[i]);
+            }
+            GraphEdit.InstructionSet = GeneratedSet;
         }
 
         /* Private methods. */
