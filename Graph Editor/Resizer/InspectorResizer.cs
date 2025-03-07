@@ -27,15 +27,9 @@ namespace Rusty.Cutscenes.Editor
             if (@event is InputEventMouseButton mouse && mouse.ButtonIndex == MouseButton.Left)
             {
                 if (mouse.Pressed)
-                {
                     Dragging = true;
-                    GD.Print("Start dragging");
-                }
                 else
-                {
                     Dragging = false;
-                    GD.Print("Stop dragging");
-                }
             }
         }
 

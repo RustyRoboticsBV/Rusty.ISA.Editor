@@ -1,4 +1,5 @@
-﻿using Rusty.Cutscenes;
+﻿using System.Collections.Generic;
+using Rusty.Cutscenes;
 using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
@@ -12,24 +13,31 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Compile an instruction inspector into a compile node hierarchy.
         /// </summary>
-        public static SubNode<NodeData> Compile(InstructionInspector inspector)
+        public static SubNode<NodeData>[] Compile(InstructionInspector inspector)
         {
             InstructionSet set = inspector.InstructionSet;
             InstructionDefinition definition = inspector.Definition;
             InstructionInstance instance = new(definition);
 
-            // Pre-instruction group.
-            SubNode<NodeData> preInstructionGroup = CompilerNodeMaker.GetPreInstructionBlock(set);
+            List<SubNode<NodeData>> results = new();
 
-            // Compile rules.
-            for (int i = 0; i < definition.CompileRules.Length; i++)
+            // Pre-instructions.
+            if (definition.PreInstructions.Length > 0)
             {
-                try
+                SubNode<NodeData> group = CompilerNodeMaker.GetPreInstructionBlock(set);
+                results.Add(group);
+
+                for (int i = 0; i < definition.PreInstructions.Length; i++)
                 {
-                    Inspector ruleInspector = inspector.GetCompileRuleInspector(i);
-                    preInstructionGroup.AddChild(RuleCompiler.Compile(ruleInspector));
+                    try
+                    {
+                        Inspector ruleInspector = inspector.GetCompileRuleInspector(i);
+                        group.AddChildren(RuleCompiler.Compile(ruleInspector));
+                    }
+                    catch { }
                 }
-                catch { }
+
+                group.AddChild(CompilerNodeMaker.GetEndOfGroup(set));
             }
 
             // Main instruction.
@@ -45,12 +53,29 @@ namespace Rusty.CutsceneEditor.Compiler
                 catch { }
             }
 
-            preInstructionGroup.AddChild(CompilerNodeMaker.GetInstruction(set, instance));
+            results.Add(CompilerNodeMaker.GetInstruction(set, instance));
 
-            // End of pre-instruction group.
-            preInstructionGroup.AddChild(CompilerNodeMaker.GetEndOfBlock(set));
+            // Post-instructions.
+            if (definition.PostInstructions.Length > 0)
+            {
+                SubNode<NodeData> group = CompilerNodeMaker.GetPostInstructionBlock(set);
+                results.Add(group);
 
-            return preInstructionGroup;
+                for (int i = 0; i < definition.PreInstructions.Length; i++)
+                {
+                    try
+                    {
+                        Inspector ruleInspector = inspector.GetCompileRuleInspector(i);
+                        group.AddChildren(RuleCompiler.Compile(ruleInspector));
+                    }
+                    catch { }
+                }
+
+                group.AddChild(CompilerNodeMaker.GetEndOfGroup(set));
+            }
+
+            // Return node(s).
+            return results.ToArray();
         }
     }
 }

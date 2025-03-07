@@ -69,7 +69,7 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"MultilineParameter ({Definition.Id})";
+            Name = $"MultilineParameter ({Definition.ID})";
 
             // Add multiline field.
             MultilineField = new();

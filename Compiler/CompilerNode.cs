@@ -1,5 +1,5 @@
-﻿using Rusty.Cutscenes;
-using Rusty.Graphs;
+﻿using Rusty.Graphs;
+using Rusty.Cutscenes;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
@@ -48,7 +48,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /// </summary>
         public SubNode<NodeData> GetStart()
         {
-            return FindSubNode(BuiltIn.StartOpcode);
+            return FindSubNode(BuiltIn.BeginOpcode);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Rusty.CutsceneEditor.Compiler
             {
                 for (int i = 0; i < node.Data.Definition.Parameters.Length; i++)
                 {
-                    if (node.Data.Definition.HideDefaultOutput)
+                    if (node.Data.Definition.RemovesDefaultOutput())
                         result.HasDefaultOutput = false;
                     if (node.Data.Definition.Parameters[i] is OutputParameter output)
                     {

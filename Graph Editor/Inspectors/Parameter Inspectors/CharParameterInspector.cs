@@ -6,56 +6,56 @@ namespace Rusty.CutsceneEditor
     /// <summary>
     /// A line parameter inspector.
     /// </summary>
-    public partial class LineParameterInspector : ParameterInspector
+    public partial class CharParameterInspector : ParameterInspector
     {
         /* Public properties. */
         /// <summary>
         /// The parameter definition visualized by this inspector.
         /// </summary>
-        public new LineParameter Definition
+        public new CharParameter Definition
         {
-            get => base.Definition as LineParameter;
+            get => base.Definition as CharParameter;
             set => base.Definition = value;
         }
         /// <summary>
         /// The value of the stored parameter.
         /// </summary>
-        public string Value
+        public char Value
         {
-            get => LineField.Value;
-            set => LineField.Value = value;
+            get => CharField.Value;
+            set => CharField.Value = value;
         }
         public override object ValueObj
         {
             get => Value;
-            set => Value = (string)value;
+            set => Value = (char)value;
         }
 
         /* Private properties. */
-        private LineField LineField { get; set; }
+        private CharField CharField { get; set; }
 
         /* Constructors. */
-        public LineParameterInspector() : base() { }
+        public CharParameterInspector() : base() { }
 
-        public LineParameterInspector(InstructionSet instructionSet, LineParameter parameter)
+        public CharParameterInspector(InstructionSet instructionSet, CharParameter parameter)
             : base(instructionSet, parameter)
         {
-            LineField.Value = parameter.DefaultValue;
+            CharField.Value = parameter.DefaultValue;
         }
 
-        public LineParameterInspector(LineParameterInspector other) : base(other) { }
+        public CharParameterInspector(CharParameterInspector other) : base(other) { }
 
         /* Public methods. */
         public override Element Duplicate()
         {
-            return new LineParameterInspector(this);
+            return new CharParameterInspector(this);
         }
 
         public override bool CopyStateFrom(Element other)
         {
-            if (base.CopyStateFrom(other) && other is LineParameterInspector otherInspector)
+            if (base.CopyStateFrom(other) && other is CharParameterInspector otherInspector)
             {
-                LineField = GetAt(0) as LineField;
+                CharField = GetAt(0) as CharField;
                 return true;
             }
             return false;
@@ -68,12 +68,12 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"LineParameter ({Definition.Id})";
+            Name = $"CharParameter ({Definition.ID})";
 
             // Add line field.
-            LineField = new();
-            LineField.LabelText = Definition.DisplayName;
-            Add(LineField);
+            CharField = new();
+            CharField.LabelText = Definition.DisplayName;
+            Add(CharField);
         }
     }
 }

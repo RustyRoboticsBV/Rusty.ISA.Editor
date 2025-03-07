@@ -44,7 +44,7 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"OutputParameter ({Definition.Id})";
+            Name = $"OutputParameter ({Definition.ID})";
 
             // Hide this inspector.
             Hide();

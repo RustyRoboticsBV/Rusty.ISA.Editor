@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rusty.Cutscenes;
-using Rusty.Cutscenes.Editor;
 
 namespace Rusty.CutsceneEditor
 {
@@ -31,6 +30,8 @@ namespace Rusty.CutsceneEditor
         {
             switch (compileRule)
             {
+                case InstructionRule preInstruction:
+                    return new PreInstructionInspector(instructionSet, instructionSet[preInstruction.Opcode]);
                 case OptionRule optionRule:
                     return new OptionRuleInspector(instructionSet, optionRule);
                 case ChoiceRule choiceRule:
@@ -39,15 +40,13 @@ namespace Rusty.CutsceneEditor
                     return new TupleRuleInspector(instructionSet, tupleRule);
                 case ListRule listRule:
                     return new ListRuleInspector(instructionSet, listRule);
-                case PreInstruction preInstruction:
-                    return new PreInstructionInspector(instructionSet, instructionSet[preInstruction.Opcode]);
                 default:
                     throw new ArgumentException($"Compile rule '{compileRule}' has an illegal type '{compileRule.GetType().Name}'.");
             }
         }
 
         /// <summary>
-        /// Get all output parameter inspectors associated with this compile rule inspectors and its sub inspectors.
+        /// Get all output parameter inspectors associated with this compile rule inspector and its sub-inspectors.
         /// </summary>
         public List<ParameterInspector> GetOutputs()
         {

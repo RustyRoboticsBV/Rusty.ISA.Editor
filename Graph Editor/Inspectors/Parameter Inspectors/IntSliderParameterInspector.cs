@@ -71,7 +71,7 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"IntSliderParameter ({Definition.Id})";
+            Name = $"IntSliderParameter ({Definition.ID})";
 
             // Add int slider field.
             IntSliderField = new();

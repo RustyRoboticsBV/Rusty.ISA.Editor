@@ -12,9 +12,9 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// The parameter definition visualized by this inspector.
         /// </summary>
-        public ParameterDefinition Definition
+        public Parameter Definition
         {
-            get => Resource as ParameterDefinition;
+            get => Resource as Parameter;
             set => Resource = value;
         }
         /// <summary>
@@ -25,7 +25,7 @@ namespace Rusty.CutsceneEditor
         /* Constructors. */
         public ParameterInspector() : base() { }
 
-        public ParameterInspector(InstructionSet instructionSet, ParameterDefinition parameter)
+        public ParameterInspector(InstructionSet instructionSet, Parameter parameter)
             : base(instructionSet, parameter) { }
 
         public ParameterInspector(ParameterInspector other) : base(other) { }
@@ -34,7 +34,7 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// Create a parameter inspector of some type.
         /// </summary>
-        public static ParameterInspector Create(InstructionSet instructionSet, ParameterDefinition parameter)
+        public static ParameterInspector Create(InstructionSet instructionSet, Parameter parameter)
         {
             switch (parameter)
             {
@@ -48,8 +48,8 @@ namespace Rusty.CutsceneEditor
                     return new IntSliderParameterInspector(instructionSet, intSliderParameter);
                 case FloatSliderParameter floatSliderParameter:
                     return new FloatSliderParameterInspector(instructionSet, floatSliderParameter);
-                case LineParameter lineParameter:
-                    return new LineParameterInspector(instructionSet, lineParameter);
+                case TextParameter TextParameter:
+                    return new TextParameterInspector(instructionSet, TextParameter);
                 case MultilineParameter multilineParameter:
                     return new MultilineParameterInspector(instructionSet, multilineParameter);
                 case ColorParameter colorParameter:

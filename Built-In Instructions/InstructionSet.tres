@@ -1,139 +1,34 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=40 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=51 format=3 uid="uid://dnt3g5dpjm0pd"]
 
-[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
-[ext_resource type="Texture2D" uid="uid://cqr70pp8lhjxg" path="res://Built-In Instructions/IconSTA.bmp" id="1_m3thx"]
-[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/OutputParameter.cs" id="2_1oqv3"]
-[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
-[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/LineParameter.cs" id="3_fplrf"]
-[ext_resource type="Texture2D" uid="uid://d2p6fihx03ulm" path="res://Built-In Instructions/IconEND.bmp" id="4_1msm3"]
-[ext_resource type="Texture2D" uid="uid://c6nj8ormy6u2x" path="res://Built-In Instructions/IconLBL.bmp" id="5_m25e8"]
-[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/BoolParameter.cs" id="5_odjsm"]
-[ext_resource type="Texture2D" uid="uid://dbw2hjlfspdf" path="res://Built-In Instructions/IconGTO.bmp" id="6_ikhp1"]
-[ext_resource type="Texture2D" uid="uid://bhfjn5nohucmy" path="res://Built-In Instructions/IconERR.bmp" id="8_qj5rq"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
+[ext_resource type="Texture2D" uid="uid://cg1l63y6ngo4a" path="res://Built-In Instructions/IconPRE.bmp" id="4_wahcg"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/BoolParameter.cs" id="5_odjsm"]
+[ext_resource type="Texture2D" uid="uid://chwtisxfc6sgf" path="res://Built-In Instructions/IconPST.bmp" id="5_yqtwi"]
 [ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="9_dl4up"]
-[ext_resource type="Texture2D" uid="uid://cg1l63y6ngo4a" path="res://Built-In Instructions/IconINS.bmp" id="11_vnhvg"]
-[ext_resource type="Script" path="res://Submodules/Cutscenes/Resources/Instruction Set/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="11_gxiqw"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/TextParameter.cs" id="12_rklps"]
 [ext_resource type="Texture2D" uid="uid://d06v0b1l2xkth" path="res://Built-In Instructions/IconOPT.bmp" id="12_y4agh"]
 [ext_resource type="Texture2D" uid="uid://csuae1j5ge1uj" path="res://Built-In Instructions/IconCHO.bmp" id="14_42hs7"]
+[ext_resource type="Texture2D" uid="uid://c6nj8ormy6u2x" path="res://Submodules/Cutscenes/Built-In Instructions/IconLAB.bmp" id="14_siv20"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/OutputParameter.cs" id="15_3ecvh"]
 [ext_resource type="Texture2D" uid="uid://hebpbqr6ffha" path="res://Built-In Instructions/IconTPL.bmp" id="15_r7qq2"]
 [ext_resource type="Texture2D" uid="uid://cw6aeeeuk5i85" path="res://Built-In Instructions/IconLST.bmp" id="16_6vvij"]
 [ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOB.bmp" id="17_fsrcr"]
 
-[sub_resource type="Resource" id="Resource_xui0c"]
-resource_name = "Line: name"
-script = ExtResource("3_fplrf")
-Id = "name"
-DisplayName = "Name"
-Description = "The name of this start point."
-DefaultValue = "Start"
-
-[sub_resource type="Resource" id="Resource_85ea8"]
-resource_name = "STA"
-script = ExtResource("2_uguea")
-Opcode = "STA"
-Parameters = [SubResource("Resource_xui0c")]
-Implementation = "Continue();"
-Icon = ExtResource("1_m3thx")
-DisplayName = "Start"
-Description = "Marks a point from which the cutscene  can be played."
-Category = "Flow Control"
-HideDefaultOutput = false
-Preview = []
-CompileRules = []
-
-[sub_resource type="Resource" id="Resource_hk6h5"]
-resource_name = "END"
-script = ExtResource("2_uguea")
-Opcode = "END"
-Parameters = []
-Implementation = "Stop();"
-Icon = ExtResource("4_1msm3")
-DisplayName = "End"
-Description = "Stop the cutscene player."
-Category = "Flow Control"
-HideDefaultOutput = true
-Preview = []
-CompileRules = []
-
-[sub_resource type="Resource" id="Resource_0i3d0"]
-resource_name = "Line: name"
-script = ExtResource("3_fplrf")
-Id = "name"
-DisplayName = "Name"
-Description = ""
-DefaultValue = ""
-
-[sub_resource type="Resource" id="Resource_l0vtb"]
-resource_name = "LBL"
-script = ExtResource("2_uguea")
-Opcode = "LBL"
-Parameters = [SubResource("Resource_0i3d0")]
-Implementation = "Continue();"
-Icon = ExtResource("5_m25e8")
-DisplayName = "Label"
-Description = "Marks a possible target position of a GTO instruction."
-Category = "Flow Control"
-HideDefaultOutput = false
-Preview = []
-CompileRules = []
-
-[sub_resource type="Resource" id="Resource_wvcvr"]
-resource_name = "Output: target_label"
-script = ExtResource("2_1oqv3")
-Id = "target_label"
-DisplayName = "Target Label"
-Description = "The label that must be jumped to by the cutscene player."
-UseParameterAsPreview = ""
-
-[sub_resource type="Resource" id="Resource_yqmpw"]
-resource_name = "GTO"
-script = ExtResource("2_uguea")
-Opcode = "GTO"
-Parameters = [SubResource("Resource_wvcvr")]
-Implementation = "Goto([target_label]);"
-Icon = ExtResource("6_ikhp1")
-DisplayName = "Go-to"
-Description = "Make the cutscene player jump to a specific LBL instruction with some name."
-Category = "Flow Control"
-HideDefaultOutput = true
-Preview = []
-CompileRules = []
-
-[sub_resource type="Resource" id="Resource_wdv8u"]
-resource_name = "Line: message"
-script = ExtResource("3_fplrf")
-Id = "message"
-DisplayName = "Message"
-Description = "The error message that must be displayed."
-DefaultValue = ""
-
-[sub_resource type="Resource" id="Resource_kgp0a"]
-resource_name = "ERR"
-script = ExtResource("2_uguea")
-Opcode = "ERR"
-Parameters = [SubResource("Resource_wdv8u")]
-Implementation = "Error([message]);
-Stop();"
-Icon = ExtResource("8_qj5rq")
-DisplayName = "Error"
-Description = "Push an error message and stop the cutscene player."
-Category = "Flow Control"
-HideDefaultOutput = false
-Preview = []
-CompileRules = []
-
 [sub_resource type="Resource" id="Resource_g65gn"]
-resource_name = "Int: x"
+resource_name = "x (int)"
 script = ExtResource("12_q4rbi")
-Id = "x"
+ID = "x"
 DisplayName = "X"
 Description = "The x-position of the editor node."
 DefaultValue = 0
 
 [sub_resource type="Resource" id="Resource_1ekkv"]
-resource_name = "Int: y"
+resource_name = "y (int)"
 script = ExtResource("12_q4rbi")
-Id = "y"
+ID = "y"
 DisplayName = "Y"
 Description = "The y-position of the editor node."
 DefaultValue = 0
@@ -143,33 +38,44 @@ resource_name = "NOD"
 script = ExtResource("2_uguea")
 Opcode = "NOD"
 Parameters = [SubResource("Resource_g65gn"), SubResource("Resource_1ekkv")]
-Implementation = ""
 Icon = ExtResource("9_dl4up")
 DisplayName = "Editor Node"
-Description = "A compiler marker that denotes the beginning of an editor node. All instructions between it and the next EON instruction will be part of the node."
+Description = "A compiler marker that denotes the beginning of an editor node. All instructions between it and the next EOG instruction will be part of the node."
 Category = "Compiler"
-HideDefaultOutput = false
 Preview = []
-CompileRules = []
+PreInstructions = []
+PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_adnbf"]
-resource_name = "INS"
+resource_name = "PRE"
 script = ExtResource("2_uguea")
-Opcode = "INS"
+Opcode = "PRE"
 Parameters = []
-Implementation = ""
-Icon = ExtResource("11_vnhvg")
+Icon = ExtResource("4_wahcg")
 DisplayName = "Instruction Inspector"
-Description = "A compiler marker that starts an instruction group. The last instruction in the group represents the \"main\" instruction, and the rest represent associated pre-instructions. The group should be closed with an EOB instruction."
+Description = "A compiler marker that starts a pre-instruction group. The group should be closed with an EOG instruction. All instruction between the two markers are interpreted as pre-instructions of the instruction that comes after the EOG."
 Category = "Compiler"
-HideDefaultOutput = false
 Preview = []
-CompileRules = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_13ejn"]
+resource_name = "PST"
+script = ExtResource("2_uguea")
+Opcode = "PST"
+Parameters = []
+Icon = ExtResource("5_yqtwi")
+DisplayName = "Post-Instructions"
+Description = "A compiler marker that starts a post-instruction group. The group should be closed with an EOB instruction. All instruction between the two markers are interpreted as post-instructions of the instruction that comes before this one."
+Category = "Compiler"
+Preview = []
+PreInstructions = []
+PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_21641"]
 resource_name = "Bool: enabled"
 script = ExtResource("5_odjsm")
-Id = "enabled"
+ID = ""
 DisplayName = "Enabled"
 Description = "Whether or not this option collection is enabled."
 DefaultValue = false
@@ -179,19 +85,18 @@ resource_name = "OPT"
 script = ExtResource("2_uguea")
 Opcode = "OPT"
 Parameters = [SubResource("Resource_21641")]
-Implementation = ""
 Icon = ExtResource("12_y4agh")
 DisplayName = "Option Rule"
-Description = "A compiler marker that starts an option collection. The collection should be closed with an EOB instruction."
+Description = "A compiler marker that starts an group collection. The group should be closed with an EOG instruction."
 Category = "Compiler"
-HideDefaultOutput = false
 Preview = []
-CompileRules = []
+PreInstructions = []
+PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_yjpwf"]
 resource_name = "Int: selected"
 script = ExtResource("12_q4rbi")
-Id = "selected"
+ID = ""
 DisplayName = "Selected"
 Description = "The selected choice."
 DefaultValue = 0
@@ -201,33 +106,31 @@ resource_name = "CHO"
 script = ExtResource("2_uguea")
 Opcode = "CHO"
 Parameters = [SubResource("Resource_yjpwf")]
-Implementation = ""
 Icon = ExtResource("14_42hs7")
 DisplayName = "Choice Rule"
-Description = "A compiler marker that starts a choice collection. The collection should be closed with an EOB instruction."
+Description = "A compiler marker that starts a choice group. The group should be closed with an EOG instruction."
 Category = "Compiler"
-HideDefaultOutput = false
 Preview = []
-CompileRules = []
+PreInstructions = []
+PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_lgia3"]
 resource_name = "TPL"
 script = ExtResource("2_uguea")
 Opcode = "TPL"
 Parameters = []
-Implementation = ""
 Icon = ExtResource("15_r7qq2")
 DisplayName = "Tuple Rule"
-Description = "A compiler marker that starts a tuple collection. The collection should be closed with an EOB instruction."
+Description = "A compiler marker that starts a tuple rule group. The group should be closed with an EOG instruction."
 Category = "Compiler"
-HideDefaultOutput = false
 Preview = []
-CompileRules = []
+PreInstructions = []
+PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_77slk"]
 resource_name = "Int: count"
 script = ExtResource("12_q4rbi")
-Id = "count"
+ID = ""
 DisplayName = "Count"
 Description = "The number of elements in this list collection."
 DefaultValue = 0
@@ -237,29 +140,194 @@ resource_name = "LST"
 script = ExtResource("2_uguea")
 Opcode = "LST"
 Parameters = [SubResource("Resource_77slk")]
-Implementation = ""
 Icon = ExtResource("16_6vvij")
 DisplayName = "List Rule"
-Description = "A compiler marker that starts a list collection. The collection should be closed with an EOB instruction."
+Description = "A compiler marker that starts a list group. The group should be closed with an EOG instruction."
 Category = "Compiler"
-HideDefaultOutput = false
 Preview = []
-CompileRules = []
+PreInstructions = []
+PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_itw8j"]
-resource_name = "EOB"
+resource_name = "EOG"
 script = ExtResource("2_uguea")
-Opcode = "EOB"
+Opcode = "EOG"
 Parameters = []
-Implementation = ""
 Icon = ExtResource("17_fsrcr")
 DisplayName = "End of Block"
-Description = "A compiler marker that denotes the end of a group of instructions, such as an editor node, a pre-instruction group or a collection."
+Description = "A compiler marker that denotes the end of a group of instructions."
 Category = "Compiler"
-HideDefaultOutput = false
 Preview = []
-CompileRules = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_wxhar"]
+load_path = "res://.godot/imported/IconBEG.bmp-10552e65313433dd5ad8ff2a59c9f4e7.ctex"
+
+[sub_resource type="Resource" id="Resource_2wpiq"]
+script = ExtResource("11_gxiqw")
+Members = ""
+Initialize = ""
+Execute = ""
+
+[sub_resource type="Resource" id="Resource_03qba"]
+resource_name = "name (text)"
+script = ExtResource("12_rklps")
+ID = "name"
+DisplayName = "Name"
+Description = "The name of this start point."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_3fopi"]
+resource_name = "BEG"
+script = ExtResource("2_uguea")
+Opcode = "BEG"
+Parameters = [SubResource("Resource_03qba")]
+Implementation = SubResource("Resource_2wpiq")
+Icon = SubResource("CompressedTexture2D_wxhar")
+DisplayName = "Begin"
+Description = "Defines a start point in a cutscene program. Cutscene players can start playing the program from these points."
+Category = "Core"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_sc10l"]
+load_path = "res://.godot/imported/IconEND.bmp-6d96b35149058b3093f4946a4ae58988.ctex"
+
+[sub_resource type="Resource" id="Resource_udtmp"]
+script = ExtResource("11_gxiqw")
+Members = ""
+Initialize = ""
+Execute = "end();"
+
+[sub_resource type="Resource" id="Resource_usn25"]
+resource_name = "END"
+script = ExtResource("2_uguea")
+Opcode = "END"
+Parameters = []
+Implementation = SubResource("Resource_udtmp")
+Icon = SubResource("CompressedTexture2D_sc10l")
+DisplayName = "End"
+Description = ""
+Category = "Core"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_08hnh"]
+script = ExtResource("11_gxiqw")
+Members = ""
+Initialize = ""
+Execute = ""
+
+[sub_resource type="Resource" id="Resource_1e2l0"]
+resource_name = "name (line)"
+script = ExtResource("12_rklps")
+ID = "name"
+DisplayName = "Name"
+Description = "The name of this label."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_pm5es"]
+resource_name = "LAB"
+script = ExtResource("2_uguea")
+Opcode = "LAB"
+Parameters = [SubResource("Resource_1e2l0")]
+Implementation = SubResource("Resource_08hnh")
+Icon = ExtResource("14_siv20")
+DisplayName = "Label"
+Description = "Defines a point that can be jumped to by the goto function."
+Category = "Core"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_r3wit"]
+load_path = "res://.godot/imported/IconGTO.bmp-ef7b274ba660228f284d60314a7346a6.ctex"
+
+[sub_resource type="Resource" id="Resource_yhvsr"]
+script = ExtResource("11_gxiqw")
+Members = ""
+Initialize = ""
+Execute = "goto(%target_label%);"
+
+[sub_resource type="Resource" id="Resource_tgvxa"]
+resource_name = "target_label (output)"
+script = ExtResource("15_3ecvh")
+ID = "target_label"
+DisplayName = "Target Label"
+Description = "The name of the label that must be jumped to."
+RemoveDefaultOutput = true
+UseArgumentAsPreview = "target_label"
+
+[sub_resource type="Resource" id="Resource_6bfpp"]
+resource_name = "GTO"
+script = ExtResource("2_uguea")
+Opcode = "GTO"
+Parameters = [SubResource("Resource_tgvxa")]
+Implementation = SubResource("Resource_yhvsr")
+Icon = SubResource("CompressedTexture2D_r3wit")
+DisplayName = "Goto"
+Description = "Jumps the program counter to a label instruction with some name."
+Category = "Core"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3263b"]
+load_path = "res://.godot/imported/IconWRN.bmp-e296787ddb9d845e66141121942cf2fe.ctex"
+
+[sub_resource type="Resource" id="Resource_08wba"]
+script = ExtResource("11_gxiqw")
+Members = ""
+Initialize = ""
+Execute = "warning(%message%);"
+
+[sub_resource type="Resource" id="Resource_b4qbb"]
+resource_name = "WRN"
+script = ExtResource("2_uguea")
+Opcode = "WRN"
+Parameters = []
+Implementation = SubResource("Resource_08wba")
+Icon = SubResource("CompressedTexture2D_3263b")
+DisplayName = "Warning"
+Description = "Prints an warning message and stops cutscene execution."
+Category = "Core"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dxm61"]
+load_path = "res://.godot/imported/IconERR.bmp-a2c5054378e2762793986fcaca6dc7a3.ctex"
+
+[sub_resource type="Resource" id="Resource_0mw74"]
+script = ExtResource("11_gxiqw")
+Members = ""
+Initialize = ""
+Execute = "error(%message%);"
+
+[sub_resource type="Resource" id="Resource_es1ni"]
+resource_name = "ERR"
+script = ExtResource("2_uguea")
+Opcode = "ERR"
+Parameters = []
+Implementation = SubResource("Resource_0mw74")
+Icon = SubResource("CompressedTexture2D_dxm61")
+DisplayName = "Error"
+Description = "Prints an error message and stops cutscene execution."
+Category = "Core"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_eqo11"]
+resource_name = "Core (copy)"
+script = ExtResource("1_1x08l")
+Definitions = [SubResource("Resource_3fopi"), SubResource("Resource_usn25"), SubResource("Resource_pm5es"), SubResource("Resource_6bfpp"), SubResource("Resource_b4qbb"), SubResource("Resource_es1ni")]
+Modules = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_85ea8"), SubResource("Resource_hk6h5"), SubResource("Resource_l0vtb"), SubResource("Resource_yqmpw"), SubResource("Resource_kgp0a"), SubResource("Resource_btai4"), SubResource("Resource_adnbf"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
+Definitions = [SubResource("Resource_btai4"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
+Modules = [SubResource("Resource_eqo11")]

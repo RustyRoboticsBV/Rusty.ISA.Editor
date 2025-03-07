@@ -62,7 +62,7 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"TupleRule ({Rule.Id})";
+            Name = $"TupleRule ({Rule.ID})";
 
             // Add label.
             if (Rule.DisplayName != "")

@@ -26,11 +26,11 @@ namespace Rusty.CutsceneEditor.Compiler
             Inspector[] childRules = inspector.GetActiveSubInspectors();
             foreach (Inspector childRule in childRules)
             {
-                choice.AddChild(Compile(childRule));
+                choice.AddChildren(Compile(childRule));
             }
 
             // End of rule.
-            choice.AddChild(CompilerNodeMaker.GetEndOfBlock(inspector.InstructionSet));
+            choice.AddChild(CompilerNodeMaker.GetEndOfGroup(inspector.InstructionSet));
 
             return choice;
         }

@@ -24,7 +24,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 switch (instructions[index].Opcode)
                 {
                     case BuiltIn.NodeOpcode:
-                    case BuiltIn.InstructorInspectorOpcode:
+                    case BuiltIn.PreInstructionOpcode:
                     case BuiltIn.OptionRuleOpcode:
                     case BuiltIn.ChoiceRuleOpcode:
                     case BuiltIn.TupleRuleOpcode:
@@ -93,14 +93,14 @@ namespace Rusty.CutsceneEditor.Compiler
                 switch (instructions[index].Opcode)
                 {
                     case BuiltIn.NodeOpcode:
-                    case BuiltIn.InstructorInspectorOpcode:
+                    case BuiltIn.PreInstructionOpcode:
                     case BuiltIn.OptionRuleOpcode:
                     case BuiltIn.ChoiceRuleOpcode:
                     case BuiltIn.TupleRuleOpcode:
                     case BuiltIn.ListRuleOpcode:
                         node.AddChild(HandleCollection(set, instructions, ref index));
                         break;
-                    case BuiltIn.EndOfBlockOpcode:
+                    case BuiltIn.EndOfGroupOpcode:
                         node.AddChild(CompilerNodeMaker.GetInstruction(set, instructions[index]));
                         return node;
                     default:

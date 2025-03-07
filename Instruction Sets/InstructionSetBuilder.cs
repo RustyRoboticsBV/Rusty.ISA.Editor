@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Godot;
@@ -20,14 +21,24 @@ namespace Rusty.CutsceneEditor.InstructionSets
 		{
 			List<InstructionDefinition> definitions = new();
 
-			// Copy over built-in instructions.
-			for (int i = 0; i < builtIn.Definitions.Length; i++)
+			// Get absolute path to folder.
+			string absolutePath = PathUtility.GetPath(folderPath);
+
+			// Create folder if it didn't exist yet.
+			if (!Directory.Exists(absolutePath))
 			{
-				definitions.Add(builtIn.Definitions[i]);
+				Directory.CreateDirectory(absolutePath);
+				GD.Print("Created definitions folder at " + absolutePath);
+			}
+
+            // Copy over built-in instructions.
+            for (int i = 0; i < builtIn.Count; i++)
+			{
+				definitions.Add(builtIn[i]);
 			}
 
 			// Recursively load folder.
-			HandleDirectory(definitions, folderPath);
+			HandleDirectory(definitions, absolutePath);
 
             // Create instruction set and return it.
             return new InstructionSet(definitions.ToArray());

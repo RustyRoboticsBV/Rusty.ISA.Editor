@@ -83,7 +83,7 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"FloatSliderParameter ({Definition.Id})";
+            Name = $"FloatSliderParameter ({Definition.ID})";
 
             // Add float slider field.
             FloatSliderField = new();

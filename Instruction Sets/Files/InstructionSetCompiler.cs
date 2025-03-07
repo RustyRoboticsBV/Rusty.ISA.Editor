@@ -1,8 +1,10 @@
 ﻿using Godot;
+using System;
 using System.Text;
 using Rusty.Xml;
 using Rusty.Cutscenes;
 using Rusty.CutsceneImporter.InstructionDefinitions;
+using System.IO;
 
 namespace Rusty.CutsceneEditor.InstructionSets
 {
@@ -14,10 +16,19 @@ namespace Rusty.CutsceneEditor.InstructionSets
     {
         public static void Compile(InstructionSet set, string filePath)
         {
+            string absolutePath = PathUtility.GetPath(filePath);
+            
+            string folderPath = Path.GetDirectoryName(absolutePath);
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+                GD.Print($"Created directory at '{folderPath}'.");
+            }
+
             ZipPacker packer = new ZipPacker();
-            Error error = packer.Open(filePath);
+            Error error = packer.Open(absolutePath);
             if (error != Error.Ok)
-                throw new System.Exception($"Could not open file '{filePath}'!");
+                throw new Exception($"Could not open file '{absolutePath}' due to error code '{error}'!");
 
             for (int i = 0; i < set.Definitions.Length; i++)
             {
@@ -25,13 +36,20 @@ namespace Rusty.CutsceneEditor.InstructionSets
 
                 packer.StartFile($"{def.Category}/{def.Opcode}/def{def.Opcode}.xml");
                 Document doc = InstructionDefinitionCompiler.Compile(def);
-                doc.Root.GetChild("icon").InnerText = $"icon{def.Opcode}.png";
+                try
+                {
+                    doc.Root.GetChild("icon").InnerText = $"icon{def.Opcode}.png";
+                }
+                catch { }
                 packer.WriteFile(Encoding.ASCII.GetBytes(doc.GenerateXml()));
                 packer.CloseFile();
 
-                packer.StartFile($"{def.Category}/{def.Opcode}/icon{def.Opcode}.png");
-                packer.WriteFile(def.Icon.GetImage().SavePngToBuffer());
-                packer.CloseFile();
+                if (def.Icon != null)
+                {
+                    packer.StartFile($"{def.Category}/{def.Opcode}/icon{def.Opcode}.png");
+                    packer.WriteFile(def.Icon.GetImage().SavePngToBuffer());
+                    packer.CloseFile();
+                }
             }
 
             packer.Close();

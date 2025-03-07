@@ -69,7 +69,7 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"BoolParameter ({Definition.Id})";
+            Name = $"BoolParameter ({Definition.ID})";
 
             // Add check box field.
             CheckBox = new();

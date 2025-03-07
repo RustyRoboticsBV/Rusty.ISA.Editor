@@ -1,4 +1,5 @@
-﻿using Rusty.Cutscenes;
+﻿using System;
+using Rusty.Cutscenes;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
@@ -58,6 +59,8 @@ namespace Rusty.CutsceneEditor.Compiler
         public string GetArgument(string name)
         {
             int index = Definition.GetParameterIndex(name);
+            if (index < 0)
+                throw new Exception($"Could not find parameter '{name}' in instructin '{GetOpcode()}'!");
             return GetArgument(index);
         }
 

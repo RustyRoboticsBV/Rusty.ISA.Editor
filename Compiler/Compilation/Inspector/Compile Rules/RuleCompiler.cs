@@ -12,20 +12,20 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Compile a rule inspector into a compiler node hierarchy.
         /// </summary>
-        public static SubNode<NodeData> Compile(Inspector inspector)
+        public static SubNode<NodeData>[] Compile(Inspector inspector)
         {
             switch (inspector)
             {
                 case PreInstructionInspector preInspector:
                     return InstructionCompiler.Compile(preInspector);
                 case OptionRuleInspector optionInspector:
-                    return OptionRuleCompiler.Compile(optionInspector);
+                    return new SubNode<NodeData>[] { OptionRuleCompiler.Compile(optionInspector) };
                 case ChoiceRuleInspector choiceInspector:
-                    return ChoiceRuleCompiler.Compile(choiceInspector);
+                    return new SubNode<NodeData>[] { ChoiceRuleCompiler.Compile(choiceInspector) };
                 case TupleRuleInspector tupleInspector:
-                    return TupleRuleCompiler.Compile(tupleInspector);
+                    return new SubNode<NodeData>[] { TupleRuleCompiler.Compile(tupleInspector) };
                 case ListRuleInspector listInspector:
-                    return ListRuleCompiler.Compile(listInspector);
+                    return new SubNode<NodeData>[] { ListRuleCompiler.Compile(listInspector) };
                 default:
                     throw new ArgumentException($"The inspector '{inspector.Name}' was of illegal type '{inspector.GetType().Name}'.");
             }

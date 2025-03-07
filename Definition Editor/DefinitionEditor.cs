@@ -1,6 +1,5 @@
-﻿using Rusty.EditorUI;
-using Rusty.Cutscenes;
-using Godot;
+﻿using Godot;
+using Rusty.EditorUI;
 using Rusty.Xml;
 
 namespace Rusty.CutsceneEditor.Definitions

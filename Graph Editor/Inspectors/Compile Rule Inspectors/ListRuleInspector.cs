@@ -81,7 +81,7 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"ListRule ({Rule.Id})";
+            Name = $"ListRule ({Rule.ID})";
 
             // Add list element.
             ListElement = new()

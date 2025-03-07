@@ -12,21 +12,21 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Create a compiler node hierarchy, starting with a NOD instruction.
         /// </summary>
-        public static CompilerNode CreateHierarchy(InstructionSet set, string x, string y, string name, SubNode<NodeData> subNode)
+        public static CompilerNode CreateHierarchy(InstructionSet set, string x, string y, string name, params SubNode<NodeData>[] subNodes)
         {
             // Add node instruction.
             CompilerNode node = GetNode(set, x, y);
 
             // Add (optional) start instruction.
             if (name != "")
-                node.AddChild(GetStart(set, name));
+                node.AddChild(GetBegin(set, name));
 
             // Add inspector instruction.
-            if (subNode != null)
-                node.AddChild(subNode);
+            if (subNodes != null)
+                node.AddChildren(subNodes);
 
             // Add end-of-block instruction.
-            node.AddChild(GetEndOfBlock(set));
+            node.AddChild(GetEndOfGroup(set));
 
             return node;
         }
@@ -47,17 +47,8 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[opcode];
             InstructionInstance instance = new(definition);
 
-            // Add pre-instruction block starter node.
-            SubNode<NodeData> pre = GetPreInstructionBlock(set);
-
-            // Create instruction node.
-            pre.AddChild(GetInstruction(set, instance));
-
-            // Create block end node.
-            pre.AddChild(GetEndOfBlock(set));
-
             // Create node hierarchy.
-            return CreateHierarchy(set, "-", "-", "", pre);
+            return CreateHierarchy(set, "-", "-", "", GetInstruction(set, instance));
         }
 
 
@@ -76,7 +67,7 @@ namespace Rusty.CutsceneEditor.Compiler
         }
 
         /// <summary>
-        /// Create a LBL instruction sub-node.
+        /// Create a LAB instruction sub-node.
         /// </summary>
         public static SubNode<NodeData> GetLabel(InstructionSet set, string value)
         {
@@ -89,11 +80,11 @@ namespace Rusty.CutsceneEditor.Compiler
         }
 
         /// <summary>
-        /// Create a STA instruction sub-node.
+        /// Create a BEG instruction sub-node.
         /// </summary>
-        public static SubNode<NodeData> GetStart(InstructionSet set, string name)
+        public static SubNode<NodeData> GetBegin(InstructionSet set, string name)
         {
-            InstructionDefinition definition = set[BuiltIn.StartOpcode];
+            InstructionDefinition definition = set[BuiltIn.BeginOpcode];
             InstructionInstance instance = new(definition);
 
             instance.Arguments[definition.GetParameterIndex(BuiltIn.StartNameId)] = name;
@@ -106,7 +97,18 @@ namespace Rusty.CutsceneEditor.Compiler
         /// </summary>
         public static SubNode<NodeData> GetPreInstructionBlock(InstructionSet set)
         {
-            InstructionDefinition definition = set[BuiltIn.InstructorInspectorOpcode];
+            InstructionDefinition definition = set[BuiltIn.PreInstructionOpcode];
+            InstructionInstance instance = new(definition);
+
+            return new SubNode<NodeData>(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
+        /// Create a PST instruction sub-node.
+        /// </summary>
+        public static SubNode<NodeData> GetPostInstructionBlock(InstructionSet set)
+        {
+            InstructionDefinition definition = set[BuiltIn.PostInstructionOpcode];
             InstructionInstance instance = new(definition);
 
             return new SubNode<NodeData>(new NodeData(set, definition, instance));
@@ -159,9 +161,9 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Create a EOB instruction sub-node.
         /// </summary>
-        public static SubNode<NodeData> GetEndOfBlock(InstructionSet set)
+        public static SubNode<NodeData> GetEndOfGroup(InstructionSet set)
         {
-            InstructionDefinition definition = set[BuiltIn.EndOfBlockOpcode];
+            InstructionDefinition definition = set[BuiltIn.EndOfGroupOpcode];
             InstructionInstance instance = new(definition);
 
             return new SubNode<NodeData>(new NodeData(set, definition, instance));

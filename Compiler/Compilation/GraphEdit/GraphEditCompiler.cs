@@ -1,6 +1,5 @@
 ﻿using Godot;
 using System;
-using Rusty.Cutscenes;
 using Rusty.Graphs;
 using Rusty.Maps;
 
@@ -85,22 +84,7 @@ namespace Rusty.CutsceneEditor.Compiler
             {
                 if (code != "")
                     code += "\n";
-                try
-                {
-                    var node = executionOrder[i];
-                    try
-                    {
-                        code += NodeCompiler.Compile(node);
-                    }
-                    catch
-                    {
-                        code += $"{BuiltIn.ErrorOpcode},\"Could not compile node {i}!\"";
-                    }
-                }
-                catch
-                {
-                    code += $"{BuiltIn.ErrorOpcode},\"Missing node {i}!\"";
-                }
+                code += NodeCompiler.Compile(executionOrder[i]);
             }
             return code;
         }
@@ -138,7 +122,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 // If the target node has been added already, add a go-to instead.
                 else if (executionOrder.ContainsRight(toNode))
                 {
-                    // Create go-to node.
+                    // Create goto node.
                     CompilerNode gto = CompilerNodeMaker.CreateHierarchy(graph.Data.Set, BuiltIn.GotoOpcode);
                     graph.AddNode(gto);
 
@@ -163,21 +147,16 @@ namespace Rusty.CutsceneEditor.Compiler
         }
 
         /// <summary>
-        /// Get the label of a node.
+        /// Get the label of a node. Returns null if the node has no label.
         /// </summary>
         private static string GetLabel(CompilerNode node)
         {
-            try
+            for (int i = 0; i < node.Children.Count; i++)
             {
-                if (node.Children[0].Data.GetOpcode() != BuiltIn.LabelOpcode)
-                    throw new Exception();
-
-                return node.Children[0].Data.GetArgument(BuiltIn.LabelNameId);
+                if (node.Children[i].Data.GetOpcode() == BuiltIn.LabelOpcode)
+                    return node.Children[i].Data.GetArgument(BuiltIn.LabelNameId);
             }
-            catch
-            {
-                return null;
-            }
+            return null;
         }
 
         /// <summary>
@@ -185,23 +164,19 @@ namespace Rusty.CutsceneEditor.Compiler
         /// </summary>
         private static void SetLabel(CompilerNode node, string value)
         {
-            try
-            {
-                if (node.Children[0].Data.GetOpcode() != BuiltIn.LabelOpcode)
-                    throw new Exception();
-
-                int labelArgumentIndex = node.Data.Set[BuiltIn.LabelOpcode].GetParameterIndex(BuiltIn.LabelNameId);
-                node.Children[0].Data.SetArgument(BuiltIn.LabelNameId,  value);
-
-            }
-            catch
+            if (node.Children.Count == 0 || node.Children[0].Data.GetOpcode() != BuiltIn.LabelOpcode)
             {
                 node.Children.Insert(0, CompilerNodeMaker.GetLabel(node.Data.Set, value));
+                return;
             }
+
+
+            int labelArgumentIndex = node.Data.Set[BuiltIn.LabelOpcode].GetParameterIndex(BuiltIn.LabelNameId);
+            node.Children[0].Data.SetArgument(BuiltIn.LabelNameId, value);
         }
 
         /// <summary>
-        /// Set the output arguments of a node.
+        /// Set the output arguments of a node. Also adds labels to the connected node(s) if necessary.
         /// </summary>
         private static void SetOutputArguments(CompilerNode node, ref int nextLabel)
         {

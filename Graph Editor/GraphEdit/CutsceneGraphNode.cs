@@ -225,7 +225,7 @@ namespace Rusty.CutsceneEditor
             List<ParameterInspector> outputs = NodeInspector.GetOutputs();
 
             // Should we keep the main output?
-            bool hideMain = Definition.HideDefaultOutput;
+            bool hideMain = Definition.RemovesDefaultOutput();
 
             // Temporarily remove preview.
             if (Preview != null)

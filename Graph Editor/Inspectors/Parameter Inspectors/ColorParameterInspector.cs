@@ -75,7 +75,7 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"ColorParameter ({Definition.Id})";
+            Name = $"ColorParameter ({Definition.ID})";
 
             // Add Color field.
             ColorField = new();

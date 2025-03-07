@@ -101,7 +101,7 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"ChoiceRule ({Rule.Id})";
+            Name = $"ChoiceRule ({Rule.ID})";
 
             // Add option element.
             OptionField = new();

@@ -81,7 +81,7 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"FloatParameter ({Definition.Id})";
+            Name = $"FloatParameter ({Definition.ID})";
 
             // Add float field.
             FloatField = new();

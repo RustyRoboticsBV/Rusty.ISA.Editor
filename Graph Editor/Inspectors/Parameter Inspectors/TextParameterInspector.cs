@@ -4,59 +4,58 @@ using Rusty.EditorUI;
 namespace Rusty.CutsceneEditor
 {
     /// <summary>
-    /// An int parameter inspector.
+    /// A line parameter inspector.
     /// </summary>
-    public partial class IntParameterInspector : ParameterInspector
+    public partial class TextParameterInspector : ParameterInspector
     {
         /* Public properties. */
         /// <summary>
         /// The parameter definition visualized by this inspector.
         /// </summary>
-        public new IntParameter Definition
+        public new TextParameter Definition
         {
-            get => base.Definition as IntParameter;
+            get => base.Definition as TextParameter;
             set => base.Definition = value;
         }
         /// <summary>
         /// The value of the stored parameter.
         /// </summary>
-        public int Value
+        public string Value
         {
-            get => IntField.Value;
-            set => IntField.Value = value;
+            get => LineField.Value;
+            set => LineField.Value = value;
         }
         public override object ValueObj
         {
             get => Value;
-            set => Value = (int)value;
+            set => Value = (string)value;
         }
 
         /* Private properties. */
-        private IntField IntField { get; set; }
+        private LineField LineField { get; set; }
 
         /* Constructors. */
-        public IntParameterInspector() : base() { }
+        public TextParameterInspector() : base() { }
 
-        public IntParameterInspector(InstructionSet instructionSet, IntParameter parameter)
+        public TextParameterInspector(InstructionSet instructionSet, TextParameter parameter)
             : base(instructionSet, parameter)
         {
-            IntField.Value = parameter.DefaultValue;
+            LineField.Value = parameter.DefaultValue;
         }
 
-        public IntParameterInspector(IntParameterInspector other) : base(other) { }
+        public TextParameterInspector(TextParameterInspector other) : base(other) { }
 
         /* Public methods. */
         public override Element Duplicate()
         {
-            return new IntParameterInspector(this);
+            return new TextParameterInspector(this);
         }
 
         public override bool CopyStateFrom(Element other)
         {
-            if (base.CopyStateFrom(other) && other is IntParameterInspector otherInspector)
+            if (base.CopyStateFrom(other) && other is TextParameterInspector otherInspector)
             {
-                IntField = GetAt(0) as IntField;
-                Value = otherInspector.Value;
+                LineField = GetAt(0) as LineField;
                 return true;
             }
             return false;
@@ -69,12 +68,12 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             // Set name.
-            Name = $"IntParameter ({Definition.ID})";
+            Name = $"TextParameter ({Definition.ID})";
 
-            // Add int field.
-            IntField = new();
-            IntField.LabelText = Definition.DisplayName;
-            Add(IntField);
+            // Add line field.
+            LineField = new();
+            LineField.LabelText = Definition.DisplayName;
+            Add(LineField);
         }
     }
 }
