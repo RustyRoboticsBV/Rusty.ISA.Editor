@@ -1,9 +1,8 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=51 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=48 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
 [ext_resource type="Texture2D" uid="uid://cg1l63y6ngo4a" path="res://Built-In Instructions/IconPRE.bmp" id="4_wahcg"]
-[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/BoolParameter.cs" id="5_odjsm"]
 [ext_resource type="Texture2D" uid="uid://chwtisxfc6sgf" path="res://Built-In Instructions/IconPST.bmp" id="5_yqtwi"]
 [ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="9_dl4up"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="11_gxiqw"]
@@ -72,19 +71,11 @@ Preview = []
 PreInstructions = []
 PostInstructions = []
 
-[sub_resource type="Resource" id="Resource_21641"]
-resource_name = "Bool: enabled"
-script = ExtResource("5_odjsm")
-ID = ""
-DisplayName = "Enabled"
-Description = "Whether or not this option collection is enabled."
-DefaultValue = false
-
 [sub_resource type="Resource" id="Resource_hn7y1"]
 resource_name = "OPT"
 script = ExtResource("2_uguea")
 Opcode = "OPT"
-Parameters = [SubResource("Resource_21641")]
+Parameters = []
 Icon = ExtResource("12_y4agh")
 DisplayName = "Option Rule"
 Description = "A compiler marker that starts an group collection. The group should be closed with an EOG instruction."
@@ -127,19 +118,11 @@ Preview = []
 PreInstructions = []
 PostInstructions = []
 
-[sub_resource type="Resource" id="Resource_77slk"]
-resource_name = "Int: count"
-script = ExtResource("12_q4rbi")
-ID = ""
-DisplayName = "Count"
-Description = "The number of elements in this list collection."
-DefaultValue = 0
-
 [sub_resource type="Resource" id="Resource_ascot"]
 resource_name = "LST"
 script = ExtResource("2_uguea")
 Opcode = "LST"
-Parameters = [SubResource("Resource_77slk")]
+Parameters = []
 Icon = ExtResource("16_6vvij")
 DisplayName = "List Rule"
 Description = "A compiler marker that starts a list group. The group should be closed with an EOG instruction."

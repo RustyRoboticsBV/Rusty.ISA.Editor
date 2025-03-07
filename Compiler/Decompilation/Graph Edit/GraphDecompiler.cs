@@ -97,11 +97,7 @@ namespace Rusty.CutsceneEditor.Compiler
             }
             catch { }
 
-            // Set compile rule inspectors.
-            for (int i = 0; i < inspector.CompileRuleInspectorCount && i < node.Children.Count - 2; i++)
-            {
-                HandleRule(inspector.GetCompileRuleInspector(i), node.Children[i]);
-            }
+            GD.Print("TODO: WE STILL NEED TO HANDLE PRE- AND POST-INSTRUCTIONS!!!");
         }
 
         private static void HandleRule(Inspector inspector, Node<NodeData> node)

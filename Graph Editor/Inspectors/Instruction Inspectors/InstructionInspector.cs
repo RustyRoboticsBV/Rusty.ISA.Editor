@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Godot;
+using System.Collections.Generic;
 using Rusty.Cutscenes;
 using Rusty.EditorUI;
 
@@ -20,13 +21,18 @@ namespace Rusty.CutsceneEditor
         }
 
         /// <summary>
-        /// The number of compile rule inspectors nested within this inspector.
+        /// The number of pre-instruction rule inspectors nested within this inspector.
         /// </summary>
-        public int CompileRuleInspectorCount => PreInstructions.Count;
+        public int PreInstructionRuleCount => PreInstructions.InspectorCount;
+        /// <summary>
+        /// The number of post-instruction rule inspectors nested within this inspector.
+        /// </summary>
+        public int PostInstructionRuleCount => PostInstructions.InspectorCount;
 
         /* Private properties. */
         private List<ParameterInspector> Parameters { get; set; } = new();
-        private List<Inspector> PreInstructions { get; set; } = new();
+        private PreInstructionsInspector PreInstructions { get; set; }
+        private PostInstructionsInspector PostInstructions { get; set; }
 
         /* Constructors. */
         public InstructionInspector() : base() { }
@@ -43,15 +49,14 @@ namespace Rusty.CutsceneEditor
             {
                 // Find parameter & compile rule inspectors.
                 Parameters.Clear();
-                PreInstructions.Clear();
                 for (int i = 0; i < Count; i++)
                 {
                     if (this[i] is ParameterInspector parameterInspector)
                         Parameters.Add(parameterInspector);
-                    else if (this[i] is CompileRuleInspector compileRuleInspector)
-                        PreInstructions.Add(compileRuleInspector);
-                    else if (this[i] is PreInstructionInspector preInstructionInspector)
-                        PreInstructions.Add(preInstructionInspector);
+                    else if (this[i] is PreInstructionsInspector preInspector)
+                        PreInstructions = preInspector;
+                    else if (this[i] is PostInstructionsInspector postInspector)
+                        PostInstructions = postInspector;
                 }
 
                 return true;
@@ -68,11 +73,19 @@ namespace Rusty.CutsceneEditor
         }
 
         /// <summary>
-        /// Get a compile rule inspector.
+        /// Get a pre-instruction inspector by its index.
         /// </summary>
-        public Inspector GetCompileRuleInspector(int index)
+        public Inspector GetPreInstructionInspector(int index)
         {
-            return PreInstructions[index];
+            return PreInstructions.Inspectors[index];
+        }
+
+        /// <summary>
+        /// Get a post-instruction inspector by its index.
+        /// </summary>
+        public Inspector GetPostInstructionInspector(int index)
+        {
+            return PostInstructions.Inspectors[index];
         }
 
         /// <summary>
@@ -92,21 +105,43 @@ namespace Rusty.CutsceneEditor
         public List<ParameterInspector> GetOutputs()
         {
             List<ParameterInspector> Outputs = new();
+
+            // Get parameter outputs.
             for (int i = 0; i < Parameters.Count; i++)
             {
                 if (Parameters[i] is OutputParameterInspector output)
                     Outputs.Add(output);
             }
 
-            for (int i = 0; i < PreInstructions.Count; i++)
+            // Get pre-instruction outputs.
+            for (int i = 0; i < PreInstructionRuleCount; i++)
             {
+                Inspector inspector = GetPreInstructionInspector(i);
+
                 List<ParameterInspector> preOutputs = new();
-                if (PreInstructions[i] is PreInstructionInspector pre)
+                if (inspector is InstructionRuleInspector pre)
                     preOutputs = pre.GetOutputs();
-                else if (PreInstructions[i] is CompileRuleInspector rule)
+                else if (inspector is CompileRuleInspector rule)
                     preOutputs = rule.GetOutputs();
 
                 foreach (ParameterInspector output in preOutputs)
+                {
+                    Outputs.Add(output);
+                }
+            }
+
+            // Get post-instruction outputs.
+            for (int i = 0; i < PostInstructionRuleCount; i++)
+            {
+                Inspector inspector = GetPostInstructionInspector(i);
+
+                List<ParameterInspector> postOutputs = new();
+                if (inspector is InstructionRuleInspector pre)
+                    postOutputs = pre.GetOutputs();
+                else if (inspector is CompileRuleInspector rule)
+                    postOutputs = rule.GetOutputs();
+
+                foreach (ParameterInspector output in postOutputs)
                 {
                     Outputs.Add(output);
                 }
@@ -137,12 +172,14 @@ namespace Rusty.CutsceneEditor
             }
 
             // Add compile rules.
-            foreach (CompileRule compileRule in Definition.PreInstructions)
-            {
-                Inspector compileRuleInspector = CompileRuleInspector.Create(InstructionSet, compileRule);
-                PreInstructions.Add(compileRuleInspector);
-                Add(compileRuleInspector);
-            }
+            PreInstructions = new(InstructionSet, Definition);
+            Add(PreInstructions);
+            PreInstructions.Populate(Definition.PreInstructions);
+
+            PostInstructions = new(InstructionSet, Definition);
+            Add(PostInstructions);
+            PostInstructions.Populate(Definition.PostInstructions);
+            GD.Print(Definition.PostInstructions.Length);
         }
     }
 }

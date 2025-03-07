@@ -31,7 +31,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 {
                     try
                     {
-                        Inspector ruleInspector = inspector.GetCompileRuleInspector(i);
+                        Inspector ruleInspector = inspector.GetPreInstructionInspector(i);
                         group.AddChildren(RuleCompiler.Compile(ruleInspector));
                     }
                     catch { }
@@ -61,11 +61,11 @@ namespace Rusty.CutsceneEditor.Compiler
                 SubNode<NodeData> group = CompilerNodeMaker.GetPostInstructionBlock(set);
                 results.Add(group);
 
-                for (int i = 0; i < definition.PreInstructions.Length; i++)
+                for (int i = 0; i < definition.PostInstructions.Length; i++)
                 {
                     try
                     {
-                        Inspector ruleInspector = inspector.GetCompileRuleInspector(i);
+                        Inspector ruleInspector = inspector.GetPostInstructionInspector(i);
                         group.AddChildren(RuleCompiler.Compile(ruleInspector));
                     }
                     catch { }

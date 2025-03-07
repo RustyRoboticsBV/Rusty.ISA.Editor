@@ -31,7 +31,7 @@ namespace Rusty.CutsceneEditor
             switch (compileRule)
             {
                 case InstructionRule preInstruction:
-                    return new PreInstructionInspector(instructionSet, instructionSet[preInstruction.Opcode]);
+                    return new InstructionRuleInspector(instructionSet, instructionSet[preInstruction.Opcode]);
                 case OptionRule optionRule:
                     return new OptionRuleInspector(instructionSet, optionRule);
                 case ChoiceRule choiceRule:
@@ -55,7 +55,7 @@ namespace Rusty.CutsceneEditor
             for (int i = 0; i < subInspectors.Length; i++)
             {
                 List<ParameterInspector> preOutputs = new();
-                if (subInspectors[i] is PreInstructionInspector pre)
+                if (subInspectors[i] is InstructionRuleInspector pre)
                     preOutputs = pre.GetOutputs();
                 else if (subInspectors[i] is CompileRuleInspector rule)
                     preOutputs = rule.GetOutputs();

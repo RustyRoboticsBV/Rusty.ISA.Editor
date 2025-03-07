@@ -35,6 +35,12 @@ namespace Rusty.CutsceneEditor.Compiler
             {
                 string arg = node.Data.Instance.Arguments[i];
 
+                if (arg == null)
+                {
+                    GD.PrintErr("Argument " + node.Data.Definition.Parameters[i] + " of " + node.Data.Definition.Opcode + " is null.");
+                    continue;
+                }
+
                 // Duplicate double quotes.
                 arg = arg.Replace("\"", "\"\"");
 

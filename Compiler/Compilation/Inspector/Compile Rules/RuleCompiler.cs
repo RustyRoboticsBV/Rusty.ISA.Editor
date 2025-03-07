@@ -16,7 +16,7 @@ namespace Rusty.CutsceneEditor.Compiler
         {
             switch (inspector)
             {
-                case PreInstructionInspector preInspector:
+                case InstructionRuleInspector preInspector:
                     return InstructionCompiler.Compile(preInspector);
                 case OptionRuleInspector optionInspector:
                     return new SubNode<NodeData>[] { OptionRuleCompiler.Compile(optionInspector) };
