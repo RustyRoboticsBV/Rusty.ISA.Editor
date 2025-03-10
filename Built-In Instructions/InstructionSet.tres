@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=48 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=50 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://chwtisxfc6sgf" path="res://Built-In Instructions/IconPST.bmp" id="5_yqtwi"]
 [ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="9_dl4up"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="11_gxiqw"]
+[ext_resource type="Texture2D" uid="uid://nyag7iauyi0f" path="res://Built-In Instructions/IconINS.bmp" id="11_vnhvg"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/TextParameter.cs" id="12_rklps"]
 [ext_resource type="Texture2D" uid="uid://d06v0b1l2xkth" path="res://Built-In Instructions/IconOPT.bmp" id="12_y4agh"]
@@ -39,7 +40,20 @@ Opcode = "NOD"
 Parameters = [SubResource("Resource_g65gn"), SubResource("Resource_1ekkv")]
 Icon = ExtResource("9_dl4up")
 DisplayName = "Editor Node"
-Description = "A compiler marker that denotes the beginning of an editor node. All instructions between it and the next EOG instruction will be part of the node."
+Description = "Starts an editor node. It should contain an inspector instruction, and optionally a label and/or begin instruction. The group should be closed with an EOG instruction."
+Category = "Compiler"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_qej85"]
+resource_name = "INS"
+script = ExtResource("2_uguea")
+Opcode = "INS"
+Parameters = []
+Icon = ExtResource("11_vnhvg")
+DisplayName = "Inspector"
+Description = "Starts an inspector group. This group contains an instruction and optionally its associated pre-instructions and post-instruction groups. The group should be closed with an EOG instruction."
 Category = "Compiler"
 Preview = []
 PreInstructions = []
@@ -312,5 +326,5 @@ Modules = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_btai4"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
+Definitions = [SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
 Modules = [SubResource("Resource_eqo11")]

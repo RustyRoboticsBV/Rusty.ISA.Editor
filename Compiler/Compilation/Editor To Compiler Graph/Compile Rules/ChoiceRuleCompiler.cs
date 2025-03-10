@@ -20,13 +20,13 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionInstance instance = new(definition);
 
             SubNode<NodeData> choice = CompilerNodeMaker.GetChoiceRule(set);
-            choice.Data.SetArgument(BuiltIn.ChoiceRuleSelectedId, inspector.Selected.ToString());
+            choice.Data.SetArgument(BuiltIn.ChoiceRuleSelectedID, inspector.Selected.ToString());
 
             // Child rules.
             Inspector[] childRules = inspector.GetActiveSubInspectors();
             foreach (Inspector childRule in childRules)
             {
-                choice.AddChildren(Compile(childRule));
+                choice.AddChild(Compile(childRule));
             }
 
             // End of rule.

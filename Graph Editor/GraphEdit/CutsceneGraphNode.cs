@@ -38,7 +38,8 @@ namespace Rusty.CutsceneEditor
             }
             else if (definition.EditorNode == null)
             {
-                GD.PrintErr($"Tried to populate a graph node with {definition}, but this instruction has no editor node info.");
+                GD.PrintErr($"Tried to populate a graph node with instruction definition '{definition}', but this instruction "
+                    + "has no editor node info.");
                 return;
             }
 
@@ -125,6 +126,20 @@ namespace Rusty.CutsceneEditor
             }
         }
 
+        /// <summary>
+        /// Force-update a the node's appearance.
+        /// </summary>
+        public void ForceUpdate()
+        {
+            UpdateContents();
+
+            if (Input.IsKeyPressed(Key.Delete) && Selected)
+            {
+                RemoveFromInspectorContainer();
+                QueueFree();
+            }
+        }
+
         /* Godot overrides. */
         public override void _Ready()
         {
@@ -137,20 +152,14 @@ namespace Rusty.CutsceneEditor
             if (!Selected)
                 return;
 
-            UpdateContents();
-
-            if (Input.IsKeyPressed(Key.Delete) && Selected)
-            {
-                RemoveFromInspectorContainer();
-                QueueFree();
-            }
+            ForceUpdate();
         }
 
         /* Private methods. */
         private void UpdateContents()
         {
             if (NodeInspector.LabelName != "")
-                Title = "[" + NodeInspector.LabelName + "] " + Definition.DisplayName;
+                Title = $"[{NodeInspector.LabelName}] {Definition.DisplayName}";
             else
                 Title = Definition.DisplayName;
 
@@ -195,7 +204,7 @@ namespace Rusty.CutsceneEditor
             if (InspectorWindow != null)
                 InspectorWindow.AddChild(NodeInspector);
             else
-                GD.PrintErr($"Graph node {Name} did not have a reference to the properties drawer container.");
+                GD.PrintErr($"Graph node '{Name}' did not have a reference to the properties drawer container.");
         }
 
         private void RemoveFromInspectorContainer()
@@ -213,7 +222,7 @@ namespace Rusty.CutsceneEditor
             if (InspectorWindow != null)
                 InspectorWindow.RemoveChild(NodeInspector);
             else
-                GD.PrintErr($"Graph node {Name} did not have a reference to the properties drawer container.");
+                GD.PrintErr($"Graph node '{Name}' did not have a reference to the properties drawer container.");
         }
 
         private void EnsureSlots()
@@ -225,7 +234,12 @@ namespace Rusty.CutsceneEditor
             List<ParameterInspector> outputs = NodeInspector.GetOutputs();
 
             // Should we keep the main output?
-            bool hideMain = Definition.RemovesDefaultOutput();
+            bool hideMain = false;
+            for (int i = 0; i < outputs.Count; i++)
+            {
+                if ((outputs[i].Definition as OutputParameter).RemoveDefaultOutput)
+                    hideMain = true;
+            }
 
             // Temporarily remove preview.
             if (Preview != null)

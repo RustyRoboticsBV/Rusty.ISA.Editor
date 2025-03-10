@@ -73,7 +73,8 @@ namespace Rusty.CutsceneEditor
 
         private void OnDebugCompile()
         {
-            string str = GraphEditCompiler.Compile(GraphEdit);
+            CompilerGraph graph = GraphEditCompiler.Compile(GraphEdit);
+            string str = GraphCompiler.Compile(graph);
             DisplayServer.ClipboardSet(str);
             GD.Print("Debug compilation result saved to clipboard!");
         }
@@ -83,9 +84,11 @@ namespace Rusty.CutsceneEditor
             InstructionSet set = GraphEdit.InstructionSet;
             string code = DisplayServer.ClipboardGet();
             CompilerGraph graph = InstructionListDecompiler.Decompile(set, CodeDecompiler.Decompile(set, code));
-            GraphDecompiler.Spawn(GraphEdit, graph);
 
             GD.Print("Compiler graph:\n" + graph);
+
+            GraphDecompiler.Spawn(GraphEdit, graph);
+
             GD.Print("Debug decompilation input loaded from clipboard!");
         }
     }

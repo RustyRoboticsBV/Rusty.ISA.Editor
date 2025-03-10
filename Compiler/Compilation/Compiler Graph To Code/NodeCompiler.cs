@@ -4,9 +4,9 @@ using Rusty.Graphs;
 namespace Rusty.CutsceneEditor.Compiler
 {
     /// <summary>
-    /// A compiler that compiles a compiler node into code.
+    /// An utility that compiles a compiler node into code.
     /// </summary>
-    public class NodeCompiler : Compiler
+    public class NodeCompiler
     {
         /* Public methods. */
         /// <summary>

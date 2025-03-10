@@ -1,69 +1,24 @@
 ﻿using Godot;
-using System;
 using Rusty.Graphs;
 using Rusty.Maps;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
     /// <summary>
-    /// Compile a graph edit into a code string.
+    /// An utility that compiles a compiler graph into code.
     /// </summary>
-    public abstract class GraphEditCompiler : Compiler
+    public class GraphCompiler
     {
         /* Public methods. */
         /// <summary>
-        /// Compile a graph edit into a compiler graph that represents the finished program. It consists of the following steps:]
-        /// <br/>1. Create non-connected compiler nodes, one for each graph edit node.
-        /// <br/>2. Connect all the compiler nodes, according to connections in the graph edit.
-        /// <br/>3. Find the start nodes.
-        /// <br/>4. Figure out the execution order.
-        /// <br/>   4.1 Insert end nodes while doing this.
-        /// <br/>   4.2 Insert go-to's while doing this.
-        /// <br/>   4.3 Set node labels while doing this.
-        /// <br/>   4.4 Set output parameter values while doing this.
-        /// <br/>5. Compile to code.
+        /// Compile a compiler node graph. This inserts gotos and ends into the graph.
         /// </summary>
-        public static string Compile(CutsceneGraphEdit graphEdit)
+        public static string Compile(CompilerGraph graph)
         {
-            // 1. Create compiler node graph.
-            CompilerGraph graph = new();
-            graph.Data.Set = graphEdit.InstructionSet;
-            for (int i = 0; i < graphEdit.Nodes.Count; i++)
-            {
-                var node = GraphEditNodeCompiler.Compile(graphEdit.Nodes[i]);
-                graph.AddNode(node);
-            }
-
-            // 2. Connect nodes.
-            for (int i = 0; i < graphEdit.Nodes.Count; i++)
-            {
-                // Get editor & compiler node.
-                CutsceneGraphNode fromEditorNode = graphEdit.Nodes[i];
-                CompilerNode fromCompilerNode = graph[i];
-
-                // For each output slot...
-                for (int j = 0; j < fromEditorNode.Slots.Count; j++)
-                {
-                    // Add empty outputs for non-connected slots.
-                    if (fromEditorNode.Slots[j].Output == null)
-                        fromCompilerNode.ConnectTo(null);
-
-                    // Else, connect nodes.
-                    else
-                    {
-                        CutsceneGraphNode toEditorNode = fromEditorNode.Slots[j].Output.Node;
-                        int toNodeIndex = graphEdit.Nodes.IndexOf(toEditorNode);
-                        CompilerNode toCompilerNode = graph[toNodeIndex];
-
-                        fromCompilerNode.ConnectTo(toCompilerNode);
-                    }
-                }
-            }
-
-            // 3. Figure out start nodes.
+            // 1. Figure out start nodes.
             int[] startNodes = graph.FindStartNodes();
 
-            // 4. Figure out execution order, set labels, insert go-to's and set output arguments.
+            // 2. Figure out execution order, set labels, insert goto's and set output arguments.
             BiDict<int, CompilerNode> executionOrder = new();
             int nextLabel = 0;
             for (int i = 0; i < startNodes.Length; i++)
@@ -78,7 +33,7 @@ namespace Rusty.CutsceneEditor.Compiler
             // Print finished graph.
             GD.Print("Compiled graph:\n" + graph);
 
-            // 5. Compile to code.
+            // 3. Compile to code.
             string code = "";
             for (int i = 0; i < executionOrder.Count; i++)
             {
@@ -92,7 +47,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /* Private methods. */
         /// <summary>
         /// Helper function for step 4 of the compilation process.
-        /// It figures out the execution order of the graph, sets labels, inserts go-to's and sets output arguments.
+        /// It figures out the execution order of the graph, sets labels, inserts goto's and sets output arguments.
         /// </summary>
         private static void ProcessSubGraph(CompilerNode node, CompilerGraph graph,
             BiDict<int, CompilerNode> executionOrder, ref int nextLabel)
@@ -109,7 +64,9 @@ namespace Rusty.CutsceneEditor.Compiler
                 if (toNode == null)
                 {
                     // Create end node.
-                    CompilerNode end = CompilerNodeMaker.CreateHierarchy(graph.Data.Set, BuiltIn.EndOpcode);
+                    CompilerNode end = CompilerNodeMaker.GetNode(graph.Data.Set, "", "");
+                    end.AddChild(CompilerNodeMaker.GetEnd(graph.Data.Set));
+                    end.AddChild(CompilerNodeMaker.GetEndOfGroup(graph.Data.Set));
                     graph.AddNode(end);
 
                     // Connect it.
@@ -119,22 +76,24 @@ namespace Rusty.CutsceneEditor.Compiler
                     executionOrder.Add(executionOrder.Count, end);
                 }
 
-                // If the target node has been added already, add a go-to instead.
+                // If the target node has been added already, add a goto instead.
                 else if (executionOrder.ContainsRight(toNode))
                 {
                     // Create goto node.
-                    CompilerNode gto = CompilerNodeMaker.CreateHierarchy(graph.Data.Set, BuiltIn.GotoOpcode);
-                    graph.AddNode(gto);
+                    CompilerNode @goto = CompilerNodeMaker.GetNode(graph.Data.Set, "", "");
+                    @goto.AddChild(CompilerNodeMaker.GetLabel(graph.Data.Set, ""));
+                    @goto.AddChild(CompilerNodeMaker.GetEndOfGroup(graph.Data.Set));
+                    graph.AddNode(@goto);
 
                     // Connect it.
-                    node.Outputs[i].ConnectTo(gto);
-                    gto.ConnectTo(toNode);
+                    node.Outputs[i].ConnectTo(@goto);
+                    @goto.ConnectTo(toNode);
 
                     // Add to execution order.
-                    executionOrder.Add(executionOrder.Count, gto);
+                    executionOrder.Add(executionOrder.Count, @goto);
 
                     // Set output parameter.
-                    SetOutputArguments(gto, ref nextLabel);
+                    SetOutputArguments(@goto, ref nextLabel);
                 }
 
                 // Else, continue with target node.
@@ -154,7 +113,7 @@ namespace Rusty.CutsceneEditor.Compiler
             for (int i = 0; i < node.Children.Count; i++)
             {
                 if (node.Children[i].Data.GetOpcode() == BuiltIn.LabelOpcode)
-                    return node.Children[i].Data.GetArgument(BuiltIn.LabelNameId);
+                    return node.Children[i].Data.GetArgument(BuiltIn.LabelNameID);
             }
             return null;
         }
@@ -171,8 +130,8 @@ namespace Rusty.CutsceneEditor.Compiler
             }
 
 
-            int labelArgumentIndex = node.Data.Set[BuiltIn.LabelOpcode].GetParameterIndex(BuiltIn.LabelNameId);
-            node.Children[0].Data.SetArgument(BuiltIn.LabelNameId, value);
+            int labelArgumentIndex = node.Data.Set[BuiltIn.LabelOpcode].GetParameterIndex(BuiltIn.LabelNameID);
+            node.Children[0].Data.SetArgument(BuiltIn.LabelNameID, value);
         }
 
         /// <summary>

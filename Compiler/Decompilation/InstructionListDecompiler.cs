@@ -40,8 +40,8 @@ namespace Rusty.CutsceneEditor.Compiler
                 // Add to label table.
                 try
                 {
-                    CompilerNode node = graph[^1] as CompilerNode;
-                    string label = node.GetLabel().Data.GetArgument(BuiltIn.LabelNameId);
+                    CompilerNode node = graph[^1];
+                    string label = node.GetLabel().Data.GetArgument(BuiltIn.LabelNameID);
                     labelTable.Add(label, node);
                 }
                 catch { }
@@ -52,7 +52,7 @@ namespace Rusty.CutsceneEditor.Compiler
             // Connect nodes.
             for (int i = 0; i < graph.Count; i++)
             {
-                CompilerNode node = graph[i] as CompilerNode;
+                CompilerNode node = graph[i];
                 OutputData outputData = node.GetOutputData();
 
                 // Connect default output.
@@ -93,7 +93,9 @@ namespace Rusty.CutsceneEditor.Compiler
                 switch (instructions[index].Opcode)
                 {
                     case BuiltIn.NodeOpcode:
+                    case BuiltIn.InspectorOpcode:
                     case BuiltIn.PreInstructionOpcode:
+                    case BuiltIn.PostInstructionOpcode:
                     case BuiltIn.OptionRuleOpcode:
                     case BuiltIn.ChoiceRuleOpcode:
                     case BuiltIn.TupleRuleOpcode:

@@ -18,37 +18,48 @@ namespace Rusty.CutsceneEditor.Compiler
         /* Casting operators. */
         public static implicit operator CompilerNode(SubNode<NodeData> node)
         {
-            return new CompilerNode(node);
+            if (node != null)
+            {
+                CompilerNode result = new();
+                result.Data = node.Data;
+                for (int i = 0; i < node.Children.Count; i++)
+                {
+                    result.AddChild(node.Children[i]);
+                }
+                return result;
+            }
+            else
+                return null;
         }
 
         /* Public methods. */
         public override string GetName()
         {
-            SubNode<NodeData> startNode = GetStart();
-            if (startNode != null)
-                return $"{startNode.Data.GetArgument(BuiltIn.StartNameId)}: {base.GetName()}";
+            SubNode<NodeData> beginNode = GetBegin();
+            if (beginNode != null)
+                return $"{beginNode.Data.GetArgument(BuiltIn.BeginNameID)}: {base.GetName()}";
 
             SubNode<NodeData> labelNode = GetLabel();
             if (labelNode != null)
-                return $"({labelNode.Data.GetArgument(BuiltIn.LabelNameId)}) {base.GetName()}";
+                return $"({labelNode.Data.GetArgument(BuiltIn.LabelNameID)}) {base.GetName()}";
 
             return base.GetName();
         }
 
         /// <summary>
-        /// Get the output data of a node.
+        /// Check if the node represents an END instruction.
         /// </summary>
-        public OutputData GetOutputData()
+        public bool IsEnd()
         {
-            return GetOutputData(this, null);
+            return FindSubNode(BuiltIn.EndOpcode) != null;
         }
 
         /// <summary>
-        /// Get the start name sub-node. Returns null if it doesn't exist.
+        /// Check if the node represents a GTO instruction.
         /// </summary>
-        public SubNode<NodeData> GetStart()
+        public bool IsGoto()
         {
-            return FindSubNode(BuiltIn.BeginOpcode);
+            return FindSubNode(BuiltIn.GotoOpcode) != null;
         }
 
         /// <summary>
@@ -59,62 +70,116 @@ namespace Rusty.CutsceneEditor.Compiler
             return FindSubNode(BuiltIn.LabelOpcode);
         }
 
-        public bool IsEnd()
+        /// <summary>
+        /// Get the start name sub-node. Returns null if it doesn't exist.
+        /// </summary>
+        public SubNode<NodeData> GetBegin()
         {
-            try
-            {
-                for (int i = 0; i < Children.Count; i++)
-                {
-                    for (int j = 0; j < Children[i].Children.Count; j++)
-                    {
-                        if (Children[i].Children[j].Data.GetOpcode() == BuiltIn.EndOpcode)
-                            return true;
-                    }
-                }
-                return false;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public bool IsGoto()
-        {
-            try
-            {
-                for (int i = 0; i < Children.Count; i++)
-                {
-                    for (int j = 0; j < Children[i].Children.Count; j++)
-                    {
-                        if (Children[i].Children[j].Data.GetOpcode() == BuiltIn.GotoOpcode)
-                            return true;
-                    }
-                }
-                return false;
-            }
-            catch
-            {
-                return false;
-            }
+            return FindSubNode(BuiltIn.BeginOpcode);
         }
 
         /// <summary>
-        /// Get the instruction's sub-node.
+        /// Get the inspector sub-node. Returns null if it doesn't exist.
         /// </summary>
-        public SubNode<NodeData> GetInstruction()
+        public SubNode<NodeData> GetInspector()
         {
-            try
+            return FindSubNode(BuiltIn.InspectorOpcode);
+        }
+
+        /// <summary>
+        /// Get the main instruction sub-node. Returns null if it doesn't exist.
+        /// </summary>
+        public SubNode<NodeData> GetMainInstruction()
+        {
+            for (int i = 0; i < Children.Count; i++)
             {
-                return Children[^2].Children[^2];
+                switch (Children[i].Data.GetOpcode())
+                {
+                    case BuiltIn.EndOpcode:
+                    case BuiltIn.GotoOpcode:
+                        return Children[i];
+                    case BuiltIn.InspectorOpcode:
+                        for (int j = 0; j < Children[i].Children.Count; j++)
+                        {
+                            switch (Children[i].Children[j].Data.GetOpcode())
+                            {
+                                case BuiltIn.PreInstructionOpcode:
+                                case BuiltIn.PostInstructionOpcode:
+                                    break;
+                                default:
+                                    return Children[i].Children[j];
+                            }
+                        }
+                        break;
+                }
             }
-            catch
+            return null;
+        }
+
+        /// <summary>
+        /// Get the pre-instructions sub-node. Returns null if it doesn't exist.
+        /// </summary>
+        public SubNode<NodeData> GetPreInstructions()
+        {
+            for (int i = 0; i < Children.Count; i++)
             {
-                return null;
+                switch (Children[i].Data.GetOpcode())
+                {
+                    case BuiltIn.InspectorOpcode:
+                        for (int j = 0; j < Children[i].Children.Count; j++)
+                        {
+                            switch (Children[i].Children[j].Data.GetOpcode())
+                            {
+                                case BuiltIn.PreInstructionOpcode:
+                                    return Children[i].Children[j];
+                                default:
+                                    break;
+                            }
+                        }
+                        break;
+                }
             }
+            return null;
+        }
+
+        /// <summary>
+        /// Get the post-instructions sub-node. Returns null if it doesn't exist.
+        /// </summary>
+        public SubNode<NodeData> GetPostInstructions()
+        {
+            for (int i = 0; i < Children.Count; i++)
+            {
+                switch (Children[i].Data.GetOpcode())
+                {
+                    case BuiltIn.InspectorOpcode:
+                        for (int j = 0; j < Children[i].Children.Count; j++)
+                        {
+                            switch (Children[i].Children[j].Data.GetOpcode())
+                            {
+                                case BuiltIn.PostInstructionOpcode:
+                                    return Children[i].Children[j];
+                                default:
+                                    break;
+                            }
+                        }
+                        break;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get the output data of a node.
+        /// </summary>
+        public OutputData GetOutputData()
+        {
+            return GetOutputData(this, null);
         }
 
         /* Private methods. */
+        /// <summary>
+        /// Find a subnode with some opcode.
+        /// </summary>
         private SubNode<NodeData> FindSubNode(string opcode)
         {
             for (int i = 0; i < Children.Count; i++)
@@ -149,9 +214,7 @@ namespace Rusty.CutsceneEditor.Compiler
                     if (node.Data.Definition.RemovesDefaultOutput())
                         result.HasDefaultOutput = false;
                     if (node.Data.Definition.Parameters[i] is OutputParameter output)
-                    {
                         result.AddOutput(node, i);
-                    }
                 }
 
                 // Handle child nodes.

@@ -21,43 +21,42 @@ namespace Rusty.CutsceneEditor.Compiler
                 CompilerNode node = graph[i];
 
                 // Get instruction.
-                var instruction = node.GetInstruction();
+                SubNode<NodeData> mainInstruction = node.GetMainInstruction();
 
                 // Do nothing if the instruction instruction has no node definition.
-                if (instruction.Data.Definition.EditorNode == null)
+                if (mainInstruction.Data.Definition.EditorNode == null)
                     continue;
 
                 // Get node position.
                 float x = 0;
                 try
                 {
-                    x = float.Parse(node.Data.GetArgument(BuiltIn.NodeXId));
+                    x = float.Parse(node.Data.GetArgument(BuiltIn.NodeXID));
                 }
                 catch { }
 
                 float y = 0;
                 try
                 {
-                    y = float.Parse(node.Data.GetArgument(BuiltIn.NodeYId));
+                    y = float.Parse(node.Data.GetArgument(BuiltIn.NodeYID));
                 }
                 catch { }
 
                 // Spawn node.
-                CutsceneGraphNode editorNode = graphEdit.Spawn(instruction.Data.Definition, new Vector2(x, y));
+                CutsceneGraphNode editorNode = graphEdit.Spawn(mainInstruction.Data.Definition, new Vector2(x, y));
                 nodeMap.Add(node, editorNode);
 
                 // Fill inspector.
                 NodeInstructionInspector inspector = editorNode.NodeInspector;
 
-                SubNode<NodeData> startName = node.GetStart();
+                SubNode<NodeData> startName = node.GetBegin();
                 if (startName != null)
-                    inspector.LabelName = startName.Data.GetArgument(BuiltIn.StartNameId);
+                    inspector.LabelName = startName.Data.GetArgument(BuiltIn.BeginNameID);
 
-                try
-                {
-                    HandleInstruction(inspector, node.Children[^2]);
-                }
-                catch { }
+                HandleInspector(inspector, node.GetInspector());
+
+                // Force-update node's appearance.
+                editorNode.ForceUpdate();
             }
 
             // Connect nodes.
@@ -88,16 +87,61 @@ namespace Rusty.CutsceneEditor.Compiler
         }
 
         /* Private methods. */
+        private static void HandleInspector(InstructionInspector inspector, Node<NodeData> node)
+        {
+            SubNode<NodeData> preInstructions = null;
+            SubNode<NodeData> postInstructions = null;
+            SubNode<NodeData> mainInstruction = null;
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                switch (node.Children[i].Data.GetOpcode())
+                {
+                    case BuiltIn.PreInstructionOpcode:
+                        if (preInstructions == null)
+                            preInstructions = node.Children[i];
+                        break;
+                    case BuiltIn.PostInstructionOpcode:
+                        if (postInstructions == null)
+                            postInstructions = node.Children[i];
+                        break;
+                    case BuiltIn.EndOfGroupOpcode:
+                        break;
+                    default:
+                        if (mainInstruction == null)
+                            mainInstruction = node.Children[i];
+                        break;
+                }
+            }
+
+            if (mainInstruction != null)
+                HandleInstruction(inspector, mainInstruction);
+            if (preInstructions != null)
+                HandlePreInstructions(inspector.PreInstructions, preInstructions);
+            if (postInstructions != null)
+                HandlePostInstructions(inspector.PostInstructions, postInstructions);
+        }
+
         private static void HandleInstruction(InstructionInspector inspector, Node<NodeData> node)
         {
-            // Set parameter inspectors.
-            try
-            {
-                inspector.SetArguments(node.Children[^2].Data.Instance);
-            }
-            catch { }
+            inspector.SetArguments(node.Data.Instance);
+        }
 
-            GD.Print("TODO: WE STILL NEED TO HANDLE PRE- AND POST-INSTRUCTIONS!!!");
+        private static void HandlePreInstructions(PreInstructionsInspector inspector, Node<NodeData> node)
+        {
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                if (node.Children[i].Data.GetOpcode() != BuiltIn.EndOfGroupOpcode)
+                    HandleRule(inspector.Inspectors[i], node.Children[i]);
+            }
+        }
+
+        private static void HandlePostInstructions(PostInstructionsInspector inspector, Node<NodeData> node)
+        {
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                if (node.Children[i].Data.GetOpcode() != BuiltIn.EndOfGroupOpcode)
+                    HandleRule(inspector.Inspectors[i], node.Children[i]);
+            }
         }
 
         private static void HandleRule(Inspector inspector, Node<NodeData> node)
@@ -105,7 +149,7 @@ namespace Rusty.CutsceneEditor.Compiler
             switch (inspector)
             {
                 case InstructionInspector instruction:
-                    HandleInstruction(instruction, node);
+                    HandleInspector(instruction, node);
                     break;
                 case OptionRuleInspector optionRule:
                     HandleOptionRule(optionRule, node);
@@ -142,7 +186,7 @@ namespace Rusty.CutsceneEditor.Compiler
             int selected = -1;
             try
             {
-                selected = int.Parse(node.Data.GetArgument(BuiltIn.ChoiceRuleSelectedId));
+                selected = int.Parse(node.Data.GetArgument(BuiltIn.ChoiceRuleSelectedID));
             }
             catch { }
 

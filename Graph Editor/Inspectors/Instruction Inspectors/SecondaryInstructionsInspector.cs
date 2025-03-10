@@ -52,7 +52,6 @@ namespace Rusty.CutsceneEditor
         {
             foreach (CompileRule compileRule in rules)
             {
-                GD.Print("WHEEEE");
                 Inspector inspector = CompileRuleInspector.Create(InstructionSet, compileRule);
                 Inspectors.Add(inspector);
                 Add(inspector);
