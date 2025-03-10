@@ -26,19 +26,30 @@
         public const string ListRuleOpcode = "LST";
         public const string EndOfGroupOpcode = "EOG";
 
-        // Parameter ids.
-        public const string BeginNameID = "name";
-        public const string LabelNameID = "name";
-        public const string GotoTargetLabelID = "target_label";
-        public const string ErrorMessageID = "message";
+        public const string MetadataOpcode = "MTA";
+        public const string DefinitionOpcode = "DEF";
+        public const string ParameterOpcode = "PAR";
+        public const string CompileRuleOpcode = "RUL";
+        public const string ReferenceOpcode = "REF";
 
-        public const string CommentTextID = "text";
-        public const string FrameNameID = "name";
-        public const string NodeXID = "x";
-        public const string NodeYID = "y";
-        public const string OptionRuleEnabledID = "enabled";
-        public const string ChoiceRuleSelectedID = "selected";
-        public const string TupleRuleLengthID = "length";
-        public const string ListRuleCountID = "count";
+        // Parameter ids.
+        public const string BeginName = "name";
+        public const string LabelName = "name";
+        public const string GotoTargetLabel = "target_label";
+        public const string ErrorMessage = "message";
+
+        public const string CommentText = "text";
+        public const string FrameName = "name";
+        public const string NodeX = "x";
+        public const string NodeY = "y";
+        public const string ChoiceRuleSelected = "selected";
+
+        public const string DefinitionOpcodeParameter = "opcode";
+        public const string ParameterType = "type";
+        public const string ParameterID = "id";
+        public const string CompileRuleType = "type";
+        public const string CompileRuleID = "id";
+        public const string ReferenceOpcodeParameter = "opcode";
+        public const string ReferenceID = "id";
     }
 }

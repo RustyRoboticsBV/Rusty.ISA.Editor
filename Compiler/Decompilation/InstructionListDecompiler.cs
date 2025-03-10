@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Godot;
+using System;
+using System.Collections.Generic;
 using Rusty.Cutscenes;
 
 namespace Rusty.CutsceneEditor.Compiler
@@ -23,25 +25,19 @@ namespace Rusty.CutsceneEditor.Compiler
                 // Create node or node hierarchy from instruction.
                 switch (instructions[index].Opcode)
                 {
+                    case BuiltIn.MetadataOpcode:
                     case BuiltIn.NodeOpcode:
-                    case BuiltIn.PreInstructionOpcode:
-                    case BuiltIn.OptionRuleOpcode:
-                    case BuiltIn.ChoiceRuleOpcode:
-                    case BuiltIn.TupleRuleOpcode:
-                    case BuiltIn.ListRuleOpcode:
                         graph.AddNode(HandleCollection(set, instructions, ref index));
                         break;
                     default:
-                        graph.AddNode(CompilerNodeMaker.GetInstruction(set, instructions[index]));
-                        index++;
-                        break;
+                        throw new Exception($"Encountered illegal top-level instruction with opcode '{instructions[index].Opcode}'.");
                 }
 
                 // Add to label table.
                 try
                 {
                     CompilerNode node = graph[^1];
-                    string label = node.GetLabel().Data.GetArgument(BuiltIn.LabelNameID);
+                    string label = node.GetLabel().Data.GetArgument(BuiltIn.LabelName);
                     labelTable.Add(label, node);
                 }
                 catch { }
@@ -54,6 +50,9 @@ namespace Rusty.CutsceneEditor.Compiler
             {
                 CompilerNode node = graph[i];
                 OutputData outputData = node.GetOutputData();
+
+                if (node.Data.GetOpcode() == BuiltIn.MetadataOpcode)
+                    continue;
 
                 // Connect default output.
                 if (outputData.HasDefaultOutput && i < graph.Count - 1)
@@ -92,6 +91,9 @@ namespace Rusty.CutsceneEditor.Compiler
             {
                 switch (instructions[index].Opcode)
                 {
+                    case BuiltIn.MetadataOpcode:
+                    case BuiltIn.DefinitionOpcode:
+                    case BuiltIn.CompileRuleOpcode:
                     case BuiltIn.NodeOpcode:
                     case BuiltIn.InspectorOpcode:
                     case BuiltIn.PreInstructionOpcode:

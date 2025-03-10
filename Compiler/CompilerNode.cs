@@ -37,11 +37,11 @@ namespace Rusty.CutsceneEditor.Compiler
         {
             SubNode<NodeData> beginNode = GetBegin();
             if (beginNode != null)
-                return $"{beginNode.Data.GetArgument(BuiltIn.BeginNameID)}: {base.GetName()}";
+                return $"{beginNode.Data.GetArgument(BuiltIn.BeginName)}: {base.GetName()}";
 
             SubNode<NodeData> labelNode = GetLabel();
             if (labelNode != null)
-                return $"({labelNode.Data.GetArgument(BuiltIn.LabelNameID)}) {base.GetName()}";
+                return $"({labelNode.Data.GetArgument(BuiltIn.LabelName)}) {base.GetName()}";
 
             return base.GetName();
         }

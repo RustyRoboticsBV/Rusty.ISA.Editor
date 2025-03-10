@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=50 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=65 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/OutputParameter.cs" id="15_3ecvh"]
 [ext_resource type="Texture2D" uid="uid://hebpbqr6ffha" path="res://Built-In Instructions/IconTPL.bmp" id="15_r7qq2"]
 [ext_resource type="Texture2D" uid="uid://cw6aeeeuk5i85" path="res://Built-In Instructions/IconLST.bmp" id="16_6vvij"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="16_nc316"]
 [ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOB.bmp" id="17_fsrcr"]
 
 [sub_resource type="Resource" id="Resource_g65gn"]
@@ -101,7 +102,7 @@ PostInstructions = []
 [sub_resource type="Resource" id="Resource_yjpwf"]
 resource_name = "Int: selected"
 script = ExtResource("12_q4rbi")
-ID = ""
+ID = "selected"
 DisplayName = "Selected"
 Description = "The selected choice."
 DefaultValue = 0
@@ -153,6 +154,122 @@ Parameters = []
 Icon = ExtResource("17_fsrcr")
 DisplayName = "End of Block"
 Description = "A compiler marker that denotes the end of a group of instructions."
+Category = "Compiler"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_cimir"]
+resource_name = "MTA"
+script = ExtResource("2_uguea")
+Opcode = "MTA"
+Parameters = []
+DisplayName = "Instruction Set Metadata"
+Description = "Starts an instruction set metadata group. The group should be closed with an EOG instruction."
+Category = ""
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_avnf8"]
+resource_name = "opcode (text)"
+script = ExtResource("12_rklps")
+ID = "opcode"
+DisplayName = "Opcode"
+Description = "The opcode of the instruction definition."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_wldw7"]
+resource_name = "DEF"
+script = ExtResource("2_uguea")
+Opcode = "DEF"
+Parameters = [SubResource("Resource_avnf8")]
+DisplayName = "Instruction Metadata"
+Description = "Starts a metadata group for an instruction definition. The group should be closed with an EOG instruction."
+Category = "Compiler"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_shaub"]
+resource_name = "type (text)"
+script = ExtResource("12_rklps")
+ID = "type"
+DisplayName = "Type"
+Description = "The type of the parameter."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_2jvhx"]
+resource_name = "id (text)"
+script = ExtResource("12_rklps")
+ID = "id"
+DisplayName = "ID"
+Description = "The identifier of the parameter."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_n3emi"]
+resource_name = "PAR"
+script = ExtResource("2_uguea")
+Opcode = "PAR"
+Parameters = [SubResource("Resource_shaub"), SubResource("Resource_2jvhx")]
+DisplayName = "Parameter Metadata"
+Description = "Represents metadata related to an instruction parameter."
+Category = "Compiler"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_4i0kw"]
+resource_name = "type (text)"
+script = ExtResource("12_rklps")
+ID = "type"
+DisplayName = "Type"
+Description = "The type of the compile rule. Should be one of the following: option, choice, tuple, or list."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_bdv4d"]
+resource_name = "id (text)"
+script = ExtResource("12_rklps")
+ID = "id"
+DisplayName = "ID"
+Description = "The identifier of the compile rule."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_hr6rg"]
+resource_name = "RUL"
+script = ExtResource("2_uguea")
+Opcode = "RUL"
+Parameters = [SubResource("Resource_4i0kw"), SubResource("Resource_bdv4d")]
+DisplayName = "Compile Rule Metadata"
+Description = "Starts a compile rule metadata group. The group should be closed with an EOG instruction."
+Category = "Compiler"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_svoja"]
+resource_name = "opcode (text)"
+script = ExtResource("12_rklps")
+ID = "opcode"
+DisplayName = "Opcode"
+Description = "The opcode of the referenced instruction."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_jdrw3"]
+resource_name = "id (text)"
+script = ExtResource("12_rklps")
+ID = "id"
+DisplayName = "ID"
+Description = "The identifier of the parameter."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_d6p30"]
+resource_name = "REF"
+script = ExtResource("2_uguea")
+Opcode = "REF"
+Parameters = [SubResource("Resource_svoja"), SubResource("Resource_jdrw3")]
+DisplayName = "Reference"
+Description = "Represents metadata related to an instruction rule."
 Category = "Compiler"
 Preview = []
 PreInstructions = []
@@ -281,11 +398,19 @@ Members = ""
 Initialize = ""
 Execute = "warning(%message%);"
 
+[sub_resource type="Resource" id="Resource_b3lgy"]
+resource_name = "message (multiline)"
+script = ExtResource("16_nc316")
+ID = "message"
+DisplayName = "Message"
+Description = "The message of this warning."
+DefaultValue = "unknown warning"
+
 [sub_resource type="Resource" id="Resource_b4qbb"]
 resource_name = "WRN"
 script = ExtResource("2_uguea")
 Opcode = "WRN"
-Parameters = []
+Parameters = [SubResource("Resource_b3lgy")]
 Implementation = SubResource("Resource_08wba")
 Icon = SubResource("CompressedTexture2D_3263b")
 DisplayName = "Warning"
@@ -304,11 +429,19 @@ Members = ""
 Initialize = ""
 Execute = "error(%message%);"
 
+[sub_resource type="Resource" id="Resource_x8fca"]
+resource_name = "message (multiline)"
+script = ExtResource("16_nc316")
+ID = "message"
+DisplayName = "Message"
+Description = "The message of this error."
+DefaultValue = "unknown error"
+
 [sub_resource type="Resource" id="Resource_es1ni"]
 resource_name = "ERR"
 script = ExtResource("2_uguea")
 Opcode = "ERR"
-Parameters = []
+Parameters = [SubResource("Resource_x8fca")]
 Implementation = SubResource("Resource_0mw74")
 Icon = SubResource("CompressedTexture2D_dxm61")
 DisplayName = "Error"
@@ -326,5 +459,5 @@ Modules = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
+Definitions = [SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30")]
 Modules = [SubResource("Resource_eqo11")]

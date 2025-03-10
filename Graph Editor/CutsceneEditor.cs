@@ -3,7 +3,6 @@ using Godot;
 using Rusty.Cutscenes;
 using Rusty.CutsceneEditor.Compiler;
 using Rusty.CutsceneEditor.InstructionSets;
-using System;
 
 namespace Rusty.CutsceneEditor
 {
@@ -85,7 +84,7 @@ namespace Rusty.CutsceneEditor
             string code = DisplayServer.ClipboardGet();
             CompilerGraph graph = InstructionListDecompiler.Decompile(set, CodeDecompiler.Decompile(set, code));
 
-            GD.Print("Compiler graph:\n" + graph);
+            GD.Print("Decompiled graph:\n" + graph);
 
             GraphDecompiler.Spawn(GraphEdit, graph);
 

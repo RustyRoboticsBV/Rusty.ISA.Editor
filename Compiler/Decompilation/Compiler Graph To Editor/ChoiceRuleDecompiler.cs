@@ -23,7 +23,7 @@ namespace Rusty.CutsceneEditor.Compiler
             int selected = -1;
             try
             {
-                selected = int.Parse(choiceNode.Data.GetArgument(BuiltIn.ChoiceRuleSelectedID));
+                selected = int.Parse(choiceNode.Data.GetArgument(BuiltIn.ChoiceRuleSelected));
             }
             catch { }
 

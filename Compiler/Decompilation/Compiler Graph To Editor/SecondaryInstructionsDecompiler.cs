@@ -14,7 +14,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 SubNode<NodeData> child = secondaryInstructionsNode.Children[i];
 
                 // Stop on end-of-group node.
-                if (child.Data.GetOpcode() == BuiltIn.EndOfGroupOpcode)
+                if (child.Data.GetOpcode() == BuiltIn.EndOfGroupOpcode || i >= instructionsInspector.Inspectors.Count)
                     break;
 
                 // Decompile secondary instruction node.

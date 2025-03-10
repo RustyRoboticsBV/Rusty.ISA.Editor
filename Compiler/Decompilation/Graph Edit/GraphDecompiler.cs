@@ -20,6 +20,10 @@ namespace Rusty.CutsceneEditor.Compiler
                 // Get compiler node.
                 CompilerNode node = graph[i];
 
+                // TODO: actually do something with the metadata.
+                if (node.Data.GetOpcode() == BuiltIn.MetadataOpcode)
+                    continue;
+
                 // Get instruction.
                 SubNode<NodeData> mainInstruction = node.GetMainInstruction();
 
@@ -31,14 +35,14 @@ namespace Rusty.CutsceneEditor.Compiler
                 float x = 0;
                 try
                 {
-                    x = float.Parse(node.Data.GetArgument(BuiltIn.NodeXID));
+                    x = float.Parse(node.Data.GetArgument(BuiltIn.NodeX));
                 }
                 catch { }
 
                 float y = 0;
                 try
                 {
-                    y = float.Parse(node.Data.GetArgument(BuiltIn.NodeYID));
+                    y = float.Parse(node.Data.GetArgument(BuiltIn.NodeY));
                 }
                 catch { }
 
@@ -51,7 +55,7 @@ namespace Rusty.CutsceneEditor.Compiler
 
                 SubNode<NodeData> startName = node.GetBegin();
                 if (startName != null)
-                    inspector.LabelName = startName.Data.GetArgument(BuiltIn.BeginNameID);
+                    inspector.LabelName = startName.Data.GetArgument(BuiltIn.BeginName);
 
                 InspectorDecompiler.Apply(node.GetInspector(), inspector);
 
@@ -65,8 +69,12 @@ namespace Rusty.CutsceneEditor.Compiler
                 // Get compiler & graph edit nodes.
                 CompilerNode node = graph[i];
 
+                if (node.Data.GetOpcode() == BuiltIn.MetadataOpcode)
+                    continue;
+
                 if (!nodeMap.ContainsKey(node))
                     continue;
+
                 CutsceneGraphNode editorNode = nodeMap[node];
 
                 // Ensure enough slots on the editor node.

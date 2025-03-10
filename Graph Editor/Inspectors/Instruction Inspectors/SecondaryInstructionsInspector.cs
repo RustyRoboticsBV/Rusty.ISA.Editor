@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Godot;
 using Rusty.Cutscenes;
 using Rusty.EditorUI;
 
@@ -9,7 +8,6 @@ namespace Rusty.CutsceneEditor
     {
         /* Public properties. */
         public List<Inspector> Inspectors { get; set; } = new();
-        public int InspectorCount => Inspectors.Count;
 
         /* Constructors. */
         public SecondaryInstructionsInspector() : base() { }

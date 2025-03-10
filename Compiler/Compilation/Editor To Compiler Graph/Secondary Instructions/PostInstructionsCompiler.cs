@@ -20,7 +20,7 @@ namespace Rusty.CutsceneEditor.Compiler
             SubNode<NodeData> node = CompilerNodeMaker.GetPostInstructions(set);
 
             // Add contents.
-            for (int i = 0; i < inspector.InspectorCount; i++)
+            for (int i = 0; i < inspector.Inspectors.Count; i++)
             {
                 node.AddChild(RuleCompiler.Compile(inspector.Inspectors[i]));
             }

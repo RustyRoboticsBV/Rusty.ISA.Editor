@@ -15,15 +15,26 @@ namespace Rusty.CutsceneEditor.Compiler
         /// </summary>
         public static string Compile(CompilerGraph graph)
         {
-            // 1. Figure out start nodes.
+            // 1. Add instruction set metadata.
+            CompilerNode setNode = MetaSetCompiler.Compile(graph.Data.Set);
+            graph.InsertNode(0, setNode);
+
+            // 2. Figure out start nodes.
             int[] startNodes = graph.FindStartNodes();
 
-            // 2. Figure out execution order, set labels, insert goto's and set output arguments.
+            // 3. Figure out execution order, set labels, insert goto's and set output arguments.
             BiDict<int, CompilerNode> executionOrder = new();
             int nextLabel = 0;
             for (int i = 0; i < startNodes.Length; i++)
             {
                 CompilerNode startNode = graph[startNodes[i]];
+
+                if (startNode.Data.GetOpcode() == BuiltIn.MetadataOpcode)
+                {
+                    executionOrder.Add(executionOrder.Count, startNode);
+                    continue;
+                }
+
                 if (executionOrder.ContainsRight(startNode))
                     continue;
 
@@ -33,7 +44,7 @@ namespace Rusty.CutsceneEditor.Compiler
             // Print finished graph.
             GD.Print("Compiled graph:\n" + graph);
 
-            // 3. Compile to code.
+            // 4. Compile to code.
             string code = "";
             for (int i = 0; i < executionOrder.Count; i++)
             {
@@ -41,6 +52,7 @@ namespace Rusty.CutsceneEditor.Compiler
                     code += "\n";
                 code += NodeCompiler.Compile(executionOrder[i]);
             }
+
             return code;
         }
 
@@ -113,7 +125,7 @@ namespace Rusty.CutsceneEditor.Compiler
             for (int i = 0; i < node.Children.Count; i++)
             {
                 if (node.Children[i].Data.GetOpcode() == BuiltIn.LabelOpcode)
-                    return node.Children[i].Data.GetArgument(BuiltIn.LabelNameID);
+                    return node.Children[i].Data.GetArgument(BuiltIn.LabelName);
             }
             return null;
         }
@@ -130,8 +142,8 @@ namespace Rusty.CutsceneEditor.Compiler
             }
 
 
-            int labelArgumentIndex = node.Data.Set[BuiltIn.LabelOpcode].GetParameterIndex(BuiltIn.LabelNameID);
-            node.Children[0].Data.SetArgument(BuiltIn.LabelNameID, value);
+            int labelArgumentIndex = node.Data.Set[BuiltIn.LabelOpcode].GetParameterIndex(BuiltIn.LabelName);
+            node.Children[0].Data.SetArgument(BuiltIn.LabelName, value);
         }
 
         /// <summary>

@@ -16,8 +16,8 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[BuiltIn.NodeOpcode];
             InstructionInstance instance = new(definition);
 
-            instance.Arguments[definition.GetParameterIndex(BuiltIn.NodeXID)] = x;
-            instance.Arguments[definition.GetParameterIndex(BuiltIn.NodeYID)] = y;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.NodeX)] = x;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.NodeY)] = y;
 
             return new CompilerNode(new NodeData(set, definition, instance));
         }
@@ -30,7 +30,7 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[BuiltIn.BeginOpcode];
             InstructionInstance instance = new(definition);
 
-            instance.Arguments[definition.GetParameterIndex(BuiltIn.BeginNameID)] = name;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.BeginName)] = name;
 
             return new(new NodeData(set, definition, instance));
         }
@@ -54,7 +54,7 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[BuiltIn.LabelOpcode];
             InstructionInstance instance = new(definition);
 
-            instance.Arguments[definition.GetParameterIndex(BuiltIn.LabelNameID)] = value;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.LabelName)] = value;
 
             return new SubNode<NodeData>(new NodeData(set, definition, instance));
         }
@@ -67,7 +67,7 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[BuiltIn.GotoOpcode];
             InstructionInstance instance = new(definition);
 
-            instance.Arguments[definition.GetParameterIndex(BuiltIn.GotoTargetLabelID)] = targetLabel;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.GotoTargetLabel)] = targetLabel;
 
             return new(new NodeData(set, definition, instance));
         }
@@ -166,6 +166,72 @@ namespace Rusty.CutsceneEditor.Compiler
         public static SubNode<NodeData> GetInstruction(InstructionSet set, InstructionInstance instance)
         {
             return new SubNode<NodeData>(new NodeData(set, set[instance.Opcode], instance));
+        }
+
+        /// <summary>
+        /// Create a SET instruction node.
+        /// </summary>
+        public static CompilerNode GetSet(InstructionSet set)
+        {
+            InstructionDefinition definition = set[BuiltIn.MetadataOpcode];
+            InstructionInstance instance = new(definition);
+
+            return new CompilerNode(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
+        /// Create a DEF instruction sub-node.
+        /// </summary>
+        public static SubNode<NodeData> GetDefinition(InstructionSet set, string opcode)
+        {
+            InstructionDefinition definition = set[BuiltIn.DefinitionOpcode];
+            InstructionInstance instance = new(definition);
+
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.DefinitionOpcodeParameter)] = opcode;
+
+            return new SubNode<NodeData>(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
+        /// Create a PAR instruction sub-node.
+        /// </summary>
+        public static SubNode<NodeData> GetParameter(InstructionSet set, string type, string id)
+        {
+            InstructionDefinition definition = set[BuiltIn.ParameterOpcode];
+            InstructionInstance instance = new(definition);
+
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.ParameterType)] = type;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.ParameterID)] = id;
+
+            return new SubNode<NodeData>(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
+        /// Create a RUL instruction sub-node.
+        /// </summary>
+        public static SubNode<NodeData> GetCompileRule(InstructionSet set, string type, string id)
+        {
+            InstructionDefinition definition = set[BuiltIn.CompileRuleOpcode];
+            InstructionInstance instance = new(definition);
+
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.CompileRuleType)] = type;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.CompileRuleID)] = id;
+
+            return new SubNode<NodeData>(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
+        /// Create a REF instruction sub-node.
+        /// </summary>
+        public static SubNode<NodeData> GetReference(InstructionSet set, string type, string id)
+        {
+            InstructionDefinition definition = set[BuiltIn.ReferenceOpcode];
+            InstructionInstance instance = new(definition);
+
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.ReferenceOpcodeParameter)] = type;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.ReferenceID)] = id;
+
+            return new SubNode<NodeData>(new NodeData(set, definition, instance));
         }
     }
 }
