@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=65 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=70 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
@@ -7,16 +7,21 @@
 [ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="9_dl4up"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="11_gxiqw"]
 [ext_resource type="Texture2D" uid="uid://nyag7iauyi0f" path="res://Built-In Instructions/IconINS.bmp" id="11_vnhvg"]
+[ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconMTA.bmp" id="12_nbvet"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/TextParameter.cs" id="12_rklps"]
 [ext_resource type="Texture2D" uid="uid://d06v0b1l2xkth" path="res://Built-In Instructions/IconOPT.bmp" id="12_y4agh"]
+[ext_resource type="Texture2D" uid="uid://bn1xqf4r0frab" path="res://Built-In Instructions/IconDEF.bmp" id="13_y5iqg"]
 [ext_resource type="Texture2D" uid="uid://csuae1j5ge1uj" path="res://Built-In Instructions/IconCHO.bmp" id="14_42hs7"]
 [ext_resource type="Texture2D" uid="uid://c6nj8ormy6u2x" path="res://Submodules/Cutscenes/Built-In Instructions/IconLAB.bmp" id="14_siv20"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/OutputParameter.cs" id="15_3ecvh"]
+[ext_resource type="Texture2D" uid="uid://bxhyuh5kvcdht" path="res://Built-In Instructions/IconPAR.bmp" id="15_5h8mm"]
 [ext_resource type="Texture2D" uid="uid://hebpbqr6ffha" path="res://Built-In Instructions/IconTPL.bmp" id="15_r7qq2"]
+[ext_resource type="Texture2D" uid="uid://bnxu4r33ccaum" path="res://Built-In Instructions/IconRUL.bmp" id="16_0cdng"]
 [ext_resource type="Texture2D" uid="uid://cw6aeeeuk5i85" path="res://Built-In Instructions/IconLST.bmp" id="16_6vvij"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="16_nc316"]
 [ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOB.bmp" id="17_fsrcr"]
+[ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="17_txonn"]
 
 [sub_resource type="Resource" id="Resource_g65gn"]
 resource_name = "x (int)"
@@ -164,6 +169,7 @@ resource_name = "MTA"
 script = ExtResource("2_uguea")
 Opcode = "MTA"
 Parameters = []
+Icon = ExtResource("12_nbvet")
 DisplayName = "Instruction Set Metadata"
 Description = "Starts an instruction set metadata group. The group should be closed with an EOG instruction."
 Category = ""
@@ -184,6 +190,7 @@ resource_name = "DEF"
 script = ExtResource("2_uguea")
 Opcode = "DEF"
 Parameters = [SubResource("Resource_avnf8")]
+Icon = ExtResource("13_y5iqg")
 DisplayName = "Instruction Metadata"
 Description = "Starts a metadata group for an instruction definition. The group should be closed with an EOG instruction."
 Category = "Compiler"
@@ -212,6 +219,7 @@ resource_name = "PAR"
 script = ExtResource("2_uguea")
 Opcode = "PAR"
 Parameters = [SubResource("Resource_shaub"), SubResource("Resource_2jvhx")]
+Icon = ExtResource("15_5h8mm")
 DisplayName = "Parameter Metadata"
 Description = "Represents metadata related to an instruction parameter."
 Category = "Compiler"
@@ -240,6 +248,7 @@ resource_name = "RUL"
 script = ExtResource("2_uguea")
 Opcode = "RUL"
 Parameters = [SubResource("Resource_4i0kw"), SubResource("Resource_bdv4d")]
+Icon = ExtResource("16_0cdng")
 DisplayName = "Compile Rule Metadata"
 Description = "Starts a compile rule metadata group. The group should be closed with an EOG instruction."
 Category = "Compiler"
@@ -268,6 +277,7 @@ resource_name = "REF"
 script = ExtResource("2_uguea")
 Opcode = "REF"
 Parameters = [SubResource("Resource_svoja"), SubResource("Resource_jdrw3")]
+Icon = ExtResource("17_txonn")
 DisplayName = "Reference"
 Description = "Represents metadata related to an instruction rule."
 Category = "Compiler"
