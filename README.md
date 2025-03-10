@@ -28,23 +28,25 @@ If you want the editor to be able to create nodes for an instruction, be sure to
 Make sure to export your instruction set and add it to your Godot game project whenever you make any changes!
 
 ## Built-in Instructions
-In addition to the [built-in instruction from the core module](https://github.com/RustyRoboticsBV/Rusty.Cutscenes?tab=readme-ov-file#built-in-instructions),
-the editor decorates generated cutscene programs with *marker instructions*. These markers serve to preserve editability, and group instructions together into editor structures so that a graph may be reconstructed. They have no in-game meaning. The markers include the following:
-- `NOD(x, y)`: Starts a node group. The group should contain between one to three members: an optional `BEG`
-instruction, an optional `LAB` instruction, and either a `GTO`, `END` or `INS` instruction.
-- `INS()`: Starts an inspector group. It's meant for grouping a main instruction with its pre-instructions
-and post-instructions. The group should contain between one to three members: an optional `PRE` instruction,
-the main instruction and an optional `PST` instruction.
+In addition to the [built-in instruction from the core module](https://github.com/RustyRoboticsBV/Rusty.Cutscenes?tab=readme-ov-file#built-in-instructions), the editor decorates generated cutscene programs with *marker instructions*. These markers serve to preserve editability, and group instructions together into editor structures so that a graph may be reconstructed. They have no in-game meaning. The markers include the following:
+- `NOD(x, y)`: Starts a node group. The group should contain between one to three members: an optional `BEG` instruction, an optional `LAB` instruction, and either a `GTO`, `END` or `INS` instruction.
+- `INS()`: Starts an inspector group. It's meant for grouping a main instruction with its pre-instructions and post-instructions. The group should contain between one to three members: an optional `PRE` instruction, the main instruction and an optional `PST` instruction.
 - Secondary instruction markers:
   - `PRE()`: Starts a pre-instruction group.
   - `PST()`: Starts a post-instruction group.
 - Compile rule markers:
-  - `OPT()`: Starts an option rule group. If the group has no members, then the option was disabled.
-  - `CHO(selected)`: Starts a choice rule group. The argument tells the editor that this instruction represents
+  - `OPT()`: Starts an option rule group. If the group has no members, then the
+option was disabled.
+  - `CHO(selected)`: Starts a choice rule group. The argument tells the editor
+that this instruction represents
 the nth selection in the dropdown window.
   - `TPL()`: Starts a tuple rule group.
   - `LST()`: Starts a list rule group.
 - `EOG()`: Ends the most recently-started group.
+- `MTA()`: Starts a metadata group. This group contains a truncated version of the instruction set, which is used to detect if instructions in the set have been changed since the last time that the cutscene was edited. If it is used, it should be the first instruction in the program, and there should be only one of them. The following members exist:
+  - `DEF(opcode)`: Starts an instruction definition group. `PRE` and `PST` markers are used to define pre-instructions and post-instructions.
+	- `PAR(type, id)`: A parameter definition.
+	- `RUL(type, id)`: Starts a compile rule definition group. The type may be one of the following: `option`, `choice`, `tuple` or `list`.
+	- `REF(opcode, id)`: Represents an instruction rule.
 
-All editor-only instructions are stripped out when a program is loaded into Godot as a CutsceneProgram resource,
-so that no performance or filesize cost is incurred.
+All editor-only instructions are stripped out when a program is loaded into Godot as a CutsceneProgram resource, so that no performance or filesize cost is incurred.
