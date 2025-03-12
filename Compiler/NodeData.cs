@@ -60,7 +60,7 @@ namespace Rusty.CutsceneEditor.Compiler
         {
             int index = Definition.GetParameterIndex(name);
             if (index < 0)
-                throw new Exception($"Could not find parameter '{name}' in instructin '{GetOpcode()}'!");
+                throw new Exception($"Could not find parameter '{name}' in instruction '{GetOpcode()}'!");
             return GetArgument(index);
         }
 

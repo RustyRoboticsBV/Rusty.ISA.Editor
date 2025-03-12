@@ -20,7 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://bnxu4r33ccaum" path="res://Built-In Instructions/IconRUL.bmp" id="16_0cdng"]
 [ext_resource type="Texture2D" uid="uid://cw6aeeeuk5i85" path="res://Built-In Instructions/IconLST.bmp" id="16_6vvij"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="16_nc316"]
-[ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOB.bmp" id="17_fsrcr"]
+[ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOG.bmp" id="17_fsrcr"]
 [ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="17_txonn"]
 
 [sub_resource type="Resource" id="Resource_g65gn"]
