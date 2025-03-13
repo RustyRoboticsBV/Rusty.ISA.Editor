@@ -1,6 +1,6 @@
 ﻿using Godot;
-using Rusty.Cutscenes;
 using System;
+using Rusty.Cutscenes;
 
 namespace Rusty.CutsceneEditor
 {
@@ -41,8 +41,14 @@ namespace Rusty.CutsceneEditor
         public event Action<IGraphElement> Selected;
         public event Action<IGraphElement> Deselected;
         public event Action<IGraphElement> Dragged;
+        public event Action<IGraphElement> Deleted;
 
         /* Public methods. */
         public Node GetParent();
+
+        /// <summary>
+        /// Delete this element from its parent graph edit.
+        /// </summary>
+        public void Delete();
     }
 }

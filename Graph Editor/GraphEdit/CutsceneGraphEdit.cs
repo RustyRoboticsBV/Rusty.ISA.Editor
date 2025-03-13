@@ -317,28 +317,22 @@ namespace Rusty.CutsceneEditor
 
                     // Remove from list.
                     Nodes.Remove(node);
-
-                    Node parent = node.GetParent();
-                    parent.RemoveChild(node);
                 }
 
                 // If the element was a comment...
                 else if (element is CutsceneGraphComment comment)
                 {
                     Comments.Remove(comment);
-
-                    Node parent = comment.GetParent();
-                    parent.RemoveChild(comment);
                 }
 
                 // If the element was a frame...
                 else if (element is CutsceneGraphFrame frame)
                 {
                     Frames.Remove(frame);
-
-                    Node parent = frame.GetParent();
-                    parent.RemoveChild(frame);
                 }
+
+                // Delete the element.
+                element.Delete();
             }
         }
 
@@ -356,6 +350,7 @@ namespace Rusty.CutsceneEditor
         {
             CutsceneGraphFrame frame = null;
 
+            // Check if we've just dragged the element into a frame.
             for (int i = 0; i < Frames.Count; i++)
             {
                 if (element == Frames[i])
@@ -369,19 +364,28 @@ namespace Rusty.CutsceneEditor
                 Vector2 mousePosition = GetMousePosition();
 
                 if (mousePosition.X > x1 && mousePosition.X < x2 && mousePosition.Y > y1 && mousePosition.Y < y2
-                    && (frame == null || frame.IsNestedIn(Frames[i])))
+                    && (frame == null || Frames[i].IsNestedIn(frame)))
                 {
                     frame = Frames[i];
                 }
             }
 
-            if (frame != null)
+            // If the new frame is different from the old one...
+            if (element.Frame != frame)
             {
-                for (int i = 0; i < GetChildCount(); i++)
+                // Remove from old frame.
+                if (element.Frame != null)
+                    element.Frame.RemoveElement(element);
+
+                // Add to new frame.
+                if (frame != null)
                 {
-                    if (GetChild(i) is IGraphElement selected && selected.IsSelected)
+                    for (int i = 0; i < GetChildCount(); i++)
                     {
-                        frame.AddElement(selected);
+                        if (GetChild(i) is IGraphElement selected && selected.IsSelected)
+                        {
+                            frame.AddElement(selected);
+                        }
                     }
                 }
             }

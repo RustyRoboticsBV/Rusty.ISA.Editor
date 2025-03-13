@@ -28,6 +28,7 @@ namespace Rusty.CutsceneEditor
         public new event Action<IGraphElement> Selected;
         public event Action<IGraphElement> Deselected;
         public new event Action<IGraphElement> Dragged;
+        public event Action<IGraphElement> Deleted;
 
         /* Constructors. */
         public CutsceneGraphNode(CutsceneGraphEdit graphEdit, InstructionDefinition definition)
@@ -39,6 +40,15 @@ namespace Rusty.CutsceneEditor
             NodeSelected += OnNodeSelected;
             NodeDeselected += OnNodeDeselected;
             base.Dragged += OnDragged;
+        }
+
+        /* Public methods. */
+        public void Delete()
+        {
+            Node parent = GetParent();
+            if (parent != null)
+                parent.RemoveChild(this);
+            Deleted?.Invoke(this);
         }
 
         /* Protected methods. */

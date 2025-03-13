@@ -34,6 +34,7 @@ namespace Rusty.CutsceneEditor
         public new event Action<IGraphElement> Selected;
         public event Action<IGraphElement> Deselected;
         public new event Action<IGraphElement> Dragged;
+        public event Action<IGraphElement> Deleted;
 
         /* Constructors. */
         public CutsceneGraphFrame(CutsceneGraphEdit graphEdit, Vector2 positionOffset)
@@ -73,6 +74,7 @@ namespace Rusty.CutsceneEditor
             Elements.Add(element);
             element.Frame = this;
             element.Dragged += OnElementDragged;
+            element.Deleted += OnElementDeleted;
 
             // Alter position & size.
             UpdateSizePosition();
@@ -89,13 +91,29 @@ namespace Rusty.CutsceneEditor
             UpdateSizePosition();
         }
 
+        public void Delete()
+        {
+            // Delete all elements.
+            for (int i = 0; i < Elements.Count; i++)
+            {
+                Elements[i].Delete();
+            }
+
+            // Delete this frame.
+            Node parent = GetParent();
+            if (parent != null)
+                parent.RemoveChild(this);
+            Deleted?.Invoke(this);
+        }
+
         /* Godot overrides. */
         public override void _Process(double delta)
         {
-            DragMargin = 1;
-            if (base.Selected)
+            // Copy title label from the inspector's value.
+            if (IsSelected)
                 Title = Inspector.TitleText;
 
+            // If we move the frame, also move members with it.
             if (LastOffset != PositionOffset)
             {
                 for (int i = 0; i < Elements.Count; i++)
@@ -115,6 +133,7 @@ namespace Rusty.CutsceneEditor
                 return;
             }
 
+            // Figure out new bounds.
             float minX = float.MaxValue;
             float maxX = float.MinValue;
             float minY = float.MaxValue;
@@ -143,14 +162,20 @@ namespace Rusty.CutsceneEditor
             minY -= AutoshrinkMargin;
             maxY += AutoshrinkMargin;
 
+            // Apply new bounds.
             PositionOffset = new(minX, minY);
             Size = new(maxX - minX, maxY - minY);
 
+            // Store member offsets.
             ElementOffsets.Clear();
             foreach (IGraphElement element in Elements)
             {
                 ElementOffsets.Add(element.PositionOffset - PositionOffset);
             }
+
+            // Also update parent frame.
+            if (Frame != null)
+                Frame.UpdateSizePosition();
         }
 
 
@@ -174,6 +199,11 @@ namespace Rusty.CutsceneEditor
         {
             if (!IsSelected)
                 UpdateSizePosition();
+        }
+
+        private void OnElementDeleted(IGraphElement element)
+        {
+            RemoveElement(element);
         }
     }
 }

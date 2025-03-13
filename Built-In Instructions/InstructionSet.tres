@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=89 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=91 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_gmmgc"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cg1l63y6ngo4a" path="res://Built-In Instructions/IconPRE.bmp" id="4_wahcg"]
 [ext_resource type="Texture2D" uid="uid://dfl3rdmo5gdiy" path="res://Built-In Instructions/IconFRM.bmp" id="5_sqci0"]
 [ext_resource type="Texture2D" uid="uid://chwtisxfc6sgf" path="res://Built-In Instructions/IconPST.bmp" id="5_yqtwi"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="8_1way0"]
 [ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="9_dl4up"]
 [ext_resource type="Texture2D" uid="uid://b3v1nu6sd00l" path="res://Built-In Instructions/IconMBR.bmp" id="9_nx7m3"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="11_gxiqw"]
@@ -87,14 +88,6 @@ DisplayName = "ID"
 Description = "The id of the frame."
 DefaultValue = ""
 
-[sub_resource type="Resource" id="Resource_qhjbc"]
-resource_name = "title (text)"
-script = ExtResource("12_rklps")
-ID = "title"
-DisplayName = "Title"
-Description = "The title text of the frame."
-DefaultValue = "Frame."
-
 [sub_resource type="Resource" id="Resource_g4ly1"]
 resource_name = "x (int)"
 script = ExtResource("12_q4rbi")
@@ -127,16 +120,53 @@ DisplayName = "Hidth"
 Description = "The height of the frame."
 DefaultValue = 0
 
+[sub_resource type="Resource" id="Resource_qhjbc"]
+resource_name = "title (text)"
+script = ExtResource("12_rklps")
+ID = "title"
+DisplayName = "Title"
+Description = "The title text of the frame."
+DefaultValue = "Frame."
+
+[sub_resource type="Resource" id="Resource_qimco"]
+resource_name = "color (Color)"
+script = ExtResource("8_1way0")
+ID = "color"
+DisplayName = "Color"
+Description = "The color of the frame."
+DefaultValue = Color(1, 1, 1, 1)
+
 [sub_resource type="Resource" id="Resource_7hiv8"]
 resource_name = "FRM"
 script = ExtResource("2_uguea")
 Opcode = "FRM"
-Parameters = [SubResource("Resource_imkvv"), SubResource("Resource_qhjbc"), SubResource("Resource_g4ly1"), SubResource("Resource_kkrrb"), SubResource("Resource_vx1sj"), SubResource("Resource_ujlnt")]
+Parameters = [SubResource("Resource_imkvv"), SubResource("Resource_g4ly1"), SubResource("Resource_kkrrb"), SubResource("Resource_vx1sj"), SubResource("Resource_ujlnt"), SubResource("Resource_qhjbc"), SubResource("Resource_qimco")]
 Icon = ExtResource("5_sqci0")
 DisplayName = "Frame"
-Description = "Starts a frame group. The group may contain nested frame instructions, and should be closed with an EOG instruction."
+Description = "Starts a frame group. The group may contain a single MBR instruction (to allow for nested frames), and should be closed with an EOG instruction."
 Category = "Editor"
 EditorNode = SubResource("Resource_latm4")
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_em22h"]
+resource_name = "frame_id (text)"
+script = ExtResource("12_rklps")
+ID = "frame_id"
+DisplayName = "Frame ID"
+Description = "The id of the frame that this node is contained in."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_cn6to"]
+resource_name = "MBR"
+script = ExtResource("2_uguea")
+Opcode = "MBR"
+Parameters = [SubResource("Resource_em22h")]
+Icon = ExtResource("9_nx7m3")
+DisplayName = "Frame Member"
+Description = "Designates a NOD, CMT or FRM group as being a member of an editor frame with some ID."
+Category = "Editor"
 Preview = []
 PreInstructions = []
 PostInstructions = []
@@ -166,27 +196,6 @@ Icon = ExtResource("9_dl4up")
 DisplayName = "Editor Node"
 Description = "Starts an editor node. It should contain an inspector instruction, and optionally a label and/or begin instruction. The group should be closed with an EOG instruction."
 Category = "Compiler"
-Preview = []
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_em22h"]
-resource_name = "frame_id (text)"
-script = ExtResource("12_rklps")
-ID = "frame_id"
-DisplayName = "Frame ID"
-Description = "The id of the frame that this node is contained in."
-DefaultValue = ""
-
-[sub_resource type="Resource" id="Resource_cn6to"]
-resource_name = "MBR"
-script = ExtResource("2_uguea")
-Opcode = "MBR"
-Parameters = [SubResource("Resource_em22h")]
-Icon = ExtResource("9_nx7m3")
-DisplayName = "Frame Member"
-Description = "Designates a NOD group as being a member of an editor frame with some ID."
-Category = "Editor"
 Preview = []
 PreInstructions = []
 PostInstructions = []
@@ -608,5 +617,5 @@ Modules = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_btai4"), SubResource("Resource_cn6to"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30")]
+Definitions = [SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30")]
 Modules = [SubResource("Resource_eqo11")]
