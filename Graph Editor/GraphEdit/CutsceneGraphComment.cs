@@ -90,7 +90,7 @@ namespace Rusty.CutsceneEditor
                 Label.Size = Vector2.Zero;
                 int parameterIndex = Definition.GetParameterIndex(BuiltIn.CommentText);
                 Label.Text = Inspector.CommentText;
-                Label.AddThemeColorOverride("default_color", Selected ? EditorNodeInfo.SelectedTextColor : Definition.EditorNode.TextColor);
+                Label.AddThemeColorOverride("default_color", IsSelected ? EditorNodeInfo.SelectedTextColor : Definition.EditorNode.TextColor);
             }
             Size = Vector2.Zero;
             Size += new Vector2(10f, 10f);

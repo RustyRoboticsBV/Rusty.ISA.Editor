@@ -1,4 +1,6 @@
-﻿using Rusty.Cutscenes;
+﻿using Godot;
+using Rusty.Cutscenes;
+using System;
 
 namespace Rusty.CutsceneEditor
 {
@@ -7,6 +9,11 @@ namespace Rusty.CutsceneEditor
     /// </summary>
     public interface IGraphElement
     {
+        /* Public properties. */
+        public Vector2 PositionOffset { get; set; }
+        public Vector2 Size { get; set; }
+        public bool IsSelected { get; }
+
         /// <summary>
         /// The graph edit that this element is contained on.
         /// </summary>
@@ -14,7 +21,7 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// The frame that this element is contained in (if any).
         /// </summary>
-        public CutsceneGraphFrame Frame { get; }
+        public CutsceneGraphFrame Frame { get; set; }
 
         /// <summary>
         /// The instruction set that this element uses.
@@ -29,5 +36,13 @@ namespace Rusty.CutsceneEditor
         /// The root inspector of this element.
         /// </summary>
         public Inspector Inspector { get; }
+
+        /* Public events. */
+        public event Action<IGraphElement> Selected;
+        public event Action<IGraphElement> Deselected;
+        public event Action<IGraphElement> Dragged;
+
+        /* Public methods. */
+        public Node GetParent();
     }
 }

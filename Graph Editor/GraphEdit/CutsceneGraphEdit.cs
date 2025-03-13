@@ -42,8 +42,9 @@ namespace Rusty.CutsceneEditor
 
             node.PositionOffset = positionOffset;
 
-            node.OnSelected += OnSelect;
-            node.OnDeselected += OnDeselect;
+            node.Selected += OnSelect;
+            node.Deselected += OnDeselect;
+            node.Dragged += OnDragged;
 
             return node;
         }
@@ -94,8 +95,9 @@ namespace Rusty.CutsceneEditor
 
             comment.PositionOffset = positionOffset;
 
-            comment.OnSelected += OnSelect;
-            comment.OnDeselected += OnDeselect;
+            comment.Selected += OnSelect;
+            comment.Deselected += OnDeselect;
+            comment.Dragged += OnDragged;
 
             return comment;
         }
@@ -109,8 +111,9 @@ namespace Rusty.CutsceneEditor
             Frames.Add(frame);
             AddChild(frame);
 
-            frame.OnSelected += OnSelect;
-            frame.OnDeselected += OnDeselect;
+            frame.Selected += OnSelect;
+            frame.Deselected += OnDeselect;
+            frame.Dragged += OnDragged;
 
             return frame;
         }
@@ -347,6 +350,41 @@ namespace Rusty.CutsceneEditor
         private void OnDeselect(IGraphElement element)
         {
             InspectorWindow.RemoveChild(element.Inspector);
+        }
+
+        private void OnDragged(IGraphElement element)
+        {
+            CutsceneGraphFrame frame = null;
+
+            for (int i = 0; i < Frames.Count; i++)
+            {
+                if (element == Frames[i])
+                    continue;
+
+                float x1 = Frames[i].PositionOffset.X;
+                float y1 = Frames[i].PositionOffset.Y;
+                float x2 = x1 + Frames[i].Size.X;
+                float y2 = y1 + Frames[i].Size.Y;
+
+                Vector2 mousePosition = GetMousePosition();
+
+                if (mousePosition.X > x1 && mousePosition.X < x2 && mousePosition.Y > y1 && mousePosition.Y < y2
+                    && (frame == null || frame.IsNestedIn(Frames[i])))
+                {
+                    frame = Frames[i];
+                }
+            }
+
+            if (frame != null)
+            {
+                for (int i = 0; i < GetChildCount(); i++)
+                {
+                    if (GetChild(i) is IGraphElement selected && selected.IsSelected)
+                    {
+                        frame.AddElement(selected);
+                    }
+                }
+            }
         }
 
         private void OnFocusExited()

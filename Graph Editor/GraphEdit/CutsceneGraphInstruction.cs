@@ -115,7 +115,7 @@ namespace Rusty.CutsceneEditor
         {
             UpdateContents();
 
-            if (Input.IsKeyPressed(Key.Delete) && Selected)
+            if (Input.IsKeyPressed(Key.Delete) && IsSelected)
             {
                 OnNodeDeselected();
                 QueueFree();
@@ -125,7 +125,7 @@ namespace Rusty.CutsceneEditor
         /* Godot overrides. */
         public override void _Process(double delta)
         {
-            if (!Selected)
+            if (!IsSelected)
                 return;
 
             ForceUpdate();

@@ -12,28 +12,22 @@ namespace Rusty.CutsceneEditor
     {
         /* Public properties. */
         public CutsceneGraphEdit GraphEdit { get; private set; }
-        public CutsceneGraphFrame Frame
-        {
-            get
-            {
-                Node parent = GetParent();
-                if (parent is CutsceneGraphFrame frame)
-                    return frame;
-                return null;
-            }
-        }
+        public CutsceneGraphFrame Frame { get; set; }
         public Inspector Inspector { get; protected set; }
 
         public InstructionSet InstructionSet => GraphEdit.InstructionSet;
         public InstructionDefinition Definition { get; private set; }
+
+        public new bool IsSelected => base.Selected;
 
         /* Protected properties. */
         protected VBoxContainer InspectorWindow => GraphEdit.InspectorWindow;
         protected HBoxContainer TitleContainer { get; private set; }
 
         /* Public events. */
-        public event Action<IGraphElement> OnSelected;
-        public event Action<IGraphElement> OnDeselected;
+        public new event Action<IGraphElement> Selected;
+        public event Action<IGraphElement> Deselected;
+        public new event Action<IGraphElement> Dragged;
 
         /* Constructors. */
         public CutsceneGraphNode(CutsceneGraphEdit graphEdit, InstructionDefinition definition)
@@ -44,19 +38,23 @@ namespace Rusty.CutsceneEditor
 
             NodeSelected += OnNodeSelected;
             NodeDeselected += OnNodeDeselected;
+            base.Dragged += OnDragged;
         }
 
         /* Protected methods. */
         protected virtual void OnNodeSelected()
         {
-            if (this is IGraphElement element)
-                OnSelected?.Invoke(element);
+            Selected?.Invoke(this);
         }
 
         protected virtual void OnNodeDeselected()
         {
-            if (this is IGraphElement element)
-                OnDeselected?.Invoke(element);
+            Deselected?.Invoke(this);
+        }
+
+        protected virtual void OnDragged(Vector2 from, Vector2 to)
+        {
+            Dragged?.Invoke(this);
         }
     }
 }
