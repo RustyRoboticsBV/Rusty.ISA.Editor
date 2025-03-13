@@ -124,8 +124,11 @@ namespace Rusty.CutsceneEditor
         {
             CutsceneGraphComment comment = new()
             {
+                InstructionSet = InstructionSet,
                 PositionOffset = GetMousePosition()
             };
+            comment.Populate(InstructionSet[BuiltIn.CommentOpcode]);
+            comment.InspectorWindow = PropertiesInspector;
             AddChild(comment);
         }
 

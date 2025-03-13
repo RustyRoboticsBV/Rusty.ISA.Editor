@@ -9,6 +9,7 @@ namespace Rusty.CutsceneEditor
     public partial class NodeInstructionInspector : InstructionInspector
     {
         /* Public methods. */
+        public LineField Label { get; private set; }
         public string LabelName
         {
             get => Label.Value;
@@ -17,7 +18,6 @@ namespace Rusty.CutsceneEditor
 
         /* Private properties. */
         private LabeledIcon Title { get; set; }
-        private LineField Label { get; set; }
         private HSeparatorElement Bottom { get; set; }
 
         /* Constructors. */

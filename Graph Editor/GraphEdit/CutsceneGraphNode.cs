@@ -29,7 +29,7 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// Creates the editor for an instruction type in its default state.
         /// </summary>
-        public void Populate(InstructionDefinition definition)
+        public virtual void Populate(InstructionDefinition definition)
         {
             if (definition == null)
             {

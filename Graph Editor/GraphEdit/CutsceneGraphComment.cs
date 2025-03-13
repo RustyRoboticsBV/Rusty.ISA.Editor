@@ -1,53 +1,75 @@
 ﻿using Godot;
+using Rusty.EditorUI;
+using Rusty.Cutscenes;
+using Rusty.CutsceneEditor.Compiler;
 
 namespace Rusty.CutsceneEditor
 {
     /// <summary>
     /// A cutscene graph comment node.
     /// </summary>
-    public partial class CutsceneGraphComment : GraphNode
+    public partial class CutsceneGraphComment : CutsceneGraphNode
     {
-        public LineEdit Text { get; private set; }
+        private RichTextLabel Label { get; set; }
 
-        public override void _Ready()
+        public override void Populate(InstructionDefinition definition)
         {
-            Color textColor = new(0.3f, 0.75f, 0.3f);
-            Color bgColor = new(0.1f, 0.1f, 0.1f, 0.9f);
-            Color selectedBgColor = new(0.1f, 0.2f, 0.1f, 0.9f);
+            base.Populate(definition);
 
-            Label label = new()
+            Color textColor = definition.EditorNode.TextColor;
+            Color bgColor = definition.EditorNode.MainColor;
+            Color selectedTextColor = EditorNodeInfo.SelectedTextColor;
+            Color selectedBgColor = EditorNodeInfo.SelectedMainColor;
+
+            // Remove old contents.
+            while (GetChildCount(true) > 1)
             {
-                Text = "#"
-            };
-            label.AddThemeColorOverride("font_color", textColor);
+                RemoveChild(GetChild(1, true));
+            }
 
-            Text = new LineEdit()
+            // Remove all slots.
+            for (int i = 0; i < Slots.Count; i++)
+            {
+                Slots[i].LeftText.Text = "";
+                Slots[i].RightText.Text = "";
+            }
+            ClearAllSlots();
+            Slots.Clear();
+
+            // Remove title header.
+            GetTitlebarHBox().Hide();
+            while (GetTitlebarHBox().GetChildCount() > 0)
+            {
+                GetTitlebarHBox().RemoveChild(GetTitlebarHBox().GetChild(0, true));
+            }
+
+            // Add contents.
+            Label = new()
             {
                 Name = "Text",
-                Text = "Comment text.",
-                CustomMinimumSize = new Vector2(200f, 32f),
+                Text = ((MultilineParameter)Definition.Parameters[Definition.GetParameterIndex(BuiltIn.CommentText)]).DefaultValue,
+                CustomMinimumSize = new Vector2(200f, 0f),
                 SizeFlagsHorizontal = SizeFlags.ExpandFill,
-                ExpandToTextLength = true,
+                SizeFlagsVertical = SizeFlags.ExpandFill,
+                FitContent = true,
+                AutowrapMode = TextServer.AutowrapMode.Off,
+                MouseFilter = MouseFilterEnum.Pass
             };
-            Text.AddThemeColorOverride("font_color", textColor);
+            Label.AddThemeColorOverride("default_color", textColor);
 
             HBoxContainer contents = new()
             {
                 SizeFlagsHorizontal = SizeFlags.ExpandFill
             };
-            contents.AddChild(label);
-            contents.AddChild(Text);
+            contents.AddChild(Label);
 
             MarginContainer margin = new();
-            margin.AddThemeConstantOverride("margin_left", 4);
+            margin.AddThemeConstantOverride("margin_left", 16);
+            margin.AddThemeConstantOverride("margin_top", 8);
             margin.AddChild(contents);
             AddChild(margin);
 
-            HBoxContainer titleBox = GetTitlebarHBox();
-            titleBox.RemoveChild(titleBox.GetChild(0, true));
-            titleBox.CustomMinimumSize = new Vector2(0f, 4f);
-            titleBox.Size = Vector2.Zero;
-
+            // Add style overrides.
             AddThemeStyleboxOverride("panel", new StyleBoxFlat()
             {
                 BgColor = bgColor
@@ -64,11 +86,20 @@ namespace Rusty.CutsceneEditor
             {
                 BgColor = selectedBgColor
             });
+
+            // Remove begin label field.
+            NodeInspector.Label.Hide();
         }
 
         public override void _Process(double delta)
         {
-            Text.Size = Vector2.Zero;
+            if (Label != null)
+            {
+                Label.Size = Vector2.Zero;
+                int parameterIndex = Definition.GetParameterIndex(BuiltIn.CommentText);
+                Label.Text = NodeInspector.GetParameterInspector(parameterIndex).ValueObj.ToString();
+                Label.AddThemeColorOverride("default_color", Selected ? EditorNodeInfo.SelectedTextColor : Definition.EditorNode.TextColor);
+            }
             Size = Vector2.Zero;
             Size += new Vector2(10f, 10f);
         }
