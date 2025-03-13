@@ -42,15 +42,6 @@ namespace Rusty.CutsceneEditor.Compiler
                 title, color
             );
 
-            // Add nested frames.
-            for (int i = 0; i < graphFrame.GetChildCount(); i++)
-            {
-                if (graphFrame.GetChild(i) is CutsceneGraphFrame childFrame)
-                {
-                    frame.AddChild(Compile(childFrame));
-                }
-            }
-
             // Add EOG sub-node.
             frame.AddChild(CompilerNodeMaker.GetEndOfGroup(set));
 

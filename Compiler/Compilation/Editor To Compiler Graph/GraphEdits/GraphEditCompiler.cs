@@ -1,4 +1,7 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using Godot;
+using Rusty.Cutscenes;
+using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
@@ -12,15 +15,21 @@ namespace Rusty.CutsceneEditor.Compiler
         /// Compile a graph edit into a compiler graph that represents the cutscene program.
         public static CompilerGraph Compile(CutsceneGraphEdit graphEdit)
         {
+            InstructionSet set = graphEdit.InstructionSet;
+
             // 1. Create empty graph.
             CompilerGraph graph = new();
-            graph.Data.Set = graphEdit.InstructionSet;
+            graph.Data.Set = set;
 
             // 2. Create nodes.
             for (int i = 0; i < graphEdit.Nodes.Count; i++)
             {
+                // Compile node.
                 CompilerNode node = GraphEditNodeCompiler.Compile(graphEdit.Nodes[i]);
                 graph.AddNode(node);
+
+                // Add frame member.
+                AddFrameMember(node, graphEdit.Nodes[i], graphEdit);
             }
 
             // 3. Connect nodes.
@@ -49,22 +58,41 @@ namespace Rusty.CutsceneEditor.Compiler
                 }
             }
 
-            // 4. Insert frames.
+            // 4. Insert comments.
+            for (int i = 0; i < graphEdit.Comments.Count; i++)
+            {
+                // Compile comment.
+                CompilerNode comment = GraphEditCommentCompiler.Compile(graphEdit.Comments[i]);
+                graph.InsertNode(i, comment);
+
+                // Add frame member.
+                AddFrameMember(comment, graphEdit.Comments[i], graphEdit);
+            }
+
+            // 5. Insert frames.
             GraphEditFrameCompiler.ResetIDGenerator();
             for (int i = 0; i < graphEdit.Frames.Count; i++)
             {
+                // Compile frame.
                 CompilerNode frame = GraphEditFrameCompiler.Compile(graphEdit.Frames[i]);
                 graph.InsertNode(i, frame);
-            }
 
-            // 5. Insert comments.
-            for (int i = 0; i < graphEdit.Comments.Count; i++)
-            {
-                CompilerNode omment = GraphEditCommentCompiler.Compile(graphEdit.Comments[i]);
-                graph.InsertNode(i, omment);
+                // Add frame member.
+                AddFrameMember(frame, graphEdit.Frames[i], graphEdit);
             }
 
             return graph;
+        }
+
+        /* Private methods. */
+        private static void AddFrameMember(CompilerNode node, IGraphElement element, CutsceneGraphEdit graphEdit)
+        {
+            if (element.Frame != null)
+            {
+                int frameID = graphEdit.Frames.IndexOf(element.Frame);
+                SubNode<NodeData> member = CompilerNodeMaker.GetFrameMember(graphEdit.InstructionSet, frameID.ToString());
+                node.InsertChild(0, member);
+            }
         }
     }
 }
