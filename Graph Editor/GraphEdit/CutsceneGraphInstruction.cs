@@ -9,15 +9,16 @@ namespace Rusty.CutsceneEditor
     /// A graph edit node representing a collection of cutscene instructions.
     /// </summary>
     [GlobalClass]
-    public partial class CutsceneGraphInstruction : CutsceneGraphNode, IGraphElement<NodeInstructionInspector>
+    public partial class CutsceneGraphInstruction : CutsceneGraphNode
     {
         /* Public properties. */
-        public InstructionDefinition Definition { get; private set; }
-        public NodeInstructionInspector Inspector { get; private set; }
+        public new NodeInstructionInspector Inspector
+        {
+            get => base.Inspector as NodeInstructionInspector;
+            set => base.Inspector = value;
+        }
         public Array<NodeSlotPair> Slots { get; private set; } = new();
-
-        Inspector IGraphElement.Inspector => Inspector;
-
+        
         /* Private properties. */
         private TextureRect TitleIcon { get; set; }
         private Label TitleLabel { get; set; }
@@ -27,7 +28,8 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// Creates the editor for an instruction type in its default state.
         /// </summary>
-        public CutsceneGraphInstruction(CutsceneGraphEdit graphEdit, InstructionDefinition definition) : base(graphEdit)
+        public CutsceneGraphInstruction(CutsceneGraphEdit graphEdit, InstructionDefinition definition)
+            : base(graphEdit, definition)
         {
             if (definition == null)
             {
@@ -40,8 +42,6 @@ namespace Rusty.CutsceneEditor
                     + "has no editor node info.");
                 return;
             }
-
-            Definition = definition;
 
             // Set themes.
             StyleBoxFlat titleStyleBox = new();

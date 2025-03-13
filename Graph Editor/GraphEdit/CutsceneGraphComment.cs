@@ -8,19 +8,21 @@ namespace Rusty.CutsceneEditor
     /// A cutscene graph comment node.
     /// </summary>
     [GlobalClass]
-    public partial class CutsceneGraphComment : CutsceneGraphNode, IGraphElement<CommentInspector>
+    public partial class CutsceneGraphComment : CutsceneGraphNode
     {
         /* Public properties. */
-        public InstructionDefinition Definition => InstructionSet[BuiltIn.CommentOpcode];
-        public CommentInspector Inspector { get; private set; }
-
-        Inspector IGraphElement.Inspector => Inspector;
+        public new CommentInspector Inspector
+        {
+            get => base.Inspector as CommentInspector;
+            set => base.Inspector = value;
+        }
 
         /* Private properties. */
         private RichTextLabel Label { get; set; }
 
         /* Constructors. */
-        public CutsceneGraphComment(CutsceneGraphEdit graphEdit) : base(graphEdit)
+        public CutsceneGraphComment(CutsceneGraphEdit graphEdit)
+            : base(graphEdit, graphEdit.InstructionSet[BuiltIn.CommentOpcode])
         {
             Color textColor = Definition.EditorNode.TextColor;
             Color bgColor = Definition.EditorNode.MainColor;
@@ -78,7 +80,7 @@ namespace Rusty.CutsceneEditor
             TitleContainer.Hide();
 
             // Create inspector.
-            Inspector = new(InstructionSet);
+            Inspector = new CommentInspector(InstructionSet);
         }
 
         public override void _Process(double delta)
@@ -87,7 +89,7 @@ namespace Rusty.CutsceneEditor
             {
                 Label.Size = Vector2.Zero;
                 int parameterIndex = Definition.GetParameterIndex(BuiltIn.CommentText);
-                Label.Text = Inspector.CommentText;
+                Label.Text = ((CommentInspector)Inspector).CommentText;
                 Label.AddThemeColorOverride("default_color", Selected ? EditorNodeInfo.SelectedTextColor : Definition.EditorNode.TextColor);
             }
             Size = Vector2.Zero;

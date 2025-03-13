@@ -7,15 +7,14 @@ namespace Rusty.CutsceneEditor
     /// <summary>
     /// A cutscene graph frame.
     /// </summary>
-    public partial class CutsceneGraphFrame : GraphFrame, IGraphElement<FrameInspector>
+    public partial class CutsceneGraphFrame : GraphFrame, IGraphElement
     {
         /* Public properties. */
         public CutsceneGraphEdit GraphEdit { get; private set; }
         public InstructionSet InstructionSet => GraphEdit.InstructionSet;
         public InstructionDefinition Definition => InstructionSet[BuiltIn.FrameOpcode];
 
-        public FrameInspector Inspector { get; private set; }
-        Inspector IGraphElement.Inspector => Inspector;
+        public Inspector Inspector { get; private set; }
         public CutsceneGraphFrame Frame
         {
             get
@@ -41,7 +40,7 @@ namespace Rusty.CutsceneEditor
             Size = Vector2.One * 64f;
             Title = "Frame";
 
-            Inspector = new(InstructionSet);
+            Inspector = new FrameInspector(InstructionSet);
         }
     }
 }

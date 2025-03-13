@@ -7,7 +7,7 @@ namespace Rusty.CutsceneEditor
     /// A graph edit node representing a collection of cutscene instructions.
     /// </summary>
     [GlobalClass]
-    public abstract partial class CutsceneGraphNode : GraphNode
+    public abstract partial class CutsceneGraphNode : GraphNode, IGraphElement
     {
         /* Public properties. */
         public CutsceneGraphEdit GraphEdit { get; private set; }
@@ -21,8 +21,10 @@ namespace Rusty.CutsceneEditor
                 return null;
             }
         }
+        public Inspector Inspector { get; protected set; }
 
         public InstructionSet InstructionSet => GraphEdit.InstructionSet;
+        public InstructionDefinition Definition { get; private set; }
 
         /* Protected properties. */
         protected VBoxContainer InspectorWindow => GraphEdit.InspectorWindow;
@@ -36,9 +38,10 @@ namespace Rusty.CutsceneEditor
         public event NodeAction OnDeselected;
 
         /* Constructors. */
-        public CutsceneGraphNode(CutsceneGraphEdit graphEdit)
+        public CutsceneGraphNode(CutsceneGraphEdit graphEdit, InstructionDefinition definition)
         {
             GraphEdit = graphEdit;
+            Definition = definition;
             TitleContainer = GetTitlebarHBox();
 
             NodeSelected += OnNodeSelected;
