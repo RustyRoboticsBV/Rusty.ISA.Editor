@@ -118,6 +118,8 @@ namespace Rusty.CutsceneEditor
         /* Godot overrides. */
         public override void _EnterTree()
         {
+            RightDisconnects = true;
+
             // Create popup.
             AddNodePopup = new(InstructionSet);
             AddChild(AddNodePopup);
