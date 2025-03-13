@@ -44,15 +44,17 @@ namespace Rusty.CutsceneEditor
             LastOffset = positionOffset;
 
             AutoshrinkEnabled = false;
+            TintColorEnabled = true;
             CustomMinimumSize = Vector2.One;
             Size = Vector2.One * 64f;
-            Title = ((TextParameter)Definition.Parameters[Definition.GetParameterIndex(BuiltIn.FrameTitle)]).DefaultValue;
 
             Inspector = new(InstructionSet);
 
             NodeSelected += OnNodeSelected;
             NodeDeselected += OnNodeDeselected;
             base.Dragged += OnDragged;
+
+            UpdateArguments();
         }
 
         /* Public methods. */
@@ -110,8 +112,7 @@ namespace Rusty.CutsceneEditor
         public override void _Process(double delta)
         {
             // Copy title label from the inspector's value.
-            if (IsSelected)
-                Title = Inspector.TitleText;
+            UpdateArguments();
 
             // If we move the frame, also move members with it.
             if (LastOffset != PositionOffset)
@@ -176,6 +177,15 @@ namespace Rusty.CutsceneEditor
             // Also update parent frame.
             if (Frame != null)
                 Frame.UpdateSizePosition();
+        }
+
+        private void UpdateArguments()
+        {
+            Title = Inspector.TitleText;
+
+            Color color = Inspector.Color * Definition.EditorNode.MainColor;
+            color.A *= IsSelected ? 1f : 0.5f;
+            TintColor = color;
         }
 
 

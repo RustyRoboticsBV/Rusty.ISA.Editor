@@ -1,4 +1,5 @@
-﻿using Rusty.Cutscenes;
+﻿using Godot;
+using Rusty.Cutscenes;
 using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
@@ -26,7 +27,8 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Create a FRM instruction root-node.
         /// </summary>
-        public static CompilerNode GetFrame(InstructionSet set, string id, string x, string y, string width, string height, string title)
+        public static CompilerNode GetFrame(InstructionSet set, string id, string x, string y, string width, string height,
+            string title, Color color)
         {
             InstructionDefinition definition = set[BuiltIn.FrameOpcode];
             InstructionInstance instance = new(definition);
@@ -37,6 +39,7 @@ namespace Rusty.CutsceneEditor.Compiler
             instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameWidth)] = width;
             instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameHeight)] = height;
             instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameTitle)] = title;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameColor)] = '#' + color.ToHtml();
 
             return new CompilerNode(new NodeData(set, definition, instance));
         }

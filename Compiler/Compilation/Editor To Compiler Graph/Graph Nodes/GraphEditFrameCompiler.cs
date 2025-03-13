@@ -27,7 +27,8 @@ namespace Rusty.CutsceneEditor.Compiler
             int y = Mathf.RoundToInt(graphFrame.PositionOffset.Y);
             int width = Mathf.RoundToInt(graphFrame.Size.X);
             int height = Mathf.RoundToInt(graphFrame.Size.Y);
-            string title = graphFrame.Title;
+            string title = graphFrame.Inspector.TitleText;
+            Color color = graphFrame.Inspector.Color;
             ulong id = NextFrameID;
 
             // Increment next frame ID.
@@ -38,7 +39,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 id.ToString(),
                 x.ToString(), y.ToString(),
                 width.ToString(), height.ToString(),
-                title
+                title, color
             );
 
             // Add nested frames.

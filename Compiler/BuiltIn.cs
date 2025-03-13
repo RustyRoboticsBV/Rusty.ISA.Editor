@@ -48,6 +48,7 @@
         public const string FrameWidth = "width";
         public const string FrameHeight = "height";
         public const string FrameTitle = "title";
+        public const string FrameColor = "color_tint";
         public const string FrameMemberID = "frame_id";
         public const string NodeX = "x";
         public const string NodeY = "y";

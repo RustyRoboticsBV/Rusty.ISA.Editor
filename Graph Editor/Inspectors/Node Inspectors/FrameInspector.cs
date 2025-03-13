@@ -1,4 +1,5 @@
-﻿using Rusty.CutsceneEditor.Compiler;
+﻿using Godot;
+using Rusty.CutsceneEditor.Compiler;
 using Rusty.Cutscenes;
 using Rusty.EditorUI;
 
@@ -11,14 +12,6 @@ namespace Rusty.CutsceneEditor
     {
         /* Public properties. */
         /// <summary>
-        /// The current value of the comment.
-        /// </summary>
-        public string TitleText
-        {
-            get => Field.Value;
-            set => Field.Value = value;
-        }
-        /// <summary>
         /// The comment instruction definition.
         /// </summary>
         public InstructionDefinition Definition
@@ -27,8 +20,26 @@ namespace Rusty.CutsceneEditor
             set => Resource = value;
         }
 
+        /// <summary>
+        /// The current title text of the frame.
+        /// </summary>
+        public string TitleText
+        {
+            get => TitleField.Value;
+            set => TitleField.Value = value;
+        }
+        /// <summary>
+        /// The current color tint of the frame.
+        /// </summary>
+        public Color Color
+        {
+            get => ColorField.Value;
+            set => ColorField.Value = value;
+        }
+
         /* Private properties. */
-        private LineField Field { get; set; }
+        private LineField TitleField { get; set; }
+        private ColorField ColorField { get; set; }
 
         /* Constructors. */
         public FrameInspector() : base() { }
@@ -43,6 +54,7 @@ namespace Rusty.CutsceneEditor
             if (base.CopyStateFrom(other) && other is FrameInspector otherInspector)
             {
                 TitleText = otherInspector.TitleText;
+                Color = otherInspector.Color;
                 return true;
             }
             else
@@ -57,20 +69,28 @@ namespace Rusty.CutsceneEditor
         {
             base.Init();
 
-            TextParameter parameter = Definition.Parameters[Definition.GetParameterIndex(BuiltIn.FrameTitle)] as TextParameter;
+            TextParameter titleParameter = Definition.Parameters[Definition.GetParameterIndex(BuiltIn.FrameTitle)] as TextParameter;
+            ColorParameter colorParameter = Definition.Parameters[Definition.GetParameterIndex(BuiltIn.FrameColor)] as ColorParameter;
             Add(new LabeledIcon()
             {
                 Name = "Header",
                 LabelText = Definition.DisplayName,
                 Value = Definition.Icon
             });
-            Field = new LineField()
+            TitleField = new()
             {
-                Name = "TitleField",
+                Name = "Title",
                 LabelText = "Title",
-                Value = parameter.DefaultValue
+                Value = titleParameter.DefaultValue
             };
-            Add(Field);
+            Add(TitleField);
+            ColorField = new()
+            {
+                Name = "Color",
+                LabelText = "Color",
+                Value = colorParameter.DefaultValue
+            };
+            Add(ColorField);
         }
     }
 }
