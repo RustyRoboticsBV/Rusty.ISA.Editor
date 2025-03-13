@@ -1,10 +1,14 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=70 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=87 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
+[ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_gmmgc"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
+[ext_resource type="Texture2D" uid="uid://bdrkrwn8lh415" path="res://Built-In Instructions/IconCMT.bmp" id="2_unaab"]
 [ext_resource type="Texture2D" uid="uid://cg1l63y6ngo4a" path="res://Built-In Instructions/IconPRE.bmp" id="4_wahcg"]
+[ext_resource type="Texture2D" uid="uid://dfl3rdmo5gdiy" path="res://Built-In Instructions/IconFRM.bmp" id="5_sqci0"]
 [ext_resource type="Texture2D" uid="uid://chwtisxfc6sgf" path="res://Built-In Instructions/IconPST.bmp" id="5_yqtwi"]
 [ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="9_dl4up"]
+[ext_resource type="Texture2D" uid="uid://b3v1nu6sd00l" path="res://Built-In Instructions/IconMBR.bmp" id="9_nx7m3"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="11_gxiqw"]
 [ext_resource type="Texture2D" uid="uid://nyag7iauyi0f" path="res://Built-In Instructions/IconINS.bmp" id="11_vnhvg"]
 [ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconMTA.bmp" id="12_nbvet"]
@@ -20,8 +24,106 @@
 [ext_resource type="Texture2D" uid="uid://bnxu4r33ccaum" path="res://Built-In Instructions/IconRUL.bmp" id="16_0cdng"]
 [ext_resource type="Texture2D" uid="uid://cw6aeeeuk5i85" path="res://Built-In Instructions/IconLST.bmp" id="16_6vvij"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="16_nc316"]
-[ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOG.bmp" id="17_fsrcr"]
+[ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOG.bmp" id="17_eto4q"]
 [ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="17_txonn"]
+
+[sub_resource type="Resource" id="Resource_mff5v"]
+script = ExtResource("1_gmmgc")
+Priority = -1
+MinWidth = 128
+MainColor = Color(0.1, 0.1, 0.1, 1)
+TextColor = Color(0.3, 0.75, 0.3, 1)
+
+[sub_resource type="Resource" id="Resource_53br1"]
+resource_name = "text (multiline)"
+script = ExtResource("16_nc316")
+ID = "text"
+DisplayName = "Text"
+Description = "The text of the comment."
+DefaultValue = "Comment text."
+
+[sub_resource type="Resource" id="Resource_t3exr"]
+resource_name = "CMT"
+script = ExtResource("2_uguea")
+Opcode = "CMT"
+Parameters = [SubResource("Resource_53br1")]
+Icon = ExtResource("2_unaab")
+DisplayName = "Comment"
+Description = "An editor comment."
+Category = "Editor"
+EditorNode = SubResource("Resource_mff5v")
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_latm4"]
+script = ExtResource("1_gmmgc")
+Priority = -1
+MinWidth = 128
+MainColor = Color(0.411765, 0.411765, 0.411765, 1)
+TextColor = Color(1, 1, 1, 1)
+
+[sub_resource type="Resource" id="Resource_imkvv"]
+resource_name = "id (text)"
+script = ExtResource("12_rklps")
+ID = "id"
+DisplayName = "ID"
+Description = "The id of the frame."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_qhjbc"]
+resource_name = "title (text)"
+script = ExtResource("12_rklps")
+ID = "title"
+DisplayName = "Title"
+Description = "The title text of the frame."
+DefaultValue = "Frame."
+
+[sub_resource type="Resource" id="Resource_g4ly1"]
+resource_name = "x (int)"
+script = ExtResource("12_q4rbi")
+ID = "x"
+DisplayName = "X"
+Description = "The horizontal position of the frame."
+DefaultValue = 0
+
+[sub_resource type="Resource" id="Resource_kkrrb"]
+resource_name = "y (int)"
+script = ExtResource("12_q4rbi")
+ID = "y"
+DisplayName = "Y"
+Description = "The vertical position of the frame."
+DefaultValue = 0
+
+[sub_resource type="Resource" id="Resource_vx1sj"]
+resource_name = "width (int)"
+script = ExtResource("12_q4rbi")
+ID = "width"
+DisplayName = "Width"
+Description = "The width of the frame."
+DefaultValue = 0
+
+[sub_resource type="Resource" id="Resource_ujlnt"]
+resource_name = "height (int)"
+script = ExtResource("12_q4rbi")
+ID = "height"
+DisplayName = "Hidth"
+Description = "The height of the frame."
+DefaultValue = 0
+
+[sub_resource type="Resource" id="Resource_7hiv8"]
+resource_name = "FRM"
+script = ExtResource("2_uguea")
+Opcode = "FRM"
+Parameters = [SubResource("Resource_imkvv"), SubResource("Resource_qhjbc"), SubResource("Resource_g4ly1"), SubResource("Resource_kkrrb"), SubResource("Resource_vx1sj"), SubResource("Resource_ujlnt")]
+Icon = ExtResource("5_sqci0")
+DisplayName = "Frame"
+Description = "Starts a frame group. The group may contain nested frame instructions, and should be closed with an EOG instruction."
+Category = "Editor"
+EditorNode = SubResource("Resource_latm4")
+Preview = []
+PreInstructions = []
+PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_g65gn"]
 resource_name = "x (int)"
@@ -48,6 +150,27 @@ Icon = ExtResource("9_dl4up")
 DisplayName = "Editor Node"
 Description = "Starts an editor node. It should contain an inspector instruction, and optionally a label and/or begin instruction. The group should be closed with an EOG instruction."
 Category = "Compiler"
+Preview = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_em22h"]
+resource_name = "frame_id (text)"
+script = ExtResource("12_rklps")
+ID = "frame_id"
+DisplayName = "Frame ID"
+Description = "The id of the frame that this node is contained in."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_cn6to"]
+resource_name = "MBR"
+script = ExtResource("2_uguea")
+Opcode = "MBR"
+Parameters = [SubResource("Resource_em22h")]
+Icon = ExtResource("9_nx7m3")
+DisplayName = "Frame Member"
+Description = "Designates a NOD group as being a member of an editor frame with some ID."
+Category = "Editor"
 Preview = []
 PreInstructions = []
 PostInstructions = []
@@ -156,7 +279,7 @@ resource_name = "EOG"
 script = ExtResource("2_uguea")
 Opcode = "EOG"
 Parameters = []
-Icon = ExtResource("17_fsrcr")
+Icon = ExtResource("17_eto4q")
 DisplayName = "End of Block"
 Description = "A compiler marker that denotes the end of a group of instructions."
 Category = "Compiler"
@@ -469,5 +592,5 @@ Modules = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30")]
+Definitions = [SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_btai4"), SubResource("Resource_cn6to"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30")]
 Modules = [SubResource("Resource_eqo11")]

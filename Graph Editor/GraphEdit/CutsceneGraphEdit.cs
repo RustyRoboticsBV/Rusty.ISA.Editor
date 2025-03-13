@@ -1,6 +1,8 @@
 using Godot;
 using System.Collections.Generic;
 using Rusty.Cutscenes;
+using Rusty.Graphs;
+using Rusty.CutsceneEditor.Compiler;
 
 namespace Rusty.CutsceneEditor
 {
@@ -17,6 +19,8 @@ namespace Rusty.CutsceneEditor
         [Export] public InstructionSet InstructionSet { get; set; }
         
         public List<CutsceneGraphNode> Nodes { get; } = new();
+        public List<CutsceneGraphComment> Comments { get; } = new();
+        public List<CutsceneGraphFrame> Frames { get; } = new();
 
         /* Private properties. */
         private AddNodePopup Popup { get; set; }
@@ -47,6 +51,8 @@ namespace Rusty.CutsceneEditor
             Popup.Hide();
 
             Popup.SelectedInstruction += OnPopupSelectedInstruction;
+            Popup.SelectedComment += OnPopupSelectedComment;
+            Popup.SelectedFrame += OnPopupSelectedFrame;
 
             // Find nodes.
             foreach (Node child in GetChildren())
@@ -105,9 +111,35 @@ namespace Rusty.CutsceneEditor
         {
             if (definition != null)
             {
-                Vector2 positionOffset = (GetGlobalMousePosition() - GlobalPosition + ScrollOffset) / Zoom;
-                Spawn(definition, positionOffset);
+                if (definition.Opcode == BuiltIn.CommentOpcode)
+                    OnPopupSelectedComment();
+                else if (definition.Opcode == BuiltIn.FrameOpcode)
+                    OnPopupSelectedFrame();
+                else
+                    Spawn(definition, GetMousePosition());
             }
+        }
+
+        private void OnPopupSelectedComment()
+        {
+            CutsceneGraphComment comment = new()
+            {
+                PositionOffset = GetMousePosition()
+            };
+            AddChild(comment);
+        }
+
+        private void OnPopupSelectedFrame()
+        {
+            CutsceneGraphFrame frame = new()
+            {
+                AutoshrinkEnabled = false,
+                CustomMinimumSize = Vector2.One,
+                PositionOffset = GetMousePosition(),
+                Size = Vector2.One * 64f,
+                Title = "Frame"
+            };
+            AddChild(frame);
         }
 
         private void ShowPopup(int x, int y)
@@ -188,6 +220,11 @@ namespace Rusty.CutsceneEditor
                     return node;
             }
             return null;
+        }
+
+        private Vector2 GetMousePosition()
+        {
+            return (GetGlobalMousePosition() - GlobalPosition + ScrollOffset) / Zoom;
         }
     }
 }

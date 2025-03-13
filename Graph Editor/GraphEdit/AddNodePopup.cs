@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 using Rusty.Cutscenes;
 
@@ -20,6 +21,8 @@ namespace Rusty.CutsceneEditor
 
         /* Events. */
         public event SelectInstructionDefinitionHandler SelectedInstruction;
+        public event Action SelectedComment;
+        public event Action SelectedFrame;
 
         /* Constructors. */
         public AddNodePopup() : this("Add Node") { }
