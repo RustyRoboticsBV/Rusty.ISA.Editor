@@ -47,7 +47,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 catch { }
 
                 // Spawn node.
-                CutsceneGraphNode editorNode = graphEdit.Spawn(mainInstruction.Data.Definition, new Vector2(x, y));
+                CutsceneGraphNode editorNode = graphEdit.SpawnNode(mainInstruction.Data.Definition, new Vector2(x, y));
                 nodeMap.Add(node, editorNode);
 
                 // Fill inspector.

@@ -9,6 +9,22 @@ namespace Rusty.CutsceneEditor
     public partial class CutsceneGraphFrame : GraphFrame
     {
         /* Public properties. */
-        public InstructionSet InstructionSet { get; set; }
+        public CutsceneGraphEdit GraphEdit { get; private set; }
+        public InstructionSet InstructionSet => GraphEdit.InstructionSet;
+
+        /* Private methods. */
+        private VBoxContainer InspectorWindow => GraphEdit.PropertiesInspector;
+
+        /* Constructors. */
+        public CutsceneGraphFrame(CutsceneGraphEdit graphEdit, Vector2 positionOffset)
+        {
+            GraphEdit = graphEdit;
+            PositionOffset = positionOffset;
+
+            AutoshrinkEnabled = false;
+            CustomMinimumSize = Vector2.One;
+            Size = Vector2.One * 64f;
+            Title = "Frame";
+        }
     }
 }

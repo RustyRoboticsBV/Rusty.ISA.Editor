@@ -1,8 +1,8 @@
 using Godot;
 using System.Collections.Generic;
 using Rusty.Cutscenes;
-using Rusty.Graphs;
 using Rusty.CutsceneEditor.Compiler;
+using Array = Godot.Collections.Array;
 
 namespace Rusty.CutsceneEditor
 {
@@ -23,69 +23,17 @@ namespace Rusty.CutsceneEditor
         public List<CutsceneGraphFrame> Frames { get; } = new();
 
         /* Private properties. */
-        private AddNodePopup Popup { get; set; }
-        private Vector2 MustOpenPopupAt { get; set; }
-        private Vector2 CreatePos { get; set; }
+        private AddNodePopup AddNodePopup { get; set; }
+        private bool HoldCtrl { get; set; }
+        private bool MustOpenAddPopup { get; set; }
+        private Vector2 AddPopupPosition { get; set; }
+        private Vector2 SpawnPosition { get; set; }
 
         /* Public methods. */
-        public void ConnectNode(CutsceneGraphNode fromNode, int fromSlot, CutsceneGraphNode toNode)
-        {
-            // Ensure that slots are available.
-            fromNode.EnsureSlots(fromSlot + 1);
-            toNode.EnsureSlots(1);
-
-            // Connect.
-            Error error = ConnectNode(fromNode.Name, fromSlot, toNode.Name, 0);
-            OnConnect(fromNode.Name, fromSlot, toNode.Name, 0);
-
-            if (error != Error.Ok)
-                GD.PrintErr($"Could not connect node {fromNode} (slot {fromSlot}) to {toNode} (slot 0) (error {error})!");
-        }
-
-        /* Godot overrides. */
-        public override void _EnterTree()
-        {
-            // Create popup.
-            Popup = new(InstructionSet);
-            AddChild(Popup);
-            Popup.Hide();
-
-            Popup.SelectedInstruction += OnPopupSelectedInstruction;
-            Popup.SelectedComment += OnPopupSelectedComment;
-            Popup.SelectedFrame += OnPopupSelectedFrame;
-
-            // Find nodes.
-            foreach (Node child in GetChildren())
-            {
-                if (child is CutsceneGraphNode node)
-                    Nodes.Add(node);
-            }
-
-            // Set up events.
-            ConnectionRequest += OnConnect;
-            DisconnectionRequest += OnDisconnect;
-            DeleteNodesRequest += OnDelete;
-        }
-
-        public override void _Process(double delta)
-        {
-            if (MustOpenPopupAt != Vector2.Zero)
-            {
-                ShowPopup((int)MustOpenPopupAt.X, (int)MustOpenPopupAt.Y);
-                MustOpenPopupAt = Vector2.Zero;
-            }
-        }
-
-        public override void _Input(InputEvent @event)
-        {
-            if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.ButtonIndex == MouseButton.Right)
-            {
-                MustOpenPopupAt = eventMouseButton.Position;
-            }
-        }
-
-        public CutsceneGraphNode Spawn(InstructionDefinition definition, Vector2 positionOffset,
-            InstructionInstance[] instances = null)
+        /// <summary>
+        /// Spawn a new instruction node onto the graph, using an instruction definition as a template.
+        /// </summary>
+        public CutsceneGraphNode SpawnNode(InstructionDefinition definition, Vector2 positionOffset)
         {
             CutsceneGraphNode node = new();
             Nodes.Add(node);
@@ -100,59 +48,181 @@ namespace Rusty.CutsceneEditor
             else
                 GD.PrintErr("Tried to spawn a node without an instruction definition.");
 
-            if (instances != null)
-                node.Set(instances);
-
             return node;
         }
 
+        /// <summary>
+        /// Remove an instruction node from the graph.
+        /// </summary>
+        public void DeleteNode(CutsceneGraphNode node)
+        {
+            if (Nodes.Contains(node))
+            {
+                Nodes.Remove(node);
+
+                if (node.GetParent() != null)
+                    node.GetParent().RemoveChild(node);
+            }
+        }
+
+        /// <summary>
+        /// Connect an outpot slot of a node on the graph to the input slot of another node.
+        /// </summary>
+        public void ConnectNode(CutsceneGraphNode fromNode, int fromSlot, CutsceneGraphNode toNode)
+        {
+            // Ensure that enough slots are available.
+            fromNode.EnsureSlots(fromSlot + 1);
+            toNode.EnsureSlots(1);
+
+            // Connect.
+            OnConnect(fromNode.Name, fromSlot, toNode.Name, 0);
+        }
+
+        /// <summary>
+        /// Disconnect an output slot of a node on the graph from the input slot of another node.
+        /// </summary>
+        public void DisconnectNode(CutsceneGraphNode fromNode, int fromSlot, CutsceneGraphNode toNode)
+        {
+            OnDisconnect(fromNode.Name, fromSlot, toNode.Name, 0);
+        }
+
+        /// <summary>
+        /// Spawn a new comment onto the graph.
+        /// </summary>
+        public CutsceneGraphComment SpawnComment(Vector2 positionOffset)
+        {
+            CutsceneGraphComment comment = new();
+            Comments.Add(comment);
+            AddChild(comment);
+
+            comment.InstructionSet = InstructionSet;
+            comment.PositionOffset = positionOffset;
+
+            comment.InspectorWindow = PropertiesInspector;
+            comment.Populate(InstructionSet[BuiltIn.CommentOpcode]);
+
+            return comment;
+        }
+
+        /// <summary>
+        /// Spawn a new frame onto the graph.
+        /// </summary>
+        public CutsceneGraphFrame SpawnFrame(Vector2 positionOffset)
+        {
+            CutsceneGraphFrame frame = new(this, positionOffset);
+            Frames.Add(frame);
+            AddChild(frame);
+
+            return frame;
+        }
+
+        /* Godot overrides. */
+        public override void _EnterTree()
+        {
+            // Create popup.
+            AddNodePopup = new(InstructionSet);
+            AddChild(AddNodePopup);
+            AddNodePopup.Hide();
+
+            // Find nodes.
+            foreach (Node child in GetChildren())
+            {
+                if (child is CutsceneGraphComment comment)
+                    Comments.Add(comment);
+                else if (child is CutsceneGraphFrame frame)
+                    Frames.Add(frame);
+                else if (child is CutsceneGraphNode node)
+                    Nodes.Add(node);
+            }
+
+            // Set up events.
+            ConnectionRequest += OnConnect;
+            DisconnectionRequest += OnDisconnect;
+            DeleteNodesRequest += OnDelete;
+
+            AddNodePopup.SelectedInstruction += OnPopupSelectedInstruction;
+        }
+
+        public override void _Process(double delta)
+        {
+            if (MustOpenAddPopup)
+            {
+                ShowAddPopup(AddPopupPosition);
+                MustOpenAddPopup = false;
+            }
+        }
+
+        public override void _Input(InputEvent @event)
+        {
+            if (@event is InputEventMouse eventMouse)
+                AddPopupPosition = eventMouse.Position;
+
+            if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.ButtonIndex == MouseButton.Right)
+            {
+                MustOpenAddPopup = true;
+                SpawnPosition = GetMousePosition();
+            }
+
+            else if (@event is InputEventKey eventKey)
+            {
+                if (eventKey.Keycode == Key.Ctrl)
+                    HoldCtrl = eventKey.Pressed;
+                else if (eventKey.Pressed && eventKey.Keycode == Key.A && HoldCtrl)
+                {
+                    MustOpenAddPopup = true;
+                    SpawnPosition = GetMousePosition();
+                }
+            }
+        }
+
         /* Private methods. */
+        /// <summary>
+        /// Show the "add node" popup menu.
+        /// </summary>
+        private void ShowAddPopup(Vector2 position)
+        {
+            // Convert to integer positions.
+            int x = Mathf.RoundToInt(position.X);
+            int y = Mathf.RoundToInt(position.Y);
+
+            // Open popup.
+            AddNodePopup.Position = new Vector2I(x, y);
+            AddNodePopup.Popup();
+        }
+
+        /// <summary>
+        /// Return a node on the graph, using its name.
+        /// </summary>
+        private CutsceneGraphNode GetNode(StringName nodeName)
+        {
+            foreach (Node child in GetChildren())
+            {
+                if (child.Name == nodeName && child is CutsceneGraphNode node)
+                    return node;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the current mouse position as a graph position offset.
+        /// </summary>
+        private Vector2 GetMousePosition()
+        {
+            return (GetGlobalMousePosition() - GlobalPosition + ScrollOffset) / Zoom;
+        }
+
+
         private void OnPopupSelectedInstruction(InstructionDefinition definition)
         {
             if (definition != null)
             {
                 if (definition.Opcode == BuiltIn.CommentOpcode)
-                    OnPopupSelectedComment();
+                    SpawnComment(SpawnPosition);
                 else if (definition.Opcode == BuiltIn.FrameOpcode)
-                    OnPopupSelectedFrame();
+                    SpawnFrame(SpawnPosition);
                 else
-                    Spawn(definition, GetMousePosition());
+                    SpawnNode(definition, SpawnPosition);
             }
-        }
-
-        private void OnPopupSelectedComment()
-        {
-            CutsceneGraphComment comment = new()
-            {
-                InstructionSet = InstructionSet,
-                PositionOffset = GetMousePosition()
-            };
-            comment.Populate(InstructionSet[BuiltIn.CommentOpcode]);
-            comment.InspectorWindow = PropertiesInspector;
-            Comments.Add(comment);
-            AddChild(comment);
-        }
-
-        private void OnPopupSelectedFrame()
-        {
-            CutsceneGraphFrame frame = new()
-            {
-                InstructionSet = InstructionSet,
-                AutoshrinkEnabled = false,
-                CustomMinimumSize = Vector2.One,
-                PositionOffset = GetMousePosition(),
-                Size = Vector2.One * 64f,
-                Title = "Frame"
-            };
-            AddChild(frame);
-            Frames.Add(frame);
-        }
-
-        private void ShowPopup(int x, int y)
-        {
-            Popup.Popup();
-            Popup.Position = new Vector2I(x, y);
-            CreatePos = Popup.Position;
         }
 
         private void OnConnect(StringName fromNode, long fromPort, StringName toNode, long toPort)
@@ -160,7 +230,7 @@ namespace Rusty.CutsceneEditor
             CutsceneGraphNode from = GetNode(fromNode);
             NodeSlotPair fromSlot = from.Slots[(int)fromPort];
 
-            // Disconnect if it this connection was already used.
+            // Disconnect if it the output port was already used.
             if (fromSlot.Output != null)
             {
                 StringName previousToNode = fromSlot.Output.Node.Name;
@@ -168,7 +238,13 @@ namespace Rusty.CutsceneEditor
             }
 
             // Connect nodes from the perspective of the graph edit.
-            ConnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
+            Error error = ConnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
+            if (error != Error.Ok)
+            {
+                GD.PrintErr($"Tried to connect node '{fromNode}' slot #{fromPort} to '{toNode}' slot #{toPort}, but it failed "
+                    + $"with error code '{error}'.");
+                return;
+            }
 
             // Connect nodes from the perspective of the node slots.
             CutsceneGraphNode to = GetNode(toNode);
@@ -185,7 +261,7 @@ namespace Rusty.CutsceneEditor
             slot.DisconnectOutput();
         }
 
-        private void OnDelete(Godot.Collections.Array nodes)
+        private void OnDelete(Array nodes)
         {
             foreach (Variant obj in nodes)
             {
@@ -216,21 +292,6 @@ namespace Rusty.CutsceneEditor
                 // Remove from list.
                 Nodes.Remove(node);
             }
-        }
-
-        private CutsceneGraphNode GetNode(StringName nodeName)
-        {
-            foreach (Node child in GetChildren())
-            {
-                if (child.Name == nodeName && child is CutsceneGraphNode node)
-                    return node;
-            }
-            return null;
-        }
-
-        private Vector2 GetMousePosition()
-        {
-            return (GetGlobalMousePosition() - GlobalPosition + ScrollOffset) / Zoom;
         }
     }
 }

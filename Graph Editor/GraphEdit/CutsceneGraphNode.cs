@@ -89,19 +89,6 @@ namespace Rusty.CutsceneEditor
         }
 
         /// <summary>
-        /// Set the state according to a list of instructions.
-        /// </summary>
-        public void Set(InstructionInstance[] instances)
-        {
-            if (instances == null)
-                return;
-
-            //NodeInspector.Set(instances);
-
-            UpdateContents();
-        }
-
-        /// <summary>
         /// Ensure some number of input/output slot pairs.
         /// </summary>
         public void EnsureSlots(int count)
