@@ -1,6 +1,5 @@
 ﻿using Godot;
 using Rusty.Cutscenes;
-using Rusty.Graphs;
 
 namespace Rusty.CutsceneEditor.Compiler
 {

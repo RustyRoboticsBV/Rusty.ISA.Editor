@@ -16,6 +16,7 @@
 
         public const string CommentOpcode = "CMT";
         public const string FrameOpcode = "FRM";
+        public const string FrameMemberOpcode = "MBR";
         public const string NodeOpcode = "NOD";
         public const string InspectorOpcode = "INS";
         public const string PreInstructionOpcode = "PRE";
@@ -41,7 +42,13 @@
         public const string CommentText = "text";
         public const string CommentX = "x";
         public const string CommentY = "y";
-        public const string FrameName = "name";
+        public const string FrameID = "id";
+        public const string FrameX = "x";
+        public const string FrameY = "y";
+        public const string FrameWidth = "width";
+        public const string FrameHeight = "height";
+        public const string FrameTitle = "title";
+        public const string FrameMemberID = "frame_id";
         public const string NodeX = "x";
         public const string NodeY = "y";
         public const string ChoiceRuleSelected = "selected";

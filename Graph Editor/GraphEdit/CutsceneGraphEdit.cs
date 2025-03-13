@@ -137,6 +137,7 @@ namespace Rusty.CutsceneEditor
         {
             CutsceneGraphFrame frame = new()
             {
+                InstructionSet = InstructionSet,
                 AutoshrinkEnabled = false,
                 CustomMinimumSize = Vector2.One,
                 PositionOffset = GetMousePosition(),

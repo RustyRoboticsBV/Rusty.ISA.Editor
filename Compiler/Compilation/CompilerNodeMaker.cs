@@ -24,6 +24,24 @@ namespace Rusty.CutsceneEditor.Compiler
         }
 
         /// <summary>
+        /// Create a FRM instruction root-node.
+        /// </summary>
+        public static CompilerNode GetFrame(InstructionSet set, string id, string x, string y, string width, string height, string title)
+        {
+            InstructionDefinition definition = set[BuiltIn.FrameOpcode];
+            InstructionInstance instance = new(definition);
+
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameID)] = id;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameX)] = x;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameY)] = y;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameWidth)] = width;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameHeight)] = height;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameTitle)] = title;
+
+            return new CompilerNode(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
         /// Create a NOD instruction root-node.
         /// </summary>
         public static CompilerNode GetNode(InstructionSet set, string x, string y)
@@ -85,6 +103,19 @@ namespace Rusty.CutsceneEditor.Compiler
             instance.Arguments[definition.GetParameterIndex(BuiltIn.GotoTargetLabel)] = targetLabel;
 
             return new(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
+        /// Create a MBR instruction sub-node.
+        /// </summary>
+        public static CompilerNode GetFrameMember(InstructionSet set, string id)
+        {
+            InstructionDefinition definition = set[BuiltIn.FrameMemberOpcode];
+            InstructionInstance instance = new(definition);
+
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.FrameMemberID)] = id;
+
+            return new SubNode<NodeData>(new NodeData(set, definition, instance));
         }
 
         /// <summary>

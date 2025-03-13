@@ -49,11 +49,19 @@ namespace Rusty.CutsceneEditor.Compiler
                 }
             }
 
-            // 4. Insert comments.
+            // 4. Insert frames.
+            GraphEditFrameCompiler.ResetIDGenerator();
+            for (int i = 0; i < graphEdit.Frames.Count; i++)
+            {
+                CompilerNode frame = GraphEditFrameCompiler.Compile(graphEdit.Frames[i]);
+                graph.InsertNode(i, frame);
+            }
+
+            // 5. Insert comments.
             for (int i = 0; i < graphEdit.Comments.Count; i++)
             {
-                CompilerNode node = GraphEditCommentCompiler.Compile(graphEdit.Comments[i]);
-                graph.InsertNode(i, node);
+                CompilerNode omment = GraphEditCommentCompiler.Compile(graphEdit.Comments[i]);
+                graph.InsertNode(i, omment);
             }
 
             return graph;
