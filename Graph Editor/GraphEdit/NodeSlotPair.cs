@@ -9,7 +9,7 @@ namespace Rusty.CutsceneEditor
     public partial class NodeSlotPair : HBoxContainer
     {
         /* Public properties. */
-        public CutsceneGraphNode Node { get; private set; }
+        public CutsceneGraphInstruction Node { get; private set; }
         public List<NodeSlotPair> Inputs { get; set; } = new();
         public NodeSlotPair Output { get; set; }
 
@@ -17,7 +17,7 @@ namespace Rusty.CutsceneEditor
         public Label RightText { get; private set; }
 
         /* Constructors. */
-        public NodeSlotPair(CutsceneGraphNode node)
+        public NodeSlotPair(CutsceneGraphInstruction node)
         {
             SizeFlagsHorizontal = SizeFlags.ExpandFill;
 

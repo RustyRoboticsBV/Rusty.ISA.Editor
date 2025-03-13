@@ -15,10 +15,10 @@ namespace Rusty.CutsceneEditor
         /* Public properties. */
         public static int LineHeight => 32;
         
-        [Export] public VBoxContainer PropertiesInspector { get; set; }
+        [Export] public VBoxContainer InspectorWindow { get; set; }
         [Export] public InstructionSet InstructionSet { get; set; }
         
-        public List<CutsceneGraphNode> Nodes { get; } = new();
+        public List<CutsceneGraphInstruction> Nodes { get; } = new();
         public List<CutsceneGraphComment> Comments { get; } = new();
         public List<CutsceneGraphFrame> Frames { get; } = new();
 
@@ -33,20 +33,16 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// Spawn a new instruction node onto the graph, using an instruction definition as a template.
         /// </summary>
-        public CutsceneGraphNode SpawnNode(InstructionDefinition definition, Vector2 positionOffset)
+        public CutsceneGraphInstruction SpawnNode(InstructionDefinition definition, Vector2 positionOffset)
         {
-            CutsceneGraphNode node = new();
+            CutsceneGraphInstruction node = new(this, definition);
             Nodes.Add(node);
             AddChild(node);
 
-            node.InstructionSet = InstructionSet;
             node.PositionOffset = positionOffset;
 
-            node.InspectorWindow = PropertiesInspector;
-            if (definition != null)
-                node.Populate(definition);
-            else
-                GD.PrintErr("Tried to spawn a node without an instruction definition.");
+            node.OnSelected += OnSelect;
+            node.OnDeselected += OnDeselect;
 
             return node;
         }
@@ -54,7 +50,7 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// Remove an instruction node from the graph.
         /// </summary>
-        public void DeleteNode(CutsceneGraphNode node)
+        public void DeleteNode(CutsceneGraphInstruction node)
         {
             if (Nodes.Contains(node))
             {
@@ -68,7 +64,7 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// Connect an outpot slot of a node on the graph to the input slot of another node.
         /// </summary>
-        public void ConnectNode(CutsceneGraphNode fromNode, int fromSlot, CutsceneGraphNode toNode)
+        public void ConnectNode(CutsceneGraphInstruction fromNode, int fromSlot, CutsceneGraphInstruction toNode)
         {
             // Ensure that enough slots are available.
             fromNode.EnsureSlots(fromSlot + 1);
@@ -81,7 +77,7 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// Disconnect an output slot of a node on the graph from the input slot of another node.
         /// </summary>
-        public void DisconnectNode(CutsceneGraphNode fromNode, int fromSlot, CutsceneGraphNode toNode)
+        public void DisconnectNode(CutsceneGraphInstruction fromNode, int fromSlot, CutsceneGraphInstruction toNode)
         {
             OnDisconnect(fromNode.Name, fromSlot, toNode.Name, 0);
         }
@@ -91,15 +87,14 @@ namespace Rusty.CutsceneEditor
         /// </summary>
         public CutsceneGraphComment SpawnComment(Vector2 positionOffset)
         {
-            CutsceneGraphComment comment = new();
+            CutsceneGraphComment comment = new(this);
             Comments.Add(comment);
             AddChild(comment);
 
-            comment.InstructionSet = InstructionSet;
             comment.PositionOffset = positionOffset;
 
-            comment.InspectorWindow = PropertiesInspector;
-            comment.Populate(InstructionSet[BuiltIn.CommentOpcode]);
+            comment.OnSelected += OnSelect;
+            comment.OnDeselected += OnDeselect;
 
             return comment;
         }
@@ -131,7 +126,7 @@ namespace Rusty.CutsceneEditor
                     Comments.Add(comment);
                 else if (child is CutsceneGraphFrame frame)
                     Frames.Add(frame);
-                else if (child is CutsceneGraphNode node)
+                else if (child is CutsceneGraphInstruction node)
                     Nodes.Add(node);
             }
 
@@ -193,11 +188,11 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// Return a node on the graph, using its name.
         /// </summary>
-        private CutsceneGraphNode GetNode(StringName nodeName)
+        private CutsceneGraphInstruction GetNode(StringName nodeName)
         {
             foreach (Node child in GetChildren())
             {
-                if (child.Name == nodeName && child is CutsceneGraphNode node)
+                if (child.Name == nodeName && child is CutsceneGraphInstruction node)
                     return node;
             }
             return null;
@@ -227,7 +222,7 @@ namespace Rusty.CutsceneEditor
 
         private void OnConnect(StringName fromNode, long fromPort, StringName toNode, long toPort)
         {
-            CutsceneGraphNode from = GetNode(fromNode);
+            CutsceneGraphInstruction from = GetNode(fromNode);
             NodeSlotPair fromSlot = from.Slots[(int)fromPort];
 
             // Disconnect if it the output port was already used.
@@ -247,14 +242,14 @@ namespace Rusty.CutsceneEditor
             }
 
             // Connect nodes from the perspective of the node slots.
-            CutsceneGraphNode to = GetNode(toNode);
+            CutsceneGraphInstruction to = GetNode(toNode);
             NodeSlotPair toSlot = to.Slots[(int)toPort];
             fromSlot.ConnectOutput(toSlot);
         }
 
         private void OnDisconnect(StringName fromNode, long fromPort, StringName toNode, long toPort)
         {
-            CutsceneGraphNode from = GetNode(fromNode);
+            CutsceneGraphInstruction from = GetNode(fromNode);
             NodeSlotPair slot = from.Slots[(int)fromPort];
 
             DisconnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
@@ -267,7 +262,7 @@ namespace Rusty.CutsceneEditor
             {
                 // Get the node.
                 StringName nodeName = obj.AsStringName();
-                CutsceneGraphNode node = GetNode(nodeName);
+                CutsceneGraphInstruction node = GetNode(nodeName);
 
                 // Disconnect the node from other nodes.
                 for (int i = 0; i < node.Slots.Count; i++)
@@ -278,7 +273,7 @@ namespace Rusty.CutsceneEditor
                     while (slot.Inputs.Count > 0)
                     {
                         NodeSlotPair fromSlot = slot.Inputs[0];
-                        CutsceneGraphNode fromNode = fromSlot.Node;
+                        CutsceneGraphInstruction fromNode = fromSlot.Node;
                         int fromIndex = fromNode.Slots.IndexOf(fromSlot);
                         OnDisconnect(fromSlot.Node.Name, fromIndex, nodeName, 0);
                     }
@@ -292,6 +287,16 @@ namespace Rusty.CutsceneEditor
                 // Remove from list.
                 Nodes.Remove(node);
             }
+        }
+
+        private void OnSelect(IGraphElement element)
+        {
+            InspectorWindow.AddChild(element.Inspector);
+        }
+
+        private void OnDeselect(IGraphElement element)
+        {
+            InspectorWindow.RemoveChild(element.Inspector);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /* Public methods. */
         public static void Spawn(CutsceneGraphEdit graphEdit, CompilerGraph graph)
         {
-            Dictionary<CompilerNode, CutsceneGraphNode> nodeMap = new();
+            Dictionary<CompilerNode, CutsceneGraphInstruction> nodeMap = new();
 
             // Spawn nodes.
             for (int i = 0; i < graph.Count; i++)
@@ -47,11 +47,11 @@ namespace Rusty.CutsceneEditor.Compiler
                 catch { }
 
                 // Spawn node.
-                CutsceneGraphNode editorNode = graphEdit.SpawnNode(mainInstruction.Data.Definition, new Vector2(x, y));
+                CutsceneGraphInstruction editorNode = graphEdit.SpawnNode(mainInstruction.Data.Definition, new Vector2(x, y));
                 nodeMap.Add(node, editorNode);
 
                 // Fill inspector.
-                NodeInstructionInspector inspector = editorNode.NodeInspector;
+                NodeInstructionInspector inspector = editorNode.Inspector;
 
                 SubNode<NodeData> startName = node.GetBegin();
                 if (startName != null)
@@ -75,7 +75,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 if (!nodeMap.ContainsKey(node))
                     continue;
 
-                CutsceneGraphNode editorNode = nodeMap[node];
+                CutsceneGraphInstruction editorNode = nodeMap[node];
 
                 // Ensure enough slots on the editor node.
                 editorNode.EnsureSlots(node.Outputs.Count);

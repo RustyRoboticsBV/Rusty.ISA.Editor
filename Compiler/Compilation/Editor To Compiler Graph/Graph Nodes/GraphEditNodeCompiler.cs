@@ -11,7 +11,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /// Take a graph edit node, and convert it and its inspector data to a compiler node.
         /// Inputs and outputs are NOT added by this method!
         /// </summary>
-        public static CompilerNode Compile(CutsceneGraphNode graphNode)
+        public static CompilerNode Compile(CutsceneGraphInstruction graphNode)
         {
             InstructionSet set = graphNode.InstructionSet;
             int x = Mathf.RoundToInt(graphNode.PositionOffset.X);
@@ -21,11 +21,11 @@ namespace Rusty.CutsceneEditor.Compiler
             CompilerNode node = CompilerNodeMaker.GetNode(set, x.ToString(), y.ToString());
 
             // Add BEG sub-node.
-            if (graphNode.NodeInspector.LabelName != "")
-                node.AddChild(CompilerNodeMaker.GetBegin(set, graphNode.NodeInspector.LabelName));
+            if (graphNode.Inspector.LabelName != "")
+                node.AddChild(CompilerNodeMaker.GetBegin(set, graphNode.Inspector.LabelName));
 
             // Compile instruction inspector hierarchy and add it as a sub-node.
-            node.AddChild(InspectorCompiler.Compile(graphNode.NodeInspector));
+            node.AddChild(InspectorCompiler.Compile(graphNode.Inspector));
 
             // Add EOG sub-node.
             node.AddChild(CompilerNodeMaker.GetEndOfGroup(set));

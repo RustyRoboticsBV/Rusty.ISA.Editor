@@ -27,7 +27,7 @@ namespace Rusty.CutsceneEditor.Compiler
             for (int i = 0; i < graphEdit.Nodes.Count; i++)
             {
                 // Get editor & compiler node.
-                CutsceneGraphNode fromEditorNode = graphEdit.Nodes[i];
+                CutsceneGraphInstruction fromEditorNode = graphEdit.Nodes[i];
                 CompilerNode fromCompilerNode = graph[i];
 
                 // For each output slot...
@@ -40,7 +40,7 @@ namespace Rusty.CutsceneEditor.Compiler
                     // Else, connect nodes.
                     else
                     {
-                        CutsceneGraphNode toEditorNode = fromEditorNode.Slots[j].Output.Node;
+                        CutsceneGraphInstruction toEditorNode = fromEditorNode.Slots[j].Output.Node;
                         int toNodeIndex = graphEdit.Nodes.IndexOf(toEditorNode);
                         CompilerNode toCompilerNode = graph[toNodeIndex];
 

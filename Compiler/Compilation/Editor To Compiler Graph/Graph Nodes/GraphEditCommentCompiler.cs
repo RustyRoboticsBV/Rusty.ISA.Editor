@@ -9,12 +9,13 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Take a graph edit comment node, and convert it and its inspector data to a compiler node.
         /// </summary>
-        public static CompilerNode Compile(CutsceneGraphNode graphNode)
+        public static CompilerNode Compile(CutsceneGraphComment graphNode)
         {
             InstructionSet set = graphNode.InstructionSet;
             int x = Mathf.RoundToInt(graphNode.PositionOffset.X);
             int y = Mathf.RoundToInt(graphNode.PositionOffset.Y);
-            string text = graphNode.NodeInspector.GetParameterInspector(BuiltIn.CommentText).ValueObj as string;
+            string text = graphNode.Inspector.CommentText;
+            text = text.Replace("\\n", "\\\\n").Replace("\n", "\\n");
 
             // Create CMT node.
             CompilerNode comment = CompilerNodeMaker.GetComment(set, x.ToString(), y.ToString(), text);
