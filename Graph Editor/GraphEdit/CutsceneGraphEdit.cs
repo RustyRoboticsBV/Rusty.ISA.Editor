@@ -129,6 +129,7 @@ namespace Rusty.CutsceneEditor
             };
             comment.Populate(InstructionSet[BuiltIn.CommentOpcode]);
             comment.InspectorWindow = PropertiesInspector;
+            Comments.Add(comment);
             AddChild(comment);
         }
 
@@ -143,6 +144,7 @@ namespace Rusty.CutsceneEditor
                 Title = "Frame"
             };
             AddChild(frame);
+            Frames.Add(frame);
         }
 
         private void ShowPopup(int x, int y)

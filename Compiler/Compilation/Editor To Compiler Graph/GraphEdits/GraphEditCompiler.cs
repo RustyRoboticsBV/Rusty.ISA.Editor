@@ -1,4 +1,6 @@
-﻿namespace Rusty.CutsceneEditor.Compiler
+﻿using System.Xml.Linq;
+
+namespace Rusty.CutsceneEditor.Compiler
 {
     /// <summary>
     /// Compile a graph edit into a code string.
@@ -17,7 +19,7 @@
             // 2. Create nodes.
             for (int i = 0; i < graphEdit.Nodes.Count; i++)
             {
-                var node = GraphEditNodeCompiler.Compile(graphEdit.Nodes[i]);
+                CompilerNode node = GraphEditNodeCompiler.Compile(graphEdit.Nodes[i]);
                 graph.AddNode(node);
             }
 
@@ -45,6 +47,13 @@
                         fromCompilerNode.ConnectTo(toCompilerNode);
                     }
                 }
+            }
+
+            // 4. Insert comments.
+            for (int i = 0; i < graphEdit.Comments.Count; i++)
+            {
+                CompilerNode node = GraphEditCommentCompiler.Compile(graphEdit.Comments[i]);
+                graph.InsertNode(i, node);
             }
 
             return graph;

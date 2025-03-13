@@ -63,6 +63,14 @@ namespace Rusty.CutsceneEditor
         }
 
         /// <summary>
+        /// Get a parameter inspector.
+        /// </summary>
+        public ParameterInspector GetParameterInspector(string id)
+        {
+            return Parameters[Definition.GetParameterIndex(id)];
+        }
+
+        /// <summary>
         /// Get a pre-instruction inspector by its index.
         /// </summary>
         public Inspector GetPreInstructionInspector(int index)

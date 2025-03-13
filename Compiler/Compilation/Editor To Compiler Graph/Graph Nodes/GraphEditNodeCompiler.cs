@@ -11,7 +11,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /// Take a graph edit node, and convert it and its inspector data to a compiler node.
         /// Inputs and outputs are NOT added by this method!
         /// </summary>
-        public static RootNode<NodeData> Compile(CutsceneGraphNode graphNode)
+        public static CompilerNode Compile(CutsceneGraphNode graphNode)
         {
             InstructionSet set = graphNode.InstructionSet;
             int x = Mathf.RoundToInt(graphNode.PositionOffset.X);

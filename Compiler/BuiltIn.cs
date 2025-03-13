@@ -39,6 +39,8 @@
         public const string ErrorMessage = "message";
 
         public const string CommentText = "text";
+        public const string CommentX = "x";
+        public const string CommentY = "y";
         public const string FrameName = "name";
         public const string NodeX = "x";
         public const string NodeY = "y";

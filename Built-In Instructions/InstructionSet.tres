@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=87 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=89 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/Cutscenes/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_gmmgc"]
@@ -34,6 +34,22 @@ MinWidth = 128
 MainColor = Color(0.1, 0.1, 0.1, 1)
 TextColor = Color(0.3, 0.75, 0.3, 1)
 
+[sub_resource type="Resource" id="Resource_imjdl"]
+resource_name = "x (int)"
+script = ExtResource("12_q4rbi")
+ID = "x"
+DisplayName = "X"
+Description = "The horizontal position of the comment."
+DefaultValue = 0
+
+[sub_resource type="Resource" id="Resource_bhdtu"]
+resource_name = "y (int)"
+script = ExtResource("12_q4rbi")
+ID = "y"
+DisplayName = "Y"
+Description = "The vertical position of the comment."
+DefaultValue = 0
+
 [sub_resource type="Resource" id="Resource_53br1"]
 resource_name = "text (multiline)"
 script = ExtResource("16_nc316")
@@ -46,7 +62,7 @@ DefaultValue = "Comment text."
 resource_name = "CMT"
 script = ExtResource("2_uguea")
 Opcode = "CMT"
-Parameters = [SubResource("Resource_53br1")]
+Parameters = [SubResource("Resource_imjdl"), SubResource("Resource_bhdtu"), SubResource("Resource_53br1")]
 Icon = ExtResource("2_unaab")
 DisplayName = "Comment"
 Description = "An editor comment."

@@ -29,7 +29,9 @@ namespace Rusty.CutsceneEditor.Compiler
             {
                 CompilerNode startNode = graph[startNodes[i]];
 
-                if (startNode.Data.GetOpcode() == BuiltIn.MetadataOpcode)
+                if (startNode.Data.GetOpcode() == BuiltIn.MetadataOpcode
+                    || startNode.Data.GetOpcode() == BuiltIn.CommentOpcode
+                    || startNode.Data.GetOpcode() == BuiltIn.FrameOpcode)
                 {
                     executionOrder.Add(executionOrder.Count, startNode);
                     continue;

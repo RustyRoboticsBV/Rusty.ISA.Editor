@@ -9,6 +9,21 @@ namespace Rusty.CutsceneEditor.Compiler
     public abstract class CompilerNodeMaker
     {
         /// <summary>
+        /// Create a CMT instruction root-node.
+        /// </summary>
+        public static CompilerNode GetComment(InstructionSet set, string x, string y, string text)
+        {
+            InstructionDefinition definition = set[BuiltIn.CommentOpcode];
+            InstructionInstance instance = new(definition);
+
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.CommentX)] = x;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.CommentY)] = y;
+            instance.Arguments[definition.GetParameterIndex(BuiltIn.CommentText)] = text;
+
+            return new CompilerNode(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
         /// Create a NOD instruction root-node.
         /// </summary>
         public static CompilerNode GetNode(InstructionSet set, string x, string y)
