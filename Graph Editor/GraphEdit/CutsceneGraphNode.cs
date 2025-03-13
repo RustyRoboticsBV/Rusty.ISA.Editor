@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using Rusty.Cutscenes;
 
 namespace Rusty.CutsceneEditor
@@ -30,12 +31,9 @@ namespace Rusty.CutsceneEditor
         protected VBoxContainer InspectorWindow => GraphEdit.InspectorWindow;
         protected HBoxContainer TitleContainer { get; private set; }
 
-        /* Public delegates. */
-        public delegate void NodeAction(IGraphElement element);
-
         /* Public events. */
-        public event NodeAction OnSelected;
-        public event NodeAction OnDeselected;
+        public event Action<IGraphElement> OnSelected;
+        public event Action<IGraphElement> OnDeselected;
 
         /* Constructors. */
         public CutsceneGraphNode(CutsceneGraphEdit graphEdit, InstructionDefinition definition)

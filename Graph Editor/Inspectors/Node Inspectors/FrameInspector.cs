@@ -58,8 +58,16 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             TextParameter parameter = Definition.Parameters[Definition.GetParameterIndex(BuiltIn.FrameTitle)] as TextParameter;
+            Add(new LabeledIcon()
+            {
+                Name = "Header",
+                LabelText = Definition.DisplayName,
+                Value = Definition.Icon
+            });
             Field = new LineField()
             {
+                Name = "TitleField",
+                LabelText = "Title",
                 Value = parameter.DefaultValue
             };
             Add(Field);

@@ -33,6 +33,8 @@ namespace Rusty.CutsceneEditor
             // Add title.
             MenuName = name;
             AddSeparator(MenuName);
+            SetItemDisabled(0, true);
+            SetItemShortcutDisabled(0, true);
 
             // Set up events.
             IdPressed += OnIdPressed;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Rusty.Cutscenes;
 using Rusty.CutsceneEditor.Compiler;
 using Array = Godot.Collections.Array;
+using Rusty.EditorUI;
 
 namespace Rusty.CutsceneEditor
 {
@@ -108,6 +109,9 @@ namespace Rusty.CutsceneEditor
             Frames.Add(frame);
             AddChild(frame);
 
+            frame.OnSelected += OnSelect;
+            frame.OnDeselected += OnDeselect;
+
             return frame;
         }
 
@@ -134,6 +138,7 @@ namespace Rusty.CutsceneEditor
             ConnectionRequest += OnConnect;
             DisconnectionRequest += OnDisconnect;
             DeleteNodesRequest += OnDelete;
+            FocusExited += OnFocusExited;
 
             AddNodePopup.SelectedInstruction += OnPopupSelectedInstruction;
         }
@@ -183,17 +188,19 @@ namespace Rusty.CutsceneEditor
             // Open popup.
             AddNodePopup.Position = new Vector2I(x, y);
             AddNodePopup.Popup();
+
+            HoldCtrl = false;
         }
 
         /// <summary>
         /// Return a node on the graph, using its name.
         /// </summary>
-        private CutsceneGraphInstruction GetNode(StringName nodeName)
+        private IGraphElement GetElement(StringName nodeName)
         {
             foreach (Node child in GetChildren())
             {
-                if (child.Name == nodeName && child is CutsceneGraphInstruction node)
-                    return node;
+                if (child.Name == nodeName && child is IGraphElement element)
+                    return element;
             }
             return null;
         }
@@ -222,70 +229,111 @@ namespace Rusty.CutsceneEditor
 
         private void OnConnect(StringName fromNode, long fromPort, StringName toNode, long toPort)
         {
-            CutsceneGraphInstruction from = GetNode(fromNode);
-            NodeSlotPair fromSlot = from.Slots[(int)fromPort];
+            IGraphElement fromElement = GetElement(fromNode);
+            IGraphElement toElement = GetElement(toNode);
 
-            // Disconnect if it the output port was already used.
-            if (fromSlot.Output != null)
+            if (fromElement is CutsceneGraphInstruction from && toElement is CutsceneGraphInstruction to)
             {
-                StringName previousToNode = fromSlot.Output.Node.Name;
-                OnDisconnect(fromNode, fromPort, previousToNode, toPort);
-            }
 
-            // Connect nodes from the perspective of the graph edit.
-            Error error = ConnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
-            if (error != Error.Ok)
-            {
-                GD.PrintErr($"Tried to connect node '{fromNode}' slot #{fromPort} to '{toNode}' slot #{toPort}, but it failed "
-                    + $"with error code '{error}'.");
-                return;
-            }
+                NodeSlotPair fromSlot = from.Slots[(int)fromPort];
 
-            // Connect nodes from the perspective of the node slots.
-            CutsceneGraphInstruction to = GetNode(toNode);
-            NodeSlotPair toSlot = to.Slots[(int)toPort];
-            fromSlot.ConnectOutput(toSlot);
+                // Disconnect if it the output port was already used.
+                if (fromSlot.Output != null)
+                {
+                    StringName previousToNode = fromSlot.Output.Node.Name;
+                    OnDisconnect(fromNode, fromPort, previousToNode, toPort);
+                }
+
+                // Connect nodes from the perspective of the graph edit.
+                Error error = ConnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
+                if (error != Error.Ok)
+                {
+                    GD.PrintErr($"Tried to connect node '{fromNode}' slot #{fromPort} to '{toNode}' slot #{toPort}, but it failed "
+                        + $"with error code '{error}'.");
+                    return;
+                }
+
+                // Connect nodes from the perspective of the node slots.
+                NodeSlotPair toSlot = to.Slots[(int)toPort];
+                fromSlot.ConnectOutput(toSlot);
+            }
         }
 
         private void OnDisconnect(StringName fromNode, long fromPort, StringName toNode, long toPort)
         {
-            CutsceneGraphInstruction from = GetNode(fromNode);
-            NodeSlotPair slot = from.Slots[(int)fromPort];
+            IGraphElement fromElement = GetElement(fromNode);
+            if (fromElement is CutsceneGraphInstruction from)
+            {
+                NodeSlotPair slot = from.Slots[(int)fromPort];
 
-            DisconnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
-            slot.DisconnectOutput();
+                DisconnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
+                slot.DisconnectOutput();
+            }
         }
 
         private void OnDelete(Array nodes)
         {
             foreach (Variant obj in nodes)
             {
-                // Get the node.
-                StringName nodeName = obj.AsStringName();
-                CutsceneGraphInstruction node = GetNode(nodeName);
+                // Get the element.
+                StringName name = obj.AsStringName();
+                IGraphElement element = GetElement(name);
 
-                // Disconnect the node from other nodes.
-                for (int i = 0; i < node.Slots.Count; i++)
+                if (element == null || element.GraphEdit != this)
+                    continue;
+
+                // Remove inspector from inspector window.
+                Node inspectorParent = element.Inspector.GetParent();
+                if (inspectorParent != null)
+                    inspectorParent.RemoveChild(element.Inspector);
+
+                // If the element was a node...
+                if (element is CutsceneGraphInstruction node)
                 {
-                    NodeSlotPair slot = node.Slots[i];
-
-                    // Disconnect inputs.
-                    while (slot.Inputs.Count > 0)
+                    // Disconnect the node from other nodes.
+                    for (int i = 0; i < node.Slots.Count; i++)
                     {
-                        NodeSlotPair fromSlot = slot.Inputs[0];
-                        CutsceneGraphInstruction fromNode = fromSlot.Node;
-                        int fromIndex = fromNode.Slots.IndexOf(fromSlot);
-                        OnDisconnect(fromSlot.Node.Name, fromIndex, nodeName, 0);
+                        NodeSlotPair slot = node.Slots[i];
+
+                        // Disconnect inputs.
+                        while (slot.Inputs.Count > 0)
+                        {
+                            NodeSlotPair fromSlot = slot.Inputs[0];
+                            CutsceneGraphInstruction fromNode = fromSlot.Node;
+                            int fromIndex = fromNode.Slots.IndexOf(fromSlot);
+                            OnDisconnect(fromSlot.Node.Name, fromIndex, name, 0);
+                        }
+
+                        // Disconnect output.
+                        NodeSlotPair toSlot = slot.Output;
+                        if (toSlot != null)
+                            OnDisconnect(name, i, toSlot.Node.Name, 0);
                     }
 
-                    // Disconnect output.
-                    NodeSlotPair toSlot = slot.Output;
-                    if (toSlot != null)
-                        OnDisconnect(nodeName, i, toSlot.Node.Name, 0);
+                    // Remove from list.
+                    Nodes.Remove(node);
+
+                    Node parent = node.GetParent();
+                    parent.RemoveChild(node);
                 }
 
-                // Remove from list.
-                Nodes.Remove(node);
+                // If the element was a comment...
+                else if (element is CutsceneGraphComment comment)
+                {
+                    Comments.Remove(comment);
+
+                    Node parent = comment.GetParent();
+                    parent.RemoveChild(comment);
+                }
+
+                // If the element was a frame...
+                else if (element is CutsceneGraphFrame frame)
+                {
+                    Frames.Remove(frame);
+
+                    Node parent = frame.GetParent();
+                    parent.RemoveChild(frame);
+                }
             }
         }
 
@@ -297,6 +345,11 @@ namespace Rusty.CutsceneEditor
         private void OnDeselect(IGraphElement element)
         {
             InspectorWindow.RemoveChild(element.Inspector);
+        }
+
+        private void OnFocusExited()
+        {
+            HoldCtrl = false;
         }
     }
 }

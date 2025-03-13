@@ -80,7 +80,7 @@ namespace Rusty.CutsceneEditor
             TitleContainer.Hide();
 
             // Create inspector.
-            Inspector = new CommentInspector(InstructionSet);
+            Inspector = new(InstructionSet);
         }
 
         public override void _Process(double delta)
@@ -89,7 +89,7 @@ namespace Rusty.CutsceneEditor
             {
                 Label.Size = Vector2.Zero;
                 int parameterIndex = Definition.GetParameterIndex(BuiltIn.CommentText);
-                Label.Text = ((CommentInspector)Inspector).CommentText;
+                Label.Text = Inspector.CommentText;
                 Label.AddThemeColorOverride("default_color", Selected ? EditorNodeInfo.SelectedTextColor : Definition.EditorNode.TextColor);
             }
             Size = Vector2.Zero;

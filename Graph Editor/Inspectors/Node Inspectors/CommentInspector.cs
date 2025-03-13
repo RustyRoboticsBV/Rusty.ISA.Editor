@@ -1,5 +1,4 @@
-﻿using Godot;
-using Rusty.CutsceneEditor.Compiler;
+﻿using Rusty.CutsceneEditor.Compiler;
 using Rusty.Cutscenes;
 using Rusty.EditorUI;
 
@@ -59,6 +58,12 @@ namespace Rusty.CutsceneEditor
             base.Init();
 
             MultilineParameter parameter = Definition.Parameters[Definition.GetParameterIndex(BuiltIn.CommentText)] as MultilineParameter;
+            Add(new LabeledIcon()
+            {
+                Name = "Header",
+                LabelText = Definition.DisplayName,
+                Value = Definition.Icon
+            });
             Field = new MultilineField()
             {
                 Value = parameter.DefaultValue,
