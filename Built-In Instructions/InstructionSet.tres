@@ -28,6 +28,127 @@
 [ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOG.bmp" id="17_eto4q"]
 [ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="17_txonn"]
 
+[sub_resource type="Resource" id="Resource_cimir"]
+resource_name = "MTA"
+script = ExtResource("2_uguea")
+Opcode = "MTA"
+Parameters = []
+Icon = ExtResource("12_nbvet")
+DisplayName = "Instruction Set Metadata"
+Description = "Starts an instruction set metadata group. The group should be closed with an EOG instruction."
+Category = "Editor"
+PreviewTerms = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_avnf8"]
+resource_name = "opcode (text)"
+script = ExtResource("12_rklps")
+ID = "opcode"
+DisplayName = "Opcode"
+Description = "The opcode of the instruction definition."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_wldw7"]
+resource_name = "DEF"
+script = ExtResource("2_uguea")
+Opcode = "DEF"
+Parameters = [SubResource("Resource_avnf8")]
+Icon = ExtResource("13_y5iqg")
+DisplayName = "Instruction Metadata"
+Description = "Starts a metadata group for an instruction definition. The group should be closed with an EOG instruction."
+Category = "Editor"
+PreviewTerms = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_4i0kw"]
+resource_name = "type (text)"
+script = ExtResource("12_rklps")
+ID = "type"
+DisplayName = "Type"
+Description = "The type of the compile rule. Should be one of the following: option, choice, tuple, or list."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_bdv4d"]
+resource_name = "id (text)"
+script = ExtResource("12_rklps")
+ID = "id"
+DisplayName = "ID"
+Description = "The identifier of the compile rule."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_hr6rg"]
+resource_name = "RUL"
+script = ExtResource("2_uguea")
+Opcode = "RUL"
+Parameters = [SubResource("Resource_4i0kw"), SubResource("Resource_bdv4d")]
+Icon = ExtResource("16_0cdng")
+DisplayName = "Compile Rule Metadata"
+Description = "Starts a compile rule metadata group. The group should be closed with an EOG instruction."
+Category = "Editor"
+PreviewTerms = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_svoja"]
+resource_name = "opcode (text)"
+script = ExtResource("12_rklps")
+ID = "opcode"
+DisplayName = "Opcode"
+Description = "The opcode of the referenced instruction."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_jdrw3"]
+resource_name = "id (text)"
+script = ExtResource("12_rklps")
+ID = "id"
+DisplayName = "ID"
+Description = "The identifier of the parameter."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_d6p30"]
+resource_name = "REF"
+script = ExtResource("2_uguea")
+Opcode = "REF"
+Parameters = [SubResource("Resource_svoja"), SubResource("Resource_jdrw3")]
+Icon = ExtResource("17_txonn")
+DisplayName = "Reference"
+Description = "Represents metadata related to an instruction rule."
+Category = "Editor"
+PreviewTerms = []
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_shaub"]
+resource_name = "type (text)"
+script = ExtResource("12_rklps")
+ID = "type"
+DisplayName = "Type"
+Description = "The type of the parameter."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_2jvhx"]
+resource_name = "id (text)"
+script = ExtResource("12_rklps")
+ID = "id"
+DisplayName = "ID"
+Description = "The identifier of the parameter."
+DefaultValue = ""
+
+[sub_resource type="Resource" id="Resource_n3emi"]
+resource_name = "PAR"
+script = ExtResource("2_uguea")
+Opcode = "PAR"
+Parameters = [SubResource("Resource_shaub"), SubResource("Resource_2jvhx")]
+Icon = ExtResource("15_5h8mm")
+DisplayName = "Parameter Metadata"
+Description = "Represents metadata related to an instruction parameter."
+Category = "Editor"
+PreviewTerms = []
+PreInstructions = []
+PostInstructions = []
+
 [sub_resource type="Resource" id="Resource_mff5v"]
 script = ExtResource("1_gmmgc")
 Priority = -1
@@ -197,7 +318,7 @@ Parameters = [SubResource("Resource_g65gn"), SubResource("Resource_1ekkv")]
 Icon = ExtResource("9_dl4up")
 DisplayName = "Editor Node"
 Description = "Starts an editor node. It should contain an inspector instruction, and optionally a label and/or begin instruction. The group should be closed with an EOG instruction."
-Category = "Compiler"
+Category = "Editor"
 PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
@@ -210,7 +331,7 @@ Parameters = []
 Icon = ExtResource("11_vnhvg")
 DisplayName = "Inspector"
 Description = "Starts an inspector group. This group contains an instruction and optionally its associated pre-instructions and post-instruction groups. The group should be closed with an EOG instruction."
-Category = "Compiler"
+Category = "Editor"
 PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
@@ -223,7 +344,7 @@ Parameters = []
 Icon = ExtResource("4_wahcg")
 DisplayName = "Instruction Inspector"
 Description = "A compiler marker that starts a pre-instruction group. The group should be closed with an EOG instruction. All instruction between the two markers are interpreted as pre-instructions of the instruction that comes after the EOG."
-Category = "Compiler"
+Category = "Editor"
 PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
@@ -236,7 +357,7 @@ Parameters = []
 Icon = ExtResource("5_yqtwi")
 DisplayName = "Post-Instructions"
 Description = "A compiler marker that starts a post-instruction group. The group should be closed with an EOB instruction. All instruction between the two markers are interpreted as post-instructions of the instruction that comes before this one."
-Category = "Compiler"
+Category = "Editor"
 PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
@@ -249,7 +370,7 @@ Parameters = []
 Icon = ExtResource("12_y4agh")
 DisplayName = "Option Rule"
 Description = "A compiler marker that starts an group collection. The group should be closed with an EOG instruction."
-Category = "Compiler"
+Category = "Editor"
 PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
@@ -270,7 +391,7 @@ Parameters = [SubResource("Resource_yjpwf")]
 Icon = ExtResource("14_42hs7")
 DisplayName = "Choice Rule"
 Description = "A compiler marker that starts a choice group. The group should be closed with an EOG instruction."
-Category = "Compiler"
+Category = "Editor"
 PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
@@ -283,7 +404,7 @@ Parameters = []
 Icon = ExtResource("15_r7qq2")
 DisplayName = "Tuple Rule"
 Description = "A compiler marker that starts a tuple rule group. The group should be closed with an EOG instruction."
-Category = "Compiler"
+Category = "Editor"
 PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
@@ -296,7 +417,7 @@ Parameters = []
 Icon = ExtResource("16_6vvij")
 DisplayName = "List Rule"
 Description = "A compiler marker that starts a list group. The group should be closed with an EOG instruction."
-Category = "Compiler"
+Category = "Editor"
 PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
@@ -309,128 +430,7 @@ Parameters = []
 Icon = ExtResource("17_eto4q")
 DisplayName = "End of Block"
 Description = "A compiler marker that denotes the end of a group of instructions."
-Category = "Compiler"
-PreviewTerms = []
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_cimir"]
-resource_name = "MTA"
-script = ExtResource("2_uguea")
-Opcode = "MTA"
-Parameters = []
-Icon = ExtResource("12_nbvet")
-DisplayName = "Instruction Set Metadata"
-Description = "Starts an instruction set metadata group. The group should be closed with an EOG instruction."
-Category = "Compiler"
-PreviewTerms = []
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_avnf8"]
-resource_name = "opcode (text)"
-script = ExtResource("12_rklps")
-ID = "opcode"
-DisplayName = "Opcode"
-Description = "The opcode of the instruction definition."
-DefaultValue = ""
-
-[sub_resource type="Resource" id="Resource_wldw7"]
-resource_name = "DEF"
-script = ExtResource("2_uguea")
-Opcode = "DEF"
-Parameters = [SubResource("Resource_avnf8")]
-Icon = ExtResource("13_y5iqg")
-DisplayName = "Instruction Metadata"
-Description = "Starts a metadata group for an instruction definition. The group should be closed with an EOG instruction."
-Category = "Compiler"
-PreviewTerms = []
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_shaub"]
-resource_name = "type (text)"
-script = ExtResource("12_rklps")
-ID = "type"
-DisplayName = "Type"
-Description = "The type of the parameter."
-DefaultValue = ""
-
-[sub_resource type="Resource" id="Resource_2jvhx"]
-resource_name = "id (text)"
-script = ExtResource("12_rklps")
-ID = "id"
-DisplayName = "ID"
-Description = "The identifier of the parameter."
-DefaultValue = ""
-
-[sub_resource type="Resource" id="Resource_n3emi"]
-resource_name = "PAR"
-script = ExtResource("2_uguea")
-Opcode = "PAR"
-Parameters = [SubResource("Resource_shaub"), SubResource("Resource_2jvhx")]
-Icon = ExtResource("15_5h8mm")
-DisplayName = "Parameter Metadata"
-Description = "Represents metadata related to an instruction parameter."
-Category = "Compiler"
-PreviewTerms = []
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_4i0kw"]
-resource_name = "type (text)"
-script = ExtResource("12_rklps")
-ID = "type"
-DisplayName = "Type"
-Description = "The type of the compile rule. Should be one of the following: option, choice, tuple, or list."
-DefaultValue = ""
-
-[sub_resource type="Resource" id="Resource_bdv4d"]
-resource_name = "id (text)"
-script = ExtResource("12_rklps")
-ID = "id"
-DisplayName = "ID"
-Description = "The identifier of the compile rule."
-DefaultValue = ""
-
-[sub_resource type="Resource" id="Resource_hr6rg"]
-resource_name = "RUL"
-script = ExtResource("2_uguea")
-Opcode = "RUL"
-Parameters = [SubResource("Resource_4i0kw"), SubResource("Resource_bdv4d")]
-Icon = ExtResource("16_0cdng")
-DisplayName = "Compile Rule Metadata"
-Description = "Starts a compile rule metadata group. The group should be closed with an EOG instruction."
-Category = "Compiler"
-PreviewTerms = []
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_svoja"]
-resource_name = "opcode (text)"
-script = ExtResource("12_rklps")
-ID = "opcode"
-DisplayName = "Opcode"
-Description = "The opcode of the referenced instruction."
-DefaultValue = ""
-
-[sub_resource type="Resource" id="Resource_jdrw3"]
-resource_name = "id (text)"
-script = ExtResource("12_rklps")
-ID = "id"
-DisplayName = "ID"
-Description = "The identifier of the parameter."
-DefaultValue = ""
-
-[sub_resource type="Resource" id="Resource_d6p30"]
-resource_name = "REF"
-script = ExtResource("2_uguea")
-Opcode = "REF"
-Parameters = [SubResource("Resource_svoja"), SubResource("Resource_jdrw3")]
-Icon = ExtResource("17_txonn")
-DisplayName = "Reference"
-Description = "Represents metadata related to an instruction rule."
-Category = "Compiler"
+Category = "Editor"
 PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
@@ -619,5 +619,5 @@ Modules = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30")]
+Definitions = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_n3emi"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
 Modules = [SubResource("Resource_eqo11")]
