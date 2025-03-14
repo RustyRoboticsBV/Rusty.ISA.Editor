@@ -21,4 +21,4 @@ project/assembly_name="CutsceneEditor"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/CutsceneImporter/Instruction Definitions/Plugin/plugin.cfg")
+enabled=PackedStringArray("res://addons/CutsceneImporter/Instruction Definitions/Plugin/plugin.cfg", "res://addons/CutsceneImporter/Instruction Sets/Plugin/plugin.cfg")
