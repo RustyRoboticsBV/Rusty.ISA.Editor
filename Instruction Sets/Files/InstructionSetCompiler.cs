@@ -35,7 +35,7 @@ namespace Rusty.CutsceneEditor.InstructionSets
                 InstructionDefinition def = set.Definitions[i];
 
                 packer.StartFile($"{def.Category}/{def.Opcode}/def{def.Opcode}.xml");
-                Document doc = InstructionDefinitionCompiler.Compile(def);
+                Document doc = Serializer.Compile(def);
                 try
                 {
                     doc.Root.GetChild("icon").InnerText = $"icon{def.Opcode}.png";

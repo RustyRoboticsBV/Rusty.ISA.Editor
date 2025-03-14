@@ -32,6 +32,7 @@
 script = ExtResource("1_gmmgc")
 Priority = -1
 MinWidth = 128
+MinHeight = 32
 MainColor = Color(0.1, 0.1, 0.1, 1)
 TextColor = Color(0.3, 0.75, 0.3, 1)
 
@@ -69,7 +70,7 @@ DisplayName = "Comment"
 Description = "An editor comment."
 Category = "Editor"
 EditorNode = SubResource("Resource_mff5v")
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -77,6 +78,7 @@ PostInstructions = []
 script = ExtResource("1_gmmgc")
 Priority = -1
 MinWidth = 128
+MinHeight = 32
 MainColor = Color(1, 1, 1, 0.752941)
 TextColor = Color(1, 1, 1, 1)
 
@@ -146,7 +148,7 @@ DisplayName = "Frame"
 Description = "Starts a frame group. The group may contain a single MBR instruction (to allow for nested frames), and should be closed with an EOG instruction."
 Category = "Editor"
 EditorNode = SubResource("Resource_latm4")
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -167,7 +169,7 @@ Icon = ExtResource("9_nx7m3")
 DisplayName = "Frame Member"
 Description = "Designates a NOD, CMT or FRM group as being a member of an editor frame with some ID."
 Category = "Editor"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -196,7 +198,7 @@ Icon = ExtResource("9_dl4up")
 DisplayName = "Editor Node"
 Description = "Starts an editor node. It should contain an inspector instruction, and optionally a label and/or begin instruction. The group should be closed with an EOG instruction."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -209,7 +211,7 @@ Icon = ExtResource("11_vnhvg")
 DisplayName = "Inspector"
 Description = "Starts an inspector group. This group contains an instruction and optionally its associated pre-instructions and post-instruction groups. The group should be closed with an EOG instruction."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -222,7 +224,7 @@ Icon = ExtResource("4_wahcg")
 DisplayName = "Instruction Inspector"
 Description = "A compiler marker that starts a pre-instruction group. The group should be closed with an EOG instruction. All instruction between the two markers are interpreted as pre-instructions of the instruction that comes after the EOG."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -235,7 +237,7 @@ Icon = ExtResource("5_yqtwi")
 DisplayName = "Post-Instructions"
 Description = "A compiler marker that starts a post-instruction group. The group should be closed with an EOB instruction. All instruction between the two markers are interpreted as post-instructions of the instruction that comes before this one."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -248,7 +250,7 @@ Icon = ExtResource("12_y4agh")
 DisplayName = "Option Rule"
 Description = "A compiler marker that starts an group collection. The group should be closed with an EOG instruction."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -269,7 +271,7 @@ Icon = ExtResource("14_42hs7")
 DisplayName = "Choice Rule"
 Description = "A compiler marker that starts a choice group. The group should be closed with an EOG instruction."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -282,7 +284,7 @@ Icon = ExtResource("15_r7qq2")
 DisplayName = "Tuple Rule"
 Description = "A compiler marker that starts a tuple rule group. The group should be closed with an EOG instruction."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -295,7 +297,7 @@ Icon = ExtResource("16_6vvij")
 DisplayName = "List Rule"
 Description = "A compiler marker that starts a list group. The group should be closed with an EOG instruction."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -308,7 +310,7 @@ Icon = ExtResource("17_eto4q")
 DisplayName = "End of Block"
 Description = "A compiler marker that denotes the end of a group of instructions."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -321,7 +323,7 @@ Icon = ExtResource("12_nbvet")
 DisplayName = "Instruction Set Metadata"
 Description = "Starts an instruction set metadata group. The group should be closed with an EOG instruction."
 Category = ""
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -342,7 +344,7 @@ Icon = ExtResource("13_y5iqg")
 DisplayName = "Instruction Metadata"
 Description = "Starts a metadata group for an instruction definition. The group should be closed with an EOG instruction."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -371,7 +373,7 @@ Icon = ExtResource("15_5h8mm")
 DisplayName = "Parameter Metadata"
 Description = "Represents metadata related to an instruction parameter."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -400,7 +402,7 @@ Icon = ExtResource("16_0cdng")
 DisplayName = "Compile Rule Metadata"
 Description = "Starts a compile rule metadata group. The group should be closed with an EOG instruction."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -429,7 +431,7 @@ Icon = ExtResource("17_txonn")
 DisplayName = "Reference"
 Description = "Represents metadata related to an instruction rule."
 Category = "Compiler"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -460,7 +462,7 @@ Icon = SubResource("CompressedTexture2D_wxhar")
 DisplayName = "Begin"
 Description = "Defines a start point in a cutscene program. Cutscene players can start playing the program from these points."
 Category = "Core"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -483,7 +485,7 @@ Icon = SubResource("CompressedTexture2D_sc10l")
 DisplayName = "End"
 Description = ""
 Category = "Core"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -511,7 +513,7 @@ Icon = ExtResource("14_siv20")
 DisplayName = "Label"
 Description = "Defines a point that can be jumped to by the goto function."
 Category = "Core"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -543,7 +545,7 @@ Icon = SubResource("CompressedTexture2D_r3wit")
 DisplayName = "Goto"
 Description = "Jumps the program counter to a label instruction with some name."
 Category = "Core"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -574,7 +576,7 @@ Icon = SubResource("CompressedTexture2D_3263b")
 DisplayName = "Warning"
 Description = "Prints an warning message and stops cutscene execution."
 Category = "Core"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
@@ -605,7 +607,7 @@ Icon = SubResource("CompressedTexture2D_dxm61")
 DisplayName = "Error"
 Description = "Prints an error message and stops cutscene execution."
 Category = "Core"
-Preview = []
+PreviewTerms = []
 PreInstructions = []
 PostInstructions = []
 
