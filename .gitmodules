@@ -13,3 +13,6 @@
 [submodule "Submodules/Csv"]
 	path = Submodules/Csv
 	url = https://github.com/RustyRoboticsBV/Rusty.Csv.git
+[submodule "addons/CutsceneImporter"]
+	path = addons/CutsceneImporter
+	url = https://github.com/RustyRoboticsBV/Rusty.CutsceneImporter.git
