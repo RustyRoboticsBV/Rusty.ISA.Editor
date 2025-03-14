@@ -276,9 +276,9 @@ namespace Rusty.CutsceneEditor
             }
         }
 
-        private void OnDelete(Array nodes)
+        private void OnDelete(Array elements)
         {
-            foreach (Variant obj in nodes)
+            foreach (Variant obj in elements)
             {
                 // Get the element.
                 StringName name = obj.AsStringName();

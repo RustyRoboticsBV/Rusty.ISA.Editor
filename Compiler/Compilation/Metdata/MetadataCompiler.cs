@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
-using Rusty.CutsceneImporter.InstructionDefinitions;
 using Rusty.Cutscenes;
 using Rusty.Graphs;
+using Rusty.CutsceneImporter.InstructionDefinitions;
 
 namespace Rusty.CutsceneEditor.Compiler
 {
     /// <summary>
     /// An instruction set metadata compiler.
     /// </summary>
-    public abstract class MetaSetCompiler
+    public static class MetadataCompiler
     {
+        /* Public methods. */
         /// <summary>
         /// Create an instruction set metadata hierarchy.
         /// </summary>
@@ -18,7 +19,7 @@ namespace Rusty.CutsceneEditor.Compiler
             InstructionDefinition definition = set[BuiltIn.NodeOpcode];
 
             // Add SET node.
-            CompilerNode node = CompilerNodeMaker.GetSet(set);
+            CompilerNode node = CompilerNodeMaker.GetMetadata(set);
 
             // Add DEF nodes.
             for (int i = 0; i < set.Count; i++)
@@ -32,6 +33,7 @@ namespace Rusty.CutsceneEditor.Compiler
             return node;
         }
 
+        /* Private methods. */
         /// <summary>
         /// Create an instruction definition hierarchy.
         /// </summary>

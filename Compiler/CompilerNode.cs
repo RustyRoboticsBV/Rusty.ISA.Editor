@@ -63,6 +63,14 @@ namespace Rusty.CutsceneEditor.Compiler
         }
 
         /// <summary>
+        /// Get the frame member sub-node. Returns null if it doesn't exist.
+        /// </summary>
+        public SubNode<NodeData> GetFrameMember()
+        {
+            return FindSubNode(BuiltIn.FrameMemberOpcode);
+        }
+
+        /// <summary>
         /// Get the label sub-node. Returns null if it doesn't exist.
         /// </summary>
         public SubNode<NodeData> GetLabel()

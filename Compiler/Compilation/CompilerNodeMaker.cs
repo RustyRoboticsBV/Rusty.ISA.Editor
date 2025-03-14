@@ -210,17 +210,9 @@ namespace Rusty.CutsceneEditor.Compiler
         }
 
         /// <summary>
-        /// Create an instruction sub-node.
+        /// Create a MTA instruction node.
         /// </summary>
-        public static SubNode<NodeData> GetInstruction(InstructionSet set, InstructionInstance instance)
-        {
-            return new SubNode<NodeData>(new NodeData(set, set[instance.Opcode], instance));
-        }
-
-        /// <summary>
-        /// Create a SET instruction node.
-        /// </summary>
-        public static CompilerNode GetSet(InstructionSet set)
+        public static CompilerNode GetMetadata(InstructionSet set)
         {
             InstructionDefinition definition = set[BuiltIn.MetadataOpcode];
             InstructionInstance instance = new(definition);
@@ -281,6 +273,14 @@ namespace Rusty.CutsceneEditor.Compiler
             instance.Arguments[definition.GetParameterIndex(BuiltIn.ReferenceID)] = id;
 
             return new SubNode<NodeData>(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
+        /// Create sub-node for any instruction.
+        /// </summary>
+        public static SubNode<NodeData> GetAny(InstructionSet set, InstructionInstance instance)
+        {
+            return new SubNode<NodeData>(new NodeData(set, set[instance.Opcode], instance));
         }
     }
 }

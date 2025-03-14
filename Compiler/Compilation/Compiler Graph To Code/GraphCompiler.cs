@@ -16,7 +16,7 @@ namespace Rusty.CutsceneEditor.Compiler
         public static string Compile(CompilerGraph graph)
         {
             // 1. Add instruction set metadata.
-            CompilerNode setNode = MetaSetCompiler.Compile(graph.Data.Set);
+            CompilerNode setNode = MetadataCompiler.Compile(graph.Data.Set);
             graph.InsertNode(0, setNode);
 
             // 2. Figure out start nodes.

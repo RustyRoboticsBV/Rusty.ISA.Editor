@@ -95,10 +95,10 @@ namespace Rusty.CutsceneEditor
 
         public void Delete()
         {
-            // Delete all elements.
+            // Remove all elements.
             for (int i = 0; i < Elements.Count; i++)
             {
-                Elements[i].Delete();
+                Elements[i].Frame = Frame;
             }
 
             // Delete this frame.

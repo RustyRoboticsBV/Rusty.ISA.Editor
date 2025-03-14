@@ -39,7 +39,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 node.AddChild(PreInstructionsCompiler.Compile(inspector.PreInstructions));
 
             // Create instruction node.
-            node.AddChild(CompilerNodeMaker.GetInstruction(set, instance));
+            node.AddChild(CompilerNodeMaker.GetAny(set, instance));
 
             // Create post-instructions.
             if (inspector.PostInstructions.Inspectors.Count > 0)

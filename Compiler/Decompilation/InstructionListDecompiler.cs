@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Godot;
 using Rusty.Cutscenes;
 
 namespace Rusty.CutsceneEditor.Compiler
@@ -21,15 +22,19 @@ namespace Rusty.CutsceneEditor.Compiler
             int index = 0;
             while (index < instructions.Count)
             {
-                // Create node or node hierarchy from instruction.
+                // Create a node or node hierarchy from the instruction and possibly subsequent instructions.
                 switch (instructions[index].Opcode)
                 {
                     case BuiltIn.MetadataOpcode:
+                    case BuiltIn.CommentOpcode:
+                    case BuiltIn.FrameOpcode:
                     case BuiltIn.NodeOpcode:
                         graph.AddNode(HandleCollection(set, instructions, ref index));
                         break;
                     default:
-                        throw new Exception($"Encountered illegal top-level instruction with opcode '{instructions[index].Opcode}'.");
+                        GD.PrintErr($"Encountered illegal top-level instruction with opcode '{instructions[index].Opcode}'. The "
+                            + "instruction was ignored.");
+                        break;
                 }
 
                 // Add to label table.
@@ -50,8 +55,13 @@ namespace Rusty.CutsceneEditor.Compiler
                 CompilerNode node = graph[i];
                 OutputData outputData = node.GetOutputData();
 
-                if (node.Data.GetOpcode() == BuiltIn.MetadataOpcode)
+                // Don't attempt to connect metadata, frame and comment nodes.
+                if (node.Data.GetOpcode() == BuiltIn.MetadataOpcode
+                    || node.Data.GetOpcode() == BuiltIn.FrameOpcode
+                    || node.Data.GetOpcode() == BuiltIn.CommentOpcode)
+                {
                     continue;
+                }
 
                 // Connect default output.
                 if (outputData.HasDefaultOutput && i < graph.Count - 1)
@@ -82,7 +92,7 @@ namespace Rusty.CutsceneEditor.Compiler
         private static CompilerNode HandleCollection(InstructionSet set, List<InstructionInstance> instructions, ref int index)
         {
             // Handle header.
-            CompilerNode node = CompilerNodeMaker.GetInstruction(set, instructions[index]);
+            CompilerNode node = CompilerNodeMaker.GetAny(set, instructions[index]);
             index++;
 
             // Handle subsequent nodes.
@@ -93,6 +103,8 @@ namespace Rusty.CutsceneEditor.Compiler
                     case BuiltIn.MetadataOpcode:
                     case BuiltIn.DefinitionOpcode:
                     case BuiltIn.CompileRuleOpcode:
+                    case BuiltIn.CommentOpcode:
+                    case BuiltIn.FrameOpcode:
                     case BuiltIn.NodeOpcode:
                     case BuiltIn.InspectorOpcode:
                     case BuiltIn.PreInstructionOpcode:
@@ -104,10 +116,10 @@ namespace Rusty.CutsceneEditor.Compiler
                         node.AddChild(HandleCollection(set, instructions, ref index));
                         break;
                     case BuiltIn.EndOfGroupOpcode:
-                        node.AddChild(CompilerNodeMaker.GetInstruction(set, instructions[index]));
+                        node.AddChild(CompilerNodeMaker.GetAny(set, instructions[index]));
                         return node;
                     default:
-                        node.AddChild(CompilerNodeMaker.GetInstruction(set, instructions[index]));
+                        node.AddChild(CompilerNodeMaker.GetAny(set, instructions[index]));
                         break;
                 }
 
