@@ -2,7 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using System.IO;
 using Rusty.Cutscenes;
-using Rusty.CutsceneImporter.InstructionSets;
+using Rusty.CutsceneImporter;
 using Rusty.CutsceneImporter.InstructionDefinitions;
 
 namespace Rusty.CutsceneEditor.InstructionSets
