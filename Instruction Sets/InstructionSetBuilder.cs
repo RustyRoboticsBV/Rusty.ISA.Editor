@@ -1,9 +1,9 @@
-using System;
+using Godot;
 using System.Collections.Generic;
 using System.IO;
-using Godot;
-using Rusty.CutsceneImporter.InstructionDefinitions;
 using Rusty.Cutscenes;
+using Rusty.CutsceneImporter.InstructionSets;
+using Rusty.CutsceneImporter.InstructionDefinitions;
 
 namespace Rusty.CutsceneEditor.InstructionSets
 {
@@ -28,7 +28,7 @@ namespace Rusty.CutsceneEditor.InstructionSets
 			if (!Directory.Exists(absolutePath))
 			{
 				Directory.CreateDirectory(absolutePath);
-				GD.Print("Created definitions folder at " + absolutePath);
+				GD.Print($"Created definitions folder at '{absolutePath}'");
 			}
 
             // Copy over built-in instructions.

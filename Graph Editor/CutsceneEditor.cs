@@ -3,6 +3,7 @@ using Godot;
 using Rusty.Cutscenes;
 using Rusty.CutsceneEditor.Compiler;
 using Rusty.CutsceneEditor.InstructionSets;
+using Rusty.CutsceneImporter.InstructionSets;
 
 namespace Rusty.CutsceneEditor
 {
@@ -46,7 +47,7 @@ namespace Rusty.CutsceneEditor
                 GD.Print("Definition " + i + ": " + GeneratedSet.Definitions[i]);
             }
             GraphEdit.InstructionSet = GeneratedSet;
-            InstructionSetCompiler.Compile(GeneratedSet, "InstructionSet/InstructionSet.zip");
+            Serializer.Serialize(GeneratedSet, "InstructionSet/InstructionSet.zip");
         }
 
         /* Private methods. */
