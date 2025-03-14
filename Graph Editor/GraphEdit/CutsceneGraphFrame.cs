@@ -95,16 +95,20 @@ namespace Rusty.CutsceneEditor
 
         public void Delete()
         {
-            // Remove all elements.
+            // Move all elements to the parent frame (if there is one).
             for (int i = 0; i < Elements.Count; i++)
             {
-                Elements[i].Frame = Frame;
+                Elements[i].Frame = null;
+                if (Frame != null)
+                    Frame.AddElement(Elements[i]);
             }
 
-            // Delete this frame.
+            // Remove from parent object.
             Node parent = GetParent();
             if (parent != null)
                 parent.RemoveChild(this);
+
+            // Call delete event.
             Deleted?.Invoke(this);
         }
 
