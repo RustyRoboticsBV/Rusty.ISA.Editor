@@ -1,15 +1,14 @@
 [remap]
 
-importer="csv_translation"
-type="Translation"
+importer="rusty.cutscenes.instruction_program_importer"
+type="Resource"
 uid="uid://diklybw223avu"
-valid=false
+path="res://.godot/imported/FrameTest.csv-1feecb863bab906770366ea3ccf86ace.tres"
 
 [deps]
 
 source_file="res://FrameTest.csv"
+dest_files=["res://.godot/imported/FrameTest.csv-1feecb863bab906770366ea3ccf86ace.tres"]
 
 [params]
 
-compress=true
-delimiter=0
