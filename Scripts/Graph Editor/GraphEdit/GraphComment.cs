@@ -1,14 +1,13 @@
 ﻿using Godot;
-using Rusty.Cutscenes;
-using Rusty.CutsceneEditor.Compiler;
+using Rusty.ISA;
+using Rusty.ISA.Editor.Compiler;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// A cutscene graph comment node.
+    /// A ISA graph comment node.
     /// </summary>
-    [GlobalClass]
-    public partial class CutsceneGraphComment : CutsceneGraphNode
+    public partial class GraphComment : GraphNode
     {
         /* Public properties. */
         public new CommentInspector Inspector
@@ -21,7 +20,7 @@ namespace Rusty.CutsceneEditor
         private RichTextLabel Label { get; set; }
 
         /* Constructors. */
-        public CutsceneGraphComment(CutsceneGraphEdit graphEdit)
+        public GraphComment(ProgramGraphEdit graphEdit)
             : base(graphEdit, graphEdit.InstructionSet[BuiltIn.CommentOpcode])
         {
             Color textColor = Definition.EditorNode.TextColor;

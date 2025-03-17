@@ -1,8 +1,8 @@
 ﻿using Godot;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 using Rusty.EditorUI;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
     /// A color parameter inspector.

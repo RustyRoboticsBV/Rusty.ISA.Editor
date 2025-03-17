@@ -1,14 +1,13 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
     /// The add node popup menu used by the graph editor.
     /// </summary>
-    [GlobalClass]
     public partial class AddNodePopup : PopupMenu
     {
         /* Public properties. */

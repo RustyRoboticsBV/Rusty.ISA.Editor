@@ -1,10 +1,10 @@
-﻿using Rusty.Cutscenes;
+﻿using Rusty.ISA;
 using System;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// A cutscene instruction parameter inspector.
+    /// A instruction parameter inspector.
     /// </summary>
     public abstract partial class ParameterInspector : Inspector
     {

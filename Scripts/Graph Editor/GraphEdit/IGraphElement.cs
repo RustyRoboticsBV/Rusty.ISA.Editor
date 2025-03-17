@@ -1,11 +1,11 @@
 ﻿using Godot;
 using System;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// An inspectable CutsceneGraphEdit element.
+    /// An inspectable GraphEdit element.
     /// </summary>
     public interface IGraphElement
     {
@@ -17,11 +17,11 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// The graph edit that this element is contained on.
         /// </summary>
-        public CutsceneGraphEdit GraphEdit { get; }
+        public ProgramGraphEdit GraphEdit { get; }
         /// <summary>
         /// The frame that this element is contained in (if any).
         /// </summary>
-        public CutsceneGraphFrame Frame { get; set; }
+        public GraphFrame Frame { get; set; }
 
         /// <summary>
         /// The instruction set that this element uses.

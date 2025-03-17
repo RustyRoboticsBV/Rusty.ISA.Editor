@@ -1,23 +1,22 @@
 ﻿using Godot;
-using Rusty.Cutscenes;
-using Rusty.CutsceneEditor.Compiler;
+using Rusty.ISA.Editor.Compiler;
 using System;
 using System.Collections.Generic;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// A cutscene graph frame.
+    /// A ISA graph frame.
     /// </summary>
-    public partial class CutsceneGraphFrame : GraphFrame, IGraphElement
+    public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     {
         /* Public properties. */
-        public CutsceneGraphEdit GraphEdit { get; private set; }
+        public ProgramGraphEdit GraphEdit { get; private set; }
         public InstructionSet InstructionSet => GraphEdit.InstructionSet;
         public InstructionDefinition Definition => InstructionSet[BuiltIn.FrameOpcode];
 
         public FrameInspector Inspector { get; private set; }
-        public CutsceneGraphFrame Frame { get; set; }
+        public GraphFrame Frame { get; set; }
 
         Inspector IGraphElement.Inspector => Inspector;
 
@@ -37,7 +36,7 @@ namespace Rusty.CutsceneEditor
         public event Action<IGraphElement> Deleted;
 
         /* Constructors. */
-        public CutsceneGraphFrame(CutsceneGraphEdit graphEdit, Vector2 positionOffset)
+        public GraphFrame(ProgramGraphEdit graphEdit, Vector2 positionOffset)
         {
             GraphEdit = graphEdit;
             PositionOffset = positionOffset;
@@ -58,7 +57,7 @@ namespace Rusty.CutsceneEditor
         }
 
         /* Public methods. */
-        public bool IsNestedIn(CutsceneGraphFrame frame)
+        public bool IsNestedIn(GraphFrame frame)
         {
             return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
         }

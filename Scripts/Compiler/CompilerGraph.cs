@@ -1,9 +1,9 @@
 ﻿using Rusty.Graphs;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
-    /// An extention of the graph class, tooled towards cutscene compilation/decompilation.
+    /// An extention of the graph class, tooled towards ISA compilation/decompilation.
     /// </summary>
     public class CompilerGraph : Graph<NodeData>
     {

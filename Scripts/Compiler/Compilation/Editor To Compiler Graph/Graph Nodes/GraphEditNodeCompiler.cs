@@ -1,8 +1,8 @@
 using Godot;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 using Rusty.Graphs;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     public abstract class GraphEditNodeCompiler
     {
@@ -11,7 +11,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /// Take a graph edit node, and convert it and its inspector data to a compiler node.
         /// Inputs and outputs are NOT added by this method!
         /// </summary>
-        public static CompilerNode Compile(CutsceneGraphInstruction graphNode)
+        public static CompilerNode Compile(GraphInstruction graphNode)
         {
             InstructionSet set = graphNode.InstructionSet;
             int x = Mathf.RoundToInt(graphNode.PositionOffset.X);

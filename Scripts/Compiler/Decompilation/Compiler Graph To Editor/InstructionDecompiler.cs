@@ -1,7 +1,7 @@
 ﻿using Godot;
 using Rusty.Graphs;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
     /// A generic instruction node decompiler.

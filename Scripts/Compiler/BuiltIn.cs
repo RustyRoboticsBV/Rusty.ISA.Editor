@@ -1,4 +1,4 @@
-﻿namespace Rusty.CutsceneEditor.Compiler
+﻿namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
     /// Built-in opcodes and parameter ids.

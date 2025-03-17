@@ -1,7 +1,7 @@
 ﻿using Godot;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     public abstract class GraphEditFrameCompiler
     {
@@ -20,7 +20,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Take a graph edit frame, and convert it and its inspector data to a compiler node.
         /// </summary>
-        public static CompilerNode Compile(CutsceneGraphFrame graphFrame)
+        public static CompilerNode Compile(GraphFrame graphFrame)
         {
             InstructionSet set = graphFrame.InstructionSet;
             int x = Mathf.RoundToInt(graphFrame.PositionOffset.X);

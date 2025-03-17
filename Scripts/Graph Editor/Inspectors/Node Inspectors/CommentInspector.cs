@@ -1,11 +1,11 @@
-﻿using Rusty.CutsceneEditor.Compiler;
-using Rusty.Cutscenes;
+﻿using Rusty.ISA.Editor.Compiler;
+using Rusty.ISA;
 using Rusty.EditorUI;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// A cutscene resource inspector.
+    /// A ISA resource inspector.
     /// </summary>
     public partial class CommentInspector : Inspector
     {

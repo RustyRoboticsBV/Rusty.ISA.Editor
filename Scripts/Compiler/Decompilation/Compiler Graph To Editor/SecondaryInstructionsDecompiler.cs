@@ -1,6 +1,6 @@
 ﻿using Rusty.Graphs;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     public abstract class SecondaryInstructionsDecompiler
     {

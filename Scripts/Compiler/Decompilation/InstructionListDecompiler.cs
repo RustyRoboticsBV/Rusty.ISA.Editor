@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Godot;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
-    /// Decompiles a list of cutscene instructions and outputs a compiler graph.
+    /// Decompiles a list of instructions and outputs a compiler graph.
     /// </summary>
     public abstract class InstructionListDecompiler
     {
         /* Public methods. */
         /// <summary>
-        /// Decompiles a list of cutscene instructions and outputs a compiler graph.
+        /// Decompiles a list of instructions and outputs a compiler graph.
         /// </summary>
         public static CompilerGraph Decompile(InstructionSet set, List<InstructionInstance> instructions)
         {

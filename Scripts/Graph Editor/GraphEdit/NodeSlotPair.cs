@@ -1,15 +1,15 @@
 ﻿using Godot;
 using System.Collections.Generic;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// An input/output pair element for cutscene graph nodes.
+    /// An input/output pair element for ISA graph nodes.
     /// </summary>
     public partial class NodeSlotPair : HBoxContainer
     {
         /* Public properties. */
-        public CutsceneGraphInstruction Node { get; private set; }
+        public GraphInstruction Node { get; private set; }
         public List<NodeSlotPair> Inputs { get; set; } = new();
         public NodeSlotPair Output { get; set; }
 
@@ -17,7 +17,7 @@ namespace Rusty.CutsceneEditor
         public Label RightText { get; private set; }
 
         /* Constructors. */
-        public NodeSlotPair(CutsceneGraphInstruction node)
+        public NodeSlotPair(GraphInstruction node)
         {
             SizeFlagsHorizontal = SizeFlags.ExpandFill;
 

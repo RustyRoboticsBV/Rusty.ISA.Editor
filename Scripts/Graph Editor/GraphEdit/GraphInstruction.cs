@@ -1,15 +1,13 @@
 ﻿using Godot;
 using Godot.Collections;
 using System.Collections.Generic;
-using Rusty.Cutscenes;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// A graph edit node representing a collection of cutscene instructions.
+    /// A graph edit node representing a collection of instructions.
     /// </summary>
-    [GlobalClass]
-    public partial class CutsceneGraphInstruction : CutsceneGraphNode
+    public partial class GraphInstruction : GraphNode
     {
         /* Public properties. */
         public new NodeInstructionInspector Inspector
@@ -28,7 +26,7 @@ namespace Rusty.CutsceneEditor
         /// <summary>
         /// Creates the editor for an instruction type in its default state.
         /// </summary>
-        public CutsceneGraphInstruction(CutsceneGraphEdit graphEdit, InstructionDefinition definition)
+        public GraphInstruction(ProgramGraphEdit graphEdit, InstructionDefinition definition)
             : base(graphEdit, definition)
         {
             if (definition == null)
@@ -231,7 +229,7 @@ namespace Rusty.CutsceneEditor
                 // Disconnect slot.
                 if (Slots[index].Output != null)
                 {
-                    CutsceneGraphEdit graph = GetParent() as CutsceneGraphEdit;
+                    ProgramGraphEdit graph = GetParent() as ProgramGraphEdit;
                     graph.DisconnectNode(Name, index, Slots[index].Output.Name, 0);
                 }
 

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Rusty.Csv;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
     /// Decompile a string of code into a list of instruction instances.

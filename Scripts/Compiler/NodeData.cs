@@ -1,7 +1,7 @@
 ﻿using System;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
     /// The data stored in a compiler graph node.

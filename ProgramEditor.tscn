@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://dofwqxu5phpon"]
 
-[ext_resource type="Script" path="res://Scripts/Graph Editor/CutsceneEditor.cs" id="1_jfu4d"]
-[ext_resource type="Script" path="res://Scripts/Graph Editor/GraphEdit/CutsceneGraphEdit.cs" id="3_mbpx3"]
-[ext_resource type="Script" path="res://Scripts/Graph Editor/Resizer/InspectorResizer.cs" id="3_pvjr1"]
-[ext_resource type="Resource" uid="uid://dnt3g5dpjm0pd" path="res://Built-In Instructions/InstructionSet.tres" id="4_ggl3d"]
+[ext_resource type="Script" path="res://Scripts/Graph Editor/ISAEditor.cs" id="1_vh6hk"]
+[ext_resource type="Resource" uid="uid://dnt3g5dpjm0pd" path="res://Built-In Instructions/InstructionSet.tres" id="2_6mtau"]
+[ext_resource type="Script" path="res://Scripts/Graph Editor/Resizer/InspectorResizer.cs" id="3_fkirs"]
+[ext_resource type="Script" path="res://Scripts/Graph Editor/GraphEdit/ProgramGraphEdit.cs" id="4_cmmha"]
 
 [node name="CutsceneEditor" type="VBoxContainer" node_paths=PackedStringArray("OpenButton", "OpenDialog", "SaveButton", "SaveDialog", "DebugCompileButton", "DebugDecompileButton", "Inspector", "GraphEdit")]
 anchors_preset = 15
@@ -11,8 +11,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_jfu4d")
-InstructionSet = ExtResource("4_ggl3d")
+script = ExtResource("1_vh6hk")
+InstructionSet = ExtResource("2_6mtau")
 OpenButton = NodePath("Buttons/HBoxContainer/Open")
 OpenDialog = NodePath("OpenDialog")
 SaveButton = NodePath("Buttons/HBoxContainer/Save")
@@ -82,7 +82,7 @@ layout_mode = 2
 
 [node name="InspectorResizer" type="VSeparator" parent="HBoxContainer" node_paths=PackedStringArray("Target")]
 layout_mode = 2
-script = ExtResource("3_pvjr1")
+script = ExtResource("3_fkirs")
 Target = NodePath("../Inspector")
 
 [node name="CutsceneGraphEdit" type="GraphEdit" parent="HBoxContainer" node_paths=PackedStringArray("InspectorWindow")]
@@ -90,7 +90,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 minimap_enabled = false
 show_menu = false
-script = ExtResource("3_mbpx3")
+script = ExtResource("4_cmmha")
 InspectorWindow = NodePath("../Inspector/ScrollContainer/Header/VBoxContainer")
 
 [node name="OpenDialog" type="FileDialog" parent="."]

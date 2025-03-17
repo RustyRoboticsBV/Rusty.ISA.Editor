@@ -1,7 +1,7 @@
 ﻿using System;
 using Rusty.Graphs;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
     /// A base class for rule inspector compilers.

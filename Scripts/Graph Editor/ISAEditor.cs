@@ -1,17 +1,16 @@
 #if TOOLS
 using Godot;
-using Rusty.Cutscenes;
-using Rusty.CutsceneEditor.Compiler;
-using Rusty.CutsceneEditor.InstructionSets;
-using Rusty.CutsceneImporter.InstructionSets;
+using Rusty.ISA.Editor.Compiler;
+using Rusty.ISA.Editor.InstructionSets;
+using Rusty.ISA.Importer.InstructionSets;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// The cutscene editor window. Contains a set of file buttons, an inspector and a graph edit.
+    /// The ISA editor window. Contains a set of file buttons, an inspector and a graph edit.
     /// </summary>
     [GlobalClass]
-    public partial class CutsceneEditor : VBoxContainer
+    public partial class ISAEditor : VBoxContainer
     {
         /* Public properties. */
         [Export] public InstructionSet InstructionSet { get; set; }
@@ -25,7 +24,7 @@ namespace Rusty.CutsceneEditor
 
         [Export] public VBoxContainer Inspector { get;  private set; }
 
-        [Export] public CutsceneGraphEdit GraphEdit { get; private set; }
+        [Export] public ProgramGraphEdit GraphEdit { get; private set; }
 
         /* Private methods. */
         private InstructionSet GeneratedSet { get; set; }

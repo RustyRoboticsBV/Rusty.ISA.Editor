@@ -1,10 +1,10 @@
-﻿using Rusty.Cutscenes;
+﻿using Rusty.ISA;
 using Rusty.EditorUI;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// A cutscene instruction inspector.
+    /// A instruction inspector.
     /// </summary>
     public partial class NodeInstructionInspector : InstructionInspector
     {

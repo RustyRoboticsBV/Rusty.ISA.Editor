@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Rusty.Cutscenes;
 using Rusty.Graphs;
-using Rusty.CutsceneImporter.InstructionDefinitions;
+using Rusty.ISA.Importer.InstructionDefinitions;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
     /// An instruction set metadata compiler.

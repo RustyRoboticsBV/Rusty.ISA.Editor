@@ -1,10 +1,10 @@
 ﻿using Rusty.Graphs;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
-    /// An extention of the node class, tooled towards cutscene compilation/decompilation.
+    /// An extention of the node class, tooled towards ISA compilation/decompilation.
     /// </summary>
     public class CompilerNode : RootNode<NodeData>
     {

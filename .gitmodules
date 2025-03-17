@@ -1,6 +1,3 @@
-[submodule "Submodules/Cutscenes"]
-	path = Submodules/Cutscenes
-	url = https://github.com/RustyRoboticsBV/Rusty.Cutscenes.git
 [submodule "Submodules/EditorUI"]
 	path = Submodules/EditorUI
 	url = https://github.com/RustyRoboticsBV/Rusty.EditorUI.git
@@ -13,6 +10,6 @@
 [submodule "Submodules/Csv"]
 	path = Submodules/Csv
 	url = https://github.com/RustyRoboticsBV/Rusty.Csv.git
-[submodule "addons/CutsceneImporter"]
-	path = addons/CutsceneImporter
-	url = https://github.com/RustyRoboticsBV/Rusty.CutsceneImporter.git
+[submodule "Submodules/ISA"]
+	path = Submodules/ISA
+	url = https://github.com/RustyRoboticsBV/Rusty.ISA.git

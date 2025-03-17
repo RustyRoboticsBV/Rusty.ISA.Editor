@@ -1,10 +1,10 @@
-using Rusty.Cutscenes;
+using Rusty.ISA;
 using Rusty.EditorUI;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
 	/// <summary>
-	/// A cutscene resource inspector.
+	/// A ISA resource inspector.
 	/// </summary>
 	public abstract partial class Inspector : ElementVBox
 	{
@@ -14,14 +14,14 @@ namespace Rusty.CutsceneEditor
 		/// </summary>
 		public InstructionSet InstructionSet { get; private set; }
 		/// <summary>
-		/// The cutscene resource visualized by this inspector.
+		/// The ISA resource visualized by this inspector.
 		/// </summary>
-		public CutsceneResource Resource { get; set; }
+		public InstructionResource Resource { get; set; }
 
         /* Constructors. */
         public Inspector() : base() { }
 
-		public Inspector(InstructionSet instructionSet, CutsceneResource resource) : base()
+		public Inspector(InstructionSet instructionSet, InstructionResource resource) : base()
 		{
 			InstructionSet = instructionSet;
 			Resource = resource;

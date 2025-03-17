@@ -2,7 +2,7 @@
 using Rusty.EditorUI;
 using Rusty.Xml;
 
-namespace Rusty.CutsceneEditor.Definitions
+namespace Rusty.ISA.Editor.Definitions
 {
     [GlobalClass]
     public partial class DefinitionEditor : ElementVBox

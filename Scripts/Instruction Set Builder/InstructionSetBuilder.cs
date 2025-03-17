@@ -1,11 +1,11 @@
 using Godot;
 using System.Collections.Generic;
 using System.IO;
-using Rusty.Cutscenes;
-using Rusty.CutsceneImporter;
-using Rusty.CutsceneImporter.InstructionDefinitions;
+using Rusty.ISA;
+using Rusty.ISA.Importer;
+using Rusty.ISA.Importer.InstructionDefinitions;
 
-namespace Rusty.CutsceneEditor.InstructionSets
+namespace Rusty.ISA.Editor.InstructionSets
 {
 	/// <summary>
 	/// A class that can combine an instruction set consisting of built-in instruction definitions with a folder containing

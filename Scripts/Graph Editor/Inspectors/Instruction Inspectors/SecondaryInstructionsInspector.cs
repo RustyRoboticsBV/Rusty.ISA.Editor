@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 using Rusty.EditorUI;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     public abstract partial class SecondaryInstructionsInspector : Inspector
     {

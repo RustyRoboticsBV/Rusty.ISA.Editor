@@ -1,18 +1,16 @@
 using Godot;
 using System;
-using Rusty.Cutscenes;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// A graph edit node representing a collection of cutscene instructions.
+    /// A graph edit node representing a collection of instructions.
     /// </summary>
-    [GlobalClass]
-    public abstract partial class CutsceneGraphNode : GraphNode, IGraphElement
+    public abstract partial class GraphNode : Godot.GraphNode, IGraphElement
     {
         /* Public properties. */
-        public CutsceneGraphEdit GraphEdit { get; private set; }
-        public CutsceneGraphFrame Frame { get; set; }
+        public ProgramGraphEdit GraphEdit { get; private set; }
+        public GraphFrame Frame { get; set; }
         public Inspector Inspector { get; protected set; }
 
         public InstructionSet InstructionSet => GraphEdit.InstructionSet;
@@ -31,7 +29,7 @@ namespace Rusty.CutsceneEditor
         public event Action<IGraphElement> Deleted;
 
         /* Constructors. */
-        public CutsceneGraphNode(CutsceneGraphEdit graphEdit, InstructionDefinition definition)
+        public GraphNode(ProgramGraphEdit graphEdit, InstructionDefinition definition)
         {
             GraphEdit = graphEdit;
             Definition = definition;

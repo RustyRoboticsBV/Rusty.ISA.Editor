@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Godot;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 using Rusty.Graphs;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
     /// Compile a graph edit into a code string.
@@ -12,8 +12,8 @@ namespace Rusty.CutsceneEditor.Compiler
     {
         /* Public methods. */
         /// <summary>
-        /// Compile a graph edit into a compiler graph that represents the cutscene program.
-        public static CompilerGraph Compile(CutsceneGraphEdit graphEdit)
+        /// Compile a graph edit into a compiler graph that represents the program.
+        public static CompilerGraph Compile(ProgramGraphEdit graphEdit)
         {
             InstructionSet set = graphEdit.InstructionSet;
 
@@ -36,7 +36,7 @@ namespace Rusty.CutsceneEditor.Compiler
             for (int i = 0; i < graphEdit.Nodes.Count; i++)
             {
                 // Get editor & compiler node.
-                CutsceneGraphInstruction fromEditorNode = graphEdit.Nodes[i];
+                GraphInstruction fromEditorNode = graphEdit.Nodes[i];
                 CompilerNode fromCompilerNode = graph[i];
 
                 // For each output slot...
@@ -49,7 +49,7 @@ namespace Rusty.CutsceneEditor.Compiler
                     // Else, connect nodes.
                     else
                     {
-                        CutsceneGraphInstruction toEditorNode = fromEditorNode.Slots[j].Output.Node;
+                        GraphInstruction toEditorNode = fromEditorNode.Slots[j].Output.Node;
                         int toNodeIndex = graphEdit.Nodes.IndexOf(toEditorNode);
                         CompilerNode toCompilerNode = graph[toNodeIndex];
 
@@ -85,7 +85,7 @@ namespace Rusty.CutsceneEditor.Compiler
         }
 
         /* Private methods. */
-        private static void AddFrameMember(CompilerNode node, IGraphElement element, CutsceneGraphEdit graphEdit)
+        private static void AddFrameMember(CompilerNode node, IGraphElement element, ProgramGraphEdit graphEdit)
         {
             if (element.Frame != null)
             {

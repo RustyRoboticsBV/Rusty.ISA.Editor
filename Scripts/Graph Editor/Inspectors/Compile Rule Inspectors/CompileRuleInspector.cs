@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 
-namespace Rusty.CutsceneEditor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
-    /// A cutscene instruction compile rule inspector.
+    /// A instruction compile rule inspector.
     /// </summary>
     public abstract partial class CompileRuleInspector : Inspector
     {

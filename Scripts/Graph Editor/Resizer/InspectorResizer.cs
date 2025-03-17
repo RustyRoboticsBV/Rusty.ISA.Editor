@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Rusty.Cutscenes.Editor
+namespace Rusty.ISA.Editor
 {
     /// <summary>
     /// A horizontal resizer for the inspector window.

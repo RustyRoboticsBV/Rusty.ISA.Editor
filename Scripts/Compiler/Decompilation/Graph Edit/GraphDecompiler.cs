@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using Rusty.Graphs;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
-    /// A class that can take a compiler graph and spawn cutscene graph edit nodes.
+    /// A class that can take a compiler graph and spawn ISA graph edit nodes.
     /// </summary>
     public abstract class GraphDecompiler
     {
         /* Public methods. */
-        public static void Spawn(CutsceneGraphEdit graphEdit, CompilerGraph graph)
+        public static void Spawn(ProgramGraphEdit graphEdit, CompilerGraph graph)
         {
             Dictionary<CompilerNode, IGraphElement> elementMap = new();
-            Dictionary<string, CutsceneGraphFrame> frameMap = new();
+            Dictionary<string, GraphFrame> frameMap = new();
             CompilerNode metadata = null;
 
             // Spawn nodes.
@@ -31,7 +31,7 @@ namespace Rusty.CutsceneEditor.Compiler
                         else
                         {
                             GD.PrintErr($"Encountered second metadata instruction at line #{i}. Only one metadata instruction is "
-                                + "allowed per cutscene program!");
+                                + "allowed per program!");
                         }
                         break;
                     case BuiltIn.NodeOpcode:
@@ -76,7 +76,7 @@ namespace Rusty.CutsceneEditor.Compiler
                 }
 
                 // If we're an instruction node...
-                if (element is CutsceneGraphInstruction editorNode)
+                if (element is GraphInstruction editorNode)
                 {
                     // Ensure enough slots on the editor node.
                     editorNode.EnsureSlots(node.Outputs.Count);
@@ -90,7 +90,7 @@ namespace Rusty.CutsceneEditor.Compiler
                         else if (toNode.IsEnd())
                             continue;
 
-                        graphEdit.ConnectNode(editorNode, j, elementMap[toNode] as CutsceneGraphInstruction);
+                        graphEdit.ConnectNode(editorNode, j, elementMap[toNode] as GraphInstruction);
                     }
                 }
             }
@@ -98,7 +98,7 @@ namespace Rusty.CutsceneEditor.Compiler
 
 
         /* Private methods. */
-        private static void SpawnInstruction(CutsceneGraphEdit graphEdit, CompilerNode node, int lineNumber,
+        private static void SpawnInstruction(ProgramGraphEdit graphEdit, CompilerNode node, int lineNumber,
             Dictionary<CompilerNode, IGraphElement> elementMap)
         {
             // Get instruction.
@@ -128,7 +128,7 @@ namespace Rusty.CutsceneEditor.Compiler
             catch { }
 
             // Spawn node.
-            CutsceneGraphInstruction editorNode = graphEdit.SpawnNode(mainInstruction.Data.Definition, new Vector2(x, y));
+            GraphInstruction editorNode = graphEdit.SpawnNode(mainInstruction.Data.Definition, new Vector2(x, y));
 
             // Fill inspector by decompiling sub-nodes.
             NodeInstructionInspector inspector = editorNode.Inspector;
@@ -146,7 +146,7 @@ namespace Rusty.CutsceneEditor.Compiler
             elementMap.Add(node, editorNode);
         }
 
-        private static void SpawnComment(CutsceneGraphEdit graphEdit, CompilerNode node,
+        private static void SpawnComment(ProgramGraphEdit graphEdit, CompilerNode node,
             Dictionary<CompilerNode, IGraphElement> elementMap)
         {
             // Get node position.
@@ -165,15 +165,15 @@ namespace Rusty.CutsceneEditor.Compiler
             catch { }
 
             // Spawn node.
-            CutsceneGraphComment editorComment = graphEdit.SpawnComment(new Vector2(x, y));
+            GraphComment editorComment = graphEdit.SpawnComment(new Vector2(x, y));
             editorComment.Inspector.CommentText = node.Data.GetArgument(BuiltIn.CommentText);
 
             // Add to element map.
             elementMap.Add(node, editorComment);
         }
 
-        private static void SpawnFrame(CutsceneGraphEdit graphEdit, CompilerNode node,
-            Dictionary<string, CutsceneGraphFrame> frameMap, Dictionary<CompilerNode, IGraphElement> elementMap)
+        private static void SpawnFrame(ProgramGraphEdit graphEdit, CompilerNode node,
+            Dictionary<string, GraphFrame> frameMap, Dictionary<CompilerNode, IGraphElement> elementMap)
         {
             // Get node position.
             float x = 0;
@@ -205,7 +205,7 @@ namespace Rusty.CutsceneEditor.Compiler
             catch { }
 
             // Spawn node.
-            CutsceneGraphFrame editorFrame = graphEdit.SpawnFrame(new Vector2(x, y));
+            GraphFrame editorFrame = graphEdit.SpawnFrame(new Vector2(x, y));
             editorFrame.Size = new Vector2(width, height);
             editorFrame.Inspector.TitleText = node.Data.GetArgument(BuiltIn.FrameTitle);
 

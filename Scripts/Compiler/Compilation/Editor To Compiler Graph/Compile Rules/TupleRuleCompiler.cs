@@ -1,7 +1,7 @@
-﻿using Rusty.Cutscenes;
+﻿using Rusty.ISA;
 using Rusty.Graphs;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
     /// A compiler that converts a tuple rule inspector into a graph node.

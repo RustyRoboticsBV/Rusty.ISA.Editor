@@ -1,7 +1,7 @@
 ﻿using Godot;
-using Rusty.Cutscenes;
+using Rusty.ISA;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     public abstract class GraphEditCommentCompiler
     {
@@ -9,7 +9,7 @@ namespace Rusty.CutsceneEditor.Compiler
         /// <summary>
         /// Take a graph edit comment node, and convert it and its inspector data to a compiler node.
         /// </summary>
-        public static CompilerNode Compile(CutsceneGraphComment graphNode)
+        public static CompilerNode Compile(GraphComment graphNode)
         {
             InstructionSet set = graphNode.InstructionSet;
             int x = Mathf.RoundToInt(graphNode.PositionOffset.X);

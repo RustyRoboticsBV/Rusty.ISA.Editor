@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Rusty.Graphs;
 
-namespace Rusty.CutsceneEditor.Compiler
+namespace Rusty.ISA.Editor.Compiler
 {
     /// <summary>
     /// A list of output information of a node.
