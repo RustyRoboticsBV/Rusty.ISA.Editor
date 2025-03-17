@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="CutsceneEditor"
-run/main_scene="res://ProgramEditor.tscn"
+config/name="ISA Editor"
+run/main_scene="res://Scenes/ProgramEditor.tscn"
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 

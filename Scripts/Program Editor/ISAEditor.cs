@@ -14,7 +14,6 @@ namespace Rusty.ISA.Editor
     {
         /* Public properties. */
         [Export] public InstructionSet InstructionSet { get; set; }
-
         [Export] public Button OpenButton { get; private set; }
         [Export] public FileDialog OpenDialog { get; private set; }
         [Export] public Button SaveButton { get; private set; }

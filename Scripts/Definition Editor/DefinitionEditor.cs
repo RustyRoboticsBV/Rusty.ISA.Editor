@@ -8,13 +8,22 @@ namespace Rusty.ISA.Editor.Definitions
     public partial class DefinitionEditor : ElementVBox
     {
         public LineField Opcode { get; private set; }
-        public ListElement Parameters { get; private set; }
-        public MultilineField Implementation { get; private set; }
 
+        public ListElement Parameters { get; private set; }
+
+        public LabelFoldout Implementation { get; private set; }
+        public ListElement Dependencies { get; private set; }
+        public MultilineField Members { get; private set; }
+        public MultilineField Initialize { get; private set; }
+        public MultilineField Execute { get; private set; }
+
+        public LabelFoldout Metadata { get; private set; }
+        public IconInspector Icon { get; private set; }
         public LineField DisplayName { get; private set; }
         public LineField Description { get; private set; }
         public LineField Category { get; private set; }
-        public LineField IconPath { get; private set; }
+
+        public EditorNodeInfoInspector EditorNodeInfo { get; private set; }
 
         protected override void Init()
         {
@@ -98,15 +107,63 @@ namespace Rusty.ISA.Editor.Definitions
             };
             left.Add(Opcode);
 
-            // Add implementation field.
+            // Add parameter list.
+            Parameters = new()
+            {
+                Template = new ParameterInspector()
+                {
+                    Name = "Parameter"
+                }
+            };
+            left.Add(Parameters);
+
+            // Add implementation section.
             Implementation = new()
             {
                 Name = "Implementation",
-                LabelText = "Implementation",
+                HeaderText = "Implementation",
                 Height = 512,
                 SizeFlagsVertical = SizeFlags.ExpandFill
             };
             right.Add(Implementation);
+
+            Dependencies = new()
+            {
+                Name = "Dependencies",
+                HeaderText = "Dependencies",
+                EntryText = "",
+                AddButtonText = "Add",
+                Template = new LineField()
+                {
+                    Name = "Dependency",
+                    LabelText = "Class Name"
+                }
+            };
+            Implementation.Add(Dependencies);
+
+            Initialize = new()
+            {
+                Name = "Initialize",
+                LabelText = "Initialize",
+                Height = 128
+            };
+            Implementation.Add(Initialize);
+
+            Execute = new()
+            {
+                Name = "Execute",
+                LabelText = "Execute",
+                Height = 128
+            };
+            Implementation.Add(Execute);
+
+            Members = new()
+            {
+                Name = "Members",
+                LabelText = "Members",
+                Height = 128
+            };
+            Implementation.Add(Members);
 
             // Add meta-data fields.
             left.Add(new HSeparatorElement() { Name = "Separator" });
@@ -132,24 +189,50 @@ namespace Rusty.ISA.Editor.Definitions
             };
             left.Add(Category);
 
-            IconPath = new()
+            Icon = new()
             {
                 Name = "IconPath",
-                LabelText = "Icon Path"
             };
-            left.Add(IconPath);
+            left.Add(Icon);
+
+            EditorNodeInfo = new()
+            {
+                Name = "EditorNodeInfo"
+            };
+            left.Add(EditorNodeInfo);
         }
 
         private void OnSave()
         {
+            DefinitionDescriptor args = new DefinitionDescriptor();
+
+            // Add opcode.
+            args.opcode = Opcode.Value;
+
+            // Add parameters.
+            for (int i = 0; i < Parameters.Count; i++)
+            {
+                ParameterInspector parameter = Parameters[i].GetAt(0) as ParameterInspector;
+                args.parameters.Add(parameter.Value);
+            }
+
+            // Add implementation.
+
+            // Add metadata.
+            args.displayName = DisplayName.Value;
+            args.description = Description.Value;
+            args.category = Category.Value;
+            args.iconPath = Icon.FilePath.Value;
+
             Xml.Element root = new("definition", "");
             root.AddChild(new Xml.Element("opcode", Opcode.Value));
-            root.AddChild(new Xml.Element("implementation", "\n" + Implementation.Value + "\n"));
+
+            root.AddChild(new Xml.Element("implementation", "\n" + Execute.Value + "\n"));
 
             root.AddChild(new Xml.Element("display_name", DisplayName.Value));
             root.AddChild(new Xml.Element("description", Description.Value));
             root.AddChild(new Xml.Element("category", Category.Value));
-            root.AddChild(new Xml.Element("icon", IconPath.Value));
+            root.AddChild(new Xml.Element("icon", Icon.FilePath.Value));
 
             Document document = new("Document", root);
 

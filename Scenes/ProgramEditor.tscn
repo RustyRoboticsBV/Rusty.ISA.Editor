@@ -1,0 +1,111 @@
+[gd_scene load_steps=5 format=3 uid="uid://dofwqxu5phpon"]
+
+[ext_resource type="Script" path="res://Scripts/Program Editor/ISAEditor.cs" id="1_vh6hk"]
+[ext_resource type="Resource" uid="uid://dnt3g5dpjm0pd" path="res://Built-In Instructions/InstructionSet.tres" id="2_6mtau"]
+[ext_resource type="Script" path="res://Scripts/Program Editor/Resizer/InspectorResizer.cs" id="3_fkirs"]
+[ext_resource type="Script" path="res://Scripts/Program Editor/GraphEdit/ProgramGraphEdit.cs" id="4_cmmha"]
+
+[node name="CutsceneEditor" type="VBoxContainer" node_paths=PackedStringArray("OpenButton", "OpenDialog", "SaveButton", "SaveDialog", "DebugCompileButton", "DebugDecompileButton", "Inspector", "GraphEdit")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vh6hk")
+InstructionSet = ExtResource("2_6mtau")
+OpenButton = NodePath("Buttons/HBoxContainer/Open")
+OpenDialog = NodePath("OpenDialog")
+SaveButton = NodePath("Buttons/HBoxContainer/Save")
+SaveDialog = NodePath("SaveDialog")
+DebugCompileButton = NodePath("Buttons/HBoxContainer/DebugCompile")
+DebugDecompileButton = NodePath("Buttons/HBoxContainer/DebugDecompile")
+Inspector = NodePath("HBoxContainer/Inspector/ScrollContainer/Header/VBoxContainer")
+GraphEdit = NodePath("HBoxContainer/CutsceneGraphEdit")
+
+[node name="Buttons" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Buttons"]
+layout_mode = 2
+
+[node name="Open" type="Button" parent="Buttons/HBoxContainer"]
+layout_mode = 2
+text = "Open"
+
+[node name="Save" type="Button" parent="Buttons/HBoxContainer"]
+layout_mode = 2
+text = "Save"
+
+[node name="DebugCompile" type="Button" parent="Buttons/HBoxContainer"]
+layout_mode = 2
+text = "Debug Compile"
+
+[node name="DebugDecompile" type="Button" parent="Buttons/HBoxContainer"]
+layout_mode = 2
+text = "Debug Decompile"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Inspector" type="MarginContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+
+[node name="Background" type="ColorRect" parent="HBoxContainer/Inspector"]
+layout_mode = 2
+color = Color(0.219608, 0.219608, 0.219608, 1)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/Inspector"]
+layout_mode = 2
+
+[node name="Header" type="MarginContainer" parent="HBoxContainer/Inspector/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Inspector/ScrollContainer/Header"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Inspector/ScrollContainer/Header/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Inspector"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/Inspector/ScrollContainer/Header/VBoxContainer"]
+layout_mode = 2
+
+[node name="InspectorResizer" type="VSeparator" parent="HBoxContainer" node_paths=PackedStringArray("Target")]
+layout_mode = 2
+script = ExtResource("3_fkirs")
+Target = NodePath("../Inspector")
+
+[node name="CutsceneGraphEdit" type="GraphEdit" parent="HBoxContainer" node_paths=PackedStringArray("InspectorWindow")]
+layout_mode = 2
+size_flags_horizontal = 3
+minimap_enabled = false
+show_menu = false
+script = ExtResource("4_cmmha")
+InspectorWindow = NodePath("../Inspector/ScrollContainer/Header/VBoxContainer")
+
+[node name="OpenDialog" type="FileDialog" parent="."]
+auto_translate_mode = 1
+title = "Open a File"
+initial_position = 1
+size = Vector2i(700, 400)
+ok_button_text = "Open"
+file_mode = 0
+
+[node name="SaveDialog" type="FileDialog" parent="."]
+auto_translate_mode = 1
+initial_position = 1
+size = Vector2i(700, 400)
+ok_button_text = "Save"
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
