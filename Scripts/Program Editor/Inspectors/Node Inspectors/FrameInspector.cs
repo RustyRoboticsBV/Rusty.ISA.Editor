@@ -69,7 +69,7 @@ namespace Rusty.ISA.Editor
         {
             base.Init();
 
-            TextParameter titleParameter = Definition.Parameters[Definition.GetParameterIndex(BuiltIn.FrameTitle)] as TextParameter;
+            TextlineParameter titleParameter = Definition.Parameters[Definition.GetParameterIndex(BuiltIn.FrameTitle)] as TextlineParameter;
             ColorParameter colorParameter = Definition.Parameters[Definition.GetParameterIndex(BuiltIn.FrameColor)] as ColorParameter;
             Add(new LabeledIcon()
             {

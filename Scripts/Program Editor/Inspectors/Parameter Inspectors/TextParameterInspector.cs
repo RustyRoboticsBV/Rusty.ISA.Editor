@@ -6,15 +6,15 @@ namespace Rusty.ISA.Editor
     /// <summary>
     /// A line parameter inspector.
     /// </summary>
-    public partial class TextParameterInspector : ParameterInspector
+    public partial class TextlineParameterInspector : ParameterInspector
     {
         /* Public properties. */
         /// <summary>
         /// The parameter definition visualized by this inspector.
         /// </summary>
-        public new TextParameter Definition
+        public new TextlineParameter Definition
         {
-            get => base.Definition as TextParameter;
+            get => base.Definition as TextlineParameter;
             set => base.Definition = value;
         }
         /// <summary>
@@ -35,25 +35,25 @@ namespace Rusty.ISA.Editor
         private LineField LineField { get; set; }
 
         /* Constructors. */
-        public TextParameterInspector() : base() { }
+        public TextlineParameterInspector() : base() { }
 
-        public TextParameterInspector(InstructionSet instructionSet, TextParameter parameter)
+        public TextlineParameterInspector(InstructionSet instructionSet, TextlineParameter parameter)
             : base(instructionSet, parameter)
         {
             LineField.Value = parameter.DefaultValue;
         }
 
-        public TextParameterInspector(TextParameterInspector other) : base(other) { }
+        public TextlineParameterInspector(TextlineParameterInspector other) : base(other) { }
 
         /* Public methods. */
         public override Element Duplicate()
         {
-            return new TextParameterInspector(this);
+            return new TextlineParameterInspector(this);
         }
 
         public override bool CopyStateFrom(Element other)
         {
-            if (base.CopyStateFrom(other) && other is TextParameterInspector otherInspector)
+            if (base.CopyStateFrom(other) && other is TextlineParameterInspector otherInspector)
             {
                 LineField = GetAt(0) as LineField;
                 return true;
@@ -68,7 +68,7 @@ namespace Rusty.ISA.Editor
             base.Init();
 
             // Set name.
-            Name = $"TextParameter ({Definition.ID})";
+            Name = $"TextlineParameter ({Definition.ID})";
 
             // Add line field.
             LineField = new();

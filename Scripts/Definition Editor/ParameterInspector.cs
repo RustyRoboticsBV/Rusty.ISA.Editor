@@ -54,7 +54,7 @@ namespace Rusty.ISA.Editor.Definitions
                     case "Char":
                         return new CharParameter(ID.Value, DisplayName.Value, Description.Value, DefaultChar.Value);
                     case "Text":
-                        return new TextParameter(ID.Value, DisplayName.Value, Description.Value, DefaultText.Value);
+                        return new TextlineParameter(ID.Value, DisplayName.Value, Description.Value, DefaultText.Value);
                     case "Multiline":
                         return new MultilineParameter(ID.Value, DisplayName.Value, Description.Value, DefaultMultiline.Value);
                     case "Color":
@@ -74,37 +74,47 @@ namespace Rusty.ISA.Editor.Definitions
                 switch (value)
                 {
                     case BoolParameter @bool:
+                        Type.Value = 0;
                         DefaultBool.Value = @bool.DefaultValue;
                         break;
                     case IntParameter @int:
+                        Type.Value = 1;
                         DefaultInt.Value = @int.DefaultValue;
                         break;
                     case IntSliderParameter islider:
+                        Type.Value = 2;
                         DefaultInt.Value = islider.DefaultValue;
                         MinInt.Value = islider.MinValue;
                         MaxInt.Value = islider.MaxValue;
                         break;
                     case FloatParameter @float:
+                        Type.Value = 3;
                         DefaultFloat.Value = @float.DefaultValue;
                         break;
                     case FloatSliderParameter fslider:
+                        Type.Value = 4;
                         DefaultFloat.Value = fslider.DefaultValue;
                         MinFloat.Value = fslider.MinValue;
                         MaxFloat.Value = fslider.MaxValue;
                         break;
                     case CharParameter @char:
+                        Type.Value = 5;
                         DefaultChar.Value = @char.DefaultValue;
                         break;
-                    case TextParameter text:
+                    case TextlineParameter text:
+                        Type.Value = 6;
                         DefaultText.Value = text.DefaultValue;
                         break;
                     case MultilineParameter multiline:
+                        Type.Value = 7;
                         DefaultMultiline.Value = multiline.DefaultValue;
                         break;
                     case ColorParameter color:
+                        Type.Value = 8;
                         DefaultColor.Value = color.DefaultValue;
                         break;
                     case OutputParameter output:
+                        Type.Value = 9;
                         RemoveDefault.Value = output.RemoveDefaultOutput;
                         PreviewArgument.Value = output.UseArgumentAsPreview;
                         break;

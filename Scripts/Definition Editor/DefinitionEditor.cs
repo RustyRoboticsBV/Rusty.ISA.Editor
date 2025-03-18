@@ -1,6 +1,6 @@
 ﻿using Godot;
 using Rusty.EditorUI;
-using Rusty.Xml;
+using System.Xml;
 
 namespace Rusty.ISA.Editor.Definitions
 {
@@ -11,11 +11,7 @@ namespace Rusty.ISA.Editor.Definitions
 
         public ListElement Parameters { get; private set; }
 
-        public LabelFoldout Implementation { get; private set; }
-        public ListElement Dependencies { get; private set; }
-        public MultilineField Members { get; private set; }
-        public MultilineField Initialize { get; private set; }
-        public MultilineField Execute { get; private set; }
+        public ImplementationInspector Implementation { get; private set; }
 
         public LabelFoldout Metadata { get; private set; }
         public IconInspector Icon { get; private set; }
@@ -31,71 +27,44 @@ namespace Rusty.ISA.Editor.Definitions
             base.Init();
 
             // Create containers.
-            ElementHBox buttons = new()
-            {
-                Name = "Buttons"
-            };
+            ElementHBox buttons = new();
             Add(buttons);
 
             Add(new HSeparatorElement() { Name = "Separator" });
 
-            ElementHBox hbox = new()
-            {
-                Name = "HBox"
-            };
+            ElementHBox hbox = new();
             Add(hbox);
 
-            ElementVBox left = new()
-            {
-                Name = "Left"
-            };
+            ElementVBox left = new();
             hbox.Add(left);
 
-            ElementVBox right = new()
-            {
-                Name = "Right"
-            };
+            ElementVBox right = new();
             right.SizeFlagsVertical = SizeFlags.ExpandFill;
             hbox.Add(right);
 
             // Add button.
-            ButtonElement saveButton = new()
-            {
-                Name = "SaveButton",
-                ButtonText = "Save"
-            };
+            ButtonElement saveButton = new();
+            saveButton.ButtonText = "Save";
             saveButton.Pressed += OnSave;
             buttons.Add(saveButton);
 
-            ButtonElement saveAsButton = new()
-            {
-                Name = "SaveAsButton",
-                ButtonText = "Save As"
-            };
+            ButtonElement saveAsButton = new();
+            saveButton.ButtonText = "Save As";
             saveAsButton.Pressed += OnSave;
             buttons.Add(saveAsButton);
 
-            ButtonElement saveDebugButton = new()
-            {
-                Name = "SaveDebugButton",
-                ButtonText = "Paste To Clipboard"
-            };
+            ButtonElement saveDebugButton = new();
+            saveDebugButton.ButtonText = "Paste To Clipboard";
             saveDebugButton.Pressed += OnSave;
             buttons.Add(saveDebugButton);
 
-            ButtonElement loadButton = new()
-            {
-                Name = "OpenButton",
-                ButtonText = "Open"
-            };
+            ButtonElement loadButton = new();
+            loadButton.ButtonText = "Open";
             loadButton.Pressed += OnOpen;
             buttons.Add(loadButton);
 
-            ButtonElement loadDebugButton = new()
-            {
-                Name = "OpenDebugButton",
-                ButtonText = "Load From Clipboard"
-            };
+            ButtonElement loadDebugButton = new();
+            loadDebugButton.ButtonText = "Load From Clipboard";
             loadDebugButton.Pressed += OnOpen;
             buttons.Add(loadDebugButton);
 
@@ -118,52 +87,8 @@ namespace Rusty.ISA.Editor.Definitions
             left.Add(Parameters);
 
             // Add implementation section.
-            Implementation = new()
-            {
-                Name = "Implementation",
-                HeaderText = "Implementation",
-                Height = 512,
-                SizeFlagsVertical = SizeFlags.ExpandFill
-            };
+            Implementation = new();
             right.Add(Implementation);
-
-            Dependencies = new()
-            {
-                Name = "Dependencies",
-                HeaderText = "Dependencies",
-                EntryText = "",
-                AddButtonText = "Add",
-                Template = new LineField()
-                {
-                    Name = "Dependency",
-                    LabelText = "Class Name"
-                }
-            };
-            Implementation.Add(Dependencies);
-
-            Initialize = new()
-            {
-                Name = "Initialize",
-                LabelText = "Initialize",
-                Height = 128
-            };
-            Implementation.Add(Initialize);
-
-            Execute = new()
-            {
-                Name = "Execute",
-                LabelText = "Execute",
-                Height = 128
-            };
-            Implementation.Add(Execute);
-
-            Members = new()
-            {
-                Name = "Members",
-                LabelText = "Members",
-                Height = 128
-            };
-            Implementation.Add(Members);
 
             // Add meta-data fields.
             left.Add(new HSeparatorElement() { Name = "Separator" });
@@ -217,21 +142,68 @@ namespace Rusty.ISA.Editor.Definitions
             }
 
             // Add implementation.
+            descriptor.Implementation = Implementation.Value;
 
             // Add metadata.
+            descriptor.IconPath = Icon.FilePath.Value;
             descriptor.DisplayName = DisplayName.Value;
             descriptor.Description = Description.Value;
             descriptor.Category = Category.Value;
-            descriptor.IconPath = Icon.FilePath.Value;
 
             // Add editor node.
             if (EditorNodeInfo.Foldout.IsOpen)
                 descriptor.EditorNodeInfo = new(EditorNodeInfo.Value);
 
+            // Add preview terms.
+
+            // Add pre-instructions.
+
+            // Add post-instructions.
 
             GD.Print(DefinitionSerializer.Serialize(descriptor));
         }
 
-        private void OnOpen() { }
+        private void OnOpen()
+        {
+            // Get xml from clipboard.
+            string xml = DisplayServer.ClipboardGet();
+
+            // Create XML document.
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xml);
+
+            // Create definition descriptor.
+            InstructionDefinitionDescriptor descriptor = new(xmlDoc);
+
+            // Load opcode.
+            Opcode.Value = descriptor.Opcode;
+
+            // Load parameters.
+            foreach (var parameter in descriptor.Parameters)
+            {
+                Parameters.Add();
+                ParameterInspector inspector = Parameters[^1].GetAt(0) as ParameterInspector;
+                inspector.Value = parameter.Generate();
+            }
+
+            // Load implementation.
+            Implementation.Value = descriptor.Implementation;
+
+            // Load metadata.
+            DisplayName.Value = descriptor.DisplayName;
+            Description.Value = descriptor.Description;
+            Category.Value = descriptor.Category;
+            Icon.FilePath.Value = descriptor.IconPath;
+
+            // Load editor node.
+            if (descriptor.EditorNodeInfo != null)
+                EditorNodeInfo.Value = descriptor.EditorNodeInfo.Generate();
+
+            // Load preview terms.
+
+            // Load pre-instructions.
+
+            // Load post-instructions.
+        }
     }
 }

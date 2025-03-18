@@ -14,7 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://nyag7iauyi0f" path="res://Built-In Instructions/IconINS.bmp" id="11_vnhvg"]
 [ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconMTA.bmp" id="12_nbvet"]
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/TextParameter.cs" id="12_rklps"]
+[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/TextlineParameter.cs" id="12_rklps"]
 [ext_resource type="Texture2D" uid="uid://d06v0b1l2xkth" path="res://Built-In Instructions/IconOPT.bmp" id="12_y4agh"]
 [ext_resource type="Texture2D" uid="uid://bn1xqf4r0frab" path="res://Built-In Instructions/IconDEF.bmp" id="13_y5iqg"]
 [ext_resource type="Texture2D" uid="uid://csuae1j5ge1uj" path="res://Built-In Instructions/IconCHO.bmp" id="14_42hs7"]

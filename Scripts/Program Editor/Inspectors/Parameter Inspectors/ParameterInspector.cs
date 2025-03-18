@@ -48,8 +48,8 @@ namespace Rusty.ISA.Editor
                     return new IntSliderParameterInspector(instructionSet, intSliderParameter);
                 case FloatSliderParameter floatSliderParameter:
                     return new FloatSliderParameterInspector(instructionSet, floatSliderParameter);
-                case TextParameter TextParameter:
-                    return new TextParameterInspector(instructionSet, TextParameter);
+                case TextlineParameter TextlineParameter:
+                    return new TextlineParameterInspector(instructionSet, TextlineParameter);
                 case MultilineParameter multilineParameter:
                     return new MultilineParameterInspector(instructionSet, multilineParameter);
                 case ColorParameter colorParameter:

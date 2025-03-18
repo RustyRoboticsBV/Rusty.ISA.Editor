@@ -105,8 +105,8 @@ namespace Rusty.ISA.Editor.Compiler
                 case CharParameter:
                     type = Keywords.CharParameter;
                     break;
-                case TextParameter:
-                    type = Keywords.TextParameter;
+                case TextlineParameter:
+                    type = Keywords.TextlineParameter;
                     break;
                 case MultilineParameter:
                     type = Keywords.MultilineParameter;

@@ -80,8 +80,8 @@ namespace Rusty.ISA.Importer.InstructionDefinitions
                             GetCharChild(element, Keywords.DefaultValue)
                         ));
                         break;
-                    case Keywords.TextParameter:
-                        args.parameters.Add(new TextParameter(GetId(element),
+                    case Keywords.TextlineParameter:
+                        args.parameters.Add(new TextlineParameter(GetId(element),
                             GetStringChild(element, Keywords.DisplayName),
                             GetStringChild(element, Keywords.Description),
                             GetStringChild(element, Keywords.DefaultValue)

@@ -98,9 +98,9 @@ namespace Rusty.ISA.Importer.InstructionDefinitions
                     element.Name = Keywords.CharParameter;
                     element.AddChild(new Element(Keywords.DefaultValue, charParameter.DefaultValue.ToString()));
                     break;
-                case TextParameter TextParameter:
-                    element.Name = Keywords.TextParameter;
-                    element.AddChild(new Element(Keywords.DefaultValue, TextParameter.DefaultValue.ToString()));
+                case TextlineParameter TextlineParameter:
+                    element.Name = Keywords.TextlineParameter;
+                    element.AddChild(new Element(Keywords.DefaultValue, TextlineParameter.DefaultValue.ToString()));
                     break;
                 case MultilineParameter multilineParameter:
                     element.Name = Keywords.MultilineParameter;

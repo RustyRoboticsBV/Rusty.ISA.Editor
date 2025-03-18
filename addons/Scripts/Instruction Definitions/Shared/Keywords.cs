@@ -20,7 +20,7 @@
         public const string FloatParameter = "float";
         public const string FloatSliderParameter = "fslider";
         public const string CharParameter = "char";
-        public const string TextParameter = "text";
+        public const string TextlineParameter = "text";
         public const string MultilineParameter = "multiline";
         public const string ColorParameter = "color";
         public const string OutputParameter = "output";
