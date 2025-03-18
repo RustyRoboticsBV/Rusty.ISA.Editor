@@ -43,7 +43,7 @@ namespace Rusty.ISA.Importer.InstructionSets
 
                 // Add definition file to ZIP archive.
                 packer.StartFile($"{category}/{opcode}/{Keywords.DefinitionFilename}");
-                Document doc = DefinitionSerializer.Serialize(def);
+                Document doc = null;//DefinitionSerializer.Serialize(def);
                 try
                 {
                     doc.Root.GetChild(DefinitionKeywords.Icon).InnerText = $"{Keywords.IconFilename}";

@@ -204,52 +204,32 @@ namespace Rusty.ISA.Editor.Definitions
 
         private void OnSave()
         {
-            DefinitionDescriptor args = new DefinitionDescriptor();
+            InstructionDefinitionDescriptor descriptor = new();
 
             // Add opcode.
-            args.opcode = Opcode.Value;
+            descriptor.Opcode = Opcode.Value;
 
             // Add parameters.
             for (int i = 0; i < Parameters.Count; i++)
             {
                 ParameterInspector parameter = Parameters[i].GetAt(0) as ParameterInspector;
-                args.parameters.Add(parameter.Value);
+                descriptor.Parameters.Add(ParameterDescriptor.Create(parameter.Value));
             }
 
             // Add implementation.
 
             // Add metadata.
-            args.displayName = DisplayName.Value;
-            args.description = Description.Value;
-            args.category = Category.Value;
-            args.iconPath = Icon.FilePath.Value;
+            descriptor.DisplayName = DisplayName.Value;
+            descriptor.Description = Description.Value;
+            descriptor.Category = Category.Value;
+            descriptor.IconPath = Icon.FilePath.Value;
 
-            Xml.Element root = new("definition", "");
-            root.AddChild(new Xml.Element("opcode", Opcode.Value));
+            // Add editor node.
+            if (EditorNodeInfo.Foldout.IsOpen)
+                descriptor.EditorNodeInfo = new(EditorNodeInfo.Value);
 
-            root.AddChild(new Xml.Element("implementation", "\n" + Execute.Value + "\n"));
 
-            root.AddChild(new Xml.Element("display_name", DisplayName.Value));
-            root.AddChild(new Xml.Element("description", Description.Value));
-            root.AddChild(new Xml.Element("category", Category.Value));
-            root.AddChild(new Xml.Element("icon", Icon.FilePath.Value));
-
-            Document document = new("Document", root);
-
-            GD.Print(document.GenerateXml());
-
-            /*string xml = "<definition>";
-            xml += $"\n <opcode>{Opcode.Value}</opcode>";
-            xml += $"\n <implementation>\n{Implementation.Value}\n </implementation>";
-
-            xml += $"\n\n <!-- Meta-data -->";
-            xml += $"\n <display_name>{DisplayName.Value}</display_name>";
-            xml += $"\n <description>{Description.Value}</description>";
-            xml += $"\n <category>{Category.Value}</category>";
-            xml += $"\n <icon>{IconPath.Value}</icon>";
-            xml += "\n</definition>";
-
-            System.IO.File.WriteAllText("file.xml", xml);*/
+            GD.Print(DefinitionSerializer.Serialize(descriptor));
         }
 
         private void OnOpen() { }

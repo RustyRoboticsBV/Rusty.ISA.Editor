@@ -180,9 +180,6 @@ namespace Rusty.ISA.Editor.Definitions
             DefaultColor.Visible = Type.Value == 8;
             RemoveDefault.Visible = Type.Value == 9;
             PreviewArgument.Visible = Type.Value == 9;
-
-            GD.Print(GetPath() + " " + DefaultBool.Visible + " "  + DefaultInt.Visible + " " + DefaultFloat.Visible + " " + DefaultChar.Visible
-                + " " + DefaultText.Visible + " " + DefaultMultiline.Visible + " " + DefaultColor.Visible);
         }
 
         /* Protected methods. */
