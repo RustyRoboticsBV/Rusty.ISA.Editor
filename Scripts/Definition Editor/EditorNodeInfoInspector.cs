@@ -17,7 +17,7 @@ namespace Rusty.ISA.Editor.Definitions
         public ColorField MainColor { get; private set; }
         public ColorField TextColor { get; private set; }
 
-        public EditorNodeInfo Value
+        public EditorNodeInfoDescriptor Value
         {
             get
             {
@@ -28,6 +28,7 @@ namespace Rusty.ISA.Editor.Definitions
             }
             set
             {
+                GD.Print(value);
                 if (value != null)
                 {
                     Foldout.IsOpen = true;

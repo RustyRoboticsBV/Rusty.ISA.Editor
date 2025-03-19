@@ -1,48 +1,90 @@
 ﻿using Godot;
-using Rusty.EditorUI;
 using System.Xml;
+using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor.Definitions
 {
     [GlobalClass]
-    public partial class DefinitionEditor : ElementVBox
+    public partial class DefinitionEditor : VBoxContainer
     {
+        /* Public properties. */
         public LineField Opcode { get; private set; }
 
-        public ListElement Parameters { get; private set; }
+        public TabBar TabBar { get; private set; }
 
-        public ImplementationInspector Implementation { get; private set; }
+        public ParameterBox Parameters { get; private set; }
 
-        public LabelFoldout Metadata { get; private set; }
+        public ImplementationBox Implementation { get; private set; }
+
+        public VBoxContainer Metadata { get; private set; }
         public IconInspector Icon { get; private set; }
         public LineField DisplayName { get; private set; }
-        public LineField Description { get; private set; }
+        public MultilineField Description { get; private set; }
         public LineField Category { get; private set; }
 
         public EditorNodeInfoInspector EditorNodeInfo { get; private set; }
 
-        protected override void Init()
+        /* Godot overrides. */
+        public override void _Ready()
         {
-            // Base vbox init.
-            base.Init();
+            AddButtons();
 
+            Opcode = new LineField() { LabelText = "Opcode" };
+            AddChild(Opcode);
+
+            TabBar = new();
+            TabBar.AddTab("Parameters");
+            TabBar.AddTab("Implementation");
+            TabBar.AddTab("Metadata");
+            TabBar.AddTab("Editor Node");
+            TabBar.AddTab("Preview Terms");
+            TabBar.AddTab("Pre-Instructions");
+            TabBar.AddTab("Post-Instructions");
+            AddChild(TabBar);
+
+            ScrollContainer scroll = new();
+            scroll.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            scroll.SizeFlagsVertical = SizeFlags.ExpandFill;
+            AddChild(scroll);
+
+            Parameters = new();
+            scroll.AddChild(Parameters);
+
+            Implementation = new();
+            scroll.AddChild(Implementation);
+
+            Metadata = new();
+            Metadata.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            scroll.AddChild(Metadata);
+            DisplayName = new() { LabelText = "Display Name" };
+            Metadata.AddChild(DisplayName);
+            Description = new() { LabelText = "Description", Height = 128 };
+            Metadata.AddChild(Description);
+            Category = new() { LabelText = "Category" };
+            Metadata.AddChild(Category);
+            Icon = new();
+            Metadata.AddChild(Icon);
+
+            EditorNodeInfo = new();
+            scroll.AddChild(EditorNodeInfo);
+        }
+
+        public override void _Process(double delta)
+        {
+            Parameters.Visible = TabBar.CurrentTab == 0;
+            Implementation.Visible = TabBar.CurrentTab == 1;
+            Metadata.Visible = TabBar.CurrentTab == 2;
+            EditorNodeInfo.Visible = TabBar.CurrentTab == 3;
+        }
+
+        /* Private methods. */
+        private void AddButtons()
+        {
             // Create containers.
             ElementHBox buttons = new();
-            Add(buttons);
+            AddChild(buttons);
 
-            Add(new HSeparatorElement() { Name = "Separator" });
-
-            ElementHBox hbox = new();
-            Add(hbox);
-
-            ElementVBox left = new();
-            hbox.Add(left);
-
-            ElementVBox right = new();
-            right.SizeFlagsVertical = SizeFlags.ExpandFill;
-            hbox.Add(right);
-
-            // Add button.
+            // Add buttons.
             ButtonElement saveButton = new();
             saveButton.ButtonText = "Save";
             saveButton.Pressed += OnSave;
@@ -68,66 +110,11 @@ namespace Rusty.ISA.Editor.Definitions
             loadDebugButton.Pressed += OnOpen;
             buttons.Add(loadDebugButton);
 
-            // Add opcode field.
-            Opcode = new()
-            {
-                Name = "Opcode",
-                LabelText = "Opcode"
-            };
-            left.Add(Opcode);
-
-            // Add parameter list.
-            Parameters = new()
-            {
-                Template = new ParameterInspector()
-                {
-                    Name = "Parameter"
-                }
-            };
-            left.Add(Parameters);
-
-            // Add implementation section.
-            Implementation = new();
-            right.Add(Implementation);
-
-            // Add meta-data fields.
-            left.Add(new HSeparatorElement() { Name = "Separator" });
-
-            DisplayName = new()
-            {
-                Name = "DisplayName",
-                LabelText = "Display Name"
-            };
-            left.Add(DisplayName);
-
-            Description = new()
-            {
-                Name = "Description",
-                LabelText = "Description"
-            };
-            left.Add(Description);
-
-            Category = new()
-            {
-                Name = "Category",
-                LabelText = "Category"
-            };
-            left.Add(Category);
-
-            Icon = new()
-            {
-                Name = "IconPath",
-            };
-            left.Add(Icon);
-
-            EditorNodeInfo = new()
-            {
-                Name = "EditorNodeInfo"
-            };
-            left.Add(EditorNodeInfo);
+            AddChild(new HSeparatorElement());
         }
 
-        private void OnSave()
+
+        private InstructionDefinitionDescriptor Compile()
         {
             InstructionDefinitionDescriptor descriptor = new();
 
@@ -135,10 +122,9 @@ namespace Rusty.ISA.Editor.Definitions
             descriptor.Opcode = Opcode.Value;
 
             // Add parameters.
-            for (int i = 0; i < Parameters.Count; i++)
+            for (int i = 0; i < Parameters.Parameters.Count; i++)
             {
-                ParameterInspector parameter = Parameters[i].GetAt(0) as ParameterInspector;
-                descriptor.Parameters.Add(ParameterDescriptor.Create(parameter.Value));
+                descriptor.Parameters.Add(Parameters.Parameters[i].Value);
             }
 
             // Add implementation.
@@ -151,8 +137,7 @@ namespace Rusty.ISA.Editor.Definitions
             descriptor.Category = Category.Value;
 
             // Add editor node.
-            if (EditorNodeInfo.Foldout.IsOpen)
-                descriptor.EditorNodeInfo = new(EditorNodeInfo.Value);
+            descriptor.EditorNodeInfo = EditorNodeInfo.Value;
 
             // Add preview terms.
 
@@ -160,7 +145,40 @@ namespace Rusty.ISA.Editor.Definitions
 
             // Add post-instructions.
 
-            GD.Print(DefinitionSerializer.Serialize(descriptor));
+            return descriptor;
+        }
+
+        private void Load(InstructionDefinitionDescriptor descriptor)
+        {
+            // Load opcode.
+            Opcode.Value = descriptor.Opcode;
+
+            // Load parameters.
+            Parameters.Set(descriptor.Parameters);
+
+            // Load implementation.
+            Implementation.Value = descriptor.Implementation;
+
+            // Load metadata.
+            Icon.FilePath.Value = descriptor.IconPath;
+            DisplayName.Value = descriptor.DisplayName;
+            Description.Value = descriptor.Description;
+            Category.Value = descriptor.Category;
+
+            // Load editor node.
+            EditorNodeInfo.Value = descriptor.EditorNodeInfo;
+
+            // Load preview terms.
+
+            // Load pre-instructions.
+
+            // Load post-instructions.
+        }
+
+
+        private void OnSave()
+        {
+            DisplayServer.ClipboardSet(Compile().GetXml());
         }
 
         private void OnOpen()
@@ -175,35 +193,8 @@ namespace Rusty.ISA.Editor.Definitions
             // Create definition descriptor.
             InstructionDefinitionDescriptor descriptor = new(xmlDoc);
 
-            // Load opcode.
-            Opcode.Value = descriptor.Opcode;
-
-            // Load parameters.
-            foreach (var parameter in descriptor.Parameters)
-            {
-                Parameters.Add();
-                ParameterInspector inspector = Parameters[^1].GetAt(0) as ParameterInspector;
-                inspector.Value = parameter.Generate();
-            }
-
-            // Load implementation.
-            Implementation.Value = descriptor.Implementation;
-
-            // Load metadata.
-            DisplayName.Value = descriptor.DisplayName;
-            Description.Value = descriptor.Description;
-            Category.Value = descriptor.Category;
-            Icon.FilePath.Value = descriptor.IconPath;
-
-            // Load editor node.
-            if (descriptor.EditorNodeInfo != null)
-                EditorNodeInfo.Value = descriptor.EditorNodeInfo.Generate();
-
-            // Load preview terms.
-
-            // Load pre-instructions.
-
-            // Load post-instructions.
+            // Load.
+            Load(descriptor);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Godot;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor.Definitions
@@ -7,11 +7,9 @@ namespace Rusty.ISA.Editor.Definitions
     /// <summary>
     /// A generic parameter definition inspector.
     /// </summary>
-    public partial class ParameterInspector : Element
+    public partial class ParameterInspector : ElementVBox
     {
         /* Public methods. */
-        public LabelFoldout Foldout { get; private set; }
-
         public OptionField Type { get; private set; }
         public LineField ID { get; private set; }
         public LineField DisplayName { get; private set; }
@@ -33,37 +31,39 @@ namespace Rusty.ISA.Editor.Definitions
         public CheckBoxField RemoveDefault { get; private set; }
         public LineField PreviewArgument { get; private set; }
 
-        public Parameter Value
+        public ParameterDescriptor Value
         {
             get
             {
-                switch (Type.Options[Type.Value])
+                switch (Types[Type.Value])
                 {
-                    case "Bool":
-                        return new BoolParameter(ID.Value, DisplayName.Value, Description.Value, DefaultBool.Value);
-                    case "Int":
-                        return new IntParameter(ID.Value, DisplayName.Value, Description.Value, DefaultInt.Value);
-                    case "Int Slider":
-                        return new IntSliderParameter(ID.Value, DisplayName.Value, Description.Value, DefaultInt.Value,
+                    case "bool":
+                        return new BoolParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultBool.Value);
+                    case "int":
+                        return new IntParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultInt.Value);
+                    case "islider":
+                        return new IntSliderParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultInt.Value,
                             MinInt.Value, MaxInt.Value);
-                    case "Float Slider":
-                        return new FloatSliderParameter(ID.Value, DisplayName.Value, Description.Value, DefaultFloat.Value,
-                            MinFloat.Value, MaxFloat.Value);
-                    case "Float":
-                        return new FloatParameter(ID.Value, DisplayName.Value, Description.Value, DefaultFloat.Value);
-                    case "Char":
-                        return new CharParameter(ID.Value, DisplayName.Value, Description.Value, DefaultChar.Value);
-                    case "Text":
-                        return new TextlineParameter(ID.Value, DisplayName.Value, Description.Value, DefaultText.Value);
-                    case "Multiline":
-                        return new MultilineParameter(ID.Value, DisplayName.Value, Description.Value, DefaultMultiline.Value);
-                    case "Color":
-                        return new ColorParameter(ID.Value, DisplayName.Value, Description.Value, DefaultColor.Value);
-                    case "Output":
-                        return new OutputParameter(ID.Value, DisplayName.Value, Description.Value, RemoveDefault.Value,
+                    case "float":
+                        return new FloatParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultFloat.Value);
+                    case "fslider":
+                        return new FloatSliderParameterDescriptor(ID.Value, DisplayName.Value, Description.Value,
+                            DefaultFloat.Value, MinFloat.Value, MaxFloat.Value);
+                    case "char":
+                        return new CharParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultChar.Value);
+                    case "textline":
+                        return new TextlineParameterDescriptor(ID.Value, DisplayName.Value, Description.Value,
+                            DefaultText.Value);
+                    case "multiline":
+                        return new MultilineParameterDescriptor(ID.Value, DisplayName.Value, Description.Value,
+                            DefaultMultiline.Value);
+                    case "color":
+                        return new ColorParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultColor.Value);
+                    case "output":
+                        return new OutputParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, RemoveDefault.Value,
                             PreviewArgument.Value);
                     default:
-                        throw new Exception();
+                        throw new Exception(Type.Options[Type.Value]);
                 }
             }
             set
@@ -73,54 +73,59 @@ namespace Rusty.ISA.Editor.Definitions
                 Description.Value = value.Description;
                 switch (value)
                 {
-                    case BoolParameter @bool:
-                        Type.Value = 0;
+                    case BoolParameterDescriptor @bool:
+                        Type.Value = Types.IndexOf("bool");
                         DefaultBool.Value = @bool.DefaultValue;
                         break;
-                    case IntParameter @int:
-                        Type.Value = 1;
+                    case IntParameterDescriptor @int:
+                        Type.Value = Types.IndexOf("int");
                         DefaultInt.Value = @int.DefaultValue;
                         break;
-                    case IntSliderParameter islider:
-                        Type.Value = 2;
+                    case IntSliderParameterDescriptor islider:
+                        Type.Value = Types.IndexOf("islider");
                         DefaultInt.Value = islider.DefaultValue;
                         MinInt.Value = islider.MinValue;
                         MaxInt.Value = islider.MaxValue;
                         break;
-                    case FloatParameter @float:
-                        Type.Value = 3;
+                    case FloatParameterDescriptor @float:
+                        Type.Value = Types.IndexOf("float");
                         DefaultFloat.Value = @float.DefaultValue;
                         break;
-                    case FloatSliderParameter fslider:
-                        Type.Value = 4;
+                    case FloatSliderParameterDescriptor fslider:
+                        Type.Value = Types.IndexOf("fslider");
                         DefaultFloat.Value = fslider.DefaultValue;
                         MinFloat.Value = fslider.MinValue;
                         MaxFloat.Value = fslider.MaxValue;
                         break;
-                    case CharParameter @char:
-                        Type.Value = 5;
+                    case CharParameterDescriptor @char:
+                        Type.Value = Types.IndexOf("char");
                         DefaultChar.Value = @char.DefaultValue;
                         break;
-                    case TextlineParameter text:
-                        Type.Value = 6;
+                    case TextlineParameterDescriptor text:
+                        Type.Value = Types.IndexOf("textline");
                         DefaultText.Value = text.DefaultValue;
                         break;
-                    case MultilineParameter multiline:
-                        Type.Value = 7;
+                    case MultilineParameterDescriptor multiline:
+                        Type.Value = Types.IndexOf("multiline");
                         DefaultMultiline.Value = multiline.DefaultValue;
                         break;
-                    case ColorParameter color:
-                        Type.Value = 8;
+                    case ColorParameterDescriptor color:
+                        Type.Value = Types.IndexOf("color");
                         DefaultColor.Value = color.DefaultValue;
                         break;
-                    case OutputParameter output:
-                        Type.Value = 9;
+                    case OutputParameterDescriptor output:
+                        Type.Value = Types.IndexOf("output");
                         RemoveDefault.Value = output.RemoveDefaultOutput;
-                        PreviewArgument.Value = output.UseArgumentAsPreview;
+                        PreviewArgument.Value = output.PreviewArgument;
                         break;
                 }
             }
         }
+
+        public List<string> Types { get; set; } = new(new string[] { "bool", "int", "islider", "float", "fslider", "char",
+            "textline", "multiline", "color", "output" });
+        public List<string> Labels { get; set; } = new(new string[] { "Bool", "Int", "Int Slider", "Float", "Float Slider",
+            "Char", "Text Line", "Multiline Text", "Color", "Output" });
 
         /* Private properties. */
         private string LastFilePath { get; set; }
@@ -171,25 +176,20 @@ namespace Rusty.ISA.Editor.Definitions
         /* Godot overrides. */
         public override void _Process(double delta)
         {
-            Foldout.HeaderText = ID.Value;
-            if (Foldout.HeaderText == "")
-                Foldout.HeaderText = "(Nameless parameter)";
-            else
-                Foldout.HeaderText += $" ({Type.Options[Type.Value].ToLower()})";
-
-            DefaultBool.Visible = Type.Value == 0;
-            DefaultInt.Visible = Type.Value == 1 || Type.Value == 2;
-            MinInt.Visible = Type.Value == 2;
-            MaxInt.Visible = Type.Value == 2;
-            DefaultFloat.Visible = Type.Value == 3 || Type.Value == 4;
-            MinFloat.Visible = Type.Value == 4;
-            MaxFloat.Visible = Type.Value == 4;
-            DefaultChar.Visible = Type.Value == 5;
-            DefaultText.Visible = Type.Value == 6;
-            DefaultMultiline.Visible = Type.Value == 7;
-            DefaultColor.Visible = Type.Value == 8;
-            RemoveDefault.Visible = Type.Value == 9;
-            PreviewArgument.Visible = Type.Value == 9;
+            string type = Types[Type.Value];
+            DefaultBool.Visible = type == "bool";
+            DefaultInt.Visible = type == "int" || type == "islider";
+            MinInt.Visible = type == "islider";
+            MaxInt.Visible = type == "islider";
+            DefaultFloat.Visible = type == "float" || type == "fslider";
+            MinFloat.Visible = type == "fslider";
+            MaxFloat.Visible = type == "fslider";
+            DefaultChar.Visible = type == "char";
+            DefaultText.Visible = type == "textline";
+            DefaultMultiline.Visible = type == "multiline";
+            DefaultColor.Visible = type == "color";
+            RemoveDefault.Visible = type == "output";
+            PreviewArgument.Visible = type == "output";
         }
 
         /* Protected methods. */
@@ -199,118 +199,112 @@ namespace Rusty.ISA.Editor.Definitions
 
             Name = "ParameterInspector";
 
-            Foldout = new()
-            {
-                HeaderText = "Parameter"
-            };
-            AddChild(Foldout);
-
             Type = new()
             {
                 LabelText = "Type",
-                Options = new string[] { "Bool", "Int", "Int Slider", "Float", "Float Slider", "Char", "Text", "Multiline", "Color", "Output" }
+                Options = Labels.ToArray()
             };
-            Foldout.Add(Type);
+            Add(Type);
 
             ID = new()
             {
                 LabelText = "ID",
             };
-            Foldout.Add(ID);
+            Add(ID);
 
             DisplayName = new()
             {
                 LabelText = "Display Name",
             };
-            Foldout.Add(DisplayName);
+            Add(DisplayName);
 
             Description = new()
             {
                 LabelText = "Description",
                 Height = 128
             };
-            Foldout.Add(Description);
+            Add(Description);
 
             DefaultBool = new()
             {
                 LabelText = "Default Value"
             };
-            Foldout.Add(DefaultBool);
+            Add(DefaultBool);
 
             DefaultInt = new()
             {
                 LabelText = "Default Value"
             };
-            Foldout.Add(DefaultInt);
+            Add(DefaultInt);
 
             DefaultFloat = new()
             {
                 LabelText = "Default Value"
             };
-            Foldout.Add(DefaultFloat);
+            Add(DefaultFloat);
 
             DefaultChar = new()
             {
                 LabelText = "Default Value"
             };
-            Foldout.Add(DefaultChar);
+            Add(DefaultChar);
 
             DefaultText = new()
             {
                 LabelText = "Default Value"
             };
-            Foldout.Add(DefaultText);
+            Add(DefaultText);
 
             DefaultMultiline = new()
             {
                 LabelText = "Default Value",
                 Height = 128
             };
-            Foldout.Add(DefaultMultiline);
+            Add(DefaultMultiline);
 
             DefaultColor = new()
             {
                 LabelText = "Default Value"
             };
-            Foldout.Add(DefaultColor);
+            Add(DefaultColor);
 
             MinInt = new()
             {
                 LabelText = "Min Value"
             };
-            Foldout.Add(MinInt);
+            Add(MinInt);
 
             MinFloat = new()
             {
                 LabelText = "Min Value"
             };
-            Foldout.Add(MinFloat);
+            Add(MinFloat);
 
             MaxInt = new()
             {
                 LabelText = "Max Value"
             };
-            Foldout.Add(MaxInt);
+            Add(MaxInt);
 
             MaxFloat = new()
             {
                 LabelText = "Max Value"
             };
-            Foldout.Add(MaxFloat);
+            Add(MaxFloat);
 
             RemoveDefault = new()
             {
                 LabelText = "Remove Default Output",
                 TooltipText = "Whether or not this output should remove a node's default output, if present."
             };
-            Foldout.Add(RemoveDefault);
+            Add(RemoveDefault);
 
             PreviewArgument = new()
             {
                 LabelText = "Preview Argument",
                 TooltipText = "The parameter whose value should be used as the output's label in the editor."
             };
-            Foldout.Add(PreviewArgument);
+            Add(PreviewArgument);
         }
     }
 }
