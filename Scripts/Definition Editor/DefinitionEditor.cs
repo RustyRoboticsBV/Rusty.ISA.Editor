@@ -24,6 +24,8 @@ namespace Rusty.ISA.Editor.Definitions
 
         public EditorNodeInfoInspector EditorNodeInfo { get; private set; }
 
+        public PreviewTermBox PreviewTerms { get; private set; }
+
         /* Godot overrides. */
         public override void _Ready()
         {
@@ -67,6 +69,9 @@ namespace Rusty.ISA.Editor.Definitions
 
             EditorNodeInfo = new();
             scroll.AddChild(EditorNodeInfo);
+
+            PreviewTerms = new();
+            scroll.AddChild(PreviewTerms);
         }
 
         public override void _Process(double delta)
@@ -75,6 +80,7 @@ namespace Rusty.ISA.Editor.Definitions
             Implementation.Visible = TabBar.CurrentTab == 1;
             Metadata.Visible = TabBar.CurrentTab == 2;
             EditorNodeInfo.Visible = TabBar.CurrentTab == 3;
+            PreviewTerms.Visible = TabBar.CurrentTab == 4;
         }
 
         /* Private methods. */
@@ -140,6 +146,10 @@ namespace Rusty.ISA.Editor.Definitions
             descriptor.EditorNodeInfo = EditorNodeInfo.Value;
 
             // Add preview terms.
+            for (int i = 0; i < PreviewTerms.PreviewTerms.Count; i++)
+            {
+                descriptor.PreviewTerms.Add(PreviewTerms.PreviewTerms[i].Value);
+            }
 
             // Add pre-instructions.
 
@@ -169,6 +179,7 @@ namespace Rusty.ISA.Editor.Definitions
             EditorNodeInfo.Value = descriptor.EditorNodeInfo;
 
             // Load preview terms.
+            PreviewTerms.Set(descriptor.PreviewTerms);
 
             // Load pre-instructions.
 
