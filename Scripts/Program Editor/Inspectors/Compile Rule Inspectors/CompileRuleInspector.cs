@@ -9,6 +9,9 @@ namespace Rusty.ISA.Editor
     /// </summary>
     public abstract partial class CompileRuleInspector : Inspector
     {
+        /* Public properties. */
+        public CompileRule Definition => Resource as CompileRule;
+
         /* Constructors. */
         public CompileRuleInspector() : base() { }
 

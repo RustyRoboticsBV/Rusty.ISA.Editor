@@ -266,13 +266,7 @@ namespace Rusty.ISA.Editor
             if (Preview == null)
                 return;
 
-            string[] terms = Inspector.GetPreviewTerms();
-            Preview.Text = "";
-            foreach (string term in terms)
-            {
-                if (term != null)
-                    Preview.Text += term;
-            }
+            Preview.Text = InstructionPreview.Parse(Inspector, Definition.Preview);
         }
     }
 }

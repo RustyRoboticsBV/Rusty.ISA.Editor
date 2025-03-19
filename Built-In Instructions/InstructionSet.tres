@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=92 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=97 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_gmmgc"]
@@ -42,7 +42,7 @@ Icon = ExtResource("12_nbvet")
 DisplayName = "Instruction Set Metadata"
 Description = "Starts an instruction set metadata group. The group should be closed with an EOG instruction."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -53,6 +53,7 @@ ID = "opcode"
 DisplayName = "Opcode"
 Description = "The opcode of the instruction definition."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_wldw7"]
 resource_name = "DEF"
@@ -63,7 +64,7 @@ Icon = ExtResource("13_y5iqg")
 DisplayName = "Instruction Metadata"
 Description = "Starts a metadata group for an instruction definition. The group should be closed with an EOG instruction."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -74,6 +75,7 @@ ID = "type"
 DisplayName = "Type"
 Description = "The type of the compile rule. Should be one of the following: option, choice, tuple, or list."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_bdv4d"]
 resource_name = "id (text)"
@@ -82,6 +84,7 @@ ID = "id"
 DisplayName = "ID"
 Description = "The identifier of the compile rule."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_hr6rg"]
 resource_name = "RUL"
@@ -92,7 +95,7 @@ Icon = ExtResource("16_0cdng")
 DisplayName = "Compile Rule Metadata"
 Description = "Starts a compile rule metadata group. The group should be closed with an EOG instruction."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -103,6 +106,7 @@ ID = "opcode"
 DisplayName = "Opcode"
 Description = "The opcode of the referenced instruction."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_jdrw3"]
 resource_name = "id (text)"
@@ -111,6 +115,7 @@ ID = "id"
 DisplayName = "ID"
 Description = "The identifier of the parameter."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_d6p30"]
 resource_name = "REF"
@@ -121,7 +126,7 @@ Icon = ExtResource("17_txonn")
 DisplayName = "Reference"
 Description = "Represents metadata related to an instruction rule."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -132,6 +137,7 @@ ID = "type"
 DisplayName = "Type"
 Description = "The type of the parameter."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_2jvhx"]
 resource_name = "id (text)"
@@ -140,6 +146,7 @@ ID = "id"
 DisplayName = "ID"
 Description = "The identifier of the parameter."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_n3emi"]
 resource_name = "PAR"
@@ -150,7 +157,7 @@ Icon = ExtResource("15_5h8mm")
 DisplayName = "Parameter Metadata"
 Description = "Represents metadata related to an instruction parameter."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -161,6 +168,7 @@ MinWidth = 128
 MinHeight = 32
 MainColor = Color(0.1, 0.1, 0.1, 1)
 TextColor = Color(0.3, 0.75, 0.3, 1)
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_imjdl"]
 resource_name = "x (int)"
@@ -169,6 +177,7 @@ ID = "x"
 DisplayName = "X"
 Description = "The horizontal position of the comment."
 DefaultValue = 0
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_bhdtu"]
 resource_name = "y (int)"
@@ -177,6 +186,7 @@ ID = "y"
 DisplayName = "Y"
 Description = "The vertical position of the comment."
 DefaultValue = 0
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_53br1"]
 resource_name = "text (multiline)"
@@ -185,6 +195,7 @@ ID = "text"
 DisplayName = "Text"
 Description = "The text of the comment."
 DefaultValue = "Comment text."
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_t3exr"]
 resource_name = "CMT"
@@ -196,7 +207,7 @@ DisplayName = "Comment"
 Description = "An editor comment."
 Category = "Editor"
 EditorNode = SubResource("Resource_mff5v")
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -207,6 +218,7 @@ MinWidth = 128
 MinHeight = 32
 MainColor = Color(1, 1, 1, 0.878431)
 TextColor = Color(1, 1, 1, 1)
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_imkvv"]
 resource_name = "id (text)"
@@ -215,6 +227,7 @@ ID = "id"
 DisplayName = "ID"
 Description = "The id of the frame."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_g4ly1"]
 resource_name = "x (int)"
@@ -223,6 +236,7 @@ ID = "x"
 DisplayName = "X"
 Description = "The horizontal position of the frame."
 DefaultValue = 0
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_kkrrb"]
 resource_name = "y (int)"
@@ -231,6 +245,7 @@ ID = "y"
 DisplayName = "Y"
 Description = "The vertical position of the frame."
 DefaultValue = 0
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_vx1sj"]
 resource_name = "width (int)"
@@ -239,6 +254,7 @@ ID = "width"
 DisplayName = "Width"
 Description = "The width of the frame."
 DefaultValue = 0
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_ujlnt"]
 resource_name = "height (int)"
@@ -247,6 +263,7 @@ ID = "height"
 DisplayName = "Hidth"
 Description = "The height of the frame."
 DefaultValue = 0
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_qhjbc"]
 resource_name = "title (text)"
@@ -255,6 +272,7 @@ ID = "title"
 DisplayName = "Title"
 Description = "The title text of the frame."
 DefaultValue = "New Frame"
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_qimco"]
 resource_name = "color (Color)"
@@ -263,6 +281,7 @@ ID = "color_tint"
 DisplayName = "Color Tint"
 Description = "The color of the frame."
 DefaultValue = Color(0.129412, 0.129412, 0.129412, 1)
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_7hiv8"]
 resource_name = "FRM"
@@ -274,7 +293,7 @@ DisplayName = "Frame"
 Description = "Starts a frame group. The group may contain a single MBR instruction (to allow for nested frames), and should be closed with an EOG instruction."
 Category = "Editor"
 EditorNode = SubResource("Resource_latm4")
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -285,6 +304,7 @@ ID = "frame_id"
 DisplayName = "Frame ID"
 Description = "The id of the frame that this node is contained in."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_cn6to"]
 resource_name = "MBR"
@@ -295,7 +315,7 @@ Icon = ExtResource("9_nx7m3")
 DisplayName = "Frame Member"
 Description = "Designates a NOD, CMT or FRM group as being a member of an editor frame with some ID."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -306,6 +326,7 @@ ID = "x"
 DisplayName = "X"
 Description = "The x-position of the editor node."
 DefaultValue = 0
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_1ekkv"]
 resource_name = "y (int)"
@@ -314,6 +335,7 @@ ID = "y"
 DisplayName = "Y"
 Description = "The y-position of the editor node."
 DefaultValue = 0
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_btai4"]
 resource_name = "NOD"
@@ -324,7 +346,7 @@ Icon = ExtResource("9_dl4up")
 DisplayName = "Editor Node"
 Description = "Starts an editor node. It should contain an inspector instruction, and optionally a label and/or begin instruction. The group should be closed with an EOG instruction."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -337,7 +359,7 @@ Icon = ExtResource("11_vnhvg")
 DisplayName = "Inspector"
 Description = "Starts an inspector group. This group contains an instruction and optionally its associated pre-instructions and post-instruction groups. The group should be closed with an EOG instruction."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -350,7 +372,7 @@ Icon = ExtResource("4_wahcg")
 DisplayName = "Instruction Inspector"
 Description = "A compiler marker that starts a pre-instruction group. The group should be closed with an EOG instruction. All instruction between the two markers are interpreted as pre-instructions of the instruction that comes after the EOG."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -363,7 +385,7 @@ Icon = ExtResource("5_yqtwi")
 DisplayName = "Post-Instructions"
 Description = "A compiler marker that starts a post-instruction group. The group should be closed with an EOB instruction. All instruction between the two markers are interpreted as post-instructions of the instruction that comes before this one."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -376,7 +398,7 @@ Icon = ExtResource("12_y4agh")
 DisplayName = "Option Rule"
 Description = "A compiler marker that starts an group collection. The group should be closed with an EOG instruction."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -387,6 +409,7 @@ ID = "selected"
 DisplayName = "Selected"
 Description = "The selected choice."
 DefaultValue = 0
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_k3g4f"]
 resource_name = "CHO"
@@ -397,7 +420,7 @@ Icon = ExtResource("14_42hs7")
 DisplayName = "Choice Rule"
 Description = "A compiler marker that starts a choice group. The group should be closed with an EOG instruction."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -410,7 +433,7 @@ Icon = ExtResource("15_r7qq2")
 DisplayName = "Tuple Rule"
 Description = "A compiler marker that starts a tuple rule group. The group should be closed with an EOG instruction."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -423,7 +446,7 @@ Icon = ExtResource("16_6vvij")
 DisplayName = "List Rule"
 Description = "A compiler marker that starts a list group. The group should be closed with an EOG instruction."
 Category = "Editor"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -434,6 +457,7 @@ MinWidth = 128
 MinHeight = 32
 MainColor = Color(0.411765, 0.411765, 0.411765, 1)
 TextColor = Color(1, 1, 1, 1)
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_itw8j"]
 resource_name = "EOG"
@@ -445,7 +469,52 @@ DisplayName = "End of Block"
 Description = "A compiler marker that denotes the end of a group of instructions."
 Category = "Editor"
 EditorNode = SubResource("Resource_wfygo")
-PreviewTerms = []
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_n0138"]
+script = ExtResource("1_gmmgc")
+Priority = -1
+MinWidth = 128
+MinHeight = 32
+MainColor = Color(0, 0.501961, 1, 1)
+TextColor = Color(1, 1, 1, 1)
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_n8xtu"]
+script = ExtResource("12_rklps")
+ID = "speaker"
+DisplayName = "Speaker"
+Description = ""
+DefaultValue = "Someone"
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_c16ni"]
+script = ExtResource("12_rklps")
+ID = "mood"
+DisplayName = "Mood"
+Description = ""
+DefaultValue = "Neutral"
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_pm5f8"]
+script = ExtResource("16_nc316")
+ID = "body"
+DisplayName = "Body"
+Description = ""
+DefaultValue = "Blah, blah, blah..."
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_cum1f"]
+script = ExtResource("2_uguea")
+Opcode = "TXT"
+Parameters = [SubResource("Resource_n8xtu"), SubResource("Resource_c16ni"), SubResource("Resource_pm5f8")]
+DisplayName = "Set Text"
+Description = ""
+Category = ""
+EditorNode = SubResource("Resource_n0138")
+Preview = "%speaker% + \": \" + %body%"
 PreInstructions = []
 PostInstructions = []
 
@@ -463,6 +532,7 @@ ID = "name"
 DisplayName = "Name"
 Description = "The name of this start point."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_3fopi"]
 resource_name = "BEG"
@@ -474,7 +544,7 @@ Icon = ExtResource("24_xkbbv")
 DisplayName = "Begin"
 Description = "Defines a start point in a program. Cutscene players can start playing the program from these points."
 Category = "Core"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -495,7 +565,7 @@ Icon = ExtResource("26_xah47")
 DisplayName = "End"
 Description = ""
 Category = "Core"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -513,6 +583,7 @@ ID = "name"
 DisplayName = "Name"
 Description = "The name of this label."
 DefaultValue = ""
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_pm5es"]
 resource_name = "LAB"
@@ -524,7 +595,7 @@ Icon = ExtResource("14_siv20")
 DisplayName = "Label"
 Description = "Defines a point that can be jumped to by the goto function."
 Category = "Core"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -542,7 +613,7 @@ ID = "target_label"
 DisplayName = "Target Label"
 Description = "The name of the label that must be jumped to."
 RemoveDefaultOutput = true
-UseArgumentAsPreview = "target_label"
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_6bfpp"]
 resource_name = "GTO"
@@ -554,7 +625,7 @@ Icon = ExtResource("28_ywca6")
 DisplayName = "Goto"
 Description = "Jumps the program counter to a label instruction with some name."
 Category = "Core"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -572,6 +643,7 @@ ID = "message"
 DisplayName = "Message"
 Description = "The message of this warning."
 DefaultValue = "unknown warning"
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_b4qbb"]
 resource_name = "WRN"
@@ -583,7 +655,7 @@ Icon = ExtResource("30_6ix1t")
 DisplayName = "Warning"
 Description = "Prints an warning message and stops cutscene execution."
 Category = "Core"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -601,6 +673,7 @@ ID = "message"
 DisplayName = "Message"
 Description = "The message of this error."
 DefaultValue = "unknown error"
+Preview = ""
 
 [sub_resource type="Resource" id="Resource_es1ni"]
 resource_name = "ERR"
@@ -612,7 +685,7 @@ Icon = ExtResource("31_g7on2")
 DisplayName = "Error"
 Description = "Prints an error message and stops cutscene execution."
 Category = "Core"
-PreviewTerms = []
+Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -624,5 +697,5 @@ Modules = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_n3emi"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
+Definitions = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_n3emi"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_cum1f")]
 Modules = [SubResource("Resource_eqo11")]
