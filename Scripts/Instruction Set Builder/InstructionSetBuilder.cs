@@ -1,9 +1,8 @@
 using Godot;
 using System.Collections.Generic;
 using System.IO;
-using Rusty.ISA;
-using Rusty.ISA.Importer;
-using Rusty.ISA.Importer.InstructionDefinitions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Rusty.ISA.Editor.InstructionSets
 {
@@ -54,8 +53,17 @@ namespace Rusty.ISA.Editor.InstructionSets
             string[] files = Directory.GetFiles(folderPath);
             for (int i = 0; i < files.Length; i++)
             {
-                if (files[i].EndsWith(".xml"))
-                    definitions.Add(InstructionDefinitionImporter.Import(files[i], new()));
+				if (files[i].EndsWith(".xml"))
+				{
+					string xml = File.ReadAllText(files[i]);
+
+					XmlDocument doc = new();
+					doc.LoadXml(xml);
+
+					InstructionDefinitionDescriptor descriptor = new(doc);
+
+					definitions.Add(descriptor.Generate(true));
+				}
             }
 
 			// Handle sub-directories.

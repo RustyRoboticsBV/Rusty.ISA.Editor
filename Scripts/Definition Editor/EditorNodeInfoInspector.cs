@@ -16,13 +16,14 @@ namespace Rusty.ISA.Editor.Definitions
         public IntField MinHeight { get; private set; }
         public ColorField MainColor { get; private set; }
         public ColorField TextColor { get; private set; }
+        public MultilineField Preview { get; private set; }
 
         public EditorNodeInfoDescriptor Value
         {
             get
             {
                 if (Foldout.IsOpen)
-                    return new(Priority.Value, MinWidth.Value, MinHeight.Value, MainColor.Value, TextColor.Value);
+                    return new(Priority.Value, MinWidth.Value, MinHeight.Value, MainColor.Value, TextColor.Value, Preview.Value);
                 else
                     return null;
             }
@@ -37,6 +38,7 @@ namespace Rusty.ISA.Editor.Definitions
                     MinHeight.Value = value.MinHeight;
                     MainColor.Value = value.MainColor;
                     TextColor.Value = value.TextColor;
+                    Preview.Value = value.Preview;
                 }
                 else
                     Foldout.IsOpen = false;
@@ -96,6 +98,13 @@ namespace Rusty.ISA.Editor.Definitions
                 Value = Colors.White
             };
             Foldout.Add(TextColor);
+
+            Preview = new()
+            {
+                Name = "Preview",
+                LabelText = "Preview",
+            };
+            Foldout.Add(Preview);
         }
     }
 }

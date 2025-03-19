@@ -1,7 +1,6 @@
 ﻿using Godot;
 using System.IO;
 using Rusty.EditorUI;
-using Rusty.ISA.Importer;
 
 namespace Rusty.ISA.Editor.Definitions
 {

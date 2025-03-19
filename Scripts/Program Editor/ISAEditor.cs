@@ -2,7 +2,6 @@
 using Godot;
 using Rusty.ISA.Editor.Compiler;
 using Rusty.ISA.Editor.InstructionSets;
-using Rusty.ISA.Importer.InstructionSets;
 
 namespace Rusty.ISA.Editor
 {
@@ -45,7 +44,7 @@ namespace Rusty.ISA.Editor
                 GD.Print("Definition " + i + ": " + GeneratedSet.Definitions[i]);
             }
             GraphEdit.InstructionSet = GeneratedSet;
-            Serializer.Serialize(GeneratedSet, "InstructionSet/InstructionSet.zip");
+            //Serializer.Serialize(GeneratedSet, "InstructionSet/InstructionSet.zip");
         }
 
         /* Private methods. */

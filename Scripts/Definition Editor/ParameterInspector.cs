@@ -22,14 +22,14 @@ namespace Rusty.ISA.Editor.Definitions
         public LineField DefaultText { get; private set; }
         public MultilineField DefaultMultiline { get; private set; }
         public ColorField DefaultColor { get; private set; }
+        public CheckBoxField RemoveDefault { get; private set; }
 
         public IntField MinInt { get; private set; }
         public IntField MaxInt { get; private set; }
         public FloatField MinFloat { get; private set; }
         public FloatField MaxFloat { get; private set; }
 
-        public CheckBoxField RemoveDefault { get; private set; }
-        public LineField PreviewArgument { get; private set; }
+        public MultilineField Preview { get; private set; }
 
         public ParameterDescriptor Value
         {
@@ -37,31 +37,36 @@ namespace Rusty.ISA.Editor.Definitions
             {
                 switch (Types[Type.Value])
                 {
-                    case "bool":
-                        return new BoolParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultBool.Value);
-                    case "int":
-                        return new IntParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultInt.Value);
-                    case "islider":
+                    case XmlKeywords.BoolParameter:
+                        return new BoolParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultBool.Value,
+                            Preview.Value);
+                    case XmlKeywords.IntParameter:
+                        return new IntParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultInt.Value,
+                            Preview.Value);
+                    case XmlKeywords.IntSliderParameter:
                         return new IntSliderParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultInt.Value,
-                            MinInt.Value, MaxInt.Value);
-                    case "float":
-                        return new FloatParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultFloat.Value);
-                    case "fslider":
+                            MinInt.Value, MaxInt.Value, Preview.Value);
+                    case XmlKeywords.FloatParameter:
+                        return new FloatParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultFloat.Value,
+                            Preview.Value);
+                    case XmlKeywords.FloatSliderParameter:
                         return new FloatSliderParameterDescriptor(ID.Value, DisplayName.Value, Description.Value,
-                            DefaultFloat.Value, MinFloat.Value, MaxFloat.Value);
-                    case "char":
-                        return new CharParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultChar.Value);
-                    case "textline":
-                        return new TextlineParameterDescriptor(ID.Value, DisplayName.Value, Description.Value,
-                            DefaultText.Value);
-                    case "multiline":
+                            DefaultFloat.Value, MinFloat.Value, MaxFloat.Value, Preview.Value);
+                    case XmlKeywords.CharParameter:
+                        return new CharParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultChar.Value,
+                            Preview.Value);
+                    case XmlKeywords.TextlineParameter:
+                        return new TextlineParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultText.Value,
+                            Preview.Value);
+                    case XmlKeywords.MultilineParameter:
                         return new MultilineParameterDescriptor(ID.Value, DisplayName.Value, Description.Value,
-                            DefaultMultiline.Value);
-                    case "color":
-                        return new ColorParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultColor.Value);
-                    case "output":
+                            DefaultMultiline.Value, Preview.Value);
+                    case XmlKeywords.ColorParameter:
+                        return new ColorParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultColor.Value,
+                            Preview.Value);
+                    case XmlKeywords.OutputParameter:
                         return new OutputParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, RemoveDefault.Value,
-                            PreviewArgument.Value);
+                            Preview.Value);
                     default:
                         throw new Exception(Type.Options[Type.Value]);
                 }
@@ -74,61 +79,56 @@ namespace Rusty.ISA.Editor.Definitions
                 switch (value)
                 {
                     case BoolParameterDescriptor @bool:
-                        Type.Value = Types.IndexOf("bool");
+                        Type.Value = Types.IndexOf(XmlKeywords.BoolParameter);
                         DefaultBool.Value = @bool.DefaultValue;
                         break;
                     case IntParameterDescriptor @int:
-                        Type.Value = Types.IndexOf("int");
+                        Type.Value = Types.IndexOf(XmlKeywords.IntParameter);
                         DefaultInt.Value = @int.DefaultValue;
                         break;
                     case IntSliderParameterDescriptor islider:
-                        Type.Value = Types.IndexOf("islider");
+                        Type.Value = Types.IndexOf(XmlKeywords.IntSliderParameter);
                         DefaultInt.Value = islider.DefaultValue;
                         MinInt.Value = islider.MinValue;
                         MaxInt.Value = islider.MaxValue;
                         break;
                     case FloatParameterDescriptor @float:
-                        Type.Value = Types.IndexOf("float");
+                        Type.Value = Types.IndexOf(XmlKeywords.FloatParameter);
                         DefaultFloat.Value = @float.DefaultValue;
                         break;
                     case FloatSliderParameterDescriptor fslider:
-                        Type.Value = Types.IndexOf("fslider");
+                        Type.Value = Types.IndexOf(XmlKeywords.FloatSliderParameter);
                         DefaultFloat.Value = fslider.DefaultValue;
                         MinFloat.Value = fslider.MinValue;
                         MaxFloat.Value = fslider.MaxValue;
                         break;
                     case CharParameterDescriptor @char:
-                        Type.Value = Types.IndexOf("char");
+                        Type.Value = Types.IndexOf(XmlKeywords.CharParameter);
                         DefaultChar.Value = @char.DefaultValue;
                         break;
                     case TextlineParameterDescriptor text:
-                        Type.Value = Types.IndexOf("textline");
+                        Type.Value = Types.IndexOf(XmlKeywords.TextlineParameter);
                         DefaultText.Value = text.DefaultValue;
                         break;
                     case MultilineParameterDescriptor multiline:
-                        Type.Value = Types.IndexOf("multiline");
+                        Type.Value = Types.IndexOf(XmlKeywords.MultilineParameter);
                         DefaultMultiline.Value = multiline.DefaultValue;
                         break;
                     case ColorParameterDescriptor color:
-                        Type.Value = Types.IndexOf("color");
+                        Type.Value = Types.IndexOf(XmlKeywords.ColorParameter);
                         DefaultColor.Value = color.DefaultValue;
                         break;
                     case OutputParameterDescriptor output:
-                        Type.Value = Types.IndexOf("output");
+                        Type.Value = Types.IndexOf(XmlKeywords.OutputParameter);
                         RemoveDefault.Value = output.RemoveDefaultOutput;
-                        PreviewArgument.Value = output.PreviewArgument;
                         break;
                 }
             }
         }
 
-        public List<string> Types { get; set; } = new(new string[] { "bool", "int", "islider", "float", "fslider", "char",
-            "textline", "multiline", "color", "output" });
+        public List<string> Types => XmlKeywords.Parameters;
         public List<string> Labels { get; set; } = new(new string[] { "Bool", "Int", "Int Slider", "Float", "Float Slider",
             "Char", "Text Line", "Multiline Text", "Color", "Output" });
-
-        /* Private properties. */
-        private string LastFilePath { get; set; }
 
         /* Constructors. */
         public ParameterInspector() : base() { }
@@ -158,14 +158,12 @@ namespace Rusty.ISA.Editor.Definitions
                 DefaultText.Value = otherParameter.DefaultText.Value;
                 DefaultMultiline.Value = otherParameter.DefaultMultiline.Value;
                 DefaultColor.Value = otherParameter.DefaultColor.Value;
+                RemoveDefault.Value = otherParameter.RemoveDefault.Value;
 
                 MinInt.Value = otherParameter.MinInt.Value;
                 MaxInt.Value = otherParameter.MaxInt.Value;
                 MinFloat.Value = otherParameter.MinFloat.Value;
                 MaxFloat.Value = otherParameter.MaxFloat.Value;
-
-                RemoveDefault.Value = otherParameter.RemoveDefault.Value;
-                PreviewArgument.Value = otherParameter.PreviewArgument.Value;
 
                 return true;
             }
@@ -177,19 +175,18 @@ namespace Rusty.ISA.Editor.Definitions
         public override void _Process(double delta)
         {
             string type = Types[Type.Value];
-            DefaultBool.Visible = type == "bool";
-            DefaultInt.Visible = type == "int" || type == "islider";
-            MinInt.Visible = type == "islider";
-            MaxInt.Visible = type == "islider";
-            DefaultFloat.Visible = type == "float" || type == "fslider";
-            MinFloat.Visible = type == "fslider";
-            MaxFloat.Visible = type == "fslider";
-            DefaultChar.Visible = type == "char";
-            DefaultText.Visible = type == "textline";
-            DefaultMultiline.Visible = type == "multiline";
-            DefaultColor.Visible = type == "color";
-            RemoveDefault.Visible = type == "output";
-            PreviewArgument.Visible = type == "output";
+            DefaultBool.Visible = type == XmlKeywords.BoolParameter;
+            DefaultInt.Visible = type == XmlKeywords.IntParameter || type == XmlKeywords.IntSliderParameter;
+            MinInt.Visible = type == XmlKeywords.IntSliderParameter;
+            MaxInt.Visible = type == XmlKeywords.IntSliderParameter;
+            DefaultFloat.Visible = type == XmlKeywords.FloatParameter || type == XmlKeywords.FloatSliderParameter;
+            MinFloat.Visible = type == XmlKeywords.FloatSliderParameter;
+            MaxFloat.Visible = type == XmlKeywords.FloatSliderParameter;
+            DefaultChar.Visible = type == XmlKeywords.CharParameter;
+            DefaultText.Visible = type == XmlKeywords.TextlineParameter;
+            DefaultMultiline.Visible = type == XmlKeywords.MultilineParameter;
+            DefaultColor.Visible = type == XmlKeywords.ColorParameter;
+            RemoveDefault.Visible = type == XmlKeywords.OutputParameter;
         }
 
         /* Protected methods. */
@@ -299,12 +296,12 @@ namespace Rusty.ISA.Editor.Definitions
             };
             Add(RemoveDefault);
 
-            PreviewArgument = new()
+            Preview = new()
             {
-                LabelText = "Preview Argument",
-                TooltipText = "The parameter whose value should be used as the output's label in the editor."
+                LabelText = "Preview",
+                Height = 128
             };
-            Add(PreviewArgument);
+            Add(Preview);
         }
     }
 }

@@ -86,7 +86,7 @@ namespace Rusty.ISA.Editor
             // Add option element.
             CheckBoxField = new();
             CheckBoxField.LabelText = Rule.DisplayName;
-            CheckBoxField.Value = Rule.StartEnabled;
+            CheckBoxField.Value = Rule.DefaultEnabled;
             Add(CheckBoxField);
 
             // Add child rule inspector.
@@ -94,7 +94,7 @@ namespace Rusty.ISA.Editor
             ChildRuleInspector.LocalIndentation = 10;
             Add(ChildRuleInspector);
 
-            if (!Rule.StartEnabled)
+            if (!Rule.DefaultEnabled)
                 ChildRuleInspector.Hide();
         }
     }

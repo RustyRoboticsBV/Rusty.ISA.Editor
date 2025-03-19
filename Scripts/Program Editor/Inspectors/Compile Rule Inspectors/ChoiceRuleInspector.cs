@@ -106,7 +106,7 @@ namespace Rusty.ISA.Editor
             // Add option element.
             OptionField = new();
             OptionField.LabelText = Rule.DisplayName;
-            OptionField.Value = Rule.StartSelected;
+            OptionField.Value = Rule.DefaultSelected;
             Add(OptionField);
 
             // Add child rule inspectors.
@@ -116,7 +116,7 @@ namespace Rusty.ISA.Editor
                 ChildInspectors[i] = Create(InstructionSet, Rule.Types[i]);
                 ChildInspectors[i].LocalIndentation = 10;
                 Add(ChildInspectors[i]);
-                if (Rule.StartSelected != i)
+                if (Rule.DefaultSelected != i)
                     ChildInspectors[i].Hide();
             }
 

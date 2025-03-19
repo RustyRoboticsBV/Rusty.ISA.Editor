@@ -1,5 +1,4 @@
-﻿using Rusty.ISA;
-using System;
+﻿using System;
 
 namespace Rusty.ISA.Editor
 {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Rusty.Graphs;
-using Rusty.ISA.Importer.InstructionDefinitions;
 
 namespace Rusty.ISA.Editor.Compiler
 {
@@ -88,34 +87,34 @@ namespace Rusty.ISA.Editor.Compiler
             switch (parameter)
             {
                 case BoolParameter:
-                    type = Keywords.BoolParameter;
+                    type = XmlKeywords.BoolParameter;
                     break;
                 case IntParameter:
-                    type = Keywords.IntParameter;
+                    type = XmlKeywords.IntParameter;
                     break;
                 case IntSliderParameter:
-                    type = Keywords.IntSliderParameter;
+                    type = XmlKeywords.IntSliderParameter;
                     break;
                 case FloatParameter:
-                    type = Keywords.FloatParameter;
+                    type = XmlKeywords.FloatParameter;
                     break;
                 case FloatSliderParameter:
-                    type = Keywords.FloatSliderParameter;
+                    type = XmlKeywords.FloatSliderParameter;
                     break;
                 case CharParameter:
-                    type = Keywords.CharParameter;
+                    type = XmlKeywords.CharParameter;
                     break;
                 case TextlineParameter:
-                    type = Keywords.TextlineParameter;
+                    type = XmlKeywords.TextlineParameter;
                     break;
                 case MultilineParameter:
-                    type = Keywords.MultilineParameter;
+                    type = XmlKeywords.MultilineParameter;
                     break;
                 case ColorParameter:
-                    type = Keywords.ColorParameter;
+                    type = XmlKeywords.ColorParameter;
                     break;
                 case OutputParameter:
-                    type = Keywords.OutputParameter;
+                    type = XmlKeywords.OutputParameter;
                     break;
             }
 
@@ -139,25 +138,25 @@ namespace Rusty.ISA.Editor.Compiler
                     return CompilerNodeMaker.GetReference(set, instructionRule.Opcode, instructionRule.ID);
 
                 case OptionRule optionRule:
-                    type = Keywords.OptionRule;
+                    type = XmlKeywords.OptionRule;
                     childRules.Add(optionRule.Type);
                     break;
                 case ChoiceRule choiceRule:
-                    type = Keywords.ChoiceRule;
+                    type = XmlKeywords.ChoiceRule;
                     foreach (CompileRule choice in choiceRule.Types)
                     {
                         childRules.Add(choice);
                     }
                     break;
                 case TupleRule tupleRule:
-                    type = Keywords.TupleRule;
+                    type = XmlKeywords.TupleRule;
                     foreach (CompileRule element in tupleRule.Types)
                     {
                         childRules.Add(element);
                     }
                     break;
                 case ListRule listRule:
-                    type = Keywords.ListRule;
+                    type = XmlKeywords.ListRule;
                     childRules.Add(listRule.Type);
                     break;
             }

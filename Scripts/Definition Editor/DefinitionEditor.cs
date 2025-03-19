@@ -22,9 +22,9 @@ namespace Rusty.ISA.Editor.Definitions
         public MultilineField Description { get; private set; }
         public LineField Category { get; private set; }
 
+        public VBoxContainer Editor { get; private set; }
         public EditorNodeInfoInspector EditorNodeInfo { get; private set; }
-
-        public PreviewTermBox PreviewTerms { get; private set; }
+        public MultilineField Preview { get; private set; }
 
         /* Godot overrides. */
         public override void _Ready()
@@ -38,8 +38,7 @@ namespace Rusty.ISA.Editor.Definitions
             TabBar.AddTab("Parameters");
             TabBar.AddTab("Implementation");
             TabBar.AddTab("Metadata");
-            TabBar.AddTab("Editor Node");
-            TabBar.AddTab("Preview Terms");
+            TabBar.AddTab("Editor");
             TabBar.AddTab("Pre-Instructions");
             TabBar.AddTab("Post-Instructions");
             AddChild(TabBar);
@@ -67,11 +66,14 @@ namespace Rusty.ISA.Editor.Definitions
             Icon = new();
             Metadata.AddChild(Icon);
 
+            Editor = new();
+            Editor.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            scroll.AddChild(Editor);
             EditorNodeInfo = new();
-            scroll.AddChild(EditorNodeInfo);
-
-            PreviewTerms = new();
-            scroll.AddChild(PreviewTerms);
+            Editor.AddChild(EditorNodeInfo);
+            Preview = new();
+            Preview.Height = 128;
+            Editor.AddChild(Preview);
         }
 
         public override void _Process(double delta)
@@ -79,8 +81,7 @@ namespace Rusty.ISA.Editor.Definitions
             Parameters.Visible = TabBar.CurrentTab == 0;
             Implementation.Visible = TabBar.CurrentTab == 1;
             Metadata.Visible = TabBar.CurrentTab == 2;
-            EditorNodeInfo.Visible = TabBar.CurrentTab == 3;
-            PreviewTerms.Visible = TabBar.CurrentTab == 4;
+            Editor.Visible = TabBar.CurrentTab == 3;
         }
 
         /* Private methods. */
@@ -142,14 +143,9 @@ namespace Rusty.ISA.Editor.Definitions
             descriptor.Description = Description.Value;
             descriptor.Category = Category.Value;
 
-            // Add editor node.
+            // Add editor data.
             descriptor.EditorNodeInfo = EditorNodeInfo.Value;
-
-            // Add preview terms.
-            for (int i = 0; i < PreviewTerms.PreviewTerms.Count; i++)
-            {
-                descriptor.PreviewTerms.Add(PreviewTerms.PreviewTerms[i].Value);
-            }
+            descriptor.Preview = Preview.Value;
 
             // Add pre-instructions.
 
@@ -175,11 +171,9 @@ namespace Rusty.ISA.Editor.Definitions
             Description.Value = descriptor.Description;
             Category.Value = descriptor.Category;
 
-            // Load editor node.
+            // Load editor data.
             EditorNodeInfo.Value = descriptor.EditorNodeInfo;
-
-            // Load preview terms.
-            PreviewTerms.Set(descriptor.PreviewTerms);
+            Preview.Value = descriptor.Preview;
 
             // Load pre-instructions.
 
