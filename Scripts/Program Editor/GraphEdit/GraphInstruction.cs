@@ -70,6 +70,7 @@ namespace Rusty.ISA.Editor
 
             // Create inspector.
             Inspector = new NodeInstructionInspector(InstructionSet, Definition);
+            Inspector.ForcePreviewUpdate();
 
             // Ensure slots.
             EnsureSlots();

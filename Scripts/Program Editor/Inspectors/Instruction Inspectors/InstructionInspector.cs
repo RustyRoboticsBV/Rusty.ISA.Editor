@@ -178,6 +178,30 @@ namespace Rusty.ISA.Editor
             return Outputs;
         }
 
+        /// <summary>
+        /// Force a preview update of this instruction inspector and all sub-inspectors. Does not set any UpdatedPreview variable
+        /// to true.
+        /// </summary>
+        public void ForcePreviewUpdate()
+        {
+            // First, force-update all child inspector previews.
+            for (int i = 0; i < Parameters.Count; i++)
+            {
+                Parameters[i].ForcePreviewUpdate();
+            }
+            for (int i = 0; i < PreInstructions.Inspectors.Count; i++)
+            {
+                PreInstructions.Inspectors[i].ForcePreviewUpdate();
+            }
+            for (int i = 0; i < PostInstructions.Inspectors.Count; i++)
+            {
+                PostInstructions.Inspectors[i].ForcePreviewUpdate();
+            }
+
+            // Update our preview.
+            Preview = new(this);
+        }
+
         /* Godot overrides. */
         public override void _Process(double delta)
         {
@@ -216,27 +240,7 @@ namespace Rusty.ISA.Editor
 
             // Update preview (if necessary).
             if (UpdatedPreview)
-            {
-                // First, force-update all child inspector previews.
-                if (UpdatedPreview)
-                {
-                    for (int i = 0; i < Parameters.Count; i++)
-                    {
-                        Parameters[i].ForcePreviewUpdate();
-                    }
-                    for (int i = 0; i < PreInstructions.Inspectors.Count; i++)
-                    {
-                        PreInstructions.Inspectors[i].ForcePreviewUpdate();
-                    }
-                    for (int i = 0; i < PostInstructions.Inspectors.Count; i++)
-                    {
-                        PostInstructions.Inspectors[i].ForcePreviewUpdate();
-                    }
-                }
-
-                // Update our preview.
-                Preview = new(this);
-            }
+                ForcePreviewUpdate();
         }
 
         /* Protected methods. */

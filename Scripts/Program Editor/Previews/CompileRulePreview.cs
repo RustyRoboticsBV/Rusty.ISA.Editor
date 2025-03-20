@@ -123,7 +123,7 @@
                     return list.GetActiveSubInspectors().Length.ToString();
                 else if (ruleID.StartsWith("element"))
                 {
-                    string index = ruleID.Substring("element".Length);
+                    string index = ruleID.Substring("element".Length).Trim();
                     return $"_elements[{index}]";
                 }
             }
