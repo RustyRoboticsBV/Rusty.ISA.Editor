@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Rusty.ISA;
 using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
@@ -7,7 +6,7 @@ namespace Rusty.ISA.Editor
     public abstract partial class SecondaryInstructionsInspector : Inspector
     {
         /* Public properties. */
-        public List<Inspector> Inspectors { get; set; } = new();
+        public List<CompileRuleInspector> Inspectors { get; set; } = new();
 
         /* Constructors. */
         public SecondaryInstructionsInspector() : base() { }
@@ -26,10 +25,7 @@ namespace Rusty.ISA.Editor
                 // Find inspectors.
                 for (int i = 0; i < Count; i++)
                 {
-                    if (this[i] is CompileRuleInspector container)
-                        Inspectors.Add(container);
-                    else if (this[i] is InstructionRuleInspector instruction)
-                        Inspectors.Add(instruction);
+                    Inspectors.Add(this[i] as CompileRuleInspector);
                 }
 
                 // Hide or show based on if we have contents or not.
@@ -50,7 +46,7 @@ namespace Rusty.ISA.Editor
         {
             foreach (CompileRule compileRule in rules)
             {
-                Inspector inspector = CompileRuleInspector.Create(InstructionSet, compileRule);
+                CompileRuleInspector inspector = CompileRuleInspector.Create(InstructionSet, compileRule);
                 Inspectors.Add(inspector);
                 Add(inspector);
             }

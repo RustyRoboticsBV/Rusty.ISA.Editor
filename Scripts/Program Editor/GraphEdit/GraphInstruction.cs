@@ -20,7 +20,9 @@ namespace Rusty.ISA.Editor
         /* Private properties. */
         private TextureRect TitleIcon { get; set; }
         private Label TitleLabel { get; set; }
-        private Label Preview { get; set; }
+        private Label PreviewLabel { get; set; }
+
+        private InstructionPreview Preview { get; set; }
 
         /* Public methods. */
         /// <summary>
@@ -75,9 +77,9 @@ namespace Rusty.ISA.Editor
             EnsureSlots();
 
             // Create preview.
-            Preview = new();
-            Preview.AddThemeFontSizeOverride("font_size", 10);
-            AddChild(Preview);
+            PreviewLabel = new();
+            PreviewLabel.AddThemeFontSizeOverride("font_size", 10);
+            AddChild(PreviewLabel);
             UpdatePreview();
         }
 
@@ -208,8 +210,8 @@ namespace Rusty.ISA.Editor
             }
 
             // Temporarily remove preview.
-            if (Preview != null)
-                RemoveChild(Preview);
+            if (PreviewLabel != null)
+                RemoveChild(PreviewLabel);
 
             // Set slot count.
             int slotCount = hideMain ? outputs.Count : outputs.Count + 1;
@@ -242,20 +244,20 @@ namespace Rusty.ISA.Editor
             // Rename slots.
             for (int i = 0; i < Slots.Count; i++)
             {
-                if (hideMain)
-                    Slots[i].RightText.Text = outputs[i].Definition.DisplayName;
+                int index = hideMain ? i : i - 1;
+
+                if (index < 0)
+                    Slots[i].RightText.Text = "OUT";
                 else
                 {
-                    if (i > 0)
-                        Slots[i].RightText.Text = outputs[i - 1].Definition.DisplayName;
-                    else
-                        Slots[i].RightText.Text = "OUT";
+                    ParameterPreview preview = new(new InstructionPreview(Inspector), outputs[i]);
+                    Slots[i].RightText.Text = preview.Evaluate();
                 }
             }
 
             // Restore preview.
-            if (Preview != null)
-                AddChild(Preview);
+            if (PreviewLabel != null)
+                AddChild(PreviewLabel);
         }
 
         private void UpdatePreview()
@@ -263,11 +265,11 @@ namespace Rusty.ISA.Editor
             if (Definition == null || Inspector == null)
                 return;
 
-            if (Preview == null)
+            if (PreviewLabel == null)
                 return;
 
             InstructionPreview preview = new(Inspector);
-            Preview.Text = preview.Evaluate();
+            PreviewLabel.Text = preview.Evaluate();
         }
     }
 }

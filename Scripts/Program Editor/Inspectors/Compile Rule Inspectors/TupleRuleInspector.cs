@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Rusty.ISA;
 using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
@@ -17,7 +16,7 @@ namespace Rusty.ISA.Editor
 
         /* Private properties. */
         private OptionField OptionField { get; set; }
-        private Inspector[] ChildRules { get; set; }
+        private CompileRuleInspector[] ChildRules { get; set; }
 
         /* Constructors. */
         public TupleRuleInspector() : base() { }
@@ -37,10 +36,10 @@ namespace Rusty.ISA.Editor
         {
             if (base.CopyStateFrom(other))
             {
-                List<Inspector> childRules = new();
+                List<CompileRuleInspector> childRules = new();
                 for (int i = 0; i < Count; i++)
                 {
-                    if (GetAt(i) is Inspector inspector)
+                    if (GetAt(i) is CompileRuleInspector inspector)
                         childRules.Add(inspector);
                 }
                 ChildRules = childRules.ToArray();
@@ -50,7 +49,7 @@ namespace Rusty.ISA.Editor
                 return false;
         }
 
-        public override Inspector[] GetActiveSubInspectors()
+        public override CompileRuleInspector[] GetActiveSubInspectors()
         {
             return ChildRules;
         }
@@ -74,7 +73,7 @@ namespace Rusty.ISA.Editor
             }
 
             // Add child rule inspectors.
-            ChildRules = new Inspector[Rule.Types.Length];
+            ChildRules = new CompileRuleInspector[Rule.Types.Length];
             for (int i = 0; i < Rule.Types.Length; i++)
             {
                 ChildRules[i] = Create(InstructionSet, Rule.Types[i]);

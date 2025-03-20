@@ -523,7 +523,8 @@ DisplayName = "Dialog Choices"
 Description = ""
 Type = SubResource("Resource_ogowu")
 AddButtonText = "Add Choice"
-Preview = ""
+Preview = "for i in [count]:
+	result += \"\\n- \" + [elementi];"
 
 [sub_resource type="Resource" id="Resource_cum1f"]
 script = ExtResource("2_uguea")
@@ -535,7 +536,7 @@ Category = ""
 EditorNode = SubResource("Resource_n0138")
 Preview = "if %speaker% != \"\":
 	result += %speaker% + \": \";
-result += %body%;"
+result += %body% + [choices];"
 PreInstructions = [SubResource("Resource_cm0rx")]
 PostInstructions = []
 
@@ -562,7 +563,7 @@ Parameters = [SubResource("Resource_n07y6"), SubResource("Resource_tue1g")]
 DisplayName = ""
 Description = ""
 Category = "Dialog"
-Preview = "\"- \" + %text%"
+Preview = "%text%"
 PreInstructions = []
 PostInstructions = []
 

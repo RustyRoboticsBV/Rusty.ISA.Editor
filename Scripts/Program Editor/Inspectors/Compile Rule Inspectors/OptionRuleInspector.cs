@@ -1,5 +1,4 @@
-﻿using Rusty.ISA;
-using Rusty.EditorUI;
+﻿using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
 {
@@ -21,10 +20,10 @@ namespace Rusty.ISA.Editor
             get => CheckBoxField.Value;
             set=> CheckBoxField.Value = value;
         }
+        public CompileRuleInspector ChildRuleInspector { get; private set; }
 
         /* Private properties. */
         private CheckBoxField CheckBoxField { get; set; }
-        private Inspector ChildRuleInspector { get; set; }
 
         /* Constructors. */
         public OptionRuleInspector() : base() { }
@@ -45,19 +44,19 @@ namespace Rusty.ISA.Editor
             if (base.CopyStateFrom(other))
             {
                 CheckBoxField = GetAt(0) as CheckBoxField;
-                ChildRuleInspector = GetAt(1) as Inspector;
+                ChildRuleInspector = GetAt(1) as CompileRuleInspector;
                 return true;
             }
             else
                 return false;
         }
 
-        public override Inspector[] GetActiveSubInspectors()
+        public override CompileRuleInspector[] GetActiveSubInspectors()
         {
             if (CheckBoxField.Value)
-                return new Inspector[] { ChildRuleInspector };
+                return new CompileRuleInspector[] { ChildRuleInspector };
             else
-                return new Inspector[0];
+                return new CompileRuleInspector[0];
         }
 
         /* Godot overrides. */

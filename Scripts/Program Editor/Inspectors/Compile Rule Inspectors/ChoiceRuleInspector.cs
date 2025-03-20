@@ -1,5 +1,4 @@
-﻿using Rusty.ISA;
-using Rusty.EditorUI;
+﻿using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
 {
@@ -24,7 +23,7 @@ namespace Rusty.ISA.Editor
 
         /* Private properties. */
         private OptionField OptionField { get; set; }
-        private Inspector[] ChildInspectors { get; set; }
+        private CompileRuleInspector[] ChildInspectors { get; set; }
 
         /* Constructors. */
         public ChoiceRuleInspector() : base() { }
@@ -48,11 +47,11 @@ namespace Rusty.ISA.Editor
                 OptionField = GetAt(0) as OptionField;
 
                 // Find child inspectors.
-                ChildInspectors = new Inspector[Count - 1];
+                ChildInspectors = new CompileRuleInspector[Count - 1];
                 for (int i = 1; i < Count; i++)
                 {
                     // Find the inspector.
-                    Inspector inspector = GetAt(i) as Inspector;
+                    CompileRuleInspector inspector = GetAt(i) as CompileRuleInspector;
                     ChildInspectors[i - 1] = inspector;
 
                     // Hide or show the inspector based on the state of the option field.
@@ -68,15 +67,27 @@ namespace Rusty.ISA.Editor
                 return false;
         }
 
-        public override Inspector[] GetActiveSubInspectors()
+        public override CompileRuleInspector[] GetActiveSubInspectors()
         {
             try
             {
-                return new Inspector[] { ChildInspectors[OptionField.Value] };
+                return new CompileRuleInspector[] { ChildInspectors[OptionField.Value] };
             }
             catch
             {
-                return new Inspector[0];
+                return new CompileRuleInspector[0];
+            }
+        }
+
+        public CompileRuleInspector GetSelected()
+        {
+            try
+            {
+                return ChildInspectors[OptionField.Value];
+            }
+            catch
+            {
+                return null;
             }
         }
 
@@ -110,7 +121,7 @@ namespace Rusty.ISA.Editor
             Add(OptionField);
 
             // Add child rule inspectors.
-            ChildInspectors = new Inspector[Rule.Types.Length];
+            ChildInspectors = new CompileRuleInspector[Rule.Types.Length];
             for (int i = 0; i < Rule.Types.Length; i++)
             {
                 ChildInspectors[i] = Create(InstructionSet, Rule.Types[i]);

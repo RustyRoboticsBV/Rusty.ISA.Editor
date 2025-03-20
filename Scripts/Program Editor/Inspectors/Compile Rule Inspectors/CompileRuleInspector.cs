@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Rusty.ISA;
 
 namespace Rusty.ISA.Editor
 {
@@ -24,17 +23,17 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// Gets the child rule inspector(s) that are currently active, if any.
         /// </summary>
-        public abstract Inspector[] GetActiveSubInspectors();
+        public abstract CompileRuleInspector[] GetActiveSubInspectors();
 
         /// <summary>
         /// Create a compile rule inspector of some type.
         /// </summary>
-        public static Inspector Create(InstructionSet instructionSet, CompileRule compileRule)
+        public static CompileRuleInspector Create(InstructionSet instructionSet, CompileRule compileRule)
         {
             switch (compileRule)
             {
-                case InstructionRule preInstruction:
-                    return new InstructionRuleInspector(instructionSet, instructionSet[preInstruction.Opcode]);
+                case InstructionRule instructionRule:
+                    return new InstructionRuleInspector(instructionSet, instructionRule);
                 case OptionRule optionRule:
                     return new OptionRuleInspector(instructionSet, optionRule);
                 case ChoiceRule choiceRule:
@@ -51,19 +50,14 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// Get all output parameter inspectors associated with this compile rule inspector and its sub-inspectors.
         /// </summary>
-        public List<ParameterInspector> GetOutputs()
+        public virtual List<ParameterInspector> GetOutputs()
         {
             List<ParameterInspector> Outputs = new();
-            Inspector[] subInspectors = GetActiveSubInspectors();
-            for (int i = 0; i < subInspectors.Length; i++)
+            CompileRuleInspector[] subInspectors = GetActiveSubInspectors();
+            foreach (CompileRuleInspector rule in subInspectors)
             {
-                List<ParameterInspector> preOutputs = new();
-                if (subInspectors[i] is InstructionRuleInspector pre)
-                    preOutputs = pre.GetOutputs();
-                else if (subInspectors[i] is CompileRuleInspector rule)
-                    preOutputs = rule.GetOutputs();
-
-                foreach (ParameterInspector output in preOutputs)
+                List<ParameterInspector> subOutputs = rule.GetOutputs();
+                foreach (ParameterInspector output in subOutputs)
                 {
                     Outputs.Add(output);
                 }

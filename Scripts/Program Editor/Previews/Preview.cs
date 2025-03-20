@@ -12,7 +12,9 @@ namespace Rusty.ISA.Editor
         private static string SkeletonCode =>
             "extends Node;\n" +
             "\n" +
+            "# %DEBUGNAME%\n" +
             "func eval() -> String:\n" +
+            "\tvar _elements : Array[String] = [%ELEMENTS%];\n" +
             "\tvar result : String = \"\";\n" +
             "\t%IMPLEMENTATION%\n" +
             "\treturn result;";
@@ -47,6 +49,18 @@ namespace Rusty.ISA.Editor
 
         /* Protected methods. */
         /// <summary>
+        /// Gets a debug name string.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract string GetDebugName();
+        /// <summary>
+        /// Get the elements.
+        /// </summary>
+        protected virtual string GetElements()
+        {
+            return " ";
+        }
+        /// <summary>
         /// Get the default expression that is used in place of the empty string.
         /// </summary>
         protected abstract string GetDefaultExpression();
@@ -58,6 +72,14 @@ namespace Rusty.ISA.Editor
         /// Parse a compile rule keyword.
         /// </summary>
         protected abstract string ParseCompileRule(string ruleID);
+
+        /// <summary>
+        /// Make an expression.
+        /// </summary>
+        protected static string Make(string str)
+        {
+            return "\"" + str.Replace("\"", "\\\"").Replace("\n", "\\n") + "\"";
+        }
 
         protected static string GetError(string str)
         {
@@ -84,7 +106,13 @@ namespace Rusty.ISA.Editor
 
             // If the expression was empty, use the default expression.
             if (expression == "")
-                expression = "result = " + GetDefaultExpression();
+            {
+                string defaultValue = GetDefaultExpression();
+                if (defaultValue != "")
+                    expression = "result = " + defaultValue;
+                else
+                    expression = "";
+            }
 
             // If the expression was NOT empty...
             else
@@ -117,9 +145,10 @@ namespace Rusty.ISA.Editor
             // Create source code.
             string code = SkeletonCode
                 .Replace("%INSPECTOR%", inspectorType)
-                .Replace("%IMPLEMENTATION%", expression);
-            GD.Print(expression);
-            GD.Print(code);
+                .Replace("%ELEMENTS%", GetElements())
+                .Replace("%IMPLEMENTATION%", expression)
+                .Replace("%DEBUGNAME%", GetDebugName());
+
             // Create script.
             GDScript script = new();
             script.SourceCode = code;

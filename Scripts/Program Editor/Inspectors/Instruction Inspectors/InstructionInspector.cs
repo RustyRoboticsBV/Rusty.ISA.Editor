@@ -8,7 +8,7 @@ namespace Rusty.ISA.Editor
     /// A instruction inspector.
     /// </summary>
     [GlobalClass]
-    public abstract partial class InstructionInspector : Inspector
+    public partial class InstructionInspector : Inspector
     {
         /* Public properties */
         /// <summary>
@@ -55,6 +55,11 @@ namespace Rusty.ISA.Editor
             return false;
         }
 
+        public override Element Duplicate()
+        {
+            return new InstructionInspector(this);
+        }
+
         /// <summary>
         /// Get a parameter inspector.
         /// </summary>
@@ -74,7 +79,7 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// Get a pre-instruction inspector by its index.
         /// </summary>
-        public Inspector GetPreInstructionInspector(int index)
+        public CompileRuleInspector GetPreInstructionInspector(int index)
         {
             return PreInstructions.Inspectors[index];
         }
@@ -82,7 +87,7 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// Get a post-instruction inspector by its index.
         /// </summary>
-        public Inspector GetPostInstructionInspector(int index)
+        public CompileRuleInspector GetPostInstructionInspector(int index)
         {
             return PostInstructions.Inspectors[index];
         }
@@ -115,14 +120,9 @@ namespace Rusty.ISA.Editor
             // Get pre-instruction outputs.
             for (int i = 0; i < PreInstructions.Inspectors.Count; i++)
             {
-                Inspector inspector = GetPreInstructionInspector(i);
+                CompileRuleInspector rule = GetPreInstructionInspector(i);
 
-                List<ParameterInspector> preOutputs = new();
-                if (inspector is InstructionRuleInspector pre)
-                    preOutputs = pre.GetOutputs();
-                else if (inspector is CompileRuleInspector rule)
-                    preOutputs = rule.GetOutputs();
-
+                List<ParameterInspector> preOutputs = rule.GetOutputs();
                 foreach (ParameterInspector output in preOutputs)
                 {
                     Outputs.Add(output);
@@ -132,14 +132,9 @@ namespace Rusty.ISA.Editor
             // Get post-instruction outputs.
             for (int i = 0; i < PostInstructions.Inspectors.Count; i++)
             {
-                Inspector inspector = GetPostInstructionInspector(i);
+                CompileRuleInspector rule = GetPostInstructionInspector(i);
 
-                List<ParameterInspector> postOutputs = new();
-                if (inspector is InstructionRuleInspector post)
-                    postOutputs = post.GetOutputs();
-                else if (inspector is CompileRuleInspector rule)
-                    postOutputs = rule.GetOutputs();
-
+                List<ParameterInspector> postOutputs = rule.GetOutputs();
                 foreach (ParameterInspector output in postOutputs)
                 {
                     Outputs.Add(output);

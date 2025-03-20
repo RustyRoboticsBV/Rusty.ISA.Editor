@@ -1,5 +1,6 @@
 using Rusty.ISA;
 using Rusty.EditorUI;
+using Godot;
 
 namespace Rusty.ISA.Editor
 {
@@ -35,7 +36,7 @@ namespace Rusty.ISA.Editor
 
 		/* Public methods. */
         public override bool CopyStateFrom(Element other)
-        {
+		{
 			if (base.CopyStateFrom(other) && other is Inspector otherInspector)
 			{
 				InstructionSet = otherInspector.InstructionSet;

@@ -13,9 +13,14 @@
         }
 
         /* Protected methods. */
+        protected override string GetDebugName()
+        {
+            return Inspector.Definition.GetType().Name + " " + Inspector.Definition.ID;
+        }
+
         protected override string GetDefaultExpression()
         {
-            return $"\"{Inspector.ValueObj}\"";
+            return Make(Inspector.ValueObj.ToString());
         }
 
         protected override string ParseParameter(string parameterID)
@@ -30,7 +35,7 @@
 
         protected override string ParseCompileRule(string ruleID)
         {
-            return "";
+            return InstructionPreview.ParseCompileRule(Parent, ruleID);
         }
     }
 }

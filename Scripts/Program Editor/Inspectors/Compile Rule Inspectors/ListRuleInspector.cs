@@ -1,5 +1,4 @@
-﻿using Rusty.ISA;
-using Rusty.EditorUI;
+﻿using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
 {
@@ -42,12 +41,12 @@ namespace Rusty.ISA.Editor
                 return false;
         }
 
-        public override Inspector[] GetActiveSubInspectors()
+        public override CompileRuleInspector[] GetActiveSubInspectors()
         {
-            Inspector[] childInspectors = new Inspector[ListElement.Count];
+            CompileRuleInspector[] childInspectors = new CompileRuleInspector[ListElement.Count];
             for (int i = 0; i < ListElement.Count; i++)
             {
-                childInspectors[i] = ListElement[i][0] as Inspector;
+                childInspectors[i] = ListElement[i][0] as CompileRuleInspector;
             }
             return childInspectors;
         }
