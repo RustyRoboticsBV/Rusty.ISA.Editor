@@ -22,8 +22,6 @@ namespace Rusty.ISA.Editor
         private Label TitleLabel { get; set; }
         private Label PreviewLabel { get; set; }
 
-        private InstructionPreview Preview { get; set; }
-
         /* Public methods. */
         /// <summary>
         /// Creates the editor for an instruction type in its default state.

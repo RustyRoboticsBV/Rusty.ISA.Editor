@@ -17,6 +17,8 @@ namespace Rusty.ISA.Editor
             set => Label.Value = value;
         }
 
+        public new EditorNodePreview Preview { get; private set; }
+
         /* Private properties. */
         private LabeledIcon Title { get; set; }
         private HSeparatorElement Bottom { get; set; }
@@ -25,9 +27,15 @@ namespace Rusty.ISA.Editor
         public NodeInstructionInspector() : base() { }
 
         public NodeInstructionInspector(InstructionSet instructionSet, InstructionDefinition resource)
-            : base(instructionSet, resource) { }
+            : base(instructionSet, resource)
+        {
+            Preview = new(this);
+        }
 
-        public NodeInstructionInspector(NodeInstructionInspector other) : base(other) { }
+        public NodeInstructionInspector(NodeInstructionInspector other) : base(other)
+        {
+            Preview = new(this);
+        }
 
         /* Public methods. */
         public override Element Duplicate()
@@ -46,6 +54,15 @@ namespace Rusty.ISA.Editor
                 return true;
             }
             return false;
+        }
+
+        /* Godot overrides. */
+        public override void _Process(double delta)
+        {
+            base._Process(delta);
+
+            if (UpdatedPreview)
+                Preview = new(this);
         }
 
         /* Protected methods. */

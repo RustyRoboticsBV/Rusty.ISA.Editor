@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor
 {
@@ -80,6 +81,13 @@ namespace Rusty.ISA.Editor
         /// Parse a compile rule keyword.
         /// </summary>
         protected abstract string ParseCompileRule(string ruleID);
+        /// <summary>
+        /// Search the expression for special keywords and parse them.
+        /// </summary>
+        protected virtual string ParseSpecialCases(string expression)
+        {
+            return expression;
+        }
 
         /// <summary>
         /// Make an expression.
@@ -91,7 +99,7 @@ namespace Rusty.ISA.Editor
 
         protected static string GetError(string str)
         {
-            return $"\"{str}\"";
+            return Make(str);
         }
 
         protected static string GetNullError(string parameterID)
@@ -140,8 +148,13 @@ namespace Rusty.ISA.Editor
                 expression = expression.Replace("\n", "\n\t");
 
                 // Parse expression keywords...
+                bool withinQuotes = false;
                 for (int i = 0; i < expression.Length - 1; i++)
                 {
+                    if (expression[i] == '"' && (!withinQuotes || withinQuotes && i > 0 && expression[i - 1] != '\\'))
+                        withinQuotes = !withinQuotes;
+                    if (withinQuotes)
+                        continue;
                     if (CheckKeyword("%", "%", expression, i, out string parameterID))
                     {
                         string parsed = ParseParameter(parameterID);
@@ -150,10 +163,15 @@ namespace Rusty.ISA.Editor
                     else if (CheckKeyword("[", "]", expression, i, out string ruleID))
                     {
                         string parsed = ParseCompileRule(ruleID);
+                        GD.Print(parsed);
                         Replace(ref expression, ref i, ruleID.Length + 2, parsed);
+                        GD.Print(expression);
                     }
                 }
             }
+
+            // Special cases.
+            expression = ParseSpecialCases(expression);
 
             // Create source code.
             string code = SkeletonCode
@@ -175,7 +193,10 @@ namespace Rusty.ISA.Editor
             if (error == Error.Ok)
                 return (Node)script.New();
             else
+            {
+                GD.PrintErr("Bad preview expression: \n" + code);
                 return null;
+            }
         }
 
         private static bool CheckKeyword(string startEscape, string endEscape, string expression, int index, out string keyword)
