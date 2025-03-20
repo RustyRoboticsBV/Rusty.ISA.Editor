@@ -1,11 +1,13 @@
 ﻿using Rusty.ISA;
 using Rusty.EditorUI;
+using Godot;
 
 namespace Rusty.ISA.Editor
 {
     /// <summary>
     /// A bool parameter inspector.
     /// </summary>
+    [GlobalClass]
     public partial class BoolParameterInspector : ParameterInspector
     {
         /* Public properties. */

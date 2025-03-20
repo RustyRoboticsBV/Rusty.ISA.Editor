@@ -5,64 +5,131 @@ namespace Rusty.ISA.Editor
     public abstract class Preview<T> where T : Inspector
     {
         /* Public properties. */
+        public InstructionInspector Root { get; private set; }
         public T Inspector { get; private set; }
 
+        /* Private properties. */
+        private static string SkeletonCode =>
+            "extends Node;\n" +
+            "\n" +
+            "func eval() -> String:\n" +
+            "\tvar result : String = \"\";\n" +
+            "\t%IMPLEMENTATION%\n" +
+            "\treturn result;";
+
+        private string Implementation { get; set; } = "";
+        private Node Node { get; set; }
+
         /* Constructors. */
-        public Preview(T inspector)
+        public Preview(InstructionInspector root, T inspector, string implementation)
         {
+            Root = root;
             Inspector = inspector;
+            Implementation = implementation;
         }
 
         /* Public methods. */
         /// <summary>
-        /// Generate a preview from an expression.
+        /// Execute the generated eval method.
         /// </summary>
-        public string Generate(string expression)
+        public string Evaluate()
         {
-            // If the expression was empty, use the default expression.
-            if (expression == "")
-                return Execute(GetDefault());
+            // Create node if necessary.
+            if (Node == null)
+                Node = CreateNode(Implementation);
 
-            // Parse expression string...
-            for (int i = 0; i < expression.Length - 1; i++)
-            {
-                if (CheckKeyword("%", "%", expression, i, out string parameterID))
-                    ParseParameter(ref expression, ref i, parameterID.Length + 2, parameterID);
-                else if (CheckKeyword("[", "]", expression, i, out string ruleID))
-                    ParseCompileRule(ref expression, ref i, ruleID.Length + 2, ruleID);
-            }
-
-            // Execute expression.
-            return Execute(expression);
+            // Evaluate.
+            if (Node != null)
+                return (string)Node.Call("eval");
+            else
+                return "bad_preview_expression";
         }
 
         /* Protected methods. */
-        protected abstract string GetDefault();
-        protected abstract void ParseParameter(ref string expression, ref int startIndex, int length, string parameterID);
-        protected abstract void ParseCompileRule(ref string expression, ref int startIndex, int length, string ruleID);
+        /// <summary>
+        /// Get the default expression that is used in place of the empty string.
+        /// </summary>
+        protected abstract string GetDefaultExpression();
+        /// <summary>
+        /// Parse a parameter keyword.
+        /// </summary>
+        protected abstract string ParseParameter(string parameterID);
+        /// <summary>
+        /// Parse a compile rule keyword.
+        /// </summary>
+        protected abstract string ParseCompileRule(string ruleID);
 
-        protected static void Replace(ref string str, ref int startIndex, int length, string substr)
+        protected static string GetError(string str)
         {
-            str = str.Substring(0, startIndex) + substr + str.Substring(startIndex + length);
-            startIndex += substr.Length - 1;
+            return $"\"{str}\"";
         }
 
-        protected static string MakeExpression(object obj)
+        protected static string GetParameterError(string parameterID)
         {
-            return $"{'\"'}{obj}{'\"'}";
+            return GetError($"bad_parameter_{parameterID}");
+        }
+
+        protected static string GetRuleError(string ruleID)
+        {
+            return GetError($"bad_rule_{ruleID}");
         }
 
         /* Private methods. */
-        private static string Execute(string str)
+        /// <summary>
+        /// Create an evaluation node.
+        /// </summary>
+        private Node CreateNode(string expression)
         {
-            GD.Print("Executing: " + str);
-            Expression expression = new();
-            if (expression.Parse(str) == Error.Ok)
-            {
-                return (string)expression.Execute();
-            }
+            string inspectorType = Inspector.GetType().Name;
+
+            // If the expression was empty, use the default expression.
+            if (expression == "")
+                expression = "result = " + GetDefaultExpression();
+
+            // If the expression was NOT empty...
             else
-                return $"bad_expression";
+            {
+                // Fix simple single-line expressions.
+                if (!expression.Contains('\n') && !expression.StartsWith("return") && !expression.StartsWith("result"))
+                {
+                    expression = "result = " + expression;
+                }
+
+                // Add indentation.
+                expression = expression.Replace("\n", "\n\t");
+
+                // Parse expression keywords...
+                for (int i = 0; i < expression.Length - 1; i++)
+                {
+                    if (CheckKeyword("%", "%", expression, i, out string parameterID))
+                    {
+                        string parsed = ParseParameter(parameterID);
+                        Replace(ref expression, ref i, parameterID.Length + 2, parsed);
+                    }
+                    else if (CheckKeyword("[", "]", expression, i, out string ruleID))
+                    {
+                        string parsed = ParseCompileRule(ruleID);
+                        Replace(ref expression, ref i, ruleID.Length + 2, parsed);
+                    }
+                }
+            }
+
+            // Create source code.
+            string code = SkeletonCode
+                .Replace("%INSPECTOR%", inspectorType)
+                .Replace("%IMPLEMENTATION%", expression);
+            GD.Print(expression);
+            GD.Print(code);
+            // Create script.
+            GDScript script = new();
+            script.SourceCode = code;
+            Error error = script.Reload();
+
+            // Return instantiated node.
+            if (error == Error.Ok)
+                return (Node)script.New();
+            else
+                return null;
         }
 
         private static bool CheckKeyword(string startEscape, string endEscape, string expression, int index, out string keyword)
@@ -81,6 +148,12 @@ namespace Rusty.ISA.Editor
 
             keyword = "";
             return false;
+        }
+
+        private static void Replace(ref string str, ref int startIndex, int length, string substr)
+        {
+            str = str.Substring(0, startIndex) + substr + str.Substring(startIndex + length);
+            startIndex += substr.Length - 1;
         }
     }
 }

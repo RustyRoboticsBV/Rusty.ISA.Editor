@@ -7,6 +7,7 @@ namespace Rusty.ISA.Editor
     /// <summary>
     /// A color parameter inspector.
     /// </summary>
+    [GlobalClass]
     public partial class ColorParameterInspector : ParameterInspector
     {
         /* Public properties. */

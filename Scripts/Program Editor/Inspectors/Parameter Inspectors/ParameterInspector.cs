@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Godot;
+using System;
 
 namespace Rusty.ISA.Editor
 {
     /// <summary>
     /// A instruction parameter inspector.
     /// </summary>
+    [GlobalClass]
     public abstract partial class ParameterInspector : Inspector
     {
         /* Public properties. */
@@ -66,6 +68,17 @@ namespace Rusty.ISA.Editor
         public virtual void SetValue(string str)
         {
             ValueObj = str;
+        }
+
+        /// <summary>
+        /// Get the inspector's argument value as a string.
+        /// </summary>
+        public string GetValue()
+        {
+            if (ValueObj == null)
+                return "";
+            else
+                return ValueObj.ToString();
         }
     }
 }

@@ -1,35 +1,55 @@
 ﻿using Godot;
+using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor
 {
     public class InstructionPreview : Preview<InstructionInspector>
     {
-        /* Constructors. */
-        public InstructionPreview(InstructionInspector inspector) : base(inspector) { }
+        /* Public properties. */
+        public List<ParameterPreview> Parameters { get; } = new();
+        public List<CompileRulePreview> CompileRules { get; } = new();
 
-        /* Public methods. */
-        public static string Parse(InstructionInspector inspector, string expression)
+        /* Constructors. */
+        public InstructionPreview(InstructionInspector inspector)
+            : base(inspector, inspector, inspector.Definition.Preview)
         {
-            InstructionPreview preview = new(inspector);
-            return preview.Generate(expression);
+            // Create parameter previews.
+            for (int i = 0; i < Inspector.Definition.Parameters.Length; i++)
+            {
+                ParameterInspector parameter = Inspector.GetParameterInspector(i);
+                Parameters.Add(new(this, parameter));
+            }
+
+            // Create compile rule previews.
+            for (int i = 0; i < Inspector.Definition.PreInstructions.Length; i++)
+            {
+                // TODO
+            }
+            for (int i = 0; i < Inspector.Definition.PostInstructions.Length; i++)
+            {
+                // TODO
+            }
+
+
         }
 
         /* Protected methods. */
-        protected override string GetDefault()
+        protected override string GetDefaultExpression()
         {
             return "";
         }
 
-        protected override void ParseParameter(ref string expression, ref int startIndex, int length, string parameterID)
+        protected override string ParseParameter(string parameterID)
         {
-            GD.Print("Encountered parameter " + parameterID);
-            Replace(ref expression, ref startIndex, length, ParameterPreview.Parse(Inspector, parameterID));
+            int index = Inspector.Definition.GetParameterIndex(parameterID);
+            if (index >= 0)
+                return $"\"{Parameters[index].Evaluate()}\"";
+            return GetParameterError(parameterID);
         }
 
-        protected override void ParseCompileRule(ref string expression, ref int startIndex, int length, string ruleID)
+        protected override string ParseCompileRule(string ruleID)
         {
-            GD.Print("TODO: parse compile rule " + ruleID);
-            Replace(ref expression, ref startIndex, length, CompileRulePreview.Parse(Inspector, ruleID));
+            return "";
         }
     }
 }

@@ -103,6 +103,7 @@ namespace Rusty.ISA.Editor.Definitions
             {
                 Name = "Preview",
                 LabelText = "Preview",
+                Height = 128
             };
             Foldout.Add(Preview);
         }

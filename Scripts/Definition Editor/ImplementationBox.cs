@@ -34,9 +34,9 @@ namespace Rusty.ISA.Editor.Definitions
 
                     Enabled.ButtonPressed = true;
                     Dependencies.Text = dependencies;
-                    Members.Text = dependencies;
-                    Initialize.Text = dependencies;
-                    Execute.Text = dependencies;
+                    Members.Text = value.Members;
+                    Initialize.Text = value.Initialize;
+                    Execute.Text = value.Execute;
                 }
                 else
                     Enabled.ButtonPressed = false;

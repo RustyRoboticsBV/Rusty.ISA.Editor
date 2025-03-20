@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Rusty.ISA;
+﻿using Godot;
+using System.Collections.Generic;
 using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
@@ -7,6 +7,7 @@ namespace Rusty.ISA.Editor
     /// <summary>
     /// A instruction inspector.
     /// </summary>
+    [GlobalClass]
     public abstract partial class InstructionInspector : Inspector
     {
         /* Public properties */

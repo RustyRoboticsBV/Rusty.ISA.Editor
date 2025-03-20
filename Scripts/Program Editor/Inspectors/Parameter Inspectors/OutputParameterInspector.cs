@@ -1,11 +1,13 @@
 ﻿using Rusty.ISA;
 using Rusty.EditorUI;
+using Godot;
 
 namespace Rusty.ISA.Editor
 {
     /// <summary>
     /// A output parameter inspector. It's a dummy inspector that is instantly hidden.
     /// </summary>
+    [GlobalClass]
     public partial class OutputParameterInspector : ParameterInspector
     {
         /* Public properties. */

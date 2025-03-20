@@ -1,4 +1,4 @@
-﻿using Rusty.ISA;
+﻿using Godot;
 using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
@@ -6,6 +6,7 @@ namespace Rusty.ISA.Editor
     /// <summary>
     /// A instruction inspector.
     /// </summary>
+    [GlobalClass]
     public partial class NodeInstructionInspector : InstructionInspector
     {
         /* Public methods. */

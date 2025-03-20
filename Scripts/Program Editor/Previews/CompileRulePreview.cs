@@ -8,7 +8,8 @@ namespace Rusty.ISA.Editor
         public InstructionInspector Parent { get; private set; }
 
         /* Constructors. */
-        public CompileRulePreview(InstructionInspector parent, CompileRuleInspector inspector) : base(inspector)
+        public CompileRulePreview(InstructionInspector parent, CompileRuleInspector inspector)
+            : base(parent, inspector, inspector.Definition.Preview)
         {
             Parent = parent;
         }
@@ -20,19 +21,19 @@ namespace Rusty.ISA.Editor
         }
 
         /* Protected methods. */
-        protected override string GetDefault()
+        protected override string GetDefaultExpression()
         {
             return "";
         }
 
-        protected override void ParseParameter(ref string expression, ref int startIndex, int length, string parameterID)
+        protected override string ParseParameter(string parameterID)
         {
-            Replace(ref expression, ref startIndex, length, ParameterPreview.Parse(Parent, parameterID));
+            return "";
         }
 
-        protected override void ParseCompileRule(ref string expression, ref int startIndex, int length, string id)
+        protected override string ParseCompileRule(string ruleID)
         {
-            Replace(ref expression, ref startIndex, length, "");
+            return "";
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using Rusty.ISA;
 using Rusty.EditorUI;
+using Godot;
 
 namespace Rusty.ISA.Editor
 {
     /// <summary>
     /// A float parameter inspector.
     /// </summary>
+    [GlobalClass]
     public partial class FloatParameterInspector : ParameterInspector
     {
         /* Public properties. */

@@ -266,7 +266,8 @@ namespace Rusty.ISA.Editor
             if (Preview == null)
                 return;
 
-            Preview.Text = InstructionPreview.Parse(Inspector, Definition.Preview);
+            InstructionPreview preview = new(Inspector);
+            Preview.Text = preview.Evaluate();
         }
     }
 }
