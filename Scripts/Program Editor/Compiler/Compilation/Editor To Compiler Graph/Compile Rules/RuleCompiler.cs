@@ -17,7 +17,7 @@ namespace Rusty.ISA.Editor.Compiler
             switch (inspector)
             {
                 case InstructionRuleInspector preInspector:
-                    return InspectorCompiler.Compile(preInspector.InstructionInspector);
+                    return InspectorCompiler.Compile(preInspector.TargetInstruction);
                 case OptionRuleInspector optionInspector:
                     return OptionRuleCompiler.Compile(optionInspector);
                 case ChoiceRuleInspector choiceInspector:

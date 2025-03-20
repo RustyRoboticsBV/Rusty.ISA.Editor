@@ -1,5 +1,4 @@
 ﻿using Godot;
-using Rusty.ISA;
 using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
@@ -37,10 +36,8 @@ namespace Rusty.ISA.Editor
         private ColorField ColorField { get; set; }
 
         /* Constructors. */
-        public ColorParameterInspector() : base() { }
-
-        public ColorParameterInspector(InstructionSet instructionSet, ColorParameter parameter)
-            : base(instructionSet, parameter)
+        public ColorParameterInspector(InstructionInspector root, ColorParameter parameter)
+            : base(root, parameter)
         {
             ColorField.Value = parameter.DefaultValue;
         }

@@ -1,6 +1,5 @@
-﻿using Rusty.ISA;
+﻿using Godot;
 using Rusty.EditorUI;
-using Godot;
 
 namespace Rusty.ISA.Editor
 {
@@ -37,10 +36,8 @@ namespace Rusty.ISA.Editor
         private CharField CharField { get; set; }
 
         /* Constructors. */
-        public CharParameterInspector() : base() { }
-
-        public CharParameterInspector(InstructionSet instructionSet, CharParameter parameter)
-            : base(instructionSet, parameter)
+        public CharParameterInspector(InstructionInspector root, CharParameter parameter)
+            : base(root, parameter)
         {
             CharField.Value = parameter.DefaultValue;
         }

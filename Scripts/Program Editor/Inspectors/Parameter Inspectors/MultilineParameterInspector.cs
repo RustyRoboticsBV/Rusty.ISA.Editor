@@ -1,6 +1,5 @@
-﻿using Rusty.ISA;
+﻿using Godot;
 using Rusty.EditorUI;
-using Godot;
 
 namespace Rusty.ISA.Editor
 {
@@ -37,10 +36,8 @@ namespace Rusty.ISA.Editor
         private MultilineField MultilineField { get; set; }
 
         /* Constructors. */
-        public MultilineParameterInspector() : base() { }
-
-        public MultilineParameterInspector(InstructionSet instructionSet, MultilineParameter parameter)
-            : base(instructionSet, parameter)
+        public MultilineParameterInspector(InstructionInspector root, MultilineParameter parameter)
+            : base(root, parameter)
         {
             MultilineField.Value = parameter.DefaultValue;
         }

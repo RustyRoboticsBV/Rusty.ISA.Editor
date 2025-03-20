@@ -1,6 +1,5 @@
-﻿using Rusty.ISA;
+﻿using Godot;
 using Rusty.EditorUI;
-using Godot;
 
 namespace Rusty.ISA.Editor
 {
@@ -26,10 +25,8 @@ namespace Rusty.ISA.Editor
         }
 
         /* Constructors. */
-        public OutputParameterInspector() : base() { }
-
-        public OutputParameterInspector(InstructionSet instructionSet, OutputParameter parameter)
-            : base(instructionSet, parameter) { }
+        public OutputParameterInspector(InstructionInspector root, OutputParameter parameter)
+            : base(root, parameter) { }
 
         public OutputParameterInspector(OutputParameterInspector other) : base(other) { }
 

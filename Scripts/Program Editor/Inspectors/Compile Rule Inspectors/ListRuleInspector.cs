@@ -11,16 +11,14 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// The compile rule visualized by this inspector.
         /// </summary>
-        public ListRule Rule => Resource as ListRule;
+        public new ListRule Definition => base.Definition as ListRule;
 
         /* Private properties. */
         private ListElement ListElement { get; set; }
 
         /* Constructors. */
-        public ListRuleInspector() : base() { }
-
-        public ListRuleInspector(InstructionSet instructionSet, ListRule compileRule)
-            : base(instructionSet, compileRule) { }
+        public ListRuleInspector(InstructionInspector root, ListRule compileRule)
+            : base(root, compileRule) { }
 
         public ListRuleInspector(ListRuleInspector other) : base(other) { }
 
@@ -69,7 +67,7 @@ namespace Rusty.ISA.Editor
 
             for (int i = 0; i < ListElement.Count; i++)
             {
-                ListElement[i].HeaderText = $"{Rule.Type.DisplayName} #{i + 1}";;
+                ListElement[i].HeaderText = $"{Definition.Type.DisplayName} #{i + 1}";;
             }
         }
 
@@ -80,14 +78,14 @@ namespace Rusty.ISA.Editor
             base.Init();
 
             // Set name.
-            Name = $"ListRule ({Rule.ID})";
+            Name = $"ListRule ({Definition.ID})";
 
             // Add list element.
             ListElement = new()
             {
-                HeaderText = Rule.DisplayName,
-                AddButtonText = Rule.AddButtonText,
-                Template = Create(InstructionSet, Rule.Type)
+                HeaderText = Definition.DisplayName,
+                AddButtonText = Definition.AddButtonText,
+                Template = Create(Root, Definition.Type)
             };
             Add(ListElement);
         }

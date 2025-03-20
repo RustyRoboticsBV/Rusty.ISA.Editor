@@ -1,5 +1,4 @@
-﻿using Rusty.ISA;
-using Rusty.EditorUI;
+﻿using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
 {
@@ -8,8 +7,8 @@ namespace Rusty.ISA.Editor
         /* Constructors. */
         public PreInstructionsInspector() : base() { }
 
-        public PreInstructionsInspector(InstructionSet instructionSet, InstructionDefinition definition)
-            : base(instructionSet, definition) { }
+        public PreInstructionsInspector(InstructionInspector root, InstructionDefinition definition)
+            : base(root, definition) { }
 
         public PreInstructionsInspector(PreInstructionsInspector other) : base()
         {

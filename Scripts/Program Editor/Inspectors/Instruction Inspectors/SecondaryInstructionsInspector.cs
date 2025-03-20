@@ -6,19 +6,26 @@ namespace Rusty.ISA.Editor
     public abstract partial class SecondaryInstructionsInspector : Inspector
     {
         /* Public properties. */
+        public InstructionInspector Root { get; private set; }
         public List<CompileRuleInspector> Inspectors { get; set; } = new();
 
         /* Constructors. */
         public SecondaryInstructionsInspector() : base() { }
 
-        public SecondaryInstructionsInspector(InstructionSet instructionSet, InstructionDefinition definition)
-            : base(instructionSet, definition) { }
+        public SecondaryInstructionsInspector(InstructionInspector root, InstructionDefinition definition)
+            : base(root.InstructionSet, definition)
+        {
+            Root = root;
+        }
 
         /* Public methods. */
         public override bool CopyStateFrom(Element other)
         {
             if (base.CopyStateFrom(other) && other is SecondaryInstructionsInspector otherInspector)
             {
+                // Copy root.
+                Root = otherInspector.Root;
+
                 // Clear current refences.
                 Inspectors.Clear();
 
@@ -46,7 +53,7 @@ namespace Rusty.ISA.Editor
         {
             foreach (CompileRule compileRule in rules)
             {
-                CompileRuleInspector inspector = CompileRuleInspector.Create(InstructionSet, compileRule);
+                CompileRuleInspector inspector = CompileRuleInspector.Create(Root, compileRule);
                 Inspectors.Add(inspector);
                 Add(inspector);
             }

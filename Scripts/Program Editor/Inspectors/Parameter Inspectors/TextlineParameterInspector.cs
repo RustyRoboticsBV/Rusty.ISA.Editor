@@ -1,6 +1,5 @@
-﻿using Rusty.ISA;
+﻿using Godot;
 using Rusty.EditorUI;
-using Godot;
 
 namespace Rusty.ISA.Editor
 {
@@ -37,10 +36,8 @@ namespace Rusty.ISA.Editor
         private LineField LineField { get; set; }
 
         /* Constructors. */
-        public TextlineParameterInspector() : base() { }
-
-        public TextlineParameterInspector(InstructionSet instructionSet, TextlineParameter parameter)
-            : base(instructionSet, parameter)
+        public TextlineParameterInspector(InstructionInspector root, TextlineParameter parameter)
+            : base(root, parameter)
         {
             LineField.Value = parameter.DefaultValue;
         }

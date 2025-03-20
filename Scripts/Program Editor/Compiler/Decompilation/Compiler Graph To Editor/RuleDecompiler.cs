@@ -14,7 +14,7 @@ namespace Rusty.ISA.Editor.Compiler
         public static void ApplyRule(Node<NodeData> rule, Inspector ruleInspector)
         {
             if (rule.Data.GetOpcode() == BuiltIn.InspectorOpcode && ruleInspector is InstructionRuleInspector instruction)
-                InspectorDecompiler.Apply(rule, instruction.InstructionInspector);
+                InspectorDecompiler.Apply(rule, instruction.TargetInstruction);
 
             else if (rule.Data.GetOpcode() == BuiltIn.OptionRuleOpcode && ruleInspector is OptionRuleInspector option)
                 OptionRuleDecompiler.Apply(rule, option);

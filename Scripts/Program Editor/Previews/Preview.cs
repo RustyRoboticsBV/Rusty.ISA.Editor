@@ -5,7 +5,6 @@ namespace Rusty.ISA.Editor
     public abstract class Preview<T> where T : Inspector
     {
         /* Public properties. */
-        public InstructionInspector Root { get; private set; }
         public T Inspector { get; private set; }
 
         /* Private properties. */
@@ -23,9 +22,10 @@ namespace Rusty.ISA.Editor
         private Node Node { get; set; }
 
         /* Constructors. */
-        public Preview(InstructionInspector root, T inspector, string implementation)
+        public Preview() : this(null, "") { }
+
+        public Preview(T inspector, string implementation)
         {
-            Root = root;
             Inspector = inspector;
             Implementation = implementation;
         }
@@ -36,6 +36,14 @@ namespace Rusty.ISA.Editor
         /// </summary>
         public string Evaluate()
         {
+            if (this is ParameterPreview parameter)
+            {
+                if (parameter.Inspector != null)
+                    GD.Print("Evaluating preview of " + parameter != null ? parameter.Inspector.Definition.ID : "null");
+                else
+                    GD.Print("Evaluating preview of null inspector");
+            }
+
             // Create node if necessary.
             if (Node == null)
                 Node = CreateNode(Implementation);
@@ -86,6 +94,11 @@ namespace Rusty.ISA.Editor
             return $"\"{str}\"";
         }
 
+        protected static string GetNullError(string parameterID)
+        {
+            return GetError($"null_{parameterID}");
+        }
+
         protected static string GetParameterError(string parameterID)
         {
             return GetError($"bad_parameter_{parameterID}");
@@ -102,7 +115,7 @@ namespace Rusty.ISA.Editor
         /// </summary>
         private Node CreateNode(string expression)
         {
-            string inspectorType = Inspector.GetType().Name;
+            string inspectorType = Inspector != null ? Inspector.GetType().Name : "Node";
 
             // If the expression was empty, use the default expression.
             if (expression == "")

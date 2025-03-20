@@ -3,25 +3,24 @@
     public class CompileRulePreview : Preview<CompileRuleInspector>
     {
         /* Public properties. */
-        public InstructionPreview Parent { get; private set; }
+        /// <summary>
+        /// The instruction inspector that acts as the root of this preview's inspector.
+        /// </summary>
+        public InstructionInspector Root => Inspector.Root;
 
         /* Constructors. */
-        public CompileRulePreview(InstructionPreview parent, CompileRuleInspector inspector)
-            : base(parent.Inspector, inspector, inspector.Definition.Preview)
-        {
-            Parent = parent;
-        }
+        public CompileRulePreview() : base() { }
 
-        /* Public methids. */
-        public static string Parse(InstructionInspector parent, string ruleID)
-        {
-            return "";
-        }
+        public CompileRulePreview(CompileRuleInspector inspector)
+            : base(inspector, inspector.Definition.Preview) { }
 
         /* Protected methods. */
         protected override string GetDebugName()
         {
-            return Inspector.Definition.GetType().Name + " " + Inspector.Definition.ID;
+            if (Inspector != null)
+                return Inspector.Definition.GetType().Name + " " + Inspector.Definition.ID;
+            else
+                return "CompileRule null";
         }
 
         protected override string GetElements()
@@ -36,7 +35,7 @@
                     {
                         if (str != "")
                             str += ", ";
-                        CompileRulePreview preview = new(Parent, item);
+                        CompileRulePreview preview = new(item);
                         str += Make(preview.Evaluate());
                     }
                     break;
@@ -50,16 +49,19 @@
 
         protected override string GetDefaultExpression()
         {
+            if (Inspector == null || Root == null)
+                return "";
+
             switch (Inspector)
             {
                 case InstructionRuleInspector instruction:
                     return Parse(instruction);
 
                 case OptionRuleInspector option:
-                    return Parse(Parent, option);
+                    return Parse(option);
 
                 case ChoiceRuleInspector choice:
-                    return Parse(Parent, choice);
+                    return Parse(choice);
 
                 case TupleRuleInspector tuple:
                     CompileRuleInspector[] items = tuple.GetActiveSubInspectors();
@@ -68,7 +70,7 @@
                     {
                         if (concat != "")
                             concat += " + ";
-                        CompileRulePreview preview = new(Parent, item);
+                        CompileRulePreview preview = new(item);
                         concat += Make(" " + preview.Evaluate());
                     }
                     return concat;
@@ -80,7 +82,7 @@
                     {
                         if (sum != "")
                             sum += " + ";
-                        CompileRulePreview preview = new(Parent, element);
+                        CompileRulePreview preview = new(element);
                         sum += Make("\n" + preview.Evaluate());
                     }
                     return sum;
@@ -91,28 +93,28 @@
 
         protected override string ParseParameter(string parameterID)
         {
-            for (int i = 0; i < Parent.Parameters.Count; i++)
-            {
-                if (Parent.Parameters[i].Inspector.Definition.ID == parameterID)
-                    return Make(Parent.Parameters[i].Evaluate());
-            }
-            return GetParameterError(parameterID);
+            ParameterInspector inspector = Root.GetParameterInspector(parameterID);
+            if (inspector != null)
+                return Make(inspector.Preview.Evaluate());
+            else
+                return GetParameterError(parameterID);
         }
 
         protected override string ParseCompileRule(string ruleID)
         {
+            // Special keywords.
             if (Inspector is InstructionRuleInspector instruction && ruleID == "target")
                 return Parse(instruction);
             else if (Inspector is OptionRuleInspector option && ruleID == "option")
-                return Parse(Parent, option);
+                return Parse(option);
             else if (Inspector is ChoiceRuleInspector choice && ruleID == "selected")
-                return Parse(Parent, choice);
+                return Parse(choice);
             else if (Inspector is TupleRuleInspector tuple)
             {
-                for (int i = 0; i < tuple.Rule.Types.Length; i++)
+                for (int i = 0; i < tuple.Definition.Types.Length; i++)
                 {
-                    if (tuple.Rule.Types[i].ID == ruleID)
-                        return Make(new CompileRulePreview(Parent, tuple.GetActiveSubInspectors()[i]).Evaluate());
+                    if (tuple.Definition.Types[i].ID == ruleID)
+                        return Make(tuple.GetActiveSubInspectors()[i].Preview.Evaluate());
                 }
             }
             else if (Inspector is ListRuleInspector list)
@@ -126,26 +128,31 @@
                 }
             }
 
-            return InstructionPreview.ParseCompileRule(Parent, ruleID);
+            // Else, we want to get the preview of another compile rule.
+            CompileRuleInspector inspector = Root.GetCompileRuleInspector(ruleID);
+            if (inspector != null)
+                return Make(inspector.Preview.Evaluate());
+            else
+                return GetRuleError(ruleID);
         }
 
         /* Private methods. */
         private static string Parse(InstructionRuleInspector inspector)
         {
-            return Make(new InstructionPreview(inspector.InstructionInspector).Evaluate());
+            return Make(inspector.TargetInstruction.Preview.Evaluate());
         }
 
-        private static string Parse(InstructionPreview parent, OptionRuleInspector option)
+        private static string Parse(OptionRuleInspector option)
         {
             if (option.Checked)
-                return Make(new CompileRulePreview(parent, option.ChildRuleInspector).Evaluate());
+                return Make(option.ChildRuleInspector.Preview.Evaluate());
             else
                 return "";
         }
 
-        private static string Parse(InstructionPreview parent, ChoiceRuleInspector choice)
+        private static string Parse(ChoiceRuleInspector choice)
         {
-            return Make(new CompileRulePreview(parent, choice.GetSelected()).Evaluate());
+            return Make(choice.Preview.Evaluate());
         }
     }
 }

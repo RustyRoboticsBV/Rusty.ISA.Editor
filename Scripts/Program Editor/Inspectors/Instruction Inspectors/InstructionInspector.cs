@@ -23,6 +23,9 @@ namespace Rusty.ISA.Editor
         public PreInstructionsInspector PreInstructions { get; set; }
         public PostInstructionsInspector PostInstructions { get; set; }
 
+        public InstructionPreview Preview { get; private set; } = new();
+        public bool UpdatedPreview { get; private set; }
+
         /* Private properties. */
         private List<ParameterInspector> Parameters { get; set; } = new();
 
@@ -73,7 +76,28 @@ namespace Rusty.ISA.Editor
         /// </summary>
         public ParameterInspector GetParameterInspector(string id)
         {
-            return Parameters[Definition.GetParameterIndex(id)];
+            int index = Definition.GetParameterIndex(id);
+            if (index >= 0)
+                return Parameters[index];
+            return null;
+        }
+
+        /// <summary>
+        /// Get a compile rule inspector.
+        /// </summary>
+        public CompileRuleInspector GetCompileRuleInspector(string id)
+        {
+            for (int i = 0; i < Definition.PreInstructions.Length; i++)
+            {
+                if (Definition.PreInstructions[i].ID == id)
+                    return GetPreInstructionInspector(i);
+            }
+            for (int i = 0; i < Definition.PostInstructions.Length; i++)
+            {
+                if (Definition.PostInstructions[i].ID == id)
+                    return GetPostInstructionInspector(i);
+            }
+            return null;
         }
 
         /// <summary>
@@ -143,9 +167,43 @@ namespace Rusty.ISA.Editor
             return Outputs;
         }
 
-        public string[] GetPreviewTerms()
+        /* Godot overrides. */
+        public override void _Process(double delta)
         {
-            return new string[0];
+            base._Process(delta);
+
+            UpdatedPreview = false;
+            for (int i = 0; i < Parameters.Count; i++)
+            {
+                if (Parameters[i].UpdatedPreview)
+                {
+                    UpdatedPreview = true;
+                    break;
+                }
+            }
+            for (int i = 0; i < PreInstructions.Inspectors.Count; i++)
+            {
+                if (UpdatedPreview)
+                    break;
+                if (PreInstructions.Inspectors[i].UpdatedPreview)
+                {
+                    UpdatedPreview = true;
+                    break;
+                }
+            }
+            for (int i = 0; i < PostInstructions.Inspectors.Count; i++)
+            {
+                if (UpdatedPreview)
+                    break;
+                if (PostInstructions.Inspectors[i].UpdatedPreview)
+                {
+                    UpdatedPreview = true;
+                    break;
+                }
+            }
+
+            if (UpdatedPreview)
+                Preview = new(this);
         }
 
         /* Protected methods. */
@@ -160,17 +218,17 @@ namespace Rusty.ISA.Editor
             // Add parameters.
             foreach (Parameter parameter in Definition.Parameters)
             {
-                ParameterInspector parameterInspector = ParameterInspector.Create(InstructionSet, parameter);
+                ParameterInspector parameterInspector = ParameterInspector.Create(this, parameter);
                 Parameters.Add(parameterInspector);
                 Add(parameterInspector);
             }
 
             // Add compile rules.
-            PreInstructions = new(InstructionSet, Definition);
+            PreInstructions = new(this, Definition);
             Add(PreInstructions);
             PreInstructions.Populate(Definition.PreInstructions);
 
-            PostInstructions = new(InstructionSet, Definition);
+            PostInstructions = new(this, Definition);
             Add(PostInstructions);
             PostInstructions.Populate(Definition.PostInstructions);
         }

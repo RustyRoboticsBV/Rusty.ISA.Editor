@@ -1,6 +1,5 @@
-﻿using Rusty.ISA;
+﻿using Godot;
 using Rusty.EditorUI;
-using Godot;
 
 namespace Rusty.ISA.Editor
 {
@@ -37,10 +36,8 @@ namespace Rusty.ISA.Editor
         private IntSliderField IntSliderField { get; set; }
 
         /* Constructors. */
-        public IntSliderParameterInspector() : base() { }
-
-        public IntSliderParameterInspector(InstructionSet instructionSet, IntSliderParameter parameter)
-            : base(instructionSet, parameter)
+        public IntSliderParameterInspector(InstructionInspector root, IntSliderParameter parameter)
+            : base(root, parameter)
         {
             IntSliderField.Value = parameter.DefaultValue;
             IntSliderField.MinValue = parameter.MinValue;

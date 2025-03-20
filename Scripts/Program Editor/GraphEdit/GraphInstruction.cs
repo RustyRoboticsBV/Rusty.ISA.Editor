@@ -140,7 +140,8 @@ namespace Rusty.ISA.Editor
                 Title = Definition.DisplayName;
 
             EnsureSlots();
-            UpdatePreview();
+            if (Inspector.UpdatedPreview)
+                UpdatePreview();
         }
 
         private TextureRect AddIcon(Control container, Texture2D texture, int size)
@@ -250,12 +251,12 @@ namespace Rusty.ISA.Editor
                     Slots[i].RightText.Text = "OUT";
                 else
                 {
-                    ParameterPreview preview = new(new InstructionPreview(Inspector), outputs[i]);
-                    Slots[i].RightText.Text = preview.Evaluate();
-                }
+                    GD.Print("Evaluating " + i + ": " + outputs[index] != null ? outputs[index].Definition : "null");
+                    Slots[i].RightText.Text = outputs[index].Preview.Evaluate();
+                }   
             }
 
-            // Restore preview.
+            // Re-add the preview.
             if (PreviewLabel != null)
                 AddChild(PreviewLabel);
         }
@@ -268,8 +269,7 @@ namespace Rusty.ISA.Editor
             if (PreviewLabel == null)
                 return;
 
-            InstructionPreview preview = new(Inspector);
-            PreviewLabel.Text = preview.Evaluate();
+            PreviewLabel.Text = Inspector.Preview.Evaluate();
         }
     }
 }

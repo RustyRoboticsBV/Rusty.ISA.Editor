@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
 {
@@ -11,15 +12,47 @@ namespace Rusty.ISA.Editor
         /* Public properties. */
         public CompileRule Definition => Resource as CompileRule;
 
+        /// <summary>
+        /// The root instruction inspector.
+        /// </summary>
+        public InstructionInspector Root { get; private set; }
+        /// <summary>
+        /// The preview generator for this inspector.
+        /// </summary>
+        public CompileRulePreview Preview { get; private set; } = new();
+        /// <summary>
+        /// Whether or not the preview was updated this loop.
+        /// </summary>
+        public bool UpdatedPreview { get; private set; }
+
+        /* Private properties. */
+        private int LastLength { get; set; }
+
         /* Constructors. */
-        public CompileRuleInspector() : base() { }
+        public CompileRuleInspector(InstructionInspector root, CompileRule compileRule)
+            : base(root.InstructionSet, compileRule)
+        {
+            Root = root;
+            Init();
+        }
 
-        public CompileRuleInspector(InstructionSet instructionSet, CompileRule compileRule)
-            : base(instructionSet, compileRule) { }
-
-        public CompileRuleInspector(CompileRuleInspector other) : base(other) { }
+        public CompileRuleInspector(CompileRuleInspector other)
+            : this(other.Root, other.Definition)
+        {
+            CopyStateFrom(other);
+        }
 
         /* Public methods. */
+        public override bool CopyStateFrom(Element other)
+        {
+            if (base.CopyStateFrom(other) && other is CompileRuleInspector rule)
+            {
+                Root = rule.Root;
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Gets the child rule inspector(s) that are currently active, if any.
         /// </summary>
@@ -28,20 +61,20 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// Create a compile rule inspector of some type.
         /// </summary>
-        public static CompileRuleInspector Create(InstructionSet instructionSet, CompileRule compileRule)
+        public static CompileRuleInspector Create(InstructionInspector root, CompileRule compileRule)
         {
             switch (compileRule)
             {
                 case InstructionRule instructionRule:
-                    return new InstructionRuleInspector(instructionSet, instructionRule);
+                    return new InstructionRuleInspector(root, instructionRule);
                 case OptionRule optionRule:
-                    return new OptionRuleInspector(instructionSet, optionRule);
+                    return new OptionRuleInspector(root, optionRule);
                 case ChoiceRule choiceRule:
-                    return new ChoiceRuleInspector(instructionSet, choiceRule);
+                    return new ChoiceRuleInspector(root, choiceRule);
                 case TupleRule tupleRule:
-                    return new TupleRuleInspector(instructionSet, tupleRule);
+                    return new TupleRuleInspector(root, tupleRule);
                 case ListRule listRule:
-                    return new ListRuleInspector(instructionSet, listRule);
+                    return new ListRuleInspector(root, listRule);
                 default:
                     throw new ArgumentException($"Compile rule '{compileRule}' has an illegal type '{compileRule.GetType().Name}'.");
             }
@@ -64,5 +97,42 @@ namespace Rusty.ISA.Editor
             }
             return Outputs;
         }
+
+        /* Godot overrides. */
+        public override void _Process(double delta)
+        {
+            base._Process(delta);
+
+            // Check if we need to update the preview.
+            UpdatedPreview = false;
+            CompileRuleInspector[] subInspectors = GetActiveSubInspectors();
+
+            // ... Either if the number of sub-inspectors has changed...
+            if (subInspectors.Length != LastLength)
+                UpdatedPreview = true;
+
+            /// ... Or if one of the sub-inspectors was updated.
+            for (int i = 0; i < subInspectors.Length; i++)
+            {
+                if (UpdatedPreview)
+                    break;
+                if (subInspectors[i].UpdatedPreview)
+                {
+                    UpdatedPreview = true;
+                    break;
+                }
+            }
+
+            // ... Or if the root had its preview changed.
+            if (Root != null && Root.UpdatedPreview)
+                UpdatedPreview = true;
+
+            // Update the preview if necessary.
+            if (UpdatedPreview)
+                Preview = new(this);
+        }
+
+        /* Protected methods. */
+        protected new virtual void Init() { }
     }
 }

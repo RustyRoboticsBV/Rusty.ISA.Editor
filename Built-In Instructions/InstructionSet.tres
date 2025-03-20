@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=104 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=105 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_gmmgc"]
@@ -506,7 +506,15 @@ ID = "body"
 DisplayName = "Body"
 Description = ""
 DefaultValue = "Blah, blah, blah..."
-Preview = ""
+Preview = "%mood% + %body%"
+
+[sub_resource type="Resource" id="Resource_vycqr"]
+script = ExtResource("15_3ecvh")
+ID = "output"
+DisplayName = "Output"
+Description = ""
+RemoveDefaultOutput = true
+Preview = "%body%"
 
 [sub_resource type="Resource" id="Resource_ogowu"]
 script = ExtResource("24_lggmc")
@@ -529,7 +537,7 @@ Preview = "for i in [count]:
 [sub_resource type="Resource" id="Resource_cum1f"]
 script = ExtResource("2_uguea")
 Opcode = "TXT"
-Parameters = [SubResource("Resource_n8xtu"), SubResource("Resource_c16ni"), SubResource("Resource_pm5f8")]
+Parameters = [SubResource("Resource_n8xtu"), SubResource("Resource_c16ni"), SubResource("Resource_pm5f8"), SubResource("Resource_vycqr")]
 DisplayName = "Set Text"
 Description = ""
 Category = ""

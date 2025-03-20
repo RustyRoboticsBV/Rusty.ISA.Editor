@@ -1,5 +1,4 @@
-﻿using Godot;
-using Rusty.EditorUI;
+﻿using Rusty.EditorUI;
 using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor
@@ -13,18 +12,16 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// The compile rule visualized by this inspector.
         /// </summary>
-        public InstructionRule Rule => Resource as InstructionRule;
+        public new InstructionRule Definition => base.Definition as InstructionRule;
 
         /// <summary>
         /// The instruction's inspector.
         /// </summary>
-        public InstructionInspector InstructionInspector { get; private set; }
+        public InstructionInspector TargetInstruction { get; private set; }
 
         /* Constructors. */
-        public InstructionRuleInspector() : base() { }
-
-        public InstructionRuleInspector(InstructionSet instructionSet, InstructionRule resource)
-            : base(instructionSet, resource) { }
+        public InstructionRuleInspector(InstructionInspector root, InstructionRule resource)
+            : base(root, resource) { }
 
         public InstructionRuleInspector(InstructionRuleInspector other) : base(other) { }
 
@@ -38,7 +35,7 @@ namespace Rusty.ISA.Editor
         {
             if (base.CopyStateFrom(other))
             {
-                InstructionInspector = this[0] as InstructionInspector;
+                TargetInstruction = this[0] as InstructionInspector;
                 return true;
             }
             else
@@ -52,7 +49,7 @@ namespace Rusty.ISA.Editor
 
         public override List<ParameterInspector> GetOutputs()
         {
-            return InstructionInspector.GetOutputs();
+            return TargetInstruction.GetOutputs();
         }
 
         /* Protected methods. */
@@ -60,9 +57,9 @@ namespace Rusty.ISA.Editor
         {
             base.Init();
 
-            InstructionInspector = new InstructionInspector(InstructionSet, InstructionSet[Rule.Opcode]);
-            Add(InstructionInspector);
-            InstructionInspector.Name = "Instruction";
+            TargetInstruction = new InstructionInspector(InstructionSet, InstructionSet[Definition.Opcode]);
+            Add(TargetInstruction);
+            TargetInstruction.Name = "Instruction";
         }
     }
 }

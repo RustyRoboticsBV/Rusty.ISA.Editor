@@ -11,7 +11,7 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// The compile rule visualized by this inspector.
         /// </summary>
-        public OptionRule Rule => Resource as OptionRule;
+        public new OptionRule Definition => base.Definition as OptionRule;
         /// <summary>
         /// Whether or not this option rule has its check box foldout ticked.
         /// </summary>
@@ -26,10 +26,8 @@ namespace Rusty.ISA.Editor
         private CheckBoxField CheckBoxField { get; set; }
 
         /* Constructors. */
-        public OptionRuleInspector() : base() { }
-
-        public OptionRuleInspector(InstructionSet instructionSet, OptionRule compileRule)
-            : base(instructionSet, compileRule) { }
+        public OptionRuleInspector(InstructionInspector root, OptionRule compileRule)
+            : base(root, compileRule) { }
 
         public OptionRuleInspector(OptionRuleInspector other) : base(other) { }
 
@@ -80,20 +78,20 @@ namespace Rusty.ISA.Editor
             base.Init();
 
             // Set name.
-            Name = $"OptionRule ({Rule.ID})";
+            Name = $"OptionRule ({Definition.ID})";
 
             // Add option element.
             CheckBoxField = new();
-            CheckBoxField.LabelText = Rule.DisplayName;
-            CheckBoxField.Value = Rule.DefaultEnabled;
+            CheckBoxField.LabelText = Definition.DisplayName;
+            CheckBoxField.Value = Definition.DefaultEnabled;
             Add(CheckBoxField);
 
             // Add child rule inspector.
-            ChildRuleInspector = Create(InstructionSet, Rule.Type);
+            ChildRuleInspector = Create(Root, Definition.Type);
             ChildRuleInspector.LocalIndentation = 10;
             Add(ChildRuleInspector);
 
-            if (!Rule.DefaultEnabled)
+            if (!Definition.DefaultEnabled)
                 ChildRuleInspector.Hide();
         }
     }

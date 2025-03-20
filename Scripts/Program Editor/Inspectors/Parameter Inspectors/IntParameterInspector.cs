@@ -1,6 +1,5 @@
-﻿using Rusty.ISA;
+﻿using Godot;
 using Rusty.EditorUI;
-using Godot;
 
 namespace Rusty.ISA.Editor
 {
@@ -37,10 +36,8 @@ namespace Rusty.ISA.Editor
         private IntField IntField { get; set; }
 
         /* Constructors. */
-        public IntParameterInspector() : base() { }
-
-        public IntParameterInspector(InstructionSet instructionSet, IntParameter parameter)
-            : base(instructionSet, parameter)
+        public IntParameterInspector(InstructionInspector root, IntParameter parameter)
+            : base(root, parameter)
         {
             IntField.Value = parameter.DefaultValue;
         }

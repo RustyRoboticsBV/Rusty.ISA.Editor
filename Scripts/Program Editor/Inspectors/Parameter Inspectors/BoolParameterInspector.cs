@@ -1,6 +1,5 @@
-﻿using Rusty.ISA;
+﻿using Godot;
 using Rusty.EditorUI;
-using Godot;
 
 namespace Rusty.ISA.Editor
 {
@@ -37,10 +36,8 @@ namespace Rusty.ISA.Editor
         private CheckBoxField CheckBox { get; set; }
 
         /* Constructors. */
-        public BoolParameterInspector() : base() { }
-
-        public BoolParameterInspector(InstructionSet instructionSet, BoolParameter parameter)
-            : base(instructionSet, parameter)
+        public BoolParameterInspector(InstructionInspector root, BoolParameter parameter)
+            : base(root, parameter)
         {
             CheckBox.Value = parameter.DefaultValue;
         }

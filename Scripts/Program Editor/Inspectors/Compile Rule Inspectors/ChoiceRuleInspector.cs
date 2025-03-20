@@ -11,7 +11,7 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// The compile rule visualized by this inspector.
         /// </summary>
-        public ChoiceRule Rule => Resource as ChoiceRule;
+        public new ChoiceRule Definition => base.Definition as ChoiceRule;
         /// <summary>
         /// The index of the selected choice.
         /// </summary>
@@ -26,10 +26,8 @@ namespace Rusty.ISA.Editor
         private CompileRuleInspector[] ChildInspectors { get; set; }
 
         /* Constructors. */
-        public ChoiceRuleInspector() : base() { }
-
-        public ChoiceRuleInspector(InstructionSet instructionSet, ChoiceRule compileRule)
-            : base(instructionSet, compileRule) { }
+        public ChoiceRuleInspector(InstructionInspector root, ChoiceRule compileRule)
+            : base(root, compileRule) { }
 
         public ChoiceRuleInspector(ChoiceRuleInspector other) : base(other) { }
 
@@ -112,30 +110,30 @@ namespace Rusty.ISA.Editor
             base.Init();
 
             // Set name.
-            Name = $"ChoiceRule ({Rule.ID})";
+            Name = $"ChoiceRule ({Definition.ID})";
 
             // Add option element.
             OptionField = new();
-            OptionField.LabelText = Rule.DisplayName;
-            OptionField.Value = Rule.DefaultSelected;
+            OptionField.LabelText = Definition.DisplayName;
+            OptionField.Value = Definition.DefaultSelected;
             Add(OptionField);
 
             // Add child rule inspectors.
-            ChildInspectors = new CompileRuleInspector[Rule.Types.Length];
-            for (int i = 0; i < Rule.Types.Length; i++)
+            ChildInspectors = new CompileRuleInspector[Definition.Types.Length];
+            for (int i = 0; i < Definition.Types.Length; i++)
             {
-                ChildInspectors[i] = Create(InstructionSet, Rule.Types[i]);
+                ChildInspectors[i] = Create(Root, Definition.Types[i]);
                 ChildInspectors[i].LocalIndentation = 10;
                 Add(ChildInspectors[i]);
-                if (Rule.DefaultSelected != i)
+                if (Definition.DefaultSelected != i)
                     ChildInspectors[i].Hide();
             }
 
             // Set options.
-            string[] options = new string[Rule.Types.Length];
-            for (int i = 0; i < Rule.Types.Length; i++)
+            string[] options = new string[Definition.Types.Length];
+            for (int i = 0; i < Definition.Types.Length; i++)
             {
-                options[i] = Rule.Types[i].DisplayName;
+                options[i] = Definition.Types[i].DisplayName;
             }
             OptionField.Options = options;
         }

@@ -12,17 +12,15 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// The compile rule visualized by this inspector.
         /// </summary>
-        public TupleRule Rule => Resource as TupleRule;
+        public new TupleRule Definition => base.Definition as TupleRule;
 
         /* Private properties. */
         private OptionField OptionField { get; set; }
         private CompileRuleInspector[] ChildRules { get; set; }
 
         /* Constructors. */
-        public TupleRuleInspector() : base() { }
-
-        public TupleRuleInspector(InstructionSet instructionSet, TupleRule compileRule)
-            : base(instructionSet, compileRule) { }
+        public TupleRuleInspector(InstructionInspector root, TupleRule compileRule)
+            : base(root, compileRule) { }
 
         public TupleRuleInspector(TupleRuleInspector other) : base(other) { }
 
@@ -61,22 +59,22 @@ namespace Rusty.ISA.Editor
             base.Init();
 
             // Set name.
-            Name = $"TupleRule ({Rule.ID})";
+            Name = $"TupleRule ({Definition.ID})";
 
             // Add label.
-            if (Rule.DisplayName != "")
+            if (Definition.DisplayName != "")
             {
                 LabelElement title = new();
                 title.Name = "Title";
-                title.LabelText = Rule.DisplayName;
+                title.LabelText = Definition.DisplayName;
                 Add(title);
             }
 
             // Add child rule inspectors.
-            ChildRules = new CompileRuleInspector[Rule.Types.Length];
-            for (int i = 0; i < Rule.Types.Length; i++)
+            ChildRules = new CompileRuleInspector[Definition.Types.Length];
+            for (int i = 0; i < Definition.Types.Length; i++)
             {
-                ChildRules[i] = Create(InstructionSet, Rule.Types[i]);
+                ChildRules[i] = Create(Root, Definition.Types[i]);
                 Add(ChildRules[i]);
             }
         }

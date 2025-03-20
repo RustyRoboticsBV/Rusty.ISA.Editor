@@ -1,6 +1,5 @@
-﻿using Rusty.ISA;
+﻿using Godot;
 using Rusty.EditorUI;
-using Godot;
 
 namespace Rusty.ISA.Editor
 {
@@ -37,10 +36,8 @@ namespace Rusty.ISA.Editor
         private FloatField FloatField { get; set; }
 
         /* Constructors. */
-        public FloatParameterInspector() : base() { }
-
-        public FloatParameterInspector(InstructionSet instructionSet, FloatParameter parameter)
-            : base(instructionSet, parameter)
+        public FloatParameterInspector(InstructionInspector root, FloatParameter parameter)
+            : base(root, parameter)
         {
             FloatField.Value = parameter.DefaultValue;
         }
