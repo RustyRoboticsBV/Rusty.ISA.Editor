@@ -1,4 +1,6 @@
-﻿namespace Rusty.ISA.Editor
+﻿using Godot;
+
+namespace Rusty.ISA.Editor
 {
     public class EditorNodePreview : Preview<NodeInstructionInspector>
     {
@@ -22,6 +24,11 @@
             return Make((Inspector as InstructionInspector).Preview.Evaluate());
         }
 
+        protected override string[] GetSpecialKeywords()
+        {
+            return new string[] { "<base>" };
+        }
+
         protected override string ParseParameter(string parameterID)
         {
             ParameterInspector inspector = Inspector.GetParameterInspector(parameterID);
@@ -40,9 +47,12 @@
                 return GetRuleError(ruleID);
         }
 
-        protected override string ParseSpecialCases(string expression)
+        protected override string ParseSpecialKeyword(string keyword)
         {
-            return expression.Replace("<base>", Make((Inspector as InstructionInspector).Preview.Evaluate()));
+            if (keyword == "<base>")
+                return Make((Inspector as InstructionInspector).Preview.Evaluate());
+            else
+                return GetSpecialKeywordError(keyword);
         }
     }
 }

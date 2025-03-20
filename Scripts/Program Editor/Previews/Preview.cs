@@ -74,6 +74,13 @@ namespace Rusty.ISA.Editor
         /// </summary>
         protected abstract string GetDefaultExpression();
         /// <summary>
+        /// Get the special keywords that can be used in this preview.
+        /// </summary>
+        protected virtual string[] GetSpecialKeywords()
+        {
+            return new string[0];
+        }
+        /// <summary>
         /// Parse a parameter keyword.
         /// </summary>
         protected abstract string ParseParameter(string parameterID);
@@ -84,9 +91,9 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// Search the expression for special keywords and parse them.
         /// </summary>
-        protected virtual string ParseSpecialCases(string expression)
+        protected virtual string ParseSpecialKeyword(string keyword)
         {
-            return expression;
+            return GetSpecialKeywordError(keyword);
         }
 
         /// <summary>
@@ -115,6 +122,11 @@ namespace Rusty.ISA.Editor
         protected static string GetRuleError(string ruleID)
         {
             return GetError($"bad_rule_{ruleID}");
+        }
+
+        protected static string GetSpecialKeywordError(string keyword)
+        {
+            return GetError($"bad_special_keyword_{keyword}");
         }
 
         /* Private methods. */
@@ -148,6 +160,7 @@ namespace Rusty.ISA.Editor
                 expression = expression.Replace("\n", "\n\t");
 
                 // Parse expression keywords...
+                string[] specialKeywords = GetSpecialKeywords();
                 bool withinQuotes = false;
                 for (int i = 0; i < expression.Length - 1; i++)
                 {
@@ -163,15 +176,22 @@ namespace Rusty.ISA.Editor
                     else if (CheckKeyword("[", "]", expression, i, out string ruleID))
                     {
                         string parsed = ParseCompileRule(ruleID);
-                        GD.Print(parsed);
                         Replace(ref expression, ref i, ruleID.Length + 2, parsed);
-                        GD.Print(expression);
+                    }
+                    else
+                    {
+                        foreach (string keyword in specialKeywords)
+                        {
+                            if (expression.Substring(i).StartsWith(keyword))
+                            {
+                                string parsed = ParseSpecialKeyword(keyword);
+                                Replace(ref expression, ref i, keyword.Length, parsed);
+                                break;
+                            }
+                        }
                     }
                 }
             }
-
-            // Special cases.
-            expression = ParseSpecialCases(expression);
 
             // Create source code.
             string code = SkeletonCode

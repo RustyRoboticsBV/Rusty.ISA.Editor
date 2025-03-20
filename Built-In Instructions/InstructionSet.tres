@@ -482,7 +482,7 @@ MinWidth = 128
 MinHeight = 32
 MainColor = Color(0, 0.501961, 1, 1)
 TextColor = Color(1, 1, 1, 1)
-Preview = "\"[\\\"COOL NODE PREVIEW, BRO!!\\\"]\\n\" + <base> + \"\\n\\\"\""
+Preview = "\"[\\\"COOL NODE PREVIEW, BRO!!\\\"]\\n<base>\" + <base> + \"\\n\\\"\""
 
 [sub_resource type="Resource" id="Resource_n8xtu"]
 script = ExtResource("12_rklps")
