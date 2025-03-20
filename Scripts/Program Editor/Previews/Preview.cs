@@ -36,14 +36,6 @@ namespace Rusty.ISA.Editor
         /// </summary>
         public string Evaluate()
         {
-            if (this is ParameterPreview parameter)
-            {
-                if (parameter.Inspector != null)
-                    GD.Print("Evaluating preview of " + parameter != null ? parameter.Inspector.Definition.ID : "null");
-                else
-                    GD.Print("Evaluating preview of null inspector");
-            }
-
             // Create node if necessary.
             if (Node == null)
                 Node = CreateNode(Implementation);

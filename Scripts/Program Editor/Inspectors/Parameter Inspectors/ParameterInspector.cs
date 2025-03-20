@@ -27,7 +27,7 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// The root instruction inspector.
         /// </summary>
-        public InstructionInspector Root { get; private set; }
+        public InstructionInspector Root { get; set; }
         /// <summary>
         /// The preview generator for this inspector.
         /// </summary>
@@ -113,22 +113,27 @@ namespace Rusty.ISA.Editor
                 return ValueObj.ToString();
         }
 
+        /// <summary>
+        /// Force-update the preview. This will not set UpdatedPreview to true.
+        /// </summary>
+        public void ForcePreviewUpdate()
+        {
+            Preview = new(this);
+            GD.Print("   I'm parameter " + Definition + " and my preview was-force-updated to " + Preview.Evaluate());
+            GD.Print("    (my new value was " + GetValue() + ")");
+            GD.Print("    (my name is " + this + ")");
+        }
+
         /* Godot overrides. */
         public override void _Process(double delta)
         {
             base._Process(delta);
 
-            // Check if we need to update the preview.
-            GD.Print("Hit I'm parameter " + Definition);
-            if (Preview == null)
-                GD.Print("My preview is null, which shouldn't happen...");
-            else
-                GD.Print("My preview says " + Preview.Evaluate());
             UpdatedPreview = false;
-            if (ValueObj == null && LastValue != null || ValueObj != null && !ValueObj.Equals(LastValue)
-                || Root != null && Root.UpdatedPreview)
+            if (ValueObj == null && LastValue != null || ValueObj != null && !ValueObj.Equals(LastValue))
             {
-                Preview = new(this);
+                GD.Print("Hi I'm parameter " + Definition + " and I'm updating my preview.");
+                ForcePreviewUpdate();
                 UpdatedPreview = true;
                 LastValue = ValueObj;
             }

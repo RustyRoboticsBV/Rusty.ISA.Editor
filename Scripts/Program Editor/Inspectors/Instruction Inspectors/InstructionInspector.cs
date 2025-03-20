@@ -44,14 +44,25 @@ namespace Rusty.ISA.Editor
             {
                 // Find parameter & compile rule inspectors.
                 Parameters.Clear();
+                PreInstructions = null;
+                PostInstructions = null;
                 for (int i = 0; i < Count; i++)
                 {
-                    if (this[i] is ParameterInspector parameterInspector)
-                        Parameters.Add(parameterInspector);
-                    else if (this[i] is PreInstructionsInspector preInspector)
-                        PreInstructions = preInspector;
-                    else if (this[i] is PostInstructionsInspector postInspector)
-                        PostInstructions = postInspector;
+                    if (this[i] is ParameterInspector parameter)
+                    {
+                        parameter.Root = this;
+                        Parameters.Add(parameter);
+                    }
+                    else if (this[i] is PreInstructionsInspector pre)
+                    {
+                        PreInstructions = pre;
+                        pre.Root = this;
+                    }
+                    else if (this[i] is PostInstructionsInspector post)
+                    {
+                        PostInstructions = post;
+                        post.Root = this;
+                    }
                 }
                 return true;
             }
@@ -68,6 +79,7 @@ namespace Rusty.ISA.Editor
         /// </summary>
         public ParameterInspector GetParameterInspector(int index)
         {
+            GD.Print("       getting parameter inspector " + index + ": " + Parameters[index]);
             return Parameters[index];
         }
 
@@ -172,11 +184,13 @@ namespace Rusty.ISA.Editor
         {
             base._Process(delta);
 
+            // Check if one of the child inspector had its preview updated.
             UpdatedPreview = false;
             for (int i = 0; i < Parameters.Count; i++)
             {
                 if (Parameters[i].UpdatedPreview)
                 {
+                    GD.Print("        Parameter " + i + " (" + Parameters[i] + ") of " + this + " got updated");
                     UpdatedPreview = true;
                     break;
                 }
@@ -202,8 +216,30 @@ namespace Rusty.ISA.Editor
                 }
             }
 
+            // Update preview (if necessary).
             if (UpdatedPreview)
+            {
+                GD.Print("Hi I'm instruction " + Definition + " and I'm updating my preview.");
+                // First, force-update all child inspector previews.
+                if (UpdatedPreview)
+                {
+                    for (int i = 0; i < Parameters.Count; i++)
+                    {
+                        Parameters[i].ForcePreviewUpdate();
+                    }
+                    for (int i = 0; i < PreInstructions.Inspectors.Count; i++)
+                    {
+                        PreInstructions.Inspectors[i].ForcePreviewUpdate();
+                    }
+                    for (int i = 0; i < PostInstructions.Inspectors.Count; i++)
+                    {
+                        PostInstructions.Inspectors[i].ForcePreviewUpdate();
+                    }
+                }
+
+                // Update our preview.
                 Preview = new(this);
+            }
         }
 
         /* Protected methods. */

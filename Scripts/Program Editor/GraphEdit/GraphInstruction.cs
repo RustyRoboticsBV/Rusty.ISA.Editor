@@ -250,10 +250,7 @@ namespace Rusty.ISA.Editor
                 if (index < 0)
                     Slots[i].RightText.Text = "OUT";
                 else
-                {
-                    GD.Print("Evaluating " + i + ": " + outputs[index] != null ? outputs[index].Definition : "null");
                     Slots[i].RightText.Text = outputs[index].Preview.Evaluate();
-                }   
             }
 
             // Re-add the preview.

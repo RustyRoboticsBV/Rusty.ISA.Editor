@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Godot;
 using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor
@@ -23,7 +24,7 @@ namespace Rusty.ISA.Editor
         /// <summary>
         /// Whether or not the preview was updated this loop.
         /// </summary>
-        public bool UpdatedPreview { get; private set; }
+        public bool UpdatedPreview { get; protected set; }
 
         /* Private properties. */
         private int LastLength { get; set; }
@@ -98,6 +99,15 @@ namespace Rusty.ISA.Editor
             return Outputs;
         }
 
+        /// <summary>
+        /// Force-update the preview. This will not set UpdatedPreview to true.
+        /// </summary>
+        public void ForcePreviewUpdate()
+        {
+            Preview = new(this);
+            GD.Print("   I'm compile rule " + Definition + " and my preview was force-updated to " + Preview.Evaluate());
+        }
+
         /* Godot overrides. */
         public override void _Process(double delta)
         {
@@ -109,7 +119,10 @@ namespace Rusty.ISA.Editor
 
             // ... Either if the number of sub-inspectors has changed...
             if (subInspectors.Length != LastLength)
+            {
                 UpdatedPreview = true;
+                LastLength = subInspectors.Length;
+            }
 
             /// ... Or if one of the sub-inspectors was updated.
             for (int i = 0; i < subInspectors.Length; i++)
@@ -123,13 +136,12 @@ namespace Rusty.ISA.Editor
                 }
             }
 
-            // ... Or if the root had its preview changed.
-            if (Root != null && Root.UpdatedPreview)
-                UpdatedPreview = true;
-
             // Update the preview if necessary.
             if (UpdatedPreview)
-                Preview = new(this);
+            {
+                GD.Print("Hi I'm compile rule " + Definition + " and I'm updating my preview.");
+                ForcePreviewUpdate();
+            }
         }
 
         /* Protected methods. */

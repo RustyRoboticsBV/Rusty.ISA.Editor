@@ -6,7 +6,7 @@ namespace Rusty.ISA.Editor
     public abstract partial class SecondaryInstructionsInspector : Inspector
     {
         /* Public properties. */
-        public InstructionInspector Root { get; private set; }
+        public InstructionInspector Root { get; set; }
         public List<CompileRuleInspector> Inspectors { get; set; } = new();
 
         /* Constructors. */

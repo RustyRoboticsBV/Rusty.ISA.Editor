@@ -1,4 +1,5 @@
-﻿using Rusty.EditorUI;
+﻿using Godot;
+using Rusty.EditorUI;
 using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor
@@ -50,6 +51,19 @@ namespace Rusty.ISA.Editor
         public override List<ParameterInspector> GetOutputs()
         {
             return TargetInstruction.GetOutputs();
+        }
+
+        /* Godot overrides. */
+        public override void _Process(double delta)
+        {
+            base._Process(delta);
+
+            if (!UpdatedPreview && TargetInstruction != null && TargetInstruction.UpdatedPreview)
+            {
+                GD.Print("Hi I'm compile rule " + Definition + " and I'm updating my preview.");
+                ForcePreviewUpdate();
+                UpdatedPreview = true;
+            }
         }
 
         /* Protected methods. */

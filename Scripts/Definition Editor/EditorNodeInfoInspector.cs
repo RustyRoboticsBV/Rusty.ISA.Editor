@@ -29,7 +29,6 @@ namespace Rusty.ISA.Editor.Definitions
             }
             set
             {
-                GD.Print(value);
                 if (value != null)
                 {
                     Foldout.IsOpen = true;

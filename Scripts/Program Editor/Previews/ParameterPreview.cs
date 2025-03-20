@@ -35,7 +35,7 @@ namespace Rusty.ISA.Editor
 
         protected override string ParseParameter(string parameterID)
         {
-            GD.Print("Parsing parameter reference " + parameterID + " in parameter " + Inspector.Definition.ID);
+            GD.Print("     " + Inspector.Definition + ": Parsing parameter " + parameterID);
             // If the id is our id, return our value.
             if (Inspector == null)
                 return GetNullError("parameter_inspector");
@@ -50,7 +50,14 @@ namespace Rusty.ISA.Editor
             int index = Root.Definition.GetParameterIndex(parameterID);
 
             if (index >= 0)
+            {
+                GD.Print("     Our root is " + Root);
+                GD.Print("     Our root definition is " + Root.Definition);
+                GD.Print("     Our target is " + Root.GetParameterInspector(index));
+                GD.Print("     Our target definition is " + Root.GetParameterInspector(index).Definition);
+                GD.Print("     Its value is " + Root.GetParameterInspector(index).GetValue());
                 return Make(Root.GetParameterInspector(index).GetValue());
+            }
             else
                 return GetParameterError(parameterID);
         }
