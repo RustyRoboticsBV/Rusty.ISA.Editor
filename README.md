@@ -1,4 +1,4 @@
-# Rusty.CutsceneEditor
+# Rusty.ISA.Editor
 A cutscene editor app for the Rusty.Custcenes module.
 
 Related repositories:
