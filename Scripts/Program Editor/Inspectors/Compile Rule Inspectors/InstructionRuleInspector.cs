@@ -60,7 +60,6 @@ namespace Rusty.ISA.Editor
 
             if (!UpdatedPreview && TargetInstruction != null && TargetInstruction.UpdatedPreview)
             {
-                GD.Print("Hi I'm compile rule " + Definition + " and I'm updating my preview.");
                 ForcePreviewUpdate();
                 UpdatedPreview = true;
             }

@@ -79,7 +79,6 @@ namespace Rusty.ISA.Editor
         /// </summary>
         public ParameterInspector GetParameterInspector(int index)
         {
-            GD.Print("       getting parameter inspector " + index + ": " + Parameters[index]);
             return Parameters[index];
         }
 
@@ -190,7 +189,6 @@ namespace Rusty.ISA.Editor
             {
                 if (Parameters[i].UpdatedPreview)
                 {
-                    GD.Print("        Parameter " + i + " (" + Parameters[i] + ") of " + this + " got updated");
                     UpdatedPreview = true;
                     break;
                 }
@@ -219,7 +217,6 @@ namespace Rusty.ISA.Editor
             // Update preview (if necessary).
             if (UpdatedPreview)
             {
-                GD.Print("Hi I'm instruction " + Definition + " and I'm updating my preview.");
                 // First, force-update all child inspector previews.
                 if (UpdatedPreview)
                 {

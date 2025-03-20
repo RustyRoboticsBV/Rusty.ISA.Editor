@@ -105,7 +105,6 @@ namespace Rusty.ISA.Editor
         public void ForcePreviewUpdate()
         {
             Preview = new(this);
-            GD.Print("   I'm compile rule " + Definition + " and my preview was force-updated to " + Preview.Evaluate());
         }
 
         /* Godot overrides. */
@@ -138,10 +137,7 @@ namespace Rusty.ISA.Editor
 
             // Update the preview if necessary.
             if (UpdatedPreview)
-            {
-                GD.Print("Hi I'm compile rule " + Definition + " and I'm updating my preview.");
                 ForcePreviewUpdate();
-            }
         }
 
         /* Protected methods. */

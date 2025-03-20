@@ -119,9 +119,6 @@ namespace Rusty.ISA.Editor
         public void ForcePreviewUpdate()
         {
             Preview = new(this);
-            GD.Print("   I'm parameter " + Definition + " and my preview was-force-updated to " + Preview.Evaluate());
-            GD.Print("    (my new value was " + GetValue() + ")");
-            GD.Print("    (my name is " + this + ")");
         }
 
         /* Godot overrides. */
@@ -132,7 +129,6 @@ namespace Rusty.ISA.Editor
             UpdatedPreview = false;
             if (ValueObj == null && LastValue != null || ValueObj != null && !ValueObj.Equals(LastValue))
             {
-                GD.Print("Hi I'm parameter " + Definition + " and I'm updating my preview.");
                 ForcePreviewUpdate();
                 UpdatedPreview = true;
                 LastValue = ValueObj;

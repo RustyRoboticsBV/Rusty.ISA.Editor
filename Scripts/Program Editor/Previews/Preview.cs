@@ -18,6 +18,14 @@ namespace Rusty.ISA.Editor
             "\t%IMPLEMENTATION%\n" +
             "\treturn result;";
 
+        private static string Limit =>
+            "\n" +
+            "func limit(string : String, max_length : int) -> String:\n" +
+            "\tif string.length() > max_length:\n" +
+            "\t\treturn string.substr(0, max_length - 1) + String.chr(8230);\n" +
+            "\telse:" +
+            "\t\treturn string;";
+
         private string Implementation { get; set; } = "";
         private Node Node { get; set; }
 
@@ -153,6 +161,10 @@ namespace Rusty.ISA.Editor
                 .Replace("%ELEMENTS%", GetElements())
                 .Replace("%IMPLEMENTATION%", expression)
                 .Replace("%DEBUGNAME%", GetDebugName());
+
+            // Add limit method if necessary.
+            if (code.Contains("limit("))
+                code += Limit;
 
             // Create script.
             GDScript script = new();
