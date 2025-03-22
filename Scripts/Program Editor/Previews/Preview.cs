@@ -53,7 +53,7 @@ namespace Rusty.ISA.Editor
             if (Node != null)
                 return (string)Node.Call("eval");
             else
-                return "bad_preview_expression";
+                return "BAD_PREVIEW";
         }
 
         /* Protected methods. */
@@ -109,24 +109,24 @@ namespace Rusty.ISA.Editor
             return Make(str);
         }
 
-        protected static string GetNullError(string parameterID)
+        protected static string GetNullError(string str)
         {
-            return GetError($"null_{parameterID}");
+            return GetError($"NULL({str})");
         }
 
         protected static string GetParameterError(string parameterID)
         {
-            return GetError($"bad_parameter_{parameterID}");
+            return GetError($"BAD_PARAMETER({parameterID})");
         }
 
         protected static string GetRuleError(string ruleID)
         {
-            return GetError($"bad_rule_{ruleID}");
+            return GetError($"BAD_RULE({ruleID})");
         }
 
         protected static string GetSpecialKeywordError(string keyword)
         {
-            return GetError($"bad_special_keyword_{keyword}");
+            return GetError($"BAD_SPECIAL_KEYWORD({keyword})");
         }
 
         /* Private methods. */

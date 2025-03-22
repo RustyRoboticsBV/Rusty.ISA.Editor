@@ -66,7 +66,7 @@ namespace Rusty.ISA.Editor
             Title = definition.DisplayName;
 
             TooltipText = definition.Description;
-            CustomMinimumSize = new Vector2(definition.EditorNode.MinWidth, CustomMinimumSize.Y);
+            CustomMinimumSize = new Vector2(definition.EditorNode.MinWidth, definition.EditorNode.MinHeight);
 
             // Create inspector.
             Inspector = new NodeInstructionInspector(InstructionSet, Definition);
@@ -77,6 +77,11 @@ namespace Rusty.ISA.Editor
 
             // Create preview.
             PreviewLabel = new();
+            if (definition.EditorNode.EnableWordWrap)
+            {
+                PreviewLabel.AutowrapMode = TextServer.AutowrapMode.Word;
+                PreviewLabel.ClipContents = true;
+            }
             PreviewLabel.AddThemeFontSizeOverride("font_size", 10);
             AddChild(PreviewLabel);
             UpdatePreview();
@@ -104,6 +109,11 @@ namespace Rusty.ISA.Editor
             for (int i = 0; i < Slots.Count; i++)
             {
                 SetSlotEnabledRight(i, true);
+                if (Definition.EditorNode.EnableWordWrap)
+                {
+                    Slots[i].RightText.AutowrapMode = TextServer.AutowrapMode.Word;
+                    Slots[i].RightText.ClipContents = true;
+                }
             }
         }
 
@@ -128,6 +138,7 @@ namespace Rusty.ISA.Editor
                 return;
 
             ForceUpdate();
+            Size = Vector2.Zero;
         }
 
         /* Private methods. */
