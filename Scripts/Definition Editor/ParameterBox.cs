@@ -52,8 +52,6 @@ namespace Rusty.ISA.Editor.Definitions
         {
             SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
-            AddChild(new Label() { Text = "Parameters" });
-
             TabBar = new();
             AddChild(TabBar);
 

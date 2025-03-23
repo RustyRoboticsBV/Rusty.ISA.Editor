@@ -24,7 +24,11 @@ namespace Rusty.ISA.Editor.Definitions
 
         public VBoxContainer Editor { get; private set; }
         public EditorNodeInfoInspector EditorNodeInfo { get; private set; }
+
         public MultilineField Preview { get; private set; }
+
+        public CompileRuleBox PreInstructions { get; private set; }
+        public CompileRuleBox PostInstructions { get; private set; }
 
         /* Godot overrides. */
         public override void _Ready()
@@ -38,7 +42,8 @@ namespace Rusty.ISA.Editor.Definitions
             TabBar.AddTab("Parameters");
             TabBar.AddTab("Implementation");
             TabBar.AddTab("Metadata");
-            TabBar.AddTab("Editor");
+            TabBar.AddTab("Editor Node");
+            TabBar.AddTab("Preview");
             TabBar.AddTab("Pre-Instructions");
             TabBar.AddTab("Post-Instructions");
             AddChild(TabBar);
@@ -71,9 +76,17 @@ namespace Rusty.ISA.Editor.Definitions
             scroll.AddChild(Editor);
             EditorNodeInfo = new();
             Editor.AddChild(EditorNodeInfo);
+
             Preview = new();
+            Preview.LabelText = "Preview";
             Preview.Height = 128;
-            Editor.AddChild(Preview);
+            scroll.AddChild(Preview);
+
+            PreInstructions = new();
+            scroll.AddChild(PreInstructions);
+
+            PostInstructions = new();
+            scroll.AddChild(PostInstructions);
         }
 
         public override void _Process(double delta)
@@ -82,6 +95,9 @@ namespace Rusty.ISA.Editor.Definitions
             Implementation.Visible = TabBar.CurrentTab == 1;
             Metadata.Visible = TabBar.CurrentTab == 2;
             Editor.Visible = TabBar.CurrentTab == 3;
+            Preview.Visible = TabBar.CurrentTab == 4;
+            PreInstructions.Visible = TabBar.CurrentTab == 5;
+            PostInstructions.Visible = TabBar.CurrentTab == 6;
         }
 
         /* Private methods. */
@@ -148,8 +164,10 @@ namespace Rusty.ISA.Editor.Definitions
             descriptor.Preview = Preview.Value;
 
             // Add pre-instructions.
+            descriptor.PreInstructions.AddRange(PreInstructions.Get());
 
             // Add post-instructions.
+            descriptor.PostInstructions.AddRange(PostInstructions.Get());
 
             return descriptor;
         }
@@ -176,8 +194,10 @@ namespace Rusty.ISA.Editor.Definitions
             Preview.Value = descriptor.Preview;
 
             // Load pre-instructions.
+            PreInstructions.Set(descriptor.PreInstructions);
 
             // Load post-instructions.
+            PostInstructions.Set(descriptor.PostInstructions);
         }
 
 

@@ -17,13 +17,14 @@ namespace Rusty.ISA.Editor.Definitions
         public ColorField MainColor { get; private set; }
         public ColorField TextColor { get; private set; }
         public MultilineField Preview { get; private set; }
+        public CheckBoxField EnableWordWrap { get; private set; }
 
         public EditorNodeInfoDescriptor Value
         {
             get
             {
                 if (Foldout.IsOpen)
-                    return new(Priority.Value, MinWidth.Value, MinHeight.Value, MainColor.Value, TextColor.Value, Preview.Value);
+                    return new(Priority.Value, MinWidth.Value, MinHeight.Value, MainColor.Value, TextColor.Value, Preview.Value, EnableWordWrap.Value);
                 else
                     return null;
             }
@@ -38,6 +39,7 @@ namespace Rusty.ISA.Editor.Definitions
                     MainColor.Value = value.MainColor;
                     TextColor.Value = value.TextColor;
                     Preview.Value = value.Preview;
+                    EnableWordWrap.Value = value.EnableWordWrap;
                 }
                 else
                     Foldout.IsOpen = false;
@@ -52,23 +54,16 @@ namespace Rusty.ISA.Editor.Definitions
         {
             base.Init();
 
-            Foldout = new()
-            {
-                Name = "Foldout",
-                HeaderText = "Editor Node"
-            };
+            Foldout = new();
             Add(Foldout);
+            Foldout.HeaderText = "Has Editor Node";
 
-            Priority = new()
-            {
-                Name = "Priority",
-                LabelText = "Priority"
-            };
+            Priority = new();
             Foldout.Add(Priority);
+            Priority.LabelText = "Priority";
 
             MinWidth = new()
             {
-                Name = "MinWidth",
                 LabelText = "Min Width",
                 Value = 128
             };
@@ -76,7 +71,6 @@ namespace Rusty.ISA.Editor.Definitions
 
             MinHeight = new()
             {
-                Name = "MinHeight",
                 LabelText = "Min Height",
                 Value = 32
             };
@@ -84,27 +78,24 @@ namespace Rusty.ISA.Editor.Definitions
 
             MainColor = new()
             {
-                Name = "MainColor",
                 LabelText = "Main Color",
                 Value = Color.FromHtml("696969")
             };
             Foldout.Add(MainColor);
 
-            TextColor = new()
-            {
-                Name = "TextColor",
-                LabelText = "Text Color",
-                Value = Colors.White
-            };
+            TextColor = new();
             Foldout.Add(TextColor);
+            TextColor.LabelText = "Text Color";
+            TextColor.Value = Colors.White;
 
-            Preview = new()
-            {
-                Name = "Preview",
-                LabelText = "Preview",
-                Height = 128
-            };
+            Preview = new();
             Foldout.Add(Preview);
+            Preview.LabelText = "Preview";
+            Preview.Height = 128;
+
+            EnableWordWrap = new();
+            Foldout.Add(EnableWordWrap);
+            EnableWordWrap.LabelText = "Enable Word Wrap";
         }
     }
 }
