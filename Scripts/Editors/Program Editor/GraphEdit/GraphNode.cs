@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     /// <summary>
     /// A graph edit node representing a collection of instructions.

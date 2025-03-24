@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Rusty.EditorUI;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     /// <summary>
     /// A instruction inspector.

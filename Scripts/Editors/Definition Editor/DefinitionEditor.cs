@@ -2,7 +2,7 @@
 using System.Xml;
 using Rusty.EditorUI;
 
-namespace Rusty.ISA.Editor.Definitions
+namespace Rusty.ISA.DefinitionEditor
 {
     [GlobalClass]
     public partial class DefinitionEditor : VBoxContainer

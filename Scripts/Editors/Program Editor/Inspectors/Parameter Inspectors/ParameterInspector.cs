@@ -2,7 +2,7 @@
 using Rusty.EditorUI;
 using System;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     /// <summary>
     /// A instruction parameter inspector.

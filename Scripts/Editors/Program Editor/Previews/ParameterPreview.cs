@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     public class ParameterPreview : Preview<ParameterInspector>
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Godot;
 using Rusty.EditorUI;
 
-namespace Rusty.ISA.Editor.Definitions
+namespace Rusty.ISA.DefinitionEditor
 {
     /// <summary>
     /// A generic parameter definition inspector.

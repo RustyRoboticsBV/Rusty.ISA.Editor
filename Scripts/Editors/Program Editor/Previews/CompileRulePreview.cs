@@ -1,4 +1,4 @@
-﻿namespace Rusty.ISA.Editor
+﻿namespace Rusty.ISA.ProgramEditor
 {
     public class CompileRulePreview : Preview<CompileRuleInspector>
     {

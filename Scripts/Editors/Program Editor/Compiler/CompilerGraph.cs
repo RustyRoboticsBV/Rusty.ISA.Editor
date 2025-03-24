@@ -1,6 +1,6 @@
 ﻿using Rusty.Graphs;
 
-namespace Rusty.ISA.Editor.Compiler
+namespace Rusty.ISA.ProgramEditor.Compiler
 {
     /// <summary>
     /// An extention of the graph class, tooled towards ISA compilation/decompilation.

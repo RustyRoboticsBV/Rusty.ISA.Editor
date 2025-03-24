@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Godot;
 using Rusty.EditorUI;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     /// <summary>
     /// A instruction compile rule inspector.

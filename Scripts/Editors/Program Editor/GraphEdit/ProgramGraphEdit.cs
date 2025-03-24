@@ -1,9 +1,9 @@
 using Godot;
 using System.Collections.Generic;
-using Rusty.ISA.Editor.Compiler;
+using Rusty.ISA.ProgramEditor.Compiler;
 using Array = Godot.Collections.Array;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     /// <summary>
     /// An ISA program graph edit.

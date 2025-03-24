@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Rusty.Graphs;
 
-namespace Rusty.ISA.Editor.Compiler
+namespace Rusty.ISA.ProgramEditor.Compiler
 {
     /// <summary>
     /// A class that can take a compiler graph and spawn ISA graph edit nodes.

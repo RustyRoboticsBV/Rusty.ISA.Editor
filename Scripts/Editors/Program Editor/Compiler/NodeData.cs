@@ -1,7 +1,7 @@
 ﻿using System;
 using Rusty.ISA;
 
-namespace Rusty.ISA.Editor.Compiler
+namespace Rusty.ISA.ProgramEditor.Compiler
 {
     /// <summary>
     /// The data stored in a compiler graph node.

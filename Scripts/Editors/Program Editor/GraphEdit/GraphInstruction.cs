@@ -2,7 +2,7 @@
 using Godot.Collections;
 using System.Collections.Generic;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     /// <summary>
     /// A graph edit node representing a collection of instructions.

@@ -1,6 +1,6 @@
 ﻿using Rusty.EditorUI;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     public partial class PostInstructionsInspector : SecondaryInstructionsInspector
     {

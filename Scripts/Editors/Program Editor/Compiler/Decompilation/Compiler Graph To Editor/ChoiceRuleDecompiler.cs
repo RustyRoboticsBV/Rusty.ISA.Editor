@@ -1,7 +1,7 @@
 ﻿using System;
 using Rusty.Graphs;
 
-namespace Rusty.ISA.Editor.Compiler
+namespace Rusty.ISA.ProgramEditor.Compiler
 {
     /// <summary>
     /// An choice rule decompiler.

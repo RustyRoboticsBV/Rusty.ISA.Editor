@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Rusty.EditorUI;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     public abstract partial class SecondaryInstructionsInspector : Inspector
     {

@@ -1,9 +1,9 @@
 #if TOOLS
 using Godot;
-using Rusty.ISA.Editor.Compiler;
-using Rusty.ISA.Editor.InstructionSets;
+using System.Collections.Generic;
+using Rusty.ISA.ProgramEditor.Compiler;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     /// <summary>
     /// The ISA editor window. Contains a set of file buttons, an inspector and a graph edit.
@@ -24,9 +24,6 @@ namespace Rusty.ISA.Editor
 
         [Export] public ProgramGraphEdit GraphEdit { get; private set; }
 
-        /* Private methods. */
-        private InstructionSet GeneratedSet { get; set; }
-
         /* Godot overrides. */
         public override void _EnterTree()
         {
@@ -36,15 +33,6 @@ namespace Rusty.ISA.Editor
             SaveDialog.FileSelected += OnSaveFileSelected;
             DebugCompileButton.Pressed += OnDebugCompile;
             DebugDecompileButton.Pressed += OnDebugDecompile;
-
-            // Build instruction set.
-            GeneratedSet = InstructionSetBuilder.Build(InstructionSet, "Definitions");
-            for (int i = 0; i < GeneratedSet.Definitions.Length; i++)
-            {
-                GD.Print("Definition " + i + ": " + GeneratedSet.Definitions[i]);
-            }
-            GraphEdit.InstructionSet = GeneratedSet;
-            //Serializer.Serialize(GeneratedSet, "InstructionSet/InstructionSet.zip");
         }
 
         /* Private methods. */
@@ -70,7 +58,10 @@ namespace Rusty.ISA.Editor
 
         private void OnDebugCompile()
         {
+            // Compile editor into graph.
             CompilerGraph graph = GraphEditCompiler.Compile(GraphEdit);
+
+            // Compile graph into code.
             string str = GraphCompiler.Compile(graph);
             DisplayServer.ClipboardSet(str);
             GD.Print("Debug compilation result saved to clipboard!");
@@ -78,14 +69,16 @@ namespace Rusty.ISA.Editor
 
         private void OnDebugDecompile()
         {
-            InstructionSet set = GraphEdit.InstructionSet;
+            // Decompile code into instructions list.
             string code = DisplayServer.ClipboardGet();
-            CompilerGraph graph = InstructionListDecompiler.Decompile(set, CodeDecompiler.Decompile(set, code));
+            List<InstructionInstance> instructions = CodeDecompiler.Decompile(InstructionSet, code);
 
+            // Decompile into graph.
+            CompilerGraph graph = InstructionListDecompiler.Decompile(InstructionSet, instructions);
             GD.Print("Decompiled graph:\n" + graph);
 
+            // Spawn into editor.
             GraphDecompiler.Spawn(GraphEdit, graph);
-
             GD.Print("Debug decompilation input loaded from clipboard!");
         }
     }

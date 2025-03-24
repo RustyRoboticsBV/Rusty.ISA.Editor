@@ -2,9 +2,8 @@ using Godot;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using System.Xml.Linq;
 
-namespace Rusty.ISA.Editor.InstructionSets
+namespace Rusty.ISA.SetBuilder
 {
 	/// <summary>
 	/// A class that can combine an instruction set consisting of built-in instruction definitions with a folder containing
@@ -27,7 +26,7 @@ namespace Rusty.ISA.Editor.InstructionSets
 			if (!Directory.Exists(absolutePath))
 			{
 				Directory.CreateDirectory(absolutePath);
-				GD.Print($"Created definitions folder at '{absolutePath}'");
+				GD.Print($"Created definitions folder at '{absolutePath}'.");
 			}
 
             // Copy over built-in instructions.

@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     /// <summary>
     /// A horizontal resizer for the inspector window.

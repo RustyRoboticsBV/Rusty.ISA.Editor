@@ -1,8 +1,8 @@
 ﻿using Godot;
 using Rusty.ISA;
-using Rusty.ISA.Editor.Compiler;
+using Rusty.ISA.ProgramEditor.Compiler;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     /// <summary>
     /// A ISA graph comment node.

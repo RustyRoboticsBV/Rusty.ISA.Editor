@@ -2,7 +2,7 @@
 using Rusty.Csv;
 using Rusty.ISA;
 
-namespace Rusty.ISA.Editor.Compiler
+namespace Rusty.ISA.ProgramEditor.Compiler
 {
     /// <summary>
     /// Decompile a string of code into a list of instruction instances.

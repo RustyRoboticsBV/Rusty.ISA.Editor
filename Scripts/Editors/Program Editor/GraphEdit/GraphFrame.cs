@@ -1,9 +1,9 @@
 ﻿using Godot;
-using Rusty.ISA.Editor.Compiler;
+using Rusty.ISA.ProgramEditor.Compiler;
 using System;
 using System.Collections.Generic;
 
-namespace Rusty.ISA.Editor
+namespace Rusty.ISA.ProgramEditor
 {
     /// <summary>
     /// A ISA graph frame.

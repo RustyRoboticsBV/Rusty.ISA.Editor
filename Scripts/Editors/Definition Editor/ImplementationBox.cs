@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Rusty.ISA.Editor.Definitions
+namespace Rusty.ISA.DefinitionEditor
 {
     public partial class ImplementationBox : VBoxContainer
     {
