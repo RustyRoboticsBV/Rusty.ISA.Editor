@@ -2,7 +2,7 @@
 using Rusty.ISA;
 using Rusty.Graphs;
 
-namespace Rusty.ISA.ProgramEditor.Compiler
+namespace Rusty.ISA.Editor.Programs.Compiler
 {
     /// <summary>
     /// An utility for creating compiler nodes.

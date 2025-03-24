@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-namespace Rusty.ISA.SetBuilder
+namespace Rusty.ISA.Editor.SetBuilder
 {
 	/// <summary>
 	/// A class that can combine an instruction set consisting of built-in instruction definitions with a folder containing
@@ -29,10 +29,13 @@ namespace Rusty.ISA.SetBuilder
 				GD.Print($"Created definitions folder at '{absolutePath}'.");
 			}
 
-            // Copy over built-in instructions.
-            for (int i = 0; i < builtIn.Count; i++)
+			// Copy over built-in instructions.
+			if (builtIn != null)
 			{
-				definitions.Add(builtIn[i]);
+				for (int i = 0; i < builtIn.Count; i++)
+				{
+					definitions.Add(builtIn[i]);
+				}
 			}
 
 			// Recursively load folder.
@@ -62,6 +65,10 @@ namespace Rusty.ISA.SetBuilder
 					InstructionDefinitionDescriptor descriptor = new(doc);
 
 					definitions.Add(descriptor.Generate(true));
+				}
+				else if (files[i].EndsWith(".zip"))
+				{
+					InstructionSetDescriptor descriptor = new();
 				}
             }
 

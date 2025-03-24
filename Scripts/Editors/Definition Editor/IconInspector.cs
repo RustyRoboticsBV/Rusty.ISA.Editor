@@ -2,7 +2,7 @@
 using System.IO;
 using Rusty.EditorUI;
 
-namespace Rusty.ISA.DefinitionEditor
+namespace Rusty.ISA.Editor.Definitions
 {
     public partial class IconInspector : ElementVBox
     {

@@ -1,7 +1,7 @@
 ﻿using Godot;
 using Rusty.Graphs;
 
-namespace Rusty.ISA.ProgramEditor.Compiler
+namespace Rusty.ISA.Editor.Programs.Compiler
 {
     /// <summary>
     /// An utility that compiles a compiler node into code.

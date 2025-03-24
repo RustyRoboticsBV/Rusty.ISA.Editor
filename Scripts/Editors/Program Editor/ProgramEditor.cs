@@ -1,9 +1,9 @@
 #if TOOLS
 using Godot;
 using System.Collections.Generic;
-using Rusty.ISA.ProgramEditor.Compiler;
+using Rusty.ISA.Editor.Programs.Compiler;
 
-namespace Rusty.ISA.ProgramEditor
+namespace Rusty.ISA.Editor.Programs
 {
     /// <summary>
     /// The ISA editor window. Contains a set of file buttons, an inspector and a graph edit.

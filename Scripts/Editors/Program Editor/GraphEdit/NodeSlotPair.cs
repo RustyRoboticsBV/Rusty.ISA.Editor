@@ -1,7 +1,7 @@
 ﻿using Godot;
 using System.Collections.Generic;
 
-namespace Rusty.ISA.ProgramEditor
+namespace Rusty.ISA.Editor.Programs
 {
     /// <summary>
     /// An input/output pair element for ISA graph nodes.

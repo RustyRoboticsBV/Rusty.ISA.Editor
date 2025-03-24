@@ -1,13 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://bm1tqrxpv46kk"]
+[gd_scene load_steps=3 format=3 uid="uid://bm1tqrxpv46kk"]
 
 [ext_resource type="Script" path="res://Scripts/Editors/Definition Editor/DefinitionEditor.cs" id="1_dqv1h"]
+[ext_resource type="Script" path="res://Scripts/Editors/Definition Editor/DefinitionInspector.cs" id="2_84p2x"]
 
-[node name="InstructionDefinitionEditor" type="MarginContainer"]
+[node name="InstructionDefinitionEditor" type="MarginContainer" node_paths=PackedStringArray("Inspector", "ExportButton", "ReloadButton", "Instructions")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_dqv1h")
+Inspector = NodePath("Margin/VBoxContainer/DefinitionInspector")
+ExportButton = NodePath("Margin/VBoxContainer/Buttons/Export")
+ReloadButton = NodePath("Margin/VBoxContainer/Buttons/Reload")
+Instructions = NodePath("Margin/VBoxContainer/Buttons/Definitions")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 2
@@ -20,6 +26,24 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="DefinitionInspector" type="VBoxContainer" parent="Margin"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
 layout_mode = 2
-script = ExtResource("1_dqv1h")
+
+[node name="Buttons" type="HBoxContainer" parent="Margin/VBoxContainer"]
+layout_mode = 2
+
+[node name="Export" type="Button" parent="Margin/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Export Instruction Set"
+
+[node name="Reload" type="Button" parent="Margin/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "Reload Instruction Set"
+
+[node name="Definitions" type="OptionButton" parent="Margin/VBoxContainer/Buttons"]
+layout_mode = 2
+
+[node name="DefinitionInspector" type="VBoxContainer" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_84p2x")

@@ -1,7 +1,7 @@
 ﻿using Rusty.ISA;
 using Rusty.Graphs;
 
-namespace Rusty.ISA.ProgramEditor.Compiler
+namespace Rusty.ISA.Editor.Programs.Compiler
 {
     /// <summary>
     /// A compiler that converts pre-instructions inspectors to graph nodes,

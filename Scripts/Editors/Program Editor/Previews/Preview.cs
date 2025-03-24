@@ -1,7 +1,7 @@
 ﻿using Godot;
 using System.Collections.Generic;
 
-namespace Rusty.ISA.ProgramEditor
+namespace Rusty.ISA.Editor.Programs
 {
     public abstract class Preview<T> where T : Inspector
     {

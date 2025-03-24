@@ -1,4 +1,7 @@
 using Godot;
+using Rusty.ISA.Editor.Definitions;
+using Rusty.ISA.Editor.Programs;
+using Rusty.ISA.Editor.SetBuilder;
 
 namespace Rusty.ISA.Editor
 {
@@ -6,8 +9,18 @@ namespace Rusty.ISA.Editor
     public partial class MultiEditor : VBoxContainer
     {
         [Export] public TabBar Tabs { get; set; }
-        [Export] public Control ProgramEditor { get; private set; }
-        [Export] public Control DefinitionEditor { get; private set; }
+        [Export] public ProgramEditor ProgramEditor { get; private set; }
+        [Export] public DefinitionEditor DefinitionEditor { get; private set; }
+
+        [Export] public InstructionSet BuiltInInstructions { get; private set; }
+        [Export] public string UserDefinedInstructions { get; private set; } = "";
+
+        public override void _EnterTree()
+        {
+            InstructionSet set = InstructionSetBuilder.Build(BuiltInInstructions, UserDefinedInstructions);
+            ProgramEditor.InstructionSet = set;
+            DefinitionEditor.InstructionSet = set;
+        }
 
         public override void _Process(double delta)
         {

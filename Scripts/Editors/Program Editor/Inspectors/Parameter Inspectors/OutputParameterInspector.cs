@@ -1,7 +1,7 @@
 ﻿using Godot;
 using Rusty.EditorUI;
 
-namespace Rusty.ISA.ProgramEditor
+namespace Rusty.ISA.Editor.Programs
 {
     /// <summary>
     /// A output parameter inspector. It's a dummy inspector that is instantly hidden.

@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://d2y6sv7wojwbo"]
+[gd_scene load_steps=5 format=3 uid="uid://d2y6sv7wojwbo"]
 
 [ext_resource type="Script" path="res://Scripts/Editors/MultiEditor.cs" id="1_n2hr8"]
+[ext_resource type="Resource" uid="uid://dnt3g5dpjm0pd" path="res://Built-In Instructions/InstructionSet.tres" id="2_7nop1"]
 [ext_resource type="PackedScene" uid="uid://dofwqxu5phpon" path="res://Scenes/ProgramEditor.tscn" id="2_8as30"]
 [ext_resource type="PackedScene" uid="uid://bm1tqrxpv46kk" path="res://Scenes/DefinitionEditor.tscn" id="3_6p0py"]
 
@@ -14,6 +15,8 @@ script = ExtResource("1_n2hr8")
 Tabs = NodePath("TabBar")
 ProgramEditor = NodePath("MarginContainer/ProgramEditor")
 DefinitionEditor = NodePath("MarginContainer/DefinitionEditor")
+BuiltInInstructions = ExtResource("2_7nop1")
+UserDefinedInstructions = "Instruction Definitions"
 
 [node name="TabBar" type="TabBar" parent="."]
 layout_mode = 2

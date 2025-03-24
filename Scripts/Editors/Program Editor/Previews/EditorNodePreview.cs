@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Rusty.ISA.ProgramEditor
+namespace Rusty.ISA.Editor.Programs
 {
     public class EditorNodePreview : Preview<NodeInstructionInspector>
     {

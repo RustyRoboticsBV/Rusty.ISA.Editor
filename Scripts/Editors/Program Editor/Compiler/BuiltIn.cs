@@ -1,4 +1,4 @@
-﻿namespace Rusty.ISA.ProgramEditor.Compiler
+﻿namespace Rusty.ISA.Editor.Programs.Compiler
 {
     /// <summary>
     /// Built-in opcodes and parameter ids.

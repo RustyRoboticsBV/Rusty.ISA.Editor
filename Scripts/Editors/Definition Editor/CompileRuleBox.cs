@@ -1,7 +1,7 @@
 ﻿using Godot;
 using System.Collections.Generic;
 
-namespace Rusty.ISA.DefinitionEditor
+namespace Rusty.ISA.Editor.Definitions
 {
     public partial class CompileRuleBox : VBoxContainer
     {

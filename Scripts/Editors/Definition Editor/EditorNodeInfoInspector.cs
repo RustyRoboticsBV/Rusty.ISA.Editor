@@ -1,7 +1,7 @@
 ﻿using Rusty.EditorUI;
 using Godot;
 
-namespace Rusty.ISA.DefinitionEditor
+namespace Rusty.ISA.Editor.Definitions
 {
     /// <summary>
     /// An inspector for an editor node info object.

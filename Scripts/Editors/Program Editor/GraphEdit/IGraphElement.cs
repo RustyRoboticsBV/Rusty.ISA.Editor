@@ -2,7 +2,7 @@
 using System;
 using Rusty.ISA;
 
-namespace Rusty.ISA.ProgramEditor
+namespace Rusty.ISA.Editor.Programs
 {
     /// <summary>
     /// An inspectable GraphEdit element.

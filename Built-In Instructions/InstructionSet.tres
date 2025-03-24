@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=104 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=92 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_gmmgc"]
@@ -27,9 +27,7 @@
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="16_nc316"]
 [ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOG.bmp" id="17_eto4q"]
 [ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="17_txonn"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Compile Rules/InstructionRule.cs" id="24_lggmc"]
 [ext_resource type="Texture2D" uid="uid://cqr70pp8lhjxg" path="res://Submodules/ISA/Built-In Instructions/IconBEG.bmp" id="24_xkbbv"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Compile Rules/ListRule.cs" id="25_cyki1"]
 [ext_resource type="Texture2D" uid="uid://d2p6fihx03ulm" path="res://Submodules/ISA/Built-In Instructions/IconEND.bmp" id="26_xah47"]
 [ext_resource type="Texture2D" uid="uid://dbw2hjlfspdf" path="res://Submodules/ISA/Built-In Instructions/IconGTO.bmp" id="28_ywca6"]
 [ext_resource type="Texture2D" uid="uid://bmrw4vxts8i3o" path="res://Submodules/ISA/Built-In Instructions/IconWRN.bmp" id="30_6ix1t"]
@@ -478,100 +476,6 @@ Preview = ""
 PreInstructions = []
 PostInstructions = []
 
-[sub_resource type="Resource" id="Resource_n0138"]
-script = ExtResource("1_gmmgc")
-Priority = -1
-MinWidth = 220
-MinHeight = 100
-MainColor = Color(0, 0.501961, 1, 1)
-TextColor = Color(1, 1, 1, 1)
-Preview = "<base>;"
-EnableWordWrap = true
-
-[sub_resource type="Resource" id="Resource_n8xtu"]
-script = ExtResource("12_rklps")
-ID = "speaker"
-DisplayName = "Speaker"
-Description = ""
-DefaultValue = "Someone"
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_c16ni"]
-script = ExtResource("12_rklps")
-ID = "mood"
-DisplayName = "Mood"
-Description = ""
-DefaultValue = "Neutral"
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_pm5f8"]
-script = ExtResource("16_nc316")
-ID = "body"
-DisplayName = "Body"
-Description = ""
-DefaultValue = "Blah, blah, blah..."
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_ogowu"]
-script = ExtResource("24_lggmc")
-ID = "choice"
-DisplayName = ""
-Description = ""
-Opcode = "CTX"
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_cm0rx"]
-script = ExtResource("25_cyki1")
-ID = "choices"
-DisplayName = "Dialog Choices"
-Description = ""
-Type = SubResource("Resource_ogowu")
-AddButtonText = "Add Choice"
-Preview = "for i in [count]:
-	result += \"\\n- \" + [elementi];"
-
-[sub_resource type="Resource" id="Resource_cum1f"]
-script = ExtResource("2_uguea")
-Opcode = "TXT"
-Parameters = [SubResource("Resource_n8xtu"), SubResource("Resource_c16ni"), SubResource("Resource_pm5f8")]
-DisplayName = "Set Text"
-Description = ""
-Category = ""
-EditorNode = SubResource("Resource_n0138")
-Preview = "if %speaker% != \"\":
-	result += %speaker% + \": \";
-result += %body%;
-result = limit(result, 100);"
-PreInstructions = [SubResource("Resource_cm0rx")]
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_n07y6"]
-script = ExtResource("12_rklps")
-ID = "text"
-DisplayName = "Text"
-Description = ""
-DefaultValue = "Blah."
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_tue1g"]
-script = ExtResource("15_3ecvh")
-ID = "target_label"
-DisplayName = "Target Label"
-Description = ""
-RemoveDefaultOutput = true
-Preview = "%text%"
-
-[sub_resource type="Resource" id="Resource_bkdky"]
-script = ExtResource("2_uguea")
-Opcode = "CTX"
-Parameters = [SubResource("Resource_n07y6"), SubResource("Resource_tue1g")]
-DisplayName = ""
-Description = ""
-Category = "Dialog"
-Preview = "%text%"
-PreInstructions = []
-PostInstructions = []
-
 [sub_resource type="Resource" id="Resource_2wpiq"]
 script = ExtResource("11_gxiqw")
 Dependencies = PackedStringArray()
@@ -751,5 +655,5 @@ Modules = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_n3emi"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j"), SubResource("Resource_cum1f"), SubResource("Resource_bkdky")]
+Definitions = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_n3emi"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
 Modules = [SubResource("Resource_eqo11")]

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Rusty.ISA;
 
-namespace Rusty.ISA.ProgramEditor
+namespace Rusty.ISA.Editor.Programs
 {
     /// <summary>
     /// The add node popup menu used by the graph editor.

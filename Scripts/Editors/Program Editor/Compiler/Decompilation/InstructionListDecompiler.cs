@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Godot;
 using Rusty.ISA;
 
-namespace Rusty.ISA.ProgramEditor.Compiler
+namespace Rusty.ISA.Editor.Programs.Compiler
 {
     /// <summary>
     /// Decompiles a list of instructions and outputs a compiler graph.

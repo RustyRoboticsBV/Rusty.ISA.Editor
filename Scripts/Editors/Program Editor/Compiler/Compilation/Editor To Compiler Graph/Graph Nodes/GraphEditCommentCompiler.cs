@@ -1,7 +1,7 @@
 ﻿using Godot;
 using Rusty.ISA;
 
-namespace Rusty.ISA.ProgramEditor.Compiler
+namespace Rusty.ISA.Editor.Programs.Compiler
 {
     public abstract class GraphEditCommentCompiler
     {

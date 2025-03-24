@@ -1,7 +1,7 @@
 ﻿using Rusty.Graphs;
 using Rusty.ISA;
 
-namespace Rusty.ISA.ProgramEditor.Compiler
+namespace Rusty.ISA.Editor.Programs.Compiler
 {
     /// <summary>
     /// An extention of the node class, tooled towards ISA compilation/decompilation.

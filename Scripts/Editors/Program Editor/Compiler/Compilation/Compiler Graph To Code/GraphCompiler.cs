@@ -2,7 +2,7 @@
 using Rusty.Graphs;
 using Rusty.Maps;
 
-namespace Rusty.ISA.ProgramEditor.Compiler
+namespace Rusty.ISA.Editor.Programs.Compiler
 {
     /// <summary>
     /// An utility that compiles a compiler graph into code.

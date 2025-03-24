@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://Scripts/Editors/Program Editor/Resizer/InspectorResizer.cs" id="3_fkirs"]
 [ext_resource type="Script" path="res://Scripts/Editors/Program Editor/GraphEdit/ProgramGraphEdit.cs" id="4_cmmha"]
 
-[node name="CutsceneEditor" type="VBoxContainer" node_paths=PackedStringArray("OpenButton", "OpenDialog", "SaveButton", "SaveDialog", "DebugCompileButton", "DebugDecompileButton", "Inspector", "GraphEdit")]
+[node name="ProgramEditor" type="VBoxContainer" node_paths=PackedStringArray("OpenButton", "OpenDialog", "SaveButton", "SaveDialog", "DebugCompileButton", "DebugDecompileButton", "Inspector", "GraphEdit")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

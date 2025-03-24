@@ -1,8 +1,8 @@
-﻿using Rusty.ISA.ProgramEditor.Compiler;
+﻿using Rusty.ISA.Editor.Programs.Compiler;
 using Rusty.ISA;
 using Rusty.EditorUI;
 
-namespace Rusty.ISA.ProgramEditor
+namespace Rusty.ISA.Editor.Programs
 {
     /// <summary>
     /// A ISA resource inspector.

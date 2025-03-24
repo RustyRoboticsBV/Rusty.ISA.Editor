@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Rusty.EditorUI;
 
-namespace Rusty.ISA.ProgramEditor
+namespace Rusty.ISA.Editor.Programs
 {
     /// <summary>
     /// A tuple rule inspector.
