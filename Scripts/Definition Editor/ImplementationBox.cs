@@ -52,8 +52,6 @@ namespace Rusty.ISA.Editor.Definitions
         {
             SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
-            AddChild(new Label() { Text = "Implementation" });
-
             HBoxContainer EnableHBox = new();
             AddChild(EnableHBox);
             Enabled = new();

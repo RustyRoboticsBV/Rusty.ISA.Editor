@@ -52,12 +52,6 @@ namespace Rusty.ISA.Editor.Definitions
         {
             SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
-            TabBar = new();
-            AddChild(TabBar);
-
-            Margin = new();
-            AddChild(Margin);
-
             HBoxContainer buttons = new();
             AddChild(buttons);
 
@@ -70,6 +64,12 @@ namespace Rusty.ISA.Editor.Definitions
             RemoveButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             buttons.AddChild(RemoveButton);
             RemoveButton.Pressed += OnRemove;
+
+            TabBar = new();
+            AddChild(TabBar);
+
+            Margin = new();
+            AddChild(Margin);
         }
 
         public override void _Process(double delta)

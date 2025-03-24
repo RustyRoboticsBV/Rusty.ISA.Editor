@@ -79,7 +79,7 @@ namespace Rusty.ISA.Editor.Definitions
 
             Preview = new();
             Preview.LabelText = "Preview";
-            Preview.Height = 128;
+            Preview.Height = 256;
             scroll.AddChild(Preview);
 
             PreInstructions = new();

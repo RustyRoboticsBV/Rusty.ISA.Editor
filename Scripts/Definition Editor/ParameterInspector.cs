@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Godot;
 using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor.Definitions
@@ -7,7 +8,7 @@ namespace Rusty.ISA.Editor.Definitions
     /// <summary>
     /// A generic parameter definition inspector.
     /// </summary>
-    public partial class ParameterInspector : ElementVBox
+    public partial class ParameterInspector : VBoxContainer
     {
         /* Public methods. */
         public OptionField Type { get; private set; }
@@ -130,50 +131,105 @@ namespace Rusty.ISA.Editor.Definitions
         public List<string> Labels { get; set; } = new(new string[] { "Bool", "Int", "Int Slider", "Float", "Float Slider",
             "Char", "Text Line", "Multiline Text", "Color", "Output" });
 
+        /* Private properties. */
+        private TabBar TabBar { get; set; }
+        private VBoxContainer Metadata { get; set; }
+
         /* Constructors. */
-        public ParameterInspector() : base() { }
-
-        public ParameterInspector(ParameterInspector other) : base(other) { }
-
-        /* Public methods. */
-        public override Element Duplicate()
+        public ParameterInspector()
         {
-            return new ParameterInspector(this);
-        }
-
-        public override bool CopyStateFrom(Element other)
-        {
-            if (base.CopyStateFrom(other) && other is ParameterInspector otherParameter)
+            Type = new()
             {
-                Type.Value = otherParameter.Type.Value;
+                LabelText = "Type",
+                Options = Labels.ToArray()
+            };
+            AddChild(Type);
 
-                ID.Value = otherParameter.ID.Value;
-                DisplayName.Value = otherParameter.DisplayName.Value;
-                Description.Value = otherParameter.Description.Value;
+            ID = new()
+            {
+                LabelText = "ID",
+            };
+            AddChild(ID);
 
-                DefaultBool.Value = otherParameter.DefaultBool.Value;
-                DefaultInt.Value = otherParameter.DefaultInt.Value;
-                DefaultFloat.Value = otherParameter.DefaultFloat.Value;
-                DefaultChar.Value = otherParameter.DefaultChar.Value;
-                DefaultText.Value = otherParameter.DefaultText.Value;
-                DefaultMultiline.Value = otherParameter.DefaultMultiline.Value;
-                DefaultColor.Value = otherParameter.DefaultColor.Value;
-                RemoveDefault.Value = otherParameter.RemoveDefault.Value;
+            TabBar = new();
+            AddChild(TabBar);
+            TabBar.AddTab("Metadata");
+            TabBar.AddTab("Preview");
 
-                MinInt.Value = otherParameter.MinInt.Value;
-                MaxInt.Value = otherParameter.MaxInt.Value;
-                MinFloat.Value = otherParameter.MinFloat.Value;
-                MaxFloat.Value = otherParameter.MaxFloat.Value;
+            Metadata = new();
+            AddChild(Metadata);
 
-                return true;
-            }
-            else
-                return false;
+            DisplayName = new();
+            Metadata.AddChild(DisplayName);
+            DisplayName.LabelText = "Display Name";
+
+            Description = new();
+            Metadata.AddChild(Description);
+            Description.LabelText = "Description";
+            Description.Height = 128;
+
+            DefaultBool = new();
+            Metadata.AddChild(DefaultBool);
+            DefaultBool.LabelText = "Default Value";
+
+            DefaultInt = new();
+            Metadata.AddChild(DefaultInt);
+            DefaultInt.LabelText = "Default Value";
+
+            DefaultFloat = new();
+            Metadata.AddChild(DefaultFloat);
+            DefaultFloat.LabelText = "Default Value";
+
+            DefaultChar = new();
+            Metadata.AddChild(DefaultChar);
+            DefaultChar.LabelText = "Default Value";
+
+            DefaultText = new();
+            Metadata.AddChild(DefaultText);
+            DefaultText.LabelText = "Default Value";
+
+            DefaultMultiline = new();
+            Metadata.AddChild(DefaultMultiline);
+            DefaultMultiline.LabelText = "Default Value";
+            DefaultMultiline.Height = 128;
+
+            DefaultColor = new();
+            Metadata.AddChild(DefaultColor);
+            DefaultColor.LabelText = "Default Value";
+
+            MinInt = new();
+            Metadata.AddChild(MinInt);
+            MinInt.LabelText = "Min Value";
+
+            MinFloat = new();
+            Metadata.AddChild(MinFloat);
+            MinFloat.LabelText = "Min Value";
+
+            MaxInt = new();
+            Metadata.AddChild(MaxInt);
+            MaxInt.LabelText = "Max Value";
+
+            MaxFloat = new();
+            Metadata.AddChild(MaxFloat);
+            MaxFloat.LabelText = "Max Value";
+
+            RemoveDefault = new();
+            Metadata.AddChild(RemoveDefault);
+            RemoveDefault.LabelText = "Remove Default Output";
+            RemoveDefault.TooltipText = "Whether or not this output should remove a node's default output, if present.";
+
+            Preview = new();
+            AddChild(Preview);
+            Preview.LabelText = "Preview";
+            Preview.Height = 256;
         }
 
         /* Godot overrides. */
         public override void _Process(double delta)
         {
+            Metadata.Visible = TabBar.CurrentTab == 0;
+            Preview.Visible = TabBar.CurrentTab == 1;
+
             string type = Types[Type.Value];
             DefaultBool.Visible = type == XmlKeywords.BoolParameter;
             DefaultInt.Visible = type == XmlKeywords.IntParameter || type == XmlKeywords.IntSliderParameter;
@@ -187,121 +243,6 @@ namespace Rusty.ISA.Editor.Definitions
             DefaultMultiline.Visible = type == XmlKeywords.MultilineParameter;
             DefaultColor.Visible = type == XmlKeywords.ColorParameter;
             RemoveDefault.Visible = type == XmlKeywords.OutputParameter;
-        }
-
-        /* Protected methods. */
-        protected override void Init()
-        {
-            base.Init();
-
-            Name = "ParameterInspector";
-
-            Type = new()
-            {
-                LabelText = "Type",
-                Options = Labels.ToArray()
-            };
-            Add(Type);
-
-            ID = new()
-            {
-                LabelText = "ID",
-            };
-            Add(ID);
-
-            DisplayName = new()
-            {
-                LabelText = "Display Name",
-            };
-            Add(DisplayName);
-
-            Description = new()
-            {
-                LabelText = "Description",
-                Height = 128
-            };
-            Add(Description);
-
-            DefaultBool = new()
-            {
-                LabelText = "Default Value"
-            };
-            Add(DefaultBool);
-
-            DefaultInt = new()
-            {
-                LabelText = "Default Value"
-            };
-            Add(DefaultInt);
-
-            DefaultFloat = new()
-            {
-                LabelText = "Default Value"
-            };
-            Add(DefaultFloat);
-
-            DefaultChar = new()
-            {
-                LabelText = "Default Value"
-            };
-            Add(DefaultChar);
-
-            DefaultText = new()
-            {
-                LabelText = "Default Value"
-            };
-            Add(DefaultText);
-
-            DefaultMultiline = new()
-            {
-                LabelText = "Default Value",
-                Height = 128
-            };
-            Add(DefaultMultiline);
-
-            DefaultColor = new()
-            {
-                LabelText = "Default Value"
-            };
-            Add(DefaultColor);
-
-            MinInt = new()
-            {
-                LabelText = "Min Value"
-            };
-            Add(MinInt);
-
-            MinFloat = new()
-            {
-                LabelText = "Min Value"
-            };
-            Add(MinFloat);
-
-            MaxInt = new()
-            {
-                LabelText = "Max Value"
-            };
-            Add(MaxInt);
-
-            MaxFloat = new()
-            {
-                LabelText = "Max Value"
-            };
-            Add(MaxFloat);
-
-            RemoveDefault = new()
-            {
-                LabelText = "Remove Default Output",
-                TooltipText = "Whether or not this output should remove a node's default output, if present."
-            };
-            Add(RemoveDefault);
-
-            Preview = new()
-            {
-                LabelText = "Preview",
-                Height = 128
-            };
-            Add(Preview);
         }
     }
 }

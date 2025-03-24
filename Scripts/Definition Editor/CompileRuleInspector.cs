@@ -13,14 +13,14 @@ namespace Rusty.ISA.Editor.Definitions
         /* Public methods. */
         public OptionField Type { get; private set; }
         public LineField ID { get; private set; }
+
         public LineField DisplayName { get; private set; }
         public MultilineField Description { get; private set; }
-
-        public LineField Opcode { get; private set; }
         public CheckBoxField DefaultEnabled { get; private set; }
         public IntField DefaultSelected { get; private set; }
         public LineField AddButtonText { get; private set; }
 
+        public LineField Opcode { get; private set; }
         public CompileRuleBox ChildRules { get; private set; }
 
         public MultilineField Preview { get; private set; }
@@ -91,9 +91,16 @@ namespace Rusty.ISA.Editor.Definitions
         public List<string> Types => XmlKeywords.CompileRules;
         public List<string> Labels { get; set; } = new(new string[] { "Instruction", "Option", "Choice", "Tuple", "List" });
 
+        /* Private properties. */
+        private TabBar TabBar { get; set; }
+        private VBoxContainer Children { get; set; }
+        private VBoxContainer Metadata { get; set; }
+
         /* Constructors. */
         public CompileRuleInspector() : base()
         {
+            SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
             Type = new();
             AddChild(Type);
             Type.LabelText = "Type";
@@ -101,53 +108,74 @@ namespace Rusty.ISA.Editor.Definitions
 
             ID = new();
             AddChild(ID);
-            ID.LabelText = "Label";
+            ID.LabelText = "ID";
+
+            TabBar = new();
+            AddChild(TabBar);
+            TabBar.AddTab("Contents");
+            TabBar.AddTab("Metadata");
+            TabBar.AddTab("Preview");
+
+
+            HBoxContainer contents = new();
+            AddChild(contents);
+            contents.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
+            VSeparator separator = new();
+            contents.AddChild(separator);
+
+
+            Children = new();
+            contents.AddChild(Children);
+            Children.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
+            Opcode = new();
+            Children.AddChild(Opcode);
+            Opcode.LabelText = "Opcode";
+
+            ChildRules = new();
+            Children.AddChild(ChildRules);
+
+
+            Metadata = new();
+            contents.AddChild(Metadata);
+            Metadata.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             DisplayName = new();
-            AddChild(DisplayName);
+            Metadata.AddChild(DisplayName);
             DisplayName.LabelText = "Display Name";
 
             Description = new();
-            AddChild(Description);
+            Metadata.AddChild(Description);
             Description.LabelText = "Description";
             Description.Height = 128;
 
-
-            Opcode = new();
-            AddChild(Opcode);
-            Opcode.LabelText = "Opcode";
-
             DefaultEnabled = new();
-            AddChild(DefaultEnabled);
+            Metadata.AddChild(DefaultEnabled);
             DefaultEnabled.LabelText = "Enabled By Default?";
 
             DefaultSelected = new();
-            AddChild(DefaultSelected);
+            Metadata.AddChild(DefaultSelected);
             DefaultSelected.LabelText = "Default Selection";
 
             AddButtonText = new();
-            AddChild(AddButtonText);
+            Metadata.AddChild(AddButtonText);
             AddButtonText.LabelText = "Add Button Text?";
-
-            
-            MarginContainer childMargin = new();
-            AddChild(childMargin);
-            childMargin.AddThemeConstantOverride("margin_left", 16);
-            childMargin.AddThemeConstantOverride("margin_right", 16);
-
-            ChildRules = new();
-            childMargin.AddChild(ChildRules);
 
 
             Preview = new();
-            AddChild(Preview);
+            contents.AddChild(Preview);
             Preview.LabelText = "Preview";
-            Preview.Height = 128;
+            Preview.Height = 256;
         }
 
         /* Godot overrides. */
         public override void _Process(double delta)
         {
+            Children.Visible = TabBar.CurrentTab == 0;
+            Metadata.Visible = TabBar.CurrentTab == 1;
+            Preview.Visible = TabBar.CurrentTab == 2;
+
             string type = Types[Type.Value];
             Opcode.Visible = type == XmlKeywords.InstructionRule;
             DefaultEnabled.Visible = type == XmlKeywords.OptionRule;

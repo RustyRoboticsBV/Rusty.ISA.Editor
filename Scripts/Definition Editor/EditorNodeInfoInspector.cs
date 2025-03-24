@@ -91,7 +91,7 @@ namespace Rusty.ISA.Editor.Definitions
             Preview = new();
             Foldout.Add(Preview);
             Preview.LabelText = "Preview";
-            Preview.Height = 128;
+            Preview.Height = 256;
 
             EnableWordWrap = new();
             Foldout.Add(EnableWordWrap);
