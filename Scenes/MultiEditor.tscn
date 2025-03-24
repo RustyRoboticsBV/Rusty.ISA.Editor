@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2y6sv7wojwbo"]
+
+[ext_resource type="Script" path="res://Scripts/Editors/MultiEditor.cs" id="1_n2hr8"]
+[ext_resource type="PackedScene" uid="uid://dofwqxu5phpon" path="res://Scenes/ProgramEditor.tscn" id="2_8as30"]
+[ext_resource type="PackedScene" uid="uid://bm1tqrxpv46kk" path="res://Scenes/DefinitionEditor.tscn" id="3_6p0py"]
+
+[node name="MultiEditor" type="VBoxContainer" node_paths=PackedStringArray("Tabs", "ProgramEditor", "DefinitionEditor")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n2hr8")
+Tabs = NodePath("TabBar")
+ProgramEditor = NodePath("MarginContainer/ProgramEditor")
+DefinitionEditor = NodePath("MarginContainer/DefinitionEditor")
+
+[node name="TabBar" type="TabBar" parent="."]
+layout_mode = 2
+current_tab = 0
+tab_count = 2
+tab_0/title = "Program Editor"
+tab_1/title = "Definition Editor"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ProgramEditor" parent="MarginContainer" instance=ExtResource("2_8as30")]
+layout_mode = 2
+
+[node name="DefinitionEditor" parent="MarginContainer" instance=ExtResource("3_6p0py")]
+layout_mode = 2

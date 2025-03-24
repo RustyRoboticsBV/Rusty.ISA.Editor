@@ -9,7 +9,7 @@ namespace Rusty.ISA.Editor
     /// The ISA editor window. Contains a set of file buttons, an inspector and a graph edit.
     /// </summary>
     [GlobalClass]
-    public partial class ISAEditor : VBoxContainer
+    public partial class ProgramEditor : VBoxContainer
     {
         /* Public properties. */
         [Export] public InstructionSet InstructionSet { get; set; }

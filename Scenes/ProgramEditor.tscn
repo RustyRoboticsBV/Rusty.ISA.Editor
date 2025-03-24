@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://dofwqxu5phpon"]
 
-[ext_resource type="Script" path="res://Scripts/Program Editor/ISAEditor.cs" id="1_vh6hk"]
+[ext_resource type="Script" path="res://Scripts/Editors/Program Editor/ProgramEditor.cs" id="1_vh6hk"]
 [ext_resource type="Resource" uid="uid://dnt3g5dpjm0pd" path="res://Built-In Instructions/InstructionSet.tres" id="2_6mtau"]
-[ext_resource type="Script" path="res://Scripts/Program Editor/Resizer/InspectorResizer.cs" id="3_fkirs"]
-[ext_resource type="Script" path="res://Scripts/Program Editor/GraphEdit/ProgramGraphEdit.cs" id="4_cmmha"]
+[ext_resource type="Script" path="res://Scripts/Editors/Program Editor/Resizer/InspectorResizer.cs" id="3_fkirs"]
+[ext_resource type="Script" path="res://Scripts/Editors/Program Editor/GraphEdit/ProgramGraphEdit.cs" id="4_cmmha"]
 
 [node name="CutsceneEditor" type="VBoxContainer" node_paths=PackedStringArray("OpenButton", "OpenDialog", "SaveButton", "SaveDialog", "DebugCompileButton", "DebugDecompileButton", "Inspector", "GraphEdit")]
 anchors_preset = 15

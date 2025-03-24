@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bm1tqrxpv46kk"]
 
-[ext_resource type="Script" path="res://Scripts/Definition Editor/DefinitionEditor.cs" id="1_dqv1h"]
+[ext_resource type="Script" path="res://Scripts/Editors/Definition Editor/DefinitionEditor.cs" id="1_dqv1h"]
 
 [node name="InstructionDefinitionEditor" type="MarginContainer"]
 anchors_preset = 15

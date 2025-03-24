@@ -35,10 +35,12 @@ namespace Rusty.ISA.Editor.Definitions
         {
             AddButtons();
 
-            Opcode = new LineField() { LabelText = "Opcode" };
+            Opcode = new();
             AddChild(Opcode);
+            Opcode.LabelText = "Opcode";
 
             TabBar = new();
+            AddChild(TabBar);
             TabBar.AddTab("Parameters");
             TabBar.AddTab("Implementation");
             TabBar.AddTab("Metadata");
@@ -46,12 +48,11 @@ namespace Rusty.ISA.Editor.Definitions
             TabBar.AddTab("Preview");
             TabBar.AddTab("Pre-Instructions");
             TabBar.AddTab("Post-Instructions");
-            AddChild(TabBar);
 
             ScrollContainer scroll = new();
+            AddChild(scroll);
             scroll.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             scroll.SizeFlagsVertical = SizeFlags.ExpandFill;
-            AddChild(scroll);
 
             Parameters = new();
             scroll.AddChild(Parameters);
@@ -59,31 +60,45 @@ namespace Rusty.ISA.Editor.Definitions
             Implementation = new();
             scroll.AddChild(Implementation);
 
+
             Metadata = new();
-            Metadata.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             scroll.AddChild(Metadata);
-            DisplayName = new() { LabelText = "Display Name" };
+            Metadata.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
+            DisplayName = new();
             Metadata.AddChild(DisplayName);
-            Description = new() { LabelText = "Description", Height = 128 };
+            DisplayName.LabelText = "Display Name";
+
+            Description = new();
             Metadata.AddChild(Description);
-            Category = new() { LabelText = "Category" };
+            Description.LabelText = "Description";
+            Description.Height = 128;
+
+            Category = new();
             Metadata.AddChild(Category);
+            Category.LabelText = "Category";
+
             Icon = new();
             Metadata.AddChild(Icon);
 
+
             Editor = new();
-            Editor.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             scroll.AddChild(Editor);
+            Editor.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
             EditorNodeInfo = new();
             Editor.AddChild(EditorNodeInfo);
 
+
             Preview = new();
+            scroll.AddChild(Preview);
             Preview.LabelText = "Preview";
             Preview.Height = 256;
-            scroll.AddChild(Preview);
+
 
             PreInstructions = new();
             scroll.AddChild(PreInstructions);
+
 
             PostInstructions = new();
             scroll.AddChild(PostInstructions);
