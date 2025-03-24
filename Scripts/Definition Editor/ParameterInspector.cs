@@ -156,8 +156,15 @@ namespace Rusty.ISA.Editor.Definitions
             TabBar.AddTab("Metadata");
             TabBar.AddTab("Preview");
 
+            HBoxContainer contents = new();
+            AddChild(contents);
+
+            VSeparator separator = new();
+            contents.AddChild(separator);
+
             Metadata = new();
-            AddChild(Metadata);
+            contents.AddChild(Metadata);
+            Metadata.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             DisplayName = new();
             Metadata.AddChild(DisplayName);
@@ -218,8 +225,9 @@ namespace Rusty.ISA.Editor.Definitions
             RemoveDefault.LabelText = "Remove Default Output";
             RemoveDefault.TooltipText = "Whether or not this output should remove a node's default output, if present.";
 
+
             Preview = new();
-            AddChild(Preview);
+            contents.AddChild(Preview);
             Preview.LabelText = "Preview";
             Preview.Height = 256;
         }

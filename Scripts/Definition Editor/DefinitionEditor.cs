@@ -106,32 +106,38 @@ namespace Rusty.ISA.Editor.Definitions
             // Create containers.
             ElementHBox buttons = new();
             AddChild(buttons);
+            buttons.Name = "Buttons";
 
             // Add buttons.
+            ButtonElement exportButton = new();
+            buttons.Add(exportButton);
+            exportButton.Name = "Export";
+            exportButton.ButtonText = "Export";
+            exportButton.Pressed += OnExport;
+
             ButtonElement saveButton = new();
+            buttons.Add(saveButton);
+            saveButton.Name = "Save";
             saveButton.ButtonText = "Save";
             saveButton.Pressed += OnSave;
-            buttons.Add(saveButton);
 
-            ButtonElement saveAsButton = new();
-            saveButton.ButtonText = "Save As";
-            saveAsButton.Pressed += OnSave;
-            buttons.Add(saveAsButton);
+            ButtonElement pasteButton = new();
+            buttons.Add(pasteButton);
+            pasteButton.Name = "Paste";
+            pasteButton.ButtonText = "Paste To Clipboard";
+            pasteButton.Pressed += OnPaste;
 
-            ButtonElement saveDebugButton = new();
-            saveDebugButton.ButtonText = "Paste To Clipboard";
-            saveDebugButton.Pressed += OnSave;
-            buttons.Add(saveDebugButton);
+            ButtonElement openButton = new();
+            buttons.Add(openButton);
+            openButton.Name = "Open";
+            openButton.ButtonText = "Open";
+            openButton.Pressed += OnOpen;
 
             ButtonElement loadButton = new();
-            loadButton.ButtonText = "Open";
-            loadButton.Pressed += OnOpen;
             buttons.Add(loadButton);
-
-            ButtonElement loadDebugButton = new();
-            loadDebugButton.ButtonText = "Load From Clipboard";
-            loadDebugButton.Pressed += OnOpen;
-            buttons.Add(loadDebugButton);
+            loadButton.Name = "Load";
+            loadButton.ButtonText = "Load From Clipboard";
+            loadButton.Pressed += OnLoad;
 
             AddChild(new HSeparatorElement());
         }
@@ -201,12 +207,32 @@ namespace Rusty.ISA.Editor.Definitions
         }
 
 
+        private void OnExport()
+        {
+        }
+
         private void OnSave()
+        {
+            FileDialog fileDialog = new();
+            fileDialog.Title = "Open Instruction Definition";
+            AddChild(fileDialog);
+            fileDialog.Show();
+        }
+
+        private void OnOpen()
+        {
+            FileDialog fileDialog = new();
+            fileDialog.Title = "Open Instruction Definition";
+            AddChild(fileDialog);
+            fileDialog.Show();
+        }
+
+        private void OnPaste()
         {
             DisplayServer.ClipboardSet(Compile().GetXml());
         }
 
-        private void OnOpen()
+        private void OnLoad()
         {
             // Get xml from clipboard.
             string xml = DisplayServer.ClipboardGet();
