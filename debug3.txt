@@ -1,8 +1,0 @@
-
-
-        public void ForcePreviewUpdate()
-        {
-            Inspector.ForcePreviewUpdate();
-            GD.Print("UPDATING NODE TO " + Inspector.Preview.Evaluate());
-            PreviewLabel.Text = Inspector.Preview.Evaluate();
-        }

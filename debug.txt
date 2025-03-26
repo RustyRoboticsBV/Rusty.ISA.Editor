@@ -1,5 +1,0 @@
-
-        public override void _Process(double delta)
-        {
-            FileButton.GetPopup().IndexPressed == OnFileMenuPressed;
-        }
