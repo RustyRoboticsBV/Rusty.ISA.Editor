@@ -58,11 +58,8 @@ namespace Rusty.ISA.Editor.Programs
 
         public new void ForcePreviewUpdate()
         {
-            GD.Print("Start force-updating " + Name);
             base.ForcePreviewUpdate();
             Preview = new(this);
-            GD.Print("Node Result = " + Preview.Evaluate());
-            GD.Print(" ");
         }
 
         /* Godot overrides. */

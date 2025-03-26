@@ -76,6 +76,9 @@ namespace Rusty.ISA.Editor.Programs
                 case 3:
                     OnPaste();
                     break;
+                case 4:
+                    OnClear();
+                    break;
             }
         }
 
@@ -113,6 +116,11 @@ namespace Rusty.ISA.Editor.Programs
         private void OnPaste()
         {
             Decompile(DisplayServer.ClipboardGet());
+        }
+
+        private void OnClear()
+        {
+            GraphEdit.Clear();
         }
     }
 }

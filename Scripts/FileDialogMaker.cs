@@ -26,7 +26,6 @@ namespace Rusty.ISA.Editor
             // Make sure the root folder exists.
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
-            GD.Print(folderPath);
 
             // Create dialog.
             FileDialog dialog = new();

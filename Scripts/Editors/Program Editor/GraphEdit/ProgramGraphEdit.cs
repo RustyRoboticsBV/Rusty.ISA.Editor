@@ -122,6 +122,30 @@ namespace Rusty.ISA.Editor.Programs
             return frame;
         }
 
+        /// <summary>
+        /// Delete all graph elements.
+        /// </summary>
+        public void Clear()
+        {
+            foreach (var node in Nodes)
+            {
+                RemoveChild(node);
+            }
+            Nodes.Clear();
+
+            foreach (var comment in Comments)
+            {
+                RemoveChild(comment);
+            }
+            Comments.Clear();
+
+            foreach (var node in Frames)
+            {
+                RemoveChild(node);
+            }
+            Frames.Clear();
+        }
+
         /* Godot overrides. */
         public override void _EnterTree()
         {

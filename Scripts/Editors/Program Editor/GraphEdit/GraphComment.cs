@@ -1,5 +1,4 @@
 ﻿using Godot;
-using Rusty.ISA;
 using Rusty.ISA.Editor.Programs.Compiler;
 
 namespace Rusty.ISA.Editor.Programs

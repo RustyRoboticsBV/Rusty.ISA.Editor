@@ -40,18 +40,6 @@ namespace Rusty.ISA.Editor.Programs
                 return false;
         }
 
-        public override void ForcePreviewUpdate()
-        {
-            GD.Print("Start force-updating list " + Name + " elements = " + ListElement.Count);
-            for (int i = 0; i < ListElement.Count; i++)
-            {
-                (ListElement[i][0] as CompileRuleInspector).ForcePreviewUpdate();
-            }
-            base.ForcePreviewUpdate();
-            GD.Print("Force-updating list " + Name + " elements = " + ListElement.Count);
-            GD.Print("   result = " + Preview.Evaluate());
-        }
-
         public override CompileRuleInspector[] GetActiveSubInspectors()
         {
             CompileRuleInspector[] childInspectors = new CompileRuleInspector[ListElement.Count];

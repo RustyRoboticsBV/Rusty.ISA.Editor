@@ -45,9 +45,9 @@ popup/item_1/text = "Save Definition"
 popup/item_1/id = 1
 popup/item_2/text = "Open Definition"
 popup/item_2/id = 2
-popup/item_3/text = "Copy Definition"
+popup/item_3/text = "Copy Definition To Clipboard"
 popup/item_3/id = 3
-popup/item_4/text = "Paste Definition"
+popup/item_4/text = "Paste Definition From Clipboard"
 popup/item_4/id = 4
 
 [node name="DefinitionInspector" type="VBoxContainer" parent="Margin/VBoxContainer"]

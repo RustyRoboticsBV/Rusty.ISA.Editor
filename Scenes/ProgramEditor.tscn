@@ -34,14 +34,16 @@ layout_mode = 2
 [node name="MenuButton" type="MenuButton" parent="Buttons/HBoxContainer/MarginContainer"]
 layout_mode = 2
 text = "  File  "
-item_count = 4
-popup/item_0/text = "Save"
-popup/item_1/text = "Open"
+item_count = 5
+popup/item_0/text = "Save Program"
+popup/item_1/text = "Open Program"
 popup/item_1/id = 1
-popup/item_2/text = "Copy"
+popup/item_2/text = "Copy Program To Clipboard"
 popup/item_2/id = 2
-popup/item_3/text = "Paste"
+popup/item_3/text = "Paste Program From Clipboard"
 popup/item_3/id = 3
+popup/item_4/text = "Delete Graph"
+popup/item_4/id = 4
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

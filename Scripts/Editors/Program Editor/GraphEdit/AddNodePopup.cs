@@ -1,7 +1,5 @@
 using Godot;
-using System;
 using System.Collections.Generic;
-using Rusty.ISA;
 
 namespace Rusty.ISA.Editor.Programs
 {

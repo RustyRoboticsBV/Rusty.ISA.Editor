@@ -47,8 +47,6 @@ namespace Rusty.ISA.Editor.Programs
         {
             TargetInstruction.ForcePreviewUpdate();
             base.ForcePreviewUpdate();
-            GD.Print("Updating instruction rule " + Definition + " / " + Name);
-            GD.Print("   result = " + Preview.Evaluate());
         }
 
         public override CompileRuleInspector[] GetActiveSubInspectors()

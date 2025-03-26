@@ -134,7 +134,6 @@ namespace Rusty.ISA.Editor.Programs
         public void ForcePreviewUpdate()
         {
             Inspector.ForcePreviewUpdate();
-            GD.Print("UPDATING NODE TO " + Inspector.Preview.Evaluate());
             PreviewLabel.Text = Inspector.Preview.Evaluate();
         }
 
@@ -146,6 +145,13 @@ namespace Rusty.ISA.Editor.Programs
 
             UpdateContents();
             Size = Vector2.Zero;
+        }
+
+        public override void _ExitTree()
+        {
+            Node inspectorParent = Inspector.GetParent();
+            if (inspectorParent != null)
+                inspectorParent.RemoveChild(Inspector);
         }
 
         /* Private methods. */
