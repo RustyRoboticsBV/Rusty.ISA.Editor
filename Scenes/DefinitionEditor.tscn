@@ -3,17 +3,15 @@
 [ext_resource type="Script" path="res://Scripts/Editors/Definition Editor/DefinitionEditor.cs" id="1_dqv1h"]
 [ext_resource type="Script" path="res://Scripts/Editors/Definition Editor/DefinitionInspector.cs" id="2_84p2x"]
 
-[node name="InstructionDefinitionEditor" type="MarginContainer" node_paths=PackedStringArray("Inspector", "ExportButton", "ReloadButton", "Instructions")]
+[node name="InstructionDefinitionEditor" type="MarginContainer" node_paths=PackedStringArray("Menu", "Inspector")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_dqv1h")
+Menu = NodePath("Margin/VBoxContainer/Buttons/MarginContainer/MenuButton")
 Inspector = NodePath("Margin/VBoxContainer/DefinitionInspector")
-ExportButton = NodePath("Margin/VBoxContainer/Buttons/Export")
-ReloadButton = NodePath("Margin/VBoxContainer/Buttons/Reload")
-Instructions = NodePath("Margin/VBoxContainer/Buttons/Definitions")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 2
@@ -32,16 +30,25 @@ layout_mode = 2
 [node name="Buttons" type="HBoxContainer" parent="Margin/VBoxContainer"]
 layout_mode = 2
 
-[node name="Export" type="Button" parent="Margin/VBoxContainer/Buttons"]
+[node name="MarginContainer" type="MarginContainer" parent="Margin/VBoxContainer/Buttons"]
 layout_mode = 2
-text = "Export Instruction Set"
 
-[node name="Reload" type="Button" parent="Margin/VBoxContainer/Buttons"]
+[node name="Button" type="Button" parent="Margin/VBoxContainer/Buttons/MarginContainer"]
 layout_mode = 2
-text = "Reload Instruction Set"
 
-[node name="Definitions" type="OptionButton" parent="Margin/VBoxContainer/Buttons"]
+[node name="MenuButton" type="MenuButton" parent="Margin/VBoxContainer/Buttons/MarginContainer"]
 layout_mode = 2
+text = "File"
+item_count = 5
+popup/item_0/text = "Export Instruction Set"
+popup/item_1/text = "Save Definition"
+popup/item_1/id = 1
+popup/item_2/text = "Open Definition"
+popup/item_2/id = 2
+popup/item_3/text = "Copy Definition"
+popup/item_3/id = 3
+popup/item_4/text = "Paste Definition"
+popup/item_4/id = 4
 
 [node name="DefinitionInspector" type="VBoxContainer" parent="Margin/VBoxContainer"]
 layout_mode = 2

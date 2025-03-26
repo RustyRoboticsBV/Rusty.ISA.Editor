@@ -16,7 +16,7 @@ Tabs = NodePath("TabBar")
 ProgramEditor = NodePath("MarginContainer/ProgramEditor")
 DefinitionEditor = NodePath("MarginContainer/DefinitionEditor")
 BuiltInInstructions = ExtResource("2_7nop1")
-UserDefinedInstructions = "Instruction Definitions"
+UserDefinedInstructions = "Definitions"
 
 [node name="TabBar" type="TabBar" parent="."]
 layout_mode = 2

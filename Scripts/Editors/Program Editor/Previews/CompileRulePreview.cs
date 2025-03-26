@@ -80,10 +80,12 @@
                     string sum = "";
                     foreach (var element in elements)
                     {
-                        if (sum != "")
-                            sum += " + ";
                         CompileRulePreview preview = new(element);
-                        sum += Make("\n" + preview.Evaluate());
+                        if (sum != "")
+                            sum += " + " + Make("\n" + preview.Evaluate());
+                        else
+                            sum += Make(preview.Evaluate());
+
                     }
                     return sum;
             }

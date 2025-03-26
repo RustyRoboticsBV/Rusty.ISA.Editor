@@ -1,60 +1,142 @@
 ﻿using Godot;
-using System;
 using System.IO;
-using System.IO.Compression;
+using System.Xml;
+using Rusty.ISA.Editor.SetBuilder;
 
 namespace Rusty.ISA.Editor.Definitions
 {
     [GlobalClass]
     public partial class DefinitionEditor : MarginContainer
     {
-        [Export] public InstructionSet InstructionSet { get; set; }
+        [Export] public MenuButton Menu { get; set; }
         [Export] public DefinitionInspector Inspector { get; set; }
-        [Export] public Button ExportButton { get; set; }
-        [Export] public Button ReloadButton { get; set; }
-        [Export] public OptionButton Instructions { get; set; }
 
-        public event Action Reloaded;
+        [Export] public InstructionSet BuiltInInstructions { get; set; }
+        [Export] public string UserDefinedInstructions { get; set; } = "";
 
         private int Selected { get; set; } = -1;
 
+        private FileDialog Dialog { get; set; }
+
         public override void _EnterTree()
         {
-            // Add buttons.
-            ExportButton.Pressed += OnExport;
-            ReloadButton.Pressed += OnReload;
+            Menu.GetPopup().IdPressed += OnMenuPressed;
         }
 
         public override void _Process(double delta)
         {
-            if (InstructionSet == null)
-                Instructions.Clear();
-            else if (Instructions.ItemCount != InstructionSet.Count)
+            if (Dialog != null && !Dialog.Visible)
             {
-                Instructions.Clear();
-                for (int i = 0; i < InstructionSet.Count; i++)
-                {
-                    Instructions.AddIconItem(InstructionSet[i].Icon, InstructionSet[i].DisplayName);
-                }
+                RemoveChild(Dialog);
+                Dialog = null;
             }
+        }
 
-            if (Selected != Instructions.Selected)
+        private void OnMenuPressed(long index)
+        {
+            switch (index)
             {
-                Selected = Instructions.Selected;
-                Inspector.Load(InstructionSet[Selected]);
+                case 0:
+                    OnExport();
+                    break;
+                case 1:
+                    OnSave();
+                    break;
+                case 2:
+                    OnOpen();
+                    break;
+                case 3:
+                    OnCopy();
+                    break;
+                case 4:
+                    OnPaste();
+                    break;
             }
         }
 
         private void OnExport()
         {
-            string path = ProjectSettings.GlobalizePath("res://.godot/Exported.zip");
-            File.WriteAllBytes(path, SetSerializer.Serialize(InstructionSet));
+            string folderPath = PathUtility.GetPath(UserDefinedInstructions);
+
+            Dialog = FileDialogMaker.GetSave("Export Instruction Set", folderPath, "InstructionSet", "zip");
+            AddChild(Dialog);
+            Dialog.Show();
+            Dialog.FileSelected += OnSetSaved;
         }
 
-        private void OnReload()
+        private void OnSetSaved(string path)
         {
-            Instructions.Clear();
-            Reloaded?.Invoke();
+            // Build instruction set.
+            InstructionSet set = InstructionSetBuilder.Build(BuiltInInstructions, UserDefinedInstructions);
+
+            // Save to file.
+            File.WriteAllBytes(path, SetSerializer.Serialize(set));
+        }
+
+        private void OnSave()
+        {
+            string folderPath = PathUtility.GetPath(UserDefinedInstructions);
+
+            InstructionDefinitionDescriptor desc = Inspector.Compile();
+            string fileName = "Def" + desc.Opcode;
+
+            FileDialog Dialog = FileDialogMaker.GetSave("Save Instruction Definition", folderPath, fileName, "xml");
+            AddChild(Dialog);
+            Dialog.Show();
+            Dialog.FileSelected += OnDefinitionSaved;
+        }
+
+        private void OnDefinitionSaved(string path)
+        {
+            // Build instruction set.
+            InstructionDefinitionDescriptor desc = Inspector.Compile();
+
+            // Save to file.
+            File.WriteAllText(path, desc.GetXml());
+        }
+
+        private void OnOpen()
+        {
+            string folderPath = PathUtility.GetPath(UserDefinedInstructions);
+
+            Dialog = FileDialogMaker.GetOpen("Open Instruction Definition", folderPath, "", "xml");
+            AddChild(Dialog);
+            Dialog.Show();
+            Dialog.FileSelected += OnDefinitionOpened;
+        }
+
+        private void OnDefinitionOpened(string path)
+        {
+            // Load XML.
+            XmlDocument doc = new();
+            doc.Load(path);
+
+            // Create descriptor.
+            InstructionDefinitionDescriptor desc = new(doc);
+
+            // Load descriptor.
+            Inspector.Load(desc);
+        }
+
+        private void OnCopy()
+        {
+            // Read clipboard.
+            string xml = DisplayServer.ClipboardGet();
+
+            // Load XML.
+            XmlDocument doc = new();
+            doc.LoadXml(xml);
+
+            // Create descriptor.
+            InstructionDefinitionDescriptor desc = new(doc);
+
+            // Load descriptor.
+            Inspector.Load(desc);
+        }
+
+        private void OnPaste()
+        {
+            DisplayServer.ClipboardSet(Inspector.Compile().GetXml());
         }
     }
 }

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=92 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=91 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_gmmgc"]
@@ -68,6 +68,37 @@ Preview = ""
 PreInstructions = []
 PostInstructions = []
 
+[sub_resource type="Resource" id="Resource_shaub"]
+resource_name = "type (text)"
+script = ExtResource("12_rklps")
+ID = "type"
+DisplayName = "Type"
+Description = "The type of the parameter."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_2jvhx"]
+resource_name = "id (text)"
+script = ExtResource("12_rklps")
+ID = "id"
+DisplayName = "ID"
+Description = "The identifier of the parameter."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_n3emi"]
+resource_name = "PAR"
+script = ExtResource("2_uguea")
+Opcode = "PAR"
+Parameters = [SubResource("Resource_shaub"), SubResource("Resource_2jvhx")]
+Icon = ExtResource("15_5h8mm")
+DisplayName = "Parameter Metadata"
+Description = "Represents metadata related to an instruction parameter."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
 [sub_resource type="Resource" id="Resource_4i0kw"]
 resource_name = "type (text)"
 script = ExtResource("12_rklps")
@@ -125,37 +156,6 @@ Parameters = [SubResource("Resource_svoja"), SubResource("Resource_jdrw3")]
 Icon = ExtResource("17_txonn")
 DisplayName = "Reference"
 Description = "Represents metadata related to an instruction rule."
-Category = "Editor"
-Preview = ""
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_shaub"]
-resource_name = "type (text)"
-script = ExtResource("12_rklps")
-ID = "type"
-DisplayName = "Type"
-Description = "The type of the parameter."
-DefaultValue = ""
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_2jvhx"]
-resource_name = "id (text)"
-script = ExtResource("12_rklps")
-ID = "id"
-DisplayName = "ID"
-Description = "The identifier of the parameter."
-DefaultValue = ""
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_n3emi"]
-resource_name = "PAR"
-script = ExtResource("2_uguea")
-Opcode = "PAR"
-Parameters = [SubResource("Resource_shaub"), SubResource("Resource_2jvhx")]
-Icon = ExtResource("15_5h8mm")
-DisplayName = "Parameter Metadata"
-Description = "Represents metadata related to an instruction parameter."
 Category = "Editor"
 Preview = ""
 PreInstructions = []
@@ -452,16 +452,6 @@ Preview = ""
 PreInstructions = []
 PostInstructions = []
 
-[sub_resource type="Resource" id="Resource_wfygo"]
-script = ExtResource("1_gmmgc")
-Priority = -1
-MinWidth = 128
-MinHeight = 32
-MainColor = Color(0.411765, 0.411765, 0.411765, 1)
-TextColor = Color(1, 1, 1, 1)
-Preview = ""
-EnableWordWrap = true
-
 [sub_resource type="Resource" id="Resource_itw8j"]
 resource_name = "EOG"
 script = ExtResource("2_uguea")
@@ -471,7 +461,6 @@ Icon = ExtResource("17_eto4q")
 DisplayName = "End of Block"
 Description = "A compiler marker that denotes the end of a group of instructions."
 Category = "Editor"
-EditorNode = SubResource("Resource_wfygo")
 Preview = ""
 PreInstructions = []
 PostInstructions = []
@@ -650,10 +639,10 @@ PostInstructions = []
 [sub_resource type="Resource" id="Resource_eqo11"]
 resource_name = "Core (copy)"
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_3fopi"), SubResource("Resource_usn25"), SubResource("Resource_pm5es"), SubResource("Resource_6bfpp"), SubResource("Resource_b4qbb"), SubResource("Resource_es1ni")]
+Local = [SubResource("Resource_3fopi"), SubResource("Resource_usn25"), SubResource("Resource_pm5es"), SubResource("Resource_6bfpp"), SubResource("Resource_b4qbb"), SubResource("Resource_es1ni")]
 Modules = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Definitions = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_n3emi"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
+Local = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
 Modules = [SubResource("Resource_eqo11")]

@@ -18,8 +18,9 @@ namespace Rusty.ISA.Editor
         public override void _EnterTree()
         {
             InstructionSet set = InstructionSetBuilder.Build(BuiltInInstructions, UserDefinedInstructions);
-            ProgramEditor.InstructionSet = set;
-            DefinitionEditor.InstructionSet = set;
+            ProgramEditor.UpdateInstructionSet(set);
+            DefinitionEditor.BuiltInInstructions = BuiltInInstructions;
+            DefinitionEditor.UserDefinedInstructions = UserDefinedInstructions;
         }
 
         public override void _Process(double delta)

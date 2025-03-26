@@ -1,5 +1,5 @@
-﻿using Godot;
-using System.Collections.Generic;
+﻿#define RUSTY_ISA_EDITOR_PREVIEWS
+using Godot;
 
 namespace Rusty.ISA.Editor.Programs
 {
@@ -45,6 +45,9 @@ namespace Rusty.ISA.Editor.Programs
         /// </summary>
         public string Evaluate()
         {
+#if !RUSTY_ISA_EDITOR_PREVIEWS
+            return "PREVIEWS_HAVE_BEEN_DISABLED";
+#else
             // Create node if necessary.
             if (Node == null)
                 Node = CreateNode(Implementation);
@@ -54,6 +57,7 @@ namespace Rusty.ISA.Editor.Programs
                 return (string)Node.Call("eval");
             else
                 return "BAD_PREVIEW";
+#endif
         }
 
         /* Protected methods. */

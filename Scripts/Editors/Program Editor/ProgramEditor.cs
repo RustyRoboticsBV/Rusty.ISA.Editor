@@ -12,7 +12,7 @@ namespace Rusty.ISA.Editor.Programs
     public partial class ProgramEditor : VBoxContainer
     {
         /* Public properties. */
-        [Export] public InstructionSet InstructionSet { get; set; }
+        [Export] public InstructionSet InstructionSet { get; private set; }
         [Export] public Button OpenButton { get; private set; }
         [Export] public FileDialog OpenDialog { get; private set; }
         [Export] public Button SaveButton { get; private set; }
@@ -23,6 +23,13 @@ namespace Rusty.ISA.Editor.Programs
         [Export] public VBoxContainer Inspector { get;  private set; }
 
         [Export] public ProgramGraphEdit GraphEdit { get; private set; }
+
+        /* Public methods. */
+        public void UpdateInstructionSet(InstructionSet set)
+        {
+            InstructionSet = set;
+            GraphEdit.UpdateInstructionSet(set);
+        }
 
         /* Godot overrides. */
         public override void _EnterTree()

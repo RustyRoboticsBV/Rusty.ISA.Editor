@@ -31,16 +31,72 @@ namespace Rusty.ISA.Editor.Definitions
         public CompileRuleBox PostInstructions { get; private set; }
 
         /* Public methods. */
-        public void Load(InstructionDefinition definition)
+        public InstructionDefinitionDescriptor Compile()
         {
-            Load(new InstructionDefinitionDescriptor(definition));
+            InstructionDefinitionDescriptor descriptor = new();
+
+            // Add opcode.
+            descriptor.Opcode = Opcode.Value;
+
+            // Add parameters.
+            for (int i = 0; i < Parameters.Parameters.Count; i++)
+            {
+                descriptor.Parameters.Add(Parameters.Parameters[i].Value);
+            }
+
+            // Add implementation.
+            descriptor.Implementation = Implementation.Value;
+
+            // Add metadata.
+            descriptor.IconPath = Icon.FilePath.Value;
+            descriptor.DisplayName = DisplayName.Value;
+            descriptor.Description = Description.Value;
+            descriptor.Category = Category.Value;
+
+            // Add editor data.
+            descriptor.EditorNodeInfo = EditorNodeInfo.Value;
+            descriptor.Preview = Preview.Value;
+
+            // Add pre-instructions.
+            descriptor.PreInstructions.AddRange(PreInstructions.Get());
+
+            // Add post-instructions.
+            descriptor.PostInstructions.AddRange(PostInstructions.Get());
+
+            return descriptor;
+        }
+
+        public void Load(InstructionDefinitionDescriptor descriptor)
+        {
+            // Load opcode.
+            Opcode.Value = descriptor.Opcode;
+
+            // Load parameters.
+            Parameters.Set(descriptor.Parameters);
+
+            // Load implementation.
+            Implementation.Value = descriptor.Implementation;
+
+            // Load metadata.
+            Icon.FilePath.Value = descriptor.IconPath;
+            DisplayName.Value = descriptor.DisplayName;
+            Description.Value = descriptor.Description;
+            Category.Value = descriptor.Category;
+
+            // Load editor data.
+            EditorNodeInfo.Value = descriptor.EditorNodeInfo;
+            Preview.Value = descriptor.Preview;
+
+            // Load pre-instructions.
+            PreInstructions.Set(descriptor.PreInstructions);
+
+            // Load post-instructions.
+            PostInstructions.Set(descriptor.PostInstructions);
         }
 
         /* Godot overrides. */
         public override void _Ready()
         {
-            AddButtons();
-
             Opcode = new();
             AddChild(Opcode);
             Opcode.LabelText = "Opcode";
@@ -54,6 +110,7 @@ namespace Rusty.ISA.Editor.Definitions
             TabBar.AddTab("Preview");
             TabBar.AddTab("Pre-Instructions");
             TabBar.AddTab("Post-Instructions");
+            TabBar.CurrentTab = 2;
 
             ScrollContainer scroll = new();
             AddChild(scroll);
@@ -119,143 +176,6 @@ namespace Rusty.ISA.Editor.Definitions
             Preview.Visible = TabBar.CurrentTab == 4;
             PreInstructions.Visible = TabBar.CurrentTab == 5;
             PostInstructions.Visible = TabBar.CurrentTab == 6;
-        }
-
-        /* Private methods. */
-        private void AddButtons()
-        {
-            // Create containers.
-            ElementHBox buttons = new();
-            AddChild(buttons);
-            buttons.Name = "Buttons";
-
-            ButtonElement saveButton = new();
-            buttons.Add(saveButton);
-            saveButton.Name = "Save";
-            saveButton.ButtonText = "Save";
-            saveButton.Pressed += OnSave;
-
-            ButtonElement pasteButton = new();
-            buttons.Add(pasteButton);
-            pasteButton.Name = "Paste";
-            pasteButton.ButtonText = "Paste To Clipboard";
-            pasteButton.Pressed += OnPaste;
-
-            ButtonElement openButton = new();
-            buttons.Add(openButton);
-            openButton.Name = "Open";
-            openButton.ButtonText = "Open";
-            openButton.Pressed += OnOpen;
-
-            ButtonElement loadButton = new();
-            buttons.Add(loadButton);
-            loadButton.Name = "Load";
-            loadButton.ButtonText = "Load From Clipboard";
-            loadButton.Pressed += OnLoad;
-
-            AddChild(new HSeparatorElement());
-        }
-
-
-        private InstructionDefinitionDescriptor Compile()
-        {
-            InstructionDefinitionDescriptor descriptor = new();
-
-            // Add opcode.
-            descriptor.Opcode = Opcode.Value;
-
-            // Add parameters.
-            for (int i = 0; i < Parameters.Parameters.Count; i++)
-            {
-                descriptor.Parameters.Add(Parameters.Parameters[i].Value);
-            }
-
-            // Add implementation.
-            descriptor.Implementation = Implementation.Value;
-
-            // Add metadata.
-            descriptor.IconPath = Icon.FilePath.Value;
-            descriptor.DisplayName = DisplayName.Value;
-            descriptor.Description = Description.Value;
-            descriptor.Category = Category.Value;
-
-            // Add editor data.
-            descriptor.EditorNodeInfo = EditorNodeInfo.Value;
-            descriptor.Preview = Preview.Value;
-
-            // Add pre-instructions.
-            descriptor.PreInstructions.AddRange(PreInstructions.Get());
-
-            // Add post-instructions.
-            descriptor.PostInstructions.AddRange(PostInstructions.Get());
-
-            return descriptor;
-        }
-
-        private void Load(InstructionDefinitionDescriptor descriptor)
-        {
-            // Load opcode.
-            Opcode.Value = descriptor.Opcode;
-
-            // Load parameters.
-            Parameters.Set(descriptor.Parameters);
-
-            // Load implementation.
-            Implementation.Value = descriptor.Implementation;
-
-            // Load metadata.
-            Icon.FilePath.Value = descriptor.IconPath;
-            DisplayName.Value = descriptor.DisplayName;
-            Description.Value = descriptor.Description;
-            Category.Value = descriptor.Category;
-
-            // Load editor data.
-            EditorNodeInfo.Value = descriptor.EditorNodeInfo;
-            Preview.Value = descriptor.Preview;
-
-            // Load pre-instructions.
-            PreInstructions.Set(descriptor.PreInstructions);
-
-            // Load post-instructions.
-            PostInstructions.Set(descriptor.PostInstructions);
-        }
-
-
-        private void OnSave()
-        {
-            FileDialog fileDialog = new();
-            fileDialog.Title = "Open Instruction Definition";
-            AddChild(fileDialog);
-            fileDialog.Show();
-        }
-
-        private void OnOpen()
-        {
-            FileDialog fileDialog = new();
-            fileDialog.Title = "Open Instruction Definition";
-            AddChild(fileDialog);
-            fileDialog.Show();
-        }
-
-        private void OnPaste()
-        {
-            DisplayServer.ClipboardSet(Compile().GetXml());
-        }
-
-        private void OnLoad()
-        {
-            // Get xml from clipboard.
-            string xml = DisplayServer.ClipboardGet();
-
-            // Create XML document.
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xml);
-
-            // Create definition descriptor.
-            InstructionDefinitionDescriptor descriptor = new(xmlDoc);
-
-            // Load.
-            Load(descriptor);
         }
     }
 }

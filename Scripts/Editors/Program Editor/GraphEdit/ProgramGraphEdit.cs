@@ -14,8 +14,8 @@ namespace Rusty.ISA.Editor.Programs
         /* Public properties. */
         public static int LineHeight => 32;
         
-        [Export] public VBoxContainer InspectorWindow { get; set; }
-        [Export] public InstructionSet InstructionSet { get; set; }
+        [Export] public VBoxContainer InspectorWindow { get; private set; }
+        [Export] public InstructionSet InstructionSet { get; private set; }
         
         public List<GraphInstruction> Nodes { get; } = new();
         public List<GraphComment> Comments { get; } = new();
@@ -29,6 +29,12 @@ namespace Rusty.ISA.Editor.Programs
         private Vector2 SpawnPosition { get; set; }
 
         /* Public methods. */
+        public void UpdateInstructionSet(InstructionSet set)
+        {
+            InstructionSet = set;
+            AddNodePopup?.UpdateInstructionSet(set);
+        }
+
         /// <summary>
         /// Spawn a new instruction node onto the graph, using an instruction definition as a template.
         /// </summary>

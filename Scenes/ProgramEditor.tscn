@@ -20,7 +20,7 @@ SaveDialog = NodePath("SaveDialog")
 DebugCompileButton = NodePath("Buttons/HBoxContainer/DebugCompile")
 DebugDecompileButton = NodePath("Buttons/HBoxContainer/DebugDecompile")
 Inspector = NodePath("HBoxContainer/Inspector/ScrollContainer/Header/VBoxContainer")
-GraphEdit = NodePath("HBoxContainer/CutsceneGraphEdit")
+GraphEdit = NodePath("HBoxContainer/GraphEdit")
 
 [node name="Buttons" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -85,7 +85,7 @@ layout_mode = 2
 script = ExtResource("3_fkirs")
 Target = NodePath("../Inspector")
 
-[node name="CutsceneGraphEdit" type="GraphEdit" parent="HBoxContainer" node_paths=PackedStringArray("InspectorWindow")]
+[node name="GraphEdit" type="GraphEdit" parent="HBoxContainer" node_paths=PackedStringArray("InspectorWindow")]
 layout_mode = 2
 size_flags_horizontal = 3
 minimap_enabled = false

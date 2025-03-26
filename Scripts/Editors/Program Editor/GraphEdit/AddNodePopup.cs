@@ -12,7 +12,7 @@ namespace Rusty.ISA.Editor.Programs
     {
         /* Public properties. */
         public string MenuName { get; set; } = "";
-        public List<InstructionDefinition> Definitions { get; set; } = new();
+        public List<InstructionDefinition> Definitions { get; private set; } = new();
         public List<PopupMenu> Submenus { get; set; } = new();
 
         /* Delegates. */
@@ -41,6 +41,21 @@ namespace Rusty.ISA.Editor.Programs
 
         public AddNodePopup(InstructionDefinition[] definitions) : this()
         {
+            UpdateInstructionSet(definitions);
+        }
+
+        public AddNodePopup(InstructionSet instructionSet) : this(instructionSet != null ? instructionSet.Local : null) { }
+
+        /* Public methods. */
+        public void UpdateInstructionSet(InstructionSet set)
+        {
+            UpdateInstructionSet(set.Definitions);
+        }
+
+        public void UpdateInstructionSet(InstructionDefinition[] definitions)
+        {
+            Clear();
+
             if (definitions == null)
                 return;
 
@@ -92,8 +107,6 @@ namespace Rusty.ISA.Editor.Programs
                 AddCategory(categoryName, nodeInstructions[categoryName]);
             }
         }
-
-        public AddNodePopup(InstructionSet instructionSet) : this(instructionSet != null ? instructionSet.Definitions : null) { }
 
         /* Private methods. */
         private void AddDefinition(InstructionDefinition definition)
