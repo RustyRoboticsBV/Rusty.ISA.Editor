@@ -60,6 +60,12 @@ namespace Rusty.ISA.Editor.Programs
             return false;
         }
 
+        public override void SetValue(string str)
+        {
+            if (str.Length > 0)
+                Value = str[0];
+        }
+
         /* Protected methods. */
         protected override void Init()
         {

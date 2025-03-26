@@ -1,4 +1,5 @@
-﻿using Rusty.EditorUI;
+﻿using Godot;
+using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor.Programs
 {
@@ -37,6 +38,18 @@ namespace Rusty.ISA.Editor.Programs
             }
             else
                 return false;
+        }
+
+        public override void ForcePreviewUpdate()
+        {
+            GD.Print("Start force-updating list " + Name + " elements = " + ListElement.Count);
+            for (int i = 0; i < ListElement.Count; i++)
+            {
+                (ListElement[i][0] as CompileRuleInspector).ForcePreviewUpdate();
+            }
+            base.ForcePreviewUpdate();
+            GD.Print("Force-updating list " + Name + " elements = " + ListElement.Count);
+            GD.Print("   result = " + Preview.Evaluate());
         }
 
         public override CompileRuleInspector[] GetActiveSubInspectors()

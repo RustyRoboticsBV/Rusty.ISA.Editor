@@ -134,7 +134,7 @@ namespace Rusty.ISA.Editor.Programs
         {
             for (int i = 0; i < Parameters.Count && i < instance.Arguments.Length; i++)
             {
-                Parameters[i].ValueObj = instance.Arguments[i];
+                Parameters[i].SetValue(instance.Arguments[i]);
             }
         }
 
@@ -184,10 +184,12 @@ namespace Rusty.ISA.Editor.Programs
         /// </summary>
         public void ForcePreviewUpdate()
         {
+            GD.Print("Start forcing update " + Name + " parameters = " + Parameters.Count + " pres = " + PreInstructions.Count + ".");
             // First, force-update all child inspector previews.
             for (int i = 0; i < Parameters.Count; i++)
             {
                 Parameters[i].ForcePreviewUpdate();
+                GD.Print("Parameter " + Parameters[i].Preview.Evaluate());
             }
             for (int i = 0; i < PreInstructions.Inspectors.Count; i++)
             {
@@ -200,6 +202,8 @@ namespace Rusty.ISA.Editor.Programs
 
             // Update our preview.
             Preview = new(this);
+            GD.Print("Forcing update " + Name + " parameters = " + Parameters.Count + " pres = " + PreInstructions.Count + ".");
+            GD.Print("    result = " + Preview.Evaluate());
         }
 
         /* Godot overrides. */
@@ -259,6 +263,7 @@ namespace Rusty.ISA.Editor.Programs
                 Parameters.Add(parameterInspector);
                 Add(parameterInspector);
             }
+            GD.Print(Parameters.Count);
 
             // Add compile rules.
             PreInstructions = new(this, Definition);

@@ -61,6 +61,12 @@ namespace Rusty.ISA.Editor.Programs
             return false;
         }
 
+        public override void SetValue(string str)
+        {
+            if (bool.TryParse(str, out bool result))
+                Value = result;
+        }
+
         /* Protected methods. */
         protected override void Init()
         {

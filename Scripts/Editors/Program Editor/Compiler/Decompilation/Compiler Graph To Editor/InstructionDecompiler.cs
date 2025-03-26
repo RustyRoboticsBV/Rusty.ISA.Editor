@@ -24,6 +24,9 @@ namespace Rusty.ISA.Editor.Programs.Compiler
 
             // Apply the instance arguments.
             instructionInspector.SetArguments(instructionNode.Data.Instance);
+
+            // Force preview update.
+            instructionInspector.ForcePreviewUpdate();
         }
     }
 }

@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://Scripts/Editors/Program Editor/Resizer/InspectorResizer.cs" id="3_fkirs"]
 [ext_resource type="Script" path="res://Scripts/Editors/Program Editor/GraphEdit/ProgramGraphEdit.cs" id="4_cmmha"]
 
-[node name="ProgramEditor" type="VBoxContainer" node_paths=PackedStringArray("OpenButton", "OpenDialog", "SaveButton", "SaveDialog", "DebugCompileButton", "DebugDecompileButton", "Inspector", "GraphEdit")]
+[node name="ProgramEditor" type="VBoxContainer" node_paths=PackedStringArray("FileButton", "Inspector", "GraphEdit")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,12 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vh6hk")
 InstructionSet = ExtResource("2_6mtau")
-OpenButton = NodePath("Buttons/HBoxContainer/Open")
-OpenDialog = NodePath("OpenDialog")
-SaveButton = NodePath("Buttons/HBoxContainer/Save")
-SaveDialog = NodePath("SaveDialog")
-DebugCompileButton = NodePath("Buttons/HBoxContainer/DebugCompile")
-DebugDecompileButton = NodePath("Buttons/HBoxContainer/DebugDecompile")
+FileButton = NodePath("Buttons/HBoxContainer/MarginContainer/MenuButton")
 Inspector = NodePath("HBoxContainer/Inspector/ScrollContainer/Header/VBoxContainer")
 GraphEdit = NodePath("HBoxContainer/GraphEdit")
 
@@ -30,21 +25,23 @@ theme_override_constants/margin_top = 5
 [node name="HBoxContainer" type="HBoxContainer" parent="Buttons"]
 layout_mode = 2
 
-[node name="Open" type="Button" parent="Buttons/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Buttons/HBoxContainer"]
 layout_mode = 2
-text = "Open"
 
-[node name="Save" type="Button" parent="Buttons/HBoxContainer"]
+[node name="Button" type="Button" parent="Buttons/HBoxContainer/MarginContainer"]
 layout_mode = 2
-text = "Save"
 
-[node name="DebugCompile" type="Button" parent="Buttons/HBoxContainer"]
+[node name="MenuButton" type="MenuButton" parent="Buttons/HBoxContainer/MarginContainer"]
 layout_mode = 2
-text = "Debug Compile"
-
-[node name="DebugDecompile" type="Button" parent="Buttons/HBoxContainer"]
-layout_mode = 2
-text = "Debug Decompile"
+text = "  File  "
+item_count = 4
+popup/item_0/text = "Save"
+popup/item_1/text = "Open"
+popup/item_1/id = 1
+popup/item_2/text = "Copy"
+popup/item_2/id = 2
+popup/item_3/text = "Paste"
+popup/item_3/id = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

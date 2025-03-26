@@ -2,6 +2,7 @@
 using Godot;
 using System.Collections.Generic;
 using Rusty.ISA.Editor.Programs.Compiler;
+using System.IO;
 
 namespace Rusty.ISA.Editor.Programs
 {
@@ -13,16 +14,14 @@ namespace Rusty.ISA.Editor.Programs
     {
         /* Public properties. */
         [Export] public InstructionSet InstructionSet { get; private set; }
-        [Export] public Button OpenButton { get; private set; }
-        [Export] public FileDialog OpenDialog { get; private set; }
-        [Export] public Button SaveButton { get; private set; }
-        [Export] public FileDialog SaveDialog { get; private set; }
-        [Export] public Button DebugCompileButton { get; private set; }
-        [Export] public Button DebugDecompileButton { get; private set; }
+        [Export] public MenuButton FileButton { get; private set; }
 
-        [Export] public VBoxContainer Inspector { get;  private set; }
+        [Export] public VBoxContainer Inspector { get; private set; }
 
         [Export] public ProgramGraphEdit GraphEdit { get; private set; }
+
+        /* Private properties. */
+        private FileDialog Dialog { get; set; }
 
         /* Public methods. */
         public void UpdateInstructionSet(InstructionSet set)
@@ -34,50 +33,22 @@ namespace Rusty.ISA.Editor.Programs
         /* Godot overrides. */
         public override void _EnterTree()
         {
-            OpenButton.Pressed += OnOpen;
-            OpenDialog.FileSelected += OnOpenFileSelected;
-            SaveButton.Pressed += OnSave;
-            SaveDialog.FileSelected += OnSaveFileSelected;
-            DebugCompileButton.Pressed += OnDebugCompile;
-            DebugDecompileButton.Pressed += OnDebugDecompile;
+            FileButton.GetPopup().IndexPressed += OnIndexPressed;
         }
 
         /* Private methods. */
-        private void OnOpen()
-        {
-            OpenDialog.Popup();
-        }
-
-        private void OnOpenFileSelected(string filePath)
-        {
-            GD.PrintErr("OnFileSelected hasn't been implemented yet!");
-        }
-
-        private void OnSave()
-        {
-            SaveDialog.Popup();
-        }
-
-        private void OnSaveFileSelected(string filePath)
-        {
-            GD.PrintErr("OnFileDeselected hasn't been implemented yet!");
-        }
-
-        private void OnDebugCompile()
+        private string Compile()
         {
             // Compile editor into graph.
             CompilerGraph graph = GraphEditCompiler.Compile(GraphEdit);
 
             // Compile graph into code.
-            string str = GraphCompiler.Compile(graph);
-            DisplayServer.ClipboardSet(str);
-            GD.Print("Debug compilation result saved to clipboard!");
+            return GraphCompiler.Compile(graph);
         }
 
-        private void OnDebugDecompile()
+        private void Decompile(string code)
         {
             // Decompile code into instructions list.
-            string code = DisplayServer.ClipboardGet();
             List<InstructionInstance> instructions = CodeDecompiler.Decompile(InstructionSet, code);
 
             // Decompile into graph.
@@ -86,7 +57,62 @@ namespace Rusty.ISA.Editor.Programs
 
             // Spawn into editor.
             GraphDecompiler.Spawn(GraphEdit, graph);
-            GD.Print("Debug decompilation input loaded from clipboard!");
+        }
+
+
+        private void OnIndexPressed(long index)
+        {
+            switch (index)
+            {
+                case 0:
+                    OnSave();
+                    break;
+                case 1:
+                    OnOpen();
+                    break;
+                case 2:
+                    OnCopy();
+                    break;
+                case 3:
+                    OnPaste();
+                    break;
+            }
+        }
+
+        private void OnSave()
+        {
+            Dialog = FileDialogMaker.GetSave("Save Program", PathUtility.GetPath(""), "Program", "csv");
+            AddChild(Dialog);
+            Dialog.Show();
+            Dialog.FileSelected += OnSaveFileSelected;
+        }
+
+        private void OnSaveFileSelected(string filePath)
+        {
+            File.WriteAllText(filePath, Compile());
+        }
+
+        private void OnOpen()
+        {
+            Dialog = FileDialogMaker.GetOpen("Open Program", PathUtility.GetPath(""), "Program", "csv");
+            AddChild(Dialog);
+            Dialog.Show();
+            Dialog.FileSelected += OnOpenFileSelected;
+        }
+
+        private void OnOpenFileSelected(string filePath)
+        {
+            Decompile(File.ReadAllText(filePath));
+        }
+
+        private void OnCopy()
+        {
+            DisplayServer.ClipboardSet(Compile());
+        }
+
+        private void OnPaste()
+        {
+            Decompile(DisplayServer.ClipboardGet());
         }
     }
 }

@@ -102,8 +102,12 @@ namespace Rusty.ISA.Editor.Programs
         /// <summary>
         /// Force-update the preview. This will not set UpdatedPreview to true.
         /// </summary>
-        public void ForcePreviewUpdate()
+        public virtual void ForcePreviewUpdate()
         {
+            foreach (CompileRuleInspector inspector in GetActiveSubInspectors())
+            {
+                inspector.ForcePreviewUpdate();
+            }
             Preview = new(this);
         }
 

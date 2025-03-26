@@ -141,6 +141,7 @@ namespace Rusty.ISA.Editor.Programs.Compiler
 
             // Force-update node's appearance.
             editorNode.ForceUpdate();
+            editorNode.ForcePreviewUpdate();
 
             // Add to element map.
             elementMap.Add(node, editorNode);

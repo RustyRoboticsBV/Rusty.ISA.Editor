@@ -10,6 +10,15 @@ namespace Rusty.ISA.Editor.Programs.Compiler
         /// <summary>
         /// Apply an inspector node to an instruction inspector.
         /// </summary>
+        public static void Apply(Node<NodeData> inspectorNode, NodeInstructionInspector instructionInspector)
+        {
+            Apply(inspectorNode, instructionInspector as InstructionInspector);
+            //instructionInspector.ForcePreviewUpdate();
+        }
+
+        /// <summary>
+        /// Apply an inspector node to an instruction inspector.
+        /// </summary>
         public static void Apply(Node<NodeData> inspectorNode, InstructionInspector instructionInspector)
         {
             SubNode<NodeData> preInstructions = null;

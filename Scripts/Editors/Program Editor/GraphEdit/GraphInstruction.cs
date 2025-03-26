@@ -70,7 +70,6 @@ namespace Rusty.ISA.Editor.Programs
 
             // Create inspector.
             Inspector = new NodeInstructionInspector(InstructionSet, Definition);
-            Inspector.ForcePreviewUpdate();
 
             // Ensure slots.
             EnsureSlots();
@@ -84,7 +83,7 @@ namespace Rusty.ISA.Editor.Programs
             }
             PreviewLabel.AddThemeFontSizeOverride("font_size", 10);
             AddChild(PreviewLabel);
-            UpdatePreview();
+            ForcePreviewUpdate();
         }
 
         /// <summary>
@@ -123,6 +122,7 @@ namespace Rusty.ISA.Editor.Programs
         public void ForceUpdate()
         {
             UpdateContents();
+            ForcePreviewUpdate();
 
             if (Input.IsKeyPressed(Key.Delete) && IsSelected)
             {
@@ -131,13 +131,20 @@ namespace Rusty.ISA.Editor.Programs
             }
         }
 
+        public void ForcePreviewUpdate()
+        {
+            Inspector.ForcePreviewUpdate();
+            GD.Print("UPDATING NODE TO " + Inspector.Preview.Evaluate());
+            PreviewLabel.Text = Inspector.Preview.Evaluate();
+        }
+
         /* Godot overrides. */
         public override void _Process(double delta)
         {
             if (!IsSelected)
                 return;
 
-            ForceUpdate();
+            UpdateContents();
             Size = Vector2.Zero;
         }
 
@@ -270,10 +277,7 @@ namespace Rusty.ISA.Editor.Programs
 
         private void UpdatePreview()
         {
-            if (Definition == null || Inspector == null)
-                return;
-
-            if (PreviewLabel == null)
+            if (Definition == null || Inspector == null || PreviewLabel == null)
                 return;
 
             PreviewLabel.Text = Inspector.Preview.Evaluate();

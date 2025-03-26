@@ -56,6 +56,15 @@ namespace Rusty.ISA.Editor.Programs
             return false;
         }
 
+        public new void ForcePreviewUpdate()
+        {
+            GD.Print("Start force-updating " + Name);
+            base.ForcePreviewUpdate();
+            Preview = new(this);
+            GD.Print("Node Result = " + Preview.Evaluate());
+            GD.Print(" ");
+        }
+
         /* Godot overrides. */
         public override void _Process(double delta)
         {

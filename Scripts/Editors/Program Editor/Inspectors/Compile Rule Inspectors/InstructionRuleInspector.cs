@@ -43,6 +43,14 @@ namespace Rusty.ISA.Editor.Programs
                 return false;
         }
 
+        public override void ForcePreviewUpdate()
+        {
+            TargetInstruction.ForcePreviewUpdate();
+            base.ForcePreviewUpdate();
+            GD.Print("Updating instruction rule " + Definition + " / " + Name);
+            GD.Print("   result = " + Preview.Evaluate());
+        }
+
         public override CompileRuleInspector[] GetActiveSubInspectors()
         {
             return new CompileRuleInspector[0];
