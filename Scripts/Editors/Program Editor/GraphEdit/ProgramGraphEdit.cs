@@ -2,6 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using Rusty.ISA.Editor.Programs.Compiler;
 using Array = Godot.Collections.Array;
+using System;
 
 namespace Rusty.ISA.Editor.Programs
 {
@@ -22,6 +23,7 @@ namespace Rusty.ISA.Editor.Programs
         public List<GraphFrame> Frames { get; } = new();
 
         /* Private properties. */
+        private bool Selected { get; set; } = true;
         private AddNodePopup AddNodePopup { get; set; }
         private bool HoldCtrl { get; set; }
         private bool MustOpenAddPopup { get; set; }
@@ -190,20 +192,31 @@ namespace Rusty.ISA.Editor.Programs
             if (@event is InputEventMouse eventMouse)
                 AddPopupPosition = eventMouse.Position;
 
-            if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.ButtonIndex == MouseButton.Right)
+            if (@event is InputEventMouseButton eventMouseButton)
             {
-                MustOpenAddPopup = true;
-                SpawnPosition = GetMousePosition();
-            }
+                bool highlighted = GetGlobalRect().HasPoint(eventMouseButton.Position);
 
-            else if (@event is InputEventKey eventKey)
-            {
-                if (eventKey.Keycode == Key.Ctrl)
-                    HoldCtrl = eventKey.Pressed;
-                else if (eventKey.Pressed && eventKey.Keycode == Key.A && HoldCtrl)
+                if (eventMouseButton.ButtonIndex == MouseButton.Left)
+                    Selected = highlighted;
+
+                else if (eventMouseButton.ButtonIndex == MouseButton.Right && highlighted)
                 {
                     MustOpenAddPopup = true;
                     SpawnPosition = GetMousePosition();
+                }
+            }
+
+            if (Selected)
+            {
+                if (@event is InputEventKey eventKey)
+                {
+                    if (eventKey.Keycode == Key.Ctrl)
+                        HoldCtrl = eventKey.Pressed;
+                    else if (eventKey.Pressed && eventKey.Keycode == Key.A && HoldCtrl)
+                    {
+                        MustOpenAddPopup = true;
+                        SpawnPosition = GetMousePosition();
+                    }
                 }
             }
         }

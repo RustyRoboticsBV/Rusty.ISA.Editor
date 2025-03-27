@@ -26,7 +26,9 @@ namespace Rusty.ISA.Editor
         public override void _Process(double delta)
         {
             ProgramEditor.Visible = Tabs.CurrentTab == 0;
+            ProgramEditor.ProcessMode = Tabs.CurrentTab == 0 ? ProcessModeEnum.Always : ProcessModeEnum.Disabled;
             DefinitionEditor.Visible = Tabs.CurrentTab == 1;
+            DefinitionEditor.ProcessMode = Tabs.CurrentTab == 1 ? ProcessModeEnum.Always : ProcessModeEnum.Disabled;
         }
     }
 }

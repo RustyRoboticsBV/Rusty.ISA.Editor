@@ -31,6 +31,11 @@ namespace Rusty.ISA.Editor.Definitions
         public CompileRuleBox PostInstructions { get; private set; }
 
         /* Public methods. */
+        public void Clear()
+        {
+            Load(new());
+        }
+
         public InstructionDefinitionDescriptor Compile()
         {
             InstructionDefinitionDescriptor descriptor = new();

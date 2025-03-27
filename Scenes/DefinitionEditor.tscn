@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://bm1tqrxpv46kk"]
+[gd_scene load_steps=9 format=3 uid="uid://bm1tqrxpv46kk"]
 
 [ext_resource type="Script" path="res://Scripts/Editors/Definition Editor/DefinitionEditor.cs" id="1_dqv1h"]
+[ext_resource type="Texture2D" uid="uid://chp7bqt82uf73" path="res://Textures/Build.png" id="2_51v5i"]
 [ext_resource type="Script" path="res://Scripts/Editors/Definition Editor/DefinitionInspector.cs" id="2_84p2x"]
+[ext_resource type="Texture2D" uid="uid://bp2bjvdufu4s2" path="res://Textures/Save.png" id="3_ukx3c"]
+[ext_resource type="Texture2D" uid="uid://cw0whfj567g78" path="res://Textures/Open.png" id="4_xpbbk"]
+[ext_resource type="Texture2D" uid="uid://dnbxoeulxmv1j" path="res://Textures/Copy.png" id="5_2a4jf"]
+[ext_resource type="Texture2D" uid="uid://crxhrsneof5s6" path="res://Textures/Paste.png" id="6_et6bx"]
+[ext_resource type="Texture2D" uid="uid://bpucd35s7668b" path="res://Textures/Clear.png" id="7_kt4rm"]
 
 [node name="InstructionDefinitionEditor" type="MarginContainer" node_paths=PackedStringArray("Menu", "Inspector")]
 anchors_preset = 15
@@ -39,16 +45,24 @@ layout_mode = 2
 [node name="MenuButton" type="MenuButton" parent="Margin/VBoxContainer/Buttons/MarginContainer"]
 layout_mode = 2
 text = "  File  "
-item_count = 5
+item_count = 6
 popup/item_0/text = "Export Instruction Set"
-popup/item_1/text = "Save Definition"
+popup/item_0/icon = ExtResource("2_51v5i")
+popup/item_1/text = "New Definition"
+popup/item_1/icon = ExtResource("7_kt4rm")
 popup/item_1/id = 1
-popup/item_2/text = "Open Definition"
+popup/item_2/text = "Save Definition"
+popup/item_2/icon = ExtResource("3_ukx3c")
 popup/item_2/id = 2
-popup/item_3/text = "Copy Definition To Clipboard"
+popup/item_3/text = "Open Definition"
+popup/item_3/icon = ExtResource("4_xpbbk")
 popup/item_3/id = 3
-popup/item_4/text = "Paste Definition From Clipboard"
+popup/item_4/text = "Copy Definition"
+popup/item_4/icon = ExtResource("5_2a4jf")
 popup/item_4/id = 4
+popup/item_5/text = "Paste Definition"
+popup/item_5/icon = ExtResource("6_et6bx")
+popup/item_5/id = 5
 
 [node name="DefinitionInspector" type="VBoxContainer" parent="Margin/VBoxContainer"]
 layout_mode = 2

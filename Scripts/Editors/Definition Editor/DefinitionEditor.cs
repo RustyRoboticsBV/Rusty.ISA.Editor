@@ -20,7 +20,7 @@ namespace Rusty.ISA.Editor.Definitions
 
         public override void _EnterTree()
         {
-            Menu.GetPopup().IdPressed += OnMenuPressed;
+            Menu.GetPopup().IndexPressed += OnMenuPressed;
         }
 
         public override void _Process(double delta)
@@ -40,15 +40,18 @@ namespace Rusty.ISA.Editor.Definitions
                     OnExport();
                     break;
                 case 1:
-                    OnSave();
+                    OnClear();
                     break;
                 case 2:
-                    OnOpen();
+                    OnSave();
                     break;
                 case 3:
-                    OnCopy();
+                    OnOpen();
                     break;
                 case 4:
+                    OnCopy();
+                    break;
+                case 5:
                     OnPaste();
                     break;
             }
@@ -71,6 +74,11 @@ namespace Rusty.ISA.Editor.Definitions
 
             // Save to file.
             File.WriteAllBytes(path, SetSerializer.Serialize(set));
+        }
+
+        private void OnClear()
+        {
+            Inspector.Clear();
         }
 
         private void OnSave()
