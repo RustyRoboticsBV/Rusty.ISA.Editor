@@ -34,12 +34,13 @@ namespace Rusty.ISA.Editor.SetBuilder
 			{
 				for (int i = 0; i < builtIn.Count; i++)
 				{
-					definitions.Add(builtIn[i]);
-				}
+					InstructionDefinitionDescriptor descriptor = new(builtIn[i]);
+                    definitions.Add(descriptor.Generate(true));
+                }
 			}
 
 			// Recursively load folder.
-			HandleDirectory(definitions, absolutePath);
+			HandleDirectory(definitions, absolutePath, absolutePath);
 
             // Create instruction set and return it.
             return new InstructionSet(definitions.ToArray());
@@ -49,7 +50,7 @@ namespace Rusty.ISA.Editor.SetBuilder
 		/// <summary>
 		/// Take all XML files in a directory hierarchy and try to load them as instruction definitions.
 		/// </summary>
-		private static void HandleDirectory(List<InstructionDefinition> definitions, string folderPath)
+		private static void HandleDirectory(List<InstructionDefinition> definitions, string folderPath, string rootFolderPath)
         {
             // Handle files.
             string[] files = Directory.GetFiles(folderPath);
@@ -64,6 +65,7 @@ namespace Rusty.ISA.Editor.SetBuilder
 
 					InstructionDefinitionDescriptor descriptor = new(doc);
 
+					descriptor.FolderPath = rootFolderPath;
 					definitions.Add(descriptor.Generate(true));
 				}
 				else if (files[i].EndsWith(".zip"))
@@ -76,7 +78,7 @@ namespace Rusty.ISA.Editor.SetBuilder
 			string[] subFolders = Directory.GetDirectories(folderPath);
 			for (int i = 0; i < subFolders.Length; i++)
 			{
-				HandleDirectory(definitions, subFolders[i]);
+				HandleDirectory(definitions, subFolders[i], rootFolderPath);
 			}
         }
 	}

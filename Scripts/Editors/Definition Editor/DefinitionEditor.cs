@@ -128,8 +128,20 @@ namespace Rusty.ISA.Editor.Definitions
 
         private void OnCopy()
         {
+            DisplayServer.ClipboardSet(Inspector.Compile().GetXml());
+        }
+
+        private void OnPaste()
+        {
             // Read clipboard.
             string xml = DisplayServer.ClipboardGet();
+
+            // Clear if the string is empty.
+            if (xml == "")
+            {
+                OnClear();
+                return;
+            }
 
             // Load XML.
             XmlDocument doc = new();
@@ -140,11 +152,6 @@ namespace Rusty.ISA.Editor.Definitions
 
             // Load descriptor.
             Inspector.Load(desc);
-        }
-
-        private void OnPaste()
-        {
-            DisplayServer.ClipboardSet(Inspector.Compile().GetXml());
         }
     }
 }

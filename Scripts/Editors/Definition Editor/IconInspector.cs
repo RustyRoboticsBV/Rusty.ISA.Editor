@@ -1,5 +1,4 @@
 ﻿using Godot;
-using System.IO;
 using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor.Definitions
@@ -18,40 +17,12 @@ namespace Rusty.ISA.Editor.Definitions
         {
             if (LastFilePath != FilePath.Value)
             {
-                string globalPath = PathUtility.GetPath(FilePath.Value);
-
-                if (File.Exists(globalPath))
-                {
-                    byte[] bytes = File.ReadAllBytes(globalPath);
-
-                    Image image = new();
-                    if (globalPath.EndsWith(".bmp"))
-                        image.LoadBmpFromBuffer(bytes);
-                    else if (globalPath.EndsWith(".png"))
-                        image.LoadPngFromBuffer(bytes);
-                    else if (globalPath.EndsWith(".jpg") || globalPath.EndsWith(".jpeg"))
-                        image.LoadJpgFromBuffer(bytes);
-                    else if (globalPath.EndsWith(".tga"))
-                        image.LoadTgaFromBuffer(bytes);
-                    else if (globalPath.EndsWith(".svg"))
-                        image.LoadSvgFromBuffer(bytes);
-                    else if (globalPath.EndsWith(".webp"))
-                        image.LoadWebpFromBuffer(bytes);
-                    else if (globalPath.EndsWith(".ktx"))
-                        image.LoadKtxFromBuffer(bytes);
-
-                    ImageTexture imageTexture = new ImageTexture();
-                    imageTexture.SetImage(image);
-
-                    Preview.Value = imageTexture;
-                }
-
+                string globalPath = PathUtility.GetPath("Definitions/" + FilePath.Value);
+                Texture2D texture = IconLoader.Load(globalPath);
+                if (texture != null)
+                    Preview.Value = texture;
                 else
-                {
-                    ImageTexture imageTexture = new ImageTexture();
-
-                    Preview.Value = imageTexture;
-                }
+                    Preview.Value = new ImageTexture();
 
                 LastFilePath = FilePath.Value;
             }
