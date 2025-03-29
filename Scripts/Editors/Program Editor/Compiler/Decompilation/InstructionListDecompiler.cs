@@ -25,10 +25,12 @@ namespace Rusty.ISA.Editor.Programs.Compiler
                 // Create a node or node hierarchy from the instruction and possibly subsequent instructions.
                 switch (instructions[index].Opcode)
                 {
-                    case BuiltIn.MetadataOpcode:
+                    case BuiltIn.InstructionSetOpcode:
                     case BuiltIn.CommentOpcode:
                     case BuiltIn.FrameOpcode:
                     case BuiltIn.NodeOpcode:
+                    case BuiltIn.GotoGroupOpcode:
+                    case BuiltIn.EndGroupOpcode:
                         graph.AddNode(HandleCollection(set, instructions, ref index));
                         break;
                     default:
@@ -55,10 +57,11 @@ namespace Rusty.ISA.Editor.Programs.Compiler
                 CompilerNode node = graph[i];
                 OutputData outputData = node.GetOutputData();
 
-                // Don't attempt to connect metadata, frame and comment nodes.
-                if (node.Data.GetOpcode() == BuiltIn.MetadataOpcode
+                // Don't attempt to connect instruction set, frame, comment and end group nodes.
+                if (node.Data.GetOpcode() == BuiltIn.InstructionSetOpcode
                     || node.Data.GetOpcode() == BuiltIn.FrameOpcode
-                    || node.Data.GetOpcode() == BuiltIn.CommentOpcode)
+                    || node.Data.GetOpcode() == BuiltIn.CommentOpcode
+                    || node.Data.GetOpcode() == BuiltIn.EndGroupOpcode)
                 {
                     continue;
                 }
@@ -100,7 +103,7 @@ namespace Rusty.ISA.Editor.Programs.Compiler
             {
                 switch (instructions[index].Opcode)
                 {
-                    case BuiltIn.MetadataOpcode:
+                    case BuiltIn.InstructionSetOpcode:
                     case BuiltIn.DefinitionOpcode:
                     case BuiltIn.CompileRuleOpcode:
                     case BuiltIn.CommentOpcode:
@@ -113,6 +116,8 @@ namespace Rusty.ISA.Editor.Programs.Compiler
                     case BuiltIn.ChoiceRuleOpcode:
                     case BuiltIn.TupleRuleOpcode:
                     case BuiltIn.ListRuleOpcode:
+                    case BuiltIn.GotoGroupOpcode:
+                    case BuiltIn.EndGroupOpcode:
                         node.AddChild(HandleCollection(set, instructions, ref index));
                         break;
                     case BuiltIn.EndOfGroupOpcode:

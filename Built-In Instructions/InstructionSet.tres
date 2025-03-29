@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=91 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=95 format=3 uid="uid://dnt3g5dpjm0pd"]
 
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_gmmgc"]
+[ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconISA.bmp" id="1_r4o3q"]
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
 [ext_resource type="Texture2D" uid="uid://bdrkrwn8lh415" path="res://Built-In Instructions/IconCMT.bmp" id="2_unaab"]
 [ext_resource type="Texture2D" uid="uid://cg1l63y6ngo4a" path="res://Built-In Instructions/IconPRE.bmp" id="4_wahcg"]
@@ -12,7 +13,6 @@
 [ext_resource type="Texture2D" uid="uid://b3v1nu6sd00l" path="res://Built-In Instructions/IconMBR.bmp" id="9_nx7m3"]
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="11_gxiqw"]
 [ext_resource type="Texture2D" uid="uid://nyag7iauyi0f" path="res://Built-In Instructions/IconINS.bmp" id="11_vnhvg"]
-[ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconMTA.bmp" id="12_nbvet"]
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/TextlineParameter.cs" id="12_rklps"]
 [ext_resource type="Texture2D" uid="uid://d06v0b1l2xkth" path="res://Built-In Instructions/IconOPT.bmp" id="12_y4agh"]
@@ -27,6 +27,8 @@
 [ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="16_nc316"]
 [ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOG.bmp" id="17_eto4q"]
 [ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="17_txonn"]
+[ext_resource type="Texture2D" uid="uid://b5e8fbehuo4u6" path="res://Built-In Instructions/IconGTN.bmp" id="23_k4b7e"]
+[ext_resource type="Texture2D" uid="uid://u8wdpdq0vkps" path="res://Built-In Instructions/IconENN.bmp" id="24_rni85"]
 [ext_resource type="Texture2D" uid="uid://cqr70pp8lhjxg" path="res://Submodules/ISA/Built-In Instructions/IconBEG.bmp" id="24_xkbbv"]
 [ext_resource type="Texture2D" uid="uid://d2p6fihx03ulm" path="res://Submodules/ISA/Built-In Instructions/IconEND.bmp" id="26_xah47"]
 [ext_resource type="Texture2D" uid="uid://dbw2hjlfspdf" path="res://Submodules/ISA/Built-In Instructions/IconGTO.bmp" id="28_ywca6"]
@@ -34,11 +36,11 @@
 [ext_resource type="Texture2D" uid="uid://bhfjn5nohucmy" path="res://Submodules/ISA/Built-In Instructions/IconERR.bmp" id="31_g7on2"]
 
 [sub_resource type="Resource" id="Resource_cimir"]
-resource_name = "MTA"
+resource_name = "ISA"
 script = ExtResource("2_uguea")
-Opcode = "MTA"
+Opcode = "ISA"
 Parameters = []
-Icon = ExtResource("12_nbvet")
+Icon = ExtResource("1_r4o3q")
 DisplayName = "Instruction Set Metadata"
 Description = "Starts an instruction set metadata group. The group should be closed with an EOG instruction."
 Category = "Editor"
@@ -452,6 +454,32 @@ Preview = ""
 PreInstructions = []
 PostInstructions = []
 
+[sub_resource type="Resource" id="Resource_a4bdl"]
+resource_name = "GTN"
+script = ExtResource("2_uguea")
+Opcode = "GTN"
+Parameters = []
+Icon = ExtResource("23_k4b7e")
+DisplayName = "Goto Group"
+Description = "Starts a goto instruction group. These are used to group goto instructions with a label instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_leu7q"]
+resource_name = "ENN"
+script = ExtResource("2_uguea")
+Opcode = "ENN"
+Parameters = []
+Icon = ExtResource("24_rni85")
+DisplayName = "End Group"
+Description = "Starts an end instruction group. These are used to group end instructions with a label instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
 [sub_resource type="Resource" id="Resource_itw8j"]
 resource_name = "EOG"
 script = ExtResource("2_uguea")
@@ -644,5 +672,5 @@ Modules = []
 
 [resource]
 script = ExtResource("1_1x08l")
-Local = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_itw8j")]
+Local = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_a4bdl"), SubResource("Resource_leu7q"), SubResource("Resource_itw8j")]
 Modules = [SubResource("Resource_eqo11")]

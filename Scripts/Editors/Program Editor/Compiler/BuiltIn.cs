@@ -25,9 +25,11 @@
         public const string ChoiceRuleOpcode = "CHO";
         public const string TupleRuleOpcode = "TPL";
         public const string ListRuleOpcode = "LST";
+        public const string GotoGroupOpcode = "GTN";
+        public const string EndGroupOpcode = "ENN";
         public const string EndOfGroupOpcode = "EOG";
 
-        public const string MetadataOpcode = "MTA";
+        public const string InstructionSetOpcode = "ISA";
         public const string DefinitionOpcode = "DEF";
         public const string ParameterOpcode = "PAR";
         public const string CompileRuleOpcode = "RUL";

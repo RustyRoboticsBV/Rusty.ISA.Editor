@@ -199,6 +199,28 @@ namespace Rusty.ISA.Editor.Programs.Compiler
         }
 
         /// <summary>
+        /// Create a GTN instruction sub-node.
+        /// </summary>
+        public static CompilerNode GetGotoNode(InstructionSet set)
+        {
+            InstructionDefinition definition = set[BuiltIn.GotoGroupOpcode];
+            InstructionInstance instance = new(definition);
+
+            return new SubNode<NodeData>(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
+        /// Create a ENN instruction sub-node.
+        /// </summary>
+        public static CompilerNode GetEndNode(InstructionSet set)
+        {
+            InstructionDefinition definition = set[BuiltIn.EndGroupOpcode];
+            InstructionInstance instance = new(definition);
+
+            return new SubNode<NodeData>(new NodeData(set, definition, instance));
+        }
+
+        /// <summary>
         /// Create a EOB instruction sub-node.
         /// </summary>
         public static SubNode<NodeData> GetEndOfGroup(InstructionSet set)
@@ -214,7 +236,7 @@ namespace Rusty.ISA.Editor.Programs.Compiler
         /// </summary>
         public static CompilerNode GetMetadata(InstructionSet set)
         {
-            InstructionDefinition definition = set[BuiltIn.MetadataOpcode];
+            InstructionDefinition definition = set[BuiltIn.InstructionSetOpcode];
             InstructionInstance instance = new(definition);
 
             return new CompilerNode(new NodeData(set, definition, instance));

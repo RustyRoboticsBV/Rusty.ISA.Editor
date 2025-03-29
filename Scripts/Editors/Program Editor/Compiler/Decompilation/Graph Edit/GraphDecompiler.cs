@@ -25,18 +25,17 @@ namespace Rusty.ISA.Editor.Programs.Compiler
                 // Determine graph element type...
                 switch (node.Data.GetOpcode())
                 {
-                    case BuiltIn.MetadataOpcode:
+                    case BuiltIn.InstructionSetOpcode:
                         if (metadata == null)
                             metadata = node;
                         else
                         {
-                            GD.PrintErr($"Encountered second metadata instruction at line #{i}. Only one metadata instruction is "
-                                + "allowed per program!");
+                            GD.PrintErr($"Encountered second instruction set metadata at line #{i}. Only one is allowed per "
+                                + "program!");
                         }
                         break;
                     case BuiltIn.NodeOpcode:
-                        if (!node.IsEnd() && !node.IsGoto())
-                            SpawnInstruction(graphEdit, node, i, elementMap);
+                        SpawnInstruction(graphEdit, node, i, elementMap);
                         break;
                     case BuiltIn.CommentOpcode:
                         SpawnComment(graphEdit, node, elementMap);
@@ -44,10 +43,14 @@ namespace Rusty.ISA.Editor.Programs.Compiler
                     case BuiltIn.FrameOpcode:
                         SpawnFrame(graphEdit, node, frameMap, elementMap);
                         break;
+                    case BuiltIn.GotoGroupOpcode:
+                    case BuiltIn.EndGroupOpcode:
+                        break;
                     default:
                         GD.PrintErr($"Encountered illegal top-layer instruction with opcode '{node.Data.GetOpcode()}' at line "
-                            + $"#{i}. Only '{BuiltIn.MetadataOpcode}', '{BuiltIn.NodeOpcode}', '{BuiltIn.CommentOpcode}' and "
-                            + $"'{BuiltIn.FrameOpcode}' are allowed.");
+                            + $"#{i}. Only '{BuiltIn.InstructionSetOpcode}', '{BuiltIn.NodeOpcode}', '{BuiltIn.FrameOpcode}', "
+                            + $"'{BuiltIn.CommentOpcode}', '{BuiltIn.GotoGroupOpcode}' and '{BuiltIn.EndGroupOpcode}' are "
+                            + "allowed.");
                         break;
                 }
             }

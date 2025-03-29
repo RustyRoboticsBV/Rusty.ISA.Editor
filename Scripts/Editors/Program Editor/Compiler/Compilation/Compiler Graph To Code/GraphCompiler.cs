@@ -29,7 +29,7 @@ namespace Rusty.ISA.Editor.Programs.Compiler
             {
                 CompilerNode startNode = graph[startNodes[i]];
 
-                if (startNode.Data.GetOpcode() == BuiltIn.MetadataOpcode
+                if (startNode.Data.GetOpcode() == BuiltIn.InstructionSetOpcode
                     || startNode.Data.GetOpcode() == BuiltIn.CommentOpcode
                     || startNode.Data.GetOpcode() == BuiltIn.FrameOpcode)
                 {
@@ -78,7 +78,7 @@ namespace Rusty.ISA.Editor.Programs.Compiler
                 if (toNode == null)
                 {
                     // Create end node.
-                    CompilerNode end = CompilerNodeMaker.GetNode(graph.Data.Set, "", "");
+                    CompilerNode end = CompilerNodeMaker.GetEndNode(graph.Data.Set);
                     end.AddChild(CompilerNodeMaker.GetEnd(graph.Data.Set));
                     end.AddChild(CompilerNodeMaker.GetEndOfGroup(graph.Data.Set));
                     graph.AddNode(end);
@@ -94,8 +94,8 @@ namespace Rusty.ISA.Editor.Programs.Compiler
                 else if (executionOrder.ContainsRight(toNode))
                 {
                     // Create goto node.
-                    CompilerNode @goto = CompilerNodeMaker.GetNode(graph.Data.Set, "", "");
-                    @goto.AddChild(CompilerNodeMaker.GetLabel(graph.Data.Set, ""));
+                    CompilerNode @goto = CompilerNodeMaker.GetGotoNode(graph.Data.Set);
+                    @goto.AddChild(CompilerNodeMaker.GetGoto(graph.Data.Set, ""));
                     @goto.AddChild(CompilerNodeMaker.GetEndOfGroup(graph.Data.Set));
                     graph.AddNode(@goto);
 

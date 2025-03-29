@@ -1,4 +1,4 @@
-MTA
+ISA
 DEF,BEG
 PAR,textline,name
 EOG
@@ -16,7 +16,7 @@ EOG
 DEF,ERR
 PAR,multiline,message
 EOG
-DEF,MTA
+DEF,ISA
 EOG
 DEF,DEF
 PAR,textline,opcode
@@ -68,6 +68,10 @@ EOG
 DEF,TPL
 EOG
 DEF,LST
+EOG
+DEF,GTN
+EOG
+DEF,ENN
 EOG
 DEF,EOG
 EOG
@@ -254,10 +258,10 @@ LST
 EOG
 LST
 INS
-CTX,Yes.,0
+CTX,Yes.,1
 EOG
 INS
-CTX,No.,1
+CTX,No.,2
 EOG
 EOG
 EOG
@@ -265,7 +269,7 @@ TXT,,Neutral,"Blah, blah, blah..."
 EOG
 EOG
 NOD,760,120
-LAB,0
+LAB,1
 MBR,0
 INS
 PRE
@@ -289,7 +293,7 @@ CLR
 EOG
 EOG
 NOD,1320,160
-LAB,2
+LAB,0
 INS
 PRE
 OPT
@@ -304,7 +308,7 @@ ENN
 END
 EOG
 NOD,760,320
-LAB,1
+LAB,2
 MBR,0
 INS
 PRE
@@ -316,6 +320,6 @@ EOG
 CLR
 EOG
 EOG
-GTN,,
-GTO,2
+GTN
+GTO,0
 EOG

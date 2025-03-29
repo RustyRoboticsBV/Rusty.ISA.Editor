@@ -10,7 +10,7 @@ This tab allows for the creation of ISA programs, using a graph-based interface.
 
 The editor has two components:
 - The graph. It can be used to create, delete, select, move, connect and disconnect nodes. Multiple nodes can be selected at the same time.
-- The inspector. It displays the contents of the selected nodes, and allows you to edit them. Each node comes with an optional start field, which allows you to define entry points from which the cutscene program can be played.
+- The inspector. It displays the contents of the selected nodes, and allows you to edit them. Each node comes with an optional start field, which allows you to define entry points from which the program can be executed.
 
 [TODO: elaborate on usage]
 
@@ -43,11 +43,13 @@ option was disabled.
 - `CMT(x, y, text)`: Starts a comment group.
 - `FRM(id, x, y, width, height, title, color_tint)`: Starts a frame group.
 - `MBR(frame_id)`: If present in a `NOD`, `CMT` or `FRM` group, it designates that group as being a member of a frame.
-- `MTA()`: Starts a metadata group. This group contains a truncated version of the instruction set, which is used to detect if instructions in the set have been changed since the last time that the cutscene was edited. If it is used, it should be the first instruction in the program, and there should be only one of them. The following members exist:
+- `GTN()`: Starts a goto group. Should contain a `GTO` and optionally a `LAB` instruction.
+- `ENN()`: Starts an end group. Should contain an `END` and optionally a `LAB` instruction.
+- `ISA()`: Starts an instruction set metadata group. It contains a truncated version of all instruction definitions in the set. It's used to detect if any of the definitions have been changed since the last time that the program was edited. There should be at most one of them in any program. The following members exist:
   - `DEF(opcode)`: Starts an instruction definition group. `PRE` and `PST` markers are used to define pre-instruction and post-instruction groups.
 	- `PAR(type, id)`: A parameter definition.
 	- `RUL(type, id)`: Starts a compile rule definition group. The type may be one of the following: `option`, `choice`, `tuple` or `list`.
-	- `REF(opcode, id)`: Represents an instruction rule. 
+	- `REF(opcode, id)`: Represents an instruction rule.
 - `EOG()`: Ends the most recently-started group.
 
-By default, all editor-only instructions are stripped out when a program is loaded into Godot as a Program resource, so that no performance or filesize cost is incurred.
+By default, all editor-only instructions are stripped out when a program is loaded into Godot as a Program resource, so that no performance or filesize cost is incurred in the finished game.
