@@ -48,6 +48,12 @@ namespace Rusty.ISA.Editor.Programs.Compiler
                 if (arg.Contains(',') || arg.Contains("\""))
                     arg = $"\"{arg}\"";
 
+                // Replace \n with \\n.
+                arg = arg.Replace("\\n", "\\" + "\\" + "n");
+
+                // Replace line-breaks with \n.
+                arg = arg.Replace("\n", "\\n");
+
                 // Add to code.
                 code += "," + arg;
             }

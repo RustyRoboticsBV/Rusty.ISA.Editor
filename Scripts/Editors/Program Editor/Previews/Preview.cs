@@ -105,7 +105,7 @@ namespace Rusty.ISA.Editor.Programs
         /// </summary>
         protected static string Make(string str)
         {
-            return "\"" + str.Replace("\"", "\\\"").Replace("\n", "\\n") + "\"";
+            return "\"" + str.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n") + "\"";
         }
 
         protected static string GetError(string str)
