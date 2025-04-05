@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor.Definitions
 {
@@ -6,7 +7,7 @@ namespace Rusty.ISA.Editor.Definitions
     {
         /* Public properties. */
         public CheckBox Enabled { get; private set; }
-        public LineEdit Dependencies { get; private set; }
+        public List<DependencyInspector> Dependencies { get; private set; } = new();
         public TextEdit Members { get; private set; }
         public TextEdit Initialize { get; private set; }
         public TextEdit Execute { get; private set; }
@@ -16,24 +17,33 @@ namespace Rusty.ISA.Editor.Definitions
             get
             {
                 if (Enabled.ButtonPressed)
-                    return new(Dependencies.Text.Split(','), Members.Text, Initialize.Text, Execute.Text);
+                {
+                    DependencyDescriptor[] dependencies = new DependencyDescriptor[Dependencies.Count];
+                    for (int i = 0; i < dependencies.Length; i++)
+                    {
+                        dependencies[i] = Dependencies[i].Value;
+                    }
+                    return new(dependencies, Members.Text, Initialize.Text, Execute.Text);
+                }
                 else
                     return null;
             }
             set
             {
+                Dependencies.Clear();
+                while (DependencyBox.GetChildCount() > 0)
+                {
+                    DependencyBox.RemoveChild(DependencyBox.GetChild(0));
+                }
+
                 if (value != null)
                 {
-                    string dependencies = "";
-                    foreach (string dependency in value.Dependencies)
-                    {
-                        if (dependencies != "")
-                            dependencies += ",";
-                        dependencies += dependency;
-                    }
-
                     Enabled.ButtonPressed = true;
-                    Dependencies.Text = dependencies;
+                    GD.Print("we have " + value.Dependencies.Count + " deps");
+                    foreach (DependencyDescriptor dependency in value.Dependencies)
+                    {
+                        AddDependency(dependency);
+                    }
                     Members.Text = value.Members;
                     Initialize.Text = value.Initialize;
                     Execute.Text = value.Execute;
@@ -45,7 +55,8 @@ namespace Rusty.ISA.Editor.Definitions
         /* Private properties. */
         private TabBar TabBar { get; set; }
         private VBoxContainer Margin { get; set; }
-        private Button RemoveButton { get; set; }
+        private VBoxContainer DependencyBox { get; set; }
+        private Button AddButton { get; set; }
 
         /* Godot overrides. */
         public override void _Ready()
@@ -67,7 +78,12 @@ namespace Rusty.ISA.Editor.Definitions
             TabBar.CurrentTab = 3;
 
             Dependencies = new();
-            AddChild(Dependencies);
+            DependencyBox = new();
+            AddChild(DependencyBox);
+            AddButton = new();
+            AddButton.Text = "Add Dependency";
+            AddButton.Pressed += OnAddDependency;
+            AddChild(AddButton);
             Members = new() { CustomMinimumSize = new(0, 128f) };
             AddChild(Members);
             Initialize = new() { CustomMinimumSize = new(0, 128f) };
@@ -79,10 +95,36 @@ namespace Rusty.ISA.Editor.Definitions
         public override void _Process(double delta)
         {
             TabBar.Visible = Enabled.ButtonPressed;
-            Dependencies.Visible = TabBar.Visible && TabBar.CurrentTab == 0;
+            foreach (DependencyInspector dependency in Dependencies)
+            {
+                dependency.Visible = TabBar.Visible && TabBar.CurrentTab == 0;
+            }
+            AddButton.Visible = TabBar.Visible && TabBar.CurrentTab == 0;
             Members.Visible = TabBar.Visible && TabBar.CurrentTab == 1;
             Initialize.Visible = TabBar.Visible && TabBar.CurrentTab == 2;
             Execute.Visible = TabBar.Visible && TabBar.CurrentTab == 3;
+        }
+
+        /* Private methods. */
+        private void AddDependency(DependencyDescriptor dependency)
+        {
+            DependencyInspector inspector = new();
+            DependencyBox.AddChild(inspector);
+            Dependencies.Add(inspector);
+            inspector.Value = dependency;
+            inspector.Deleted += OnDeleteDependency;
+        }
+
+
+        private void OnAddDependency()
+        {
+            AddDependency(new());
+        }
+
+        private void OnDeleteDependency(DependencyInspector inspector)
+        {
+            Dependencies.Remove(inspector);
+            DependencyBox.RemoveChild(inspector);
         }
     }
 }
