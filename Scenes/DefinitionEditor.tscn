@@ -21,7 +21,7 @@ Inspector = NodePath("Margin/VBoxContainer/DefinitionInspector")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 2
-color = Color(0.2, 0.2, 0.2, 1)
+color = Color(0.219608, 0.219608, 0.219608, 1)
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
