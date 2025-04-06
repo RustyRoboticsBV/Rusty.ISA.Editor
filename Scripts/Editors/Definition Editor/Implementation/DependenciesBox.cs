@@ -53,6 +53,7 @@ namespace Rusty.ISA.Editor.Definitions
             Inspectors.Add(inspector);
             inspector.Value = dependency;
             inspector.Deleted += OnDeleted;
+            UpdateIndices();
         }
 
         public void Clear()
@@ -74,6 +75,14 @@ namespace Rusty.ISA.Editor.Definitions
         private void OnAdd()
         {
             Add(new());
+        }
+
+        private void UpdateIndices()
+        {
+            for (int i = 0; i  < Inspectors.Count; i++)
+            {
+                Inspectors[i].Index = i + 1;
+            }
         }
     }
 }

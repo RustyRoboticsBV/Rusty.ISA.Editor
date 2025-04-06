@@ -7,6 +7,9 @@ namespace Rusty.ISA.Editor.Definitions
     /// </summary>
     public partial class BorderContainer : MarginContainer
     {
+        /* Constants. */
+        private const int MarginSize = 8;
+
         /* Private properties. */
         private new Control Anchor { get; set; }
         private NinePatchRect TextureRect { get; set; }
@@ -22,10 +25,10 @@ namespace Rusty.ISA.Editor.Definitions
         public BorderContainer(Texture2D texture)
         {
             // Set margins.
-            AddThemeConstantOverride("margin_left", 4);
-            AddThemeConstantOverride("margin_right", 4);
-            AddThemeConstantOverride("margin_bottom", 4);
-            AddThemeConstantOverride("margin_top", 4);
+            AddThemeConstantOverride("margin_left", MarginSize);
+            AddThemeConstantOverride("margin_right", MarginSize);
+            AddThemeConstantOverride("margin_bottom", MarginSize);
+            AddThemeConstantOverride("margin_top", MarginSize);
 
             // Create anchor.
             Anchor = new();
@@ -64,23 +67,23 @@ namespace Rusty.ISA.Editor.Definitions
         /* Godot overrides. */
         public override void _Process(double delta)
         {
-            TextureRect.Size = Anchor.Size + new Vector2(8, 8);
-            TextureRect.Position = new Vector2(-4, -4);
+            TextureRect.Size = Anchor.Size + new Vector2(MarginSize * 2, MarginSize * 2);
+            TextureRect.Position = new Vector2(-MarginSize, -MarginSize);
 
             if (TitleLabel.Text != "")
             {
-                AddThemeConstantOverride("margin_top", 20);
+                AddThemeConstantOverride("margin_top", MarginSize + 16);
 
                 TitleColor.Size = TitleLabel.Size;
-                TitleMargin.Position = new Vector2(20, -24);
+                TitleMargin.Position = new Vector2(20, -(20 + MarginSize));
                 TitleMargin.Show();
 
-                TextureRect.Position += new Vector2(0f, -8f);
-                TextureRect.Size += new Vector2(0f, 8f);
+                TextureRect.Position += new Vector2(0f, -MarginSize);
+                TextureRect.Size += new Vector2(0f, MarginSize);
             }
             else
             {
-                AddThemeConstantOverride("margin_top", 4);
+                AddThemeConstantOverride("margin_top", MarginSize);
                 TitleMargin.Hide();
             }
         }

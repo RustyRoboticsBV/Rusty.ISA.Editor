@@ -46,19 +46,23 @@ namespace Rusty.ISA.Editor.Definitions
         {
             SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
+            HBoxContainer header = new();
+            AddChild(header);
+
             HBoxContainer EnableHBox = new();
-            AddChild(EnableHBox);
+            header.AddChild(EnableHBox);
             Enabled = new();
             EnableHBox.AddChild(Enabled);
-            EnableHBox.AddChild(new Label() { Text = "Enabled?" });
+            EnableHBox.AddChild(new Label() { Text = "Enabled?  " });
 
             TabBar = new();
             TabBar.AddTab("Dependencies");
             TabBar.AddTab("Members");
             TabBar.AddTab("Initialize");
             TabBar.AddTab("Execute");
-            AddChild(TabBar);
+            header.AddChild(TabBar);
             TabBar.CurrentTab = 3;
+            TabBar.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             Border = new();
             AddChild(Border);

@@ -1,5 +1,4 @@
 ﻿using Godot;
-using Rusty.ISA.Editor.Programs;
 using System;
 
 namespace Rusty.ISA.Editor.Definitions
@@ -10,9 +9,14 @@ namespace Rusty.ISA.Editor.Definitions
     public partial class DependencyInspector : HBoxContainer
     {
         /* Public properties. */
+        public Label IndexLabel { get; private set; }
         public LineEdit TypeName { get; private set; }
         public Button Delete { get; private set; }
 
+        public int Index
+        {
+            set => IndexLabel.Text = $"#{value}";
+        }
         public DependencyDescriptor Value
         {
             get => new(TypeName.Text);
@@ -31,6 +35,11 @@ namespace Rusty.ISA.Editor.Definitions
         /* Godot overrides. */
         public override void _Ready()
         {
+            IndexLabel = new();
+            AddChild(IndexLabel);
+            IndexLabel.CustomMinimumSize = new(32f, 0f);
+            IndexLabel.Text = "#0";
+
             TypeName = new();
             AddChild(TypeName);
             TypeName.SizeFlagsHorizontal = SizeFlags.ExpandFill;

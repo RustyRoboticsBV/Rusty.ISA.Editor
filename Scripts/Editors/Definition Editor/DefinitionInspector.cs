@@ -11,6 +11,7 @@ namespace Rusty.ISA.Editor.Definitions
         public LineField Opcode { get; private set; }
 
         public TabBar TabBar { get; private set; }
+        public BorderContainer Border { get; private set; }
 
         public ParameterBox Parameters { get; private set; }
 
@@ -122,15 +123,19 @@ namespace Rusty.ISA.Editor.Definitions
             scroll.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             scroll.SizeFlagsVertical = SizeFlags.ExpandFill;
 
+            BorderContainer border = new();
+            scroll.AddChild(border);
+            border.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
             Parameters = new();
-            scroll.AddChild(Parameters);
+            border.AddChild(Parameters);
 
             Implementation = new();
-            scroll.AddChild(Implementation);
+            border.AddChild(Implementation);
 
 
             Metadata = new();
-            scroll.AddChild(Metadata);
+            border.AddChild(Metadata);
             Metadata.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             DisplayName = new();
@@ -148,10 +153,11 @@ namespace Rusty.ISA.Editor.Definitions
 
             Icon = new();
             Metadata.AddChild(Icon);
+            Icon.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
 
             Editor = new();
-            scroll.AddChild(Editor);
+            border.AddChild(Editor);
             Editor.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             EditorNodeInfo = new();
@@ -159,17 +165,17 @@ namespace Rusty.ISA.Editor.Definitions
 
 
             Preview = new();
-            scroll.AddChild(Preview);
+            border.AddChild(Preview);
             Preview.LabelText = "Preview";
             Preview.Height = 256;
 
 
             PreInstructions = new();
-            scroll.AddChild(PreInstructions);
+            border.AddChild(PreInstructions);
 
 
             PostInstructions = new();
-            scroll.AddChild(PostInstructions);
+            border.AddChild(PostInstructions);
         }
 
         public override void _Process(double delta)
