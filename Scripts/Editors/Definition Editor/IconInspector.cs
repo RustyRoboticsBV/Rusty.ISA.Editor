@@ -49,11 +49,13 @@ namespace Rusty.ISA.Editor.Definitions
             {
                 // Get global path.
                 string globalPath = FilePath.Value;
-                if (!FilePath.Value.StartsWith("C:\\"))
+                if (!PathUtility.IsGlobalPath(globalPath))
                     globalPath = StandardPath + globalPath;
 
-                // Update preview.
+                // Try to load the texture.
                 Texture2D texture = IconLoader.Load(globalPath);
+
+                // Update preview.
                 if (texture != null)
                 {
                     Preview.Texture = texture;
