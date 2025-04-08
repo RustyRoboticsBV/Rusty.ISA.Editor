@@ -91,7 +91,6 @@ namespace Rusty.ISA.Editor.Definitions
             Members.Visible = TabBar.Visible && TabBar.CurrentTab == 1;
             Initialize.Visible = TabBar.Visible && TabBar.CurrentTab == 2;
             Execute.Visible = TabBar.Visible && TabBar.CurrentTab == 3;
-            Border.SetTitle(TabBar.GetTabTitle(TabBar.CurrentTab));
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Rusty.ISA.Editor.Definitions
 
         public TabBar TabBar { get; private set; }
         public BorderContainer Border { get; private set; }
+        public Label BorderLabel { get; private set; }
 
         public ParameterBox Parameters { get; private set; }
 
@@ -127,6 +128,9 @@ namespace Rusty.ISA.Editor.Definitions
             scroll.AddChild(border);
             border.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
+            BorderLabel = new();
+            border.AddToTop(BorderLabel);
+
             Parameters = new();
             border.AddChild(Parameters);
 
@@ -187,6 +191,7 @@ namespace Rusty.ISA.Editor.Definitions
             Preview.Visible = TabBar.CurrentTab == 4;
             PreInstructions.Visible = TabBar.CurrentTab == 5;
             PostInstructions.Visible = TabBar.CurrentTab == 6;
+            BorderLabel.Text = TabBar.GetTabTitle(TabBar.CurrentTab);
         }
     }
 }

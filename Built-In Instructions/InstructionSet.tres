@@ -495,7 +495,7 @@ PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_2wpiq"]
 script = ExtResource("11_gxiqw")
-Dependencies = PackedStringArray()
+Dependencies = []
 Members = ""
 Initialize = ""
 Execute = ""
@@ -525,7 +525,7 @@ PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_udtmp"]
 script = ExtResource("11_gxiqw")
-Dependencies = PackedStringArray()
+Dependencies = []
 Members = ""
 Initialize = ""
 Execute = "end();"
@@ -546,7 +546,7 @@ PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_08hnh"]
 script = ExtResource("11_gxiqw")
-Dependencies = PackedStringArray()
+Dependencies = []
 Members = ""
 Initialize = ""
 Execute = ""
@@ -576,7 +576,7 @@ PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_yhvsr"]
 script = ExtResource("11_gxiqw")
-Dependencies = PackedStringArray()
+Dependencies = []
 Members = ""
 Initialize = ""
 Execute = "goto(%target_label%);"
@@ -606,7 +606,7 @@ PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_08wba"]
 script = ExtResource("11_gxiqw")
-Dependencies = PackedStringArray()
+Dependencies = []
 Members = ""
 Initialize = ""
 Execute = "warning(%message%);"
@@ -636,7 +636,7 @@ PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_0mw74"]
 script = ExtResource("11_gxiqw")
-Dependencies = PackedStringArray()
+Dependencies = []
 Members = ""
 Initialize = ""
 Execute = "error(%message%);"

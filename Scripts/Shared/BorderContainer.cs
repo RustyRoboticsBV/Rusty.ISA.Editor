@@ -11,18 +11,22 @@ namespace Rusty.ISA.Editor.Definitions
         private const int MarginSize = 8;
 
         /* Private properties. */
-        private new Control Anchor { get; set; }
-        private NinePatchRect TextureRect { get; set; }
-        private MarginContainer TitleMargin { get; set; }
-        private ColorRect TitleColor { get; set; }
-        private Label TitleLabel { get; set; }
+        private Control Border { get; set; }
+        private VBoxContainer LeftContainer { get; set; }
+        private VSeparator Left { get; set; }
+        private VBoxContainer RightContainer { get; set; }
+        private VSeparator Right { get; set; }
+        private HBoxContainer TopContainer { get; set; }
+        private HSeparator TopLeft { get; set; }
+        private MarginContainer TopContents { get; set; }
+        private HSeparator TopRight { get; set; }
+        private HBoxContainer BottomContainer { get; set; }
+        private HSeparator BottomLeft { get; set; }
+        private MarginContainer BottomContents { get; set; }
+        private HSeparator BottomRight { get; set; }
 
         /* Constructors. */
-        public BorderContainer() : this(BorderMaker.Default) { }
-
-        public BorderContainer(Color color) : this(BorderMaker.CreateBorderTexture(color, 128)) { }
-
-        public BorderContainer(Texture2D texture)
+        public BorderContainer()
         {
             // Set margins.
             AddThemeConstantOverride("margin_left", MarginSize);
@@ -30,62 +34,135 @@ namespace Rusty.ISA.Editor.Definitions
             AddThemeConstantOverride("margin_bottom", MarginSize);
             AddThemeConstantOverride("margin_top", MarginSize);
 
-            // Create anchor.
-            Anchor = new();
-            AddChild(Anchor);
-            Anchor.Name = "Anchor";
-
             // Create border.
-            TextureRect = BorderMaker.CreateBorderRect(texture);
-            Anchor.AddChild(TextureRect);
+            Border = new();
+            AddChild(Border);
+            Border.MouseFilter = MouseFilterEnum.Ignore;
 
-            // Create title element.
-            TitleMargin = new();
-            Anchor.AddChild(TitleMargin);
+            // Left edge.
+            LeftContainer = new();
+            Border.AddChild(LeftContainer);
+            LeftContainer.MouseFilter = MouseFilterEnum.Ignore;
 
-            TitleColor = new();
-            TitleColor.Color = Color.FromHtml("383838");
-            TitleMargin.AddChild(TitleColor);
+            Left = new();
+            LeftContainer.AddChild(Left);
+            Left.SizeFlagsVertical = SizeFlags.ExpandFill;
+            Left.MouseFilter = MouseFilterEnum.Ignore;
 
-            TitleLabel = new();
-            TitleMargin.AddChild(TitleLabel);
-            TitleLabel.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+            // Right edge.
+            RightContainer = new();
+            Border.AddChild(RightContainer);
+            RightContainer.MouseFilter = MouseFilterEnum.Ignore;
 
-            TitleMargin.Hide();
+            Right = new();
+            RightContainer.AddChild(Right);
+            Right.SizeFlagsVertical = SizeFlags.ExpandFill;
+            Right.MouseFilter = MouseFilterEnum.Ignore;
+
+            // Top edge.
+            TopContainer = new();
+            Border.AddChild(TopContainer);
+            TopContainer.AddThemeConstantOverride("separation", 0);
+            TopContainer.MouseFilter = MouseFilterEnum.Ignore;
+
+            TopLeft = new();
+            TopContainer.AddChild(TopLeft);
+            TopLeft.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+            TopLeft.MouseFilter = MouseFilterEnum.Ignore;
+
+            TopContents = new();
+            TopContainer.AddChild(TopContents);
+            TopContents.AddThemeConstantOverride("margin_left", 4);
+            TopContents.AddThemeConstantOverride("margin_right", 4);
+            TopContents.MouseFilter = MouseFilterEnum.Ignore;
+
+            TopRight = new();
+            TopContainer.AddChild(TopRight);
+            TopRight.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            TopRight.MouseFilter = MouseFilterEnum.Ignore;
+
+            // Bottom edge.
+            BottomContainer = new();
+            Border.AddChild(BottomContainer);
+            BottomContainer.AddThemeConstantOverride("separation", 0);
+            BottomContainer.MouseFilter = MouseFilterEnum.Ignore;
+
+            BottomLeft = new();
+            BottomContainer.AddChild(BottomLeft);
+            BottomLeft.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+            BottomLeft.MouseFilter = MouseFilterEnum.Ignore;
+
+            BottomContents = new();
+            BottomContainer.AddChild(BottomContents);
+            BottomContents.AddThemeConstantOverride("margin_left", 4);
+            BottomContents.AddThemeConstantOverride("margin_right", 4);
+            BottomContents.MouseFilter = MouseFilterEnum.Ignore;
+
+            BottomRight = new();
+            BottomContainer.AddChild(BottomRight);
+            BottomRight.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            BottomRight.MouseFilter = MouseFilterEnum.Ignore;
         }
 
         /* Public methods. */
-        public void SetTitle(string text)
+        public void AddToTop(Control element)
         {
-            if (text != "")
-                text = $"  {text}  ";
-            TitleLabel.Text = text;
+            TopContents.AddChild(element);
+        }
 
-            _Process(0.0);
+        public void AddToBottom(Control element)
+        {
+            BottomContents.AddChild(element);
         }
 
         /* Godot overrides. */
         public override void _Process(double delta)
         {
-            TextureRect.Size = Anchor.Size + new Vector2(MarginSize * 2, MarginSize * 2);
-            TextureRect.Position = new Vector2(-MarginSize, -MarginSize);
+            int topMargin = GetMargin(TopContents);
+            int bottomMargin = GetMargin(BottomContents);
 
-            if (TitleLabel.Text != "")
+            AddThemeConstantOverride("margin_top", topMargin);
+            AddThemeConstantOverride("margin_bottom", bottomMargin);
+
+            LeftContainer.SetAnchorAndOffset(Side.Left, 0, -2 - MarginSize);
+            LeftContainer.SetAnchorAndOffset(Side.Right, 0, 3 - MarginSize);
+            LeftContainer.SetAnchorAndOffset(Side.Top, 0, 1 - MarginSize);
+            LeftContainer.SetAnchorAndOffset(Side.Bottom, 1, -1 + MarginSize);
+
+            RightContainer.SetAnchorAndOffset(Side.Left, 1, -3 + MarginSize);
+            RightContainer.SetAnchorAndOffset(Side.Right, 1, 2 + MarginSize);
+            RightContainer.SetAnchorAndOffset(Side.Top, 0, 1 - MarginSize);
+            RightContainer.SetAnchorAndOffset(Side.Bottom, 1, -1 + MarginSize);
+
+            TopContainer.SetAnchorAndOffset(Side.Left, 0, 1 - MarginSize);
+            TopContainer.SetAnchorAndOffset(Side.Right, 1, -1 + MarginSize);
+            TopContainer.SetAnchorAndOffset(Side.Top, 0, -Border.Size.Y / 2 - MarginSize);
+            TopContainer.SetAnchorAndOffset(Side.Bottom, 0, Border.Size.Y / 2 - MarginSize);
+            TopContents.Visible = TopContents.GetChildCount() > 0;
+
+            BottomContainer.SetAnchorAndOffset(Side.Left, 0, 1 - MarginSize);
+            BottomContainer.SetAnchorAndOffset(Side.Right, 1, -1 + MarginSize);
+            BottomContainer.SetAnchorAndOffset(Side.Top, 1, -Border.Size.Y / 2 + MarginSize);
+            BottomContainer.SetAnchorAndOffset(Side.Bottom, 1, Border.Size.Y / 2 + MarginSize);
+            BottomContents.Visible = BottomContents.GetChildCount() > 0;
+
+        }
+
+        /* Private methods. */
+        private int GetMargin(Node node)
+        {
+            int contentsSize = 0;
+            for (int i = 0; i < TopContents.GetChildCount(); i++)
             {
-                AddThemeConstantOverride("margin_top", MarginSize + 16);
-
-                TitleColor.Size = TitleLabel.Size;
-                TitleMargin.Position = new Vector2(20, -(20 + MarginSize));
-                TitleMargin.Show();
-
-                TextureRect.Position += new Vector2(0f, -MarginSize);
-                TextureRect.Size += new Vector2(0f, MarginSize);
+                Node child = TopContents.GetChild(i);
+                if (child is Control control)
+                {
+                    if (contentsSize < control.Size.Y)
+                        contentsSize = (int)control.Size.Y;
+                }
             }
-            else
-            {
-                AddThemeConstantOverride("margin_top", MarginSize);
-                TitleMargin.Hide();
-            }
+
+            return Mathf.RoundToInt(contentsSize / 2f) + MarginSize;
         }
     }
 }
