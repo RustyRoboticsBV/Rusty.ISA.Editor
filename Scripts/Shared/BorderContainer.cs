@@ -28,6 +28,8 @@ namespace Rusty.ISA.Editor.Definitions
         /* Constructors. */
         public BorderContainer()
         {
+            Name = "BorderContainer";
+
             // Set margins.
             AddThemeConstantOverride("margin_left", MarginSize);
             AddThemeConstantOverride("margin_right", MarginSize);
@@ -36,12 +38,14 @@ namespace Rusty.ISA.Editor.Definitions
 
             // Create border.
             Border = new();
-            AddChild(Border);
+            AddChild(Border, false, InternalMode.Front);
+            Border.Name = "Border";
             Border.MouseFilter = MouseFilterEnum.Ignore;
 
             // Left edge.
             LeftContainer = new();
             Border.AddChild(LeftContainer);
+            LeftContainer.Name = "LeftContainer";
             LeftContainer.MouseFilter = MouseFilterEnum.Ignore;
 
             Left = new();
@@ -52,6 +56,7 @@ namespace Rusty.ISA.Editor.Definitions
             // Right edge.
             RightContainer = new();
             Border.AddChild(RightContainer);
+            RightContainer.Name = "RightContainer";
             RightContainer.MouseFilter = MouseFilterEnum.Ignore;
 
             Right = new();
@@ -62,45 +67,55 @@ namespace Rusty.ISA.Editor.Definitions
             // Top edge.
             TopContainer = new();
             Border.AddChild(TopContainer);
+            TopContainer.Name = "TopContainer";
             TopContainer.AddThemeConstantOverride("separation", 0);
             TopContainer.MouseFilter = MouseFilterEnum.Ignore;
 
             TopLeft = new();
             TopContainer.AddChild(TopLeft);
             TopLeft.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+            TopLeft.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             TopLeft.MouseFilter = MouseFilterEnum.Ignore;
 
             TopContents = new();
             TopContainer.AddChild(TopContents);
             TopContents.AddThemeConstantOverride("margin_left", 4);
             TopContents.AddThemeConstantOverride("margin_right", 4);
+            TopContents.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            TopContents.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             TopContents.MouseFilter = MouseFilterEnum.Ignore;
 
             TopRight = new();
             TopContainer.AddChild(TopRight);
             TopRight.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            TopRight.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             TopRight.MouseFilter = MouseFilterEnum.Ignore;
 
             // Bottom edge.
             BottomContainer = new();
             Border.AddChild(BottomContainer);
+            BottomContainer.Name = "BottomContainer";
             BottomContainer.AddThemeConstantOverride("separation", 0);
             BottomContainer.MouseFilter = MouseFilterEnum.Ignore;
 
             BottomLeft = new();
             BottomContainer.AddChild(BottomLeft);
             BottomLeft.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+            BottomLeft.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             BottomLeft.MouseFilter = MouseFilterEnum.Ignore;
 
             BottomContents = new();
             BottomContainer.AddChild(BottomContents);
             BottomContents.AddThemeConstantOverride("margin_left", 4);
             BottomContents.AddThemeConstantOverride("margin_right", 4);
+            BottomContents.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            BottomContents.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             BottomContents.MouseFilter = MouseFilterEnum.Ignore;
 
             BottomRight = new();
             BottomContainer.AddChild(BottomRight);
             BottomRight.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            BottomRight.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             BottomRight.MouseFilter = MouseFilterEnum.Ignore;
         }
 
@@ -108,61 +123,73 @@ namespace Rusty.ISA.Editor.Definitions
         public void AddToTop(Control element)
         {
             TopContents.AddChild(element);
+            element.SizeFlagsVertical = SizeFlags.ShrinkCenter;
         }
 
         public void AddToBottom(Control element)
         {
             BottomContents.AddChild(element);
+            element.SizeFlagsVertical = SizeFlags.ShrinkCenter;
         }
 
         /* Godot overrides. */
         public override void _Process(double delta)
         {
-            int topMargin = GetMargin(TopContents);
-            int bottomMargin = GetMargin(BottomContents);
+            float topContentsSize = GetContentsSize(TopContainer);
+            float bottomContentsSize = GetContentsSize(BottomContainer);
+
+            int topBorderMargin = (int)(topContentsSize / 2) + MarginSize;
+            int topMargin = (int)topContentsSize + MarginSize;
+            int bottomBorderMargin = (int)(bottomContentsSize / 2) + MarginSize;
+            int bottomMargin = (int)bottomContentsSize + MarginSize;
 
             AddThemeConstantOverride("margin_top", topMargin);
             AddThemeConstantOverride("margin_bottom", bottomMargin);
+            GD.Print("t" + topMargin);
+            GD.Print("b" + bottomMargin);
 
             LeftContainer.SetAnchorAndOffset(Side.Left, 0, -2 - MarginSize);
             LeftContainer.SetAnchorAndOffset(Side.Right, 0, 3 - MarginSize);
-            LeftContainer.SetAnchorAndOffset(Side.Top, 0, 1 - MarginSize);
-            LeftContainer.SetAnchorAndOffset(Side.Bottom, 1, -1 + MarginSize);
+            LeftContainer.SetAnchorAndOffset(Side.Top, 0, 1 - topBorderMargin);
+            LeftContainer.SetAnchorAndOffset(Side.Bottom, 1, -1 + bottomBorderMargin);
 
             RightContainer.SetAnchorAndOffset(Side.Left, 1, -3 + MarginSize);
             RightContainer.SetAnchorAndOffset(Side.Right, 1, 2 + MarginSize);
-            RightContainer.SetAnchorAndOffset(Side.Top, 0, 1 - MarginSize);
-            RightContainer.SetAnchorAndOffset(Side.Bottom, 1, -1 + MarginSize);
+            RightContainer.SetAnchorAndOffset(Side.Top, 0, 1 - topBorderMargin);
+            RightContainer.SetAnchorAndOffset(Side.Bottom, 1, -1 + bottomBorderMargin);
 
             TopContainer.SetAnchorAndOffset(Side.Left, 0, 1 - MarginSize);
             TopContainer.SetAnchorAndOffset(Side.Right, 1, -1 + MarginSize);
-            TopContainer.SetAnchorAndOffset(Side.Top, 0, -Border.Size.Y / 2 - MarginSize);
-            TopContainer.SetAnchorAndOffset(Side.Bottom, 0, Border.Size.Y / 2 - MarginSize);
+            TopContainer.SetAnchorAndOffset(Side.Top, 0, -Border.Size.Y / 2 - topBorderMargin);
+            TopContainer.SetAnchorAndOffset(Side.Bottom, 0, Border.Size.Y / 2 - topBorderMargin);
             TopContents.Visible = TopContents.GetChildCount() > 0;
+            //TopContainer.Size = new(TopContainer.Size.X, GetContainerHeight(TopContainer));
 
             BottomContainer.SetAnchorAndOffset(Side.Left, 0, 1 - MarginSize);
             BottomContainer.SetAnchorAndOffset(Side.Right, 1, -1 + MarginSize);
-            BottomContainer.SetAnchorAndOffset(Side.Top, 1, -Border.Size.Y / 2 + MarginSize);
-            BottomContainer.SetAnchorAndOffset(Side.Bottom, 1, Border.Size.Y / 2 + MarginSize);
+            BottomContainer.SetAnchorAndOffset(Side.Top, 1, -Border.Size.Y / 2 + bottomBorderMargin);
+            BottomContainer.SetAnchorAndOffset(Side.Bottom, 1, Border.Size.Y / 2 + bottomBorderMargin);
             BottomContents.Visible = BottomContents.GetChildCount() > 0;
 
         }
 
         /* Private methods. */
-        private int GetMargin(Node node)
+        /// <summary>
+        /// Get the vertical size of a container's contents. This assumes that all elements use the ShrinkCenter vertical size flag.
+        /// </summary>
+        private static float GetContentsSize(Container container)
         {
             int contentsSize = 0;
-            for (int i = 0; i < TopContents.GetChildCount(); i++)
+            for (int i = 0; i < container.GetChildCount(); i++)
             {
-                Node child = TopContents.GetChild(i);
-                if (child is Control control)
+                Node child = container.GetChild(i);
+                if (child is Control control && control.SizeFlagsVertical == SizeFlags.ShrinkCenter)
                 {
                     if (contentsSize < control.Size.Y)
-                        contentsSize = (int)control.Size.Y;
+                        contentsSize = Mathf.RoundToInt(control.Size.Y);
                 }
             }
-
-            return Mathf.RoundToInt(contentsSize / 2f) + MarginSize;
+            return contentsSize;
         }
     }
 }

@@ -37,8 +37,8 @@ namespace Rusty.ISA.Editor.Definitions
             }
         }
         /* Private properties. */
-        private TabBar TabBar { get; set; }
         private BorderContainer Border { get; set; }
+        private TabBar TabBar { get; set; }
         private Button AddButton { get; set; }
 
         /* Godot overrides. */
@@ -46,26 +46,24 @@ namespace Rusty.ISA.Editor.Definitions
         {
             SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
-            HBoxContainer header = new();
-            AddChild(header);
+            Border = new();
+            AddChild(Border);
 
             HBoxContainer EnableHBox = new();
-            header.AddChild(EnableHBox);
+            Border.AddToTop(EnableHBox);
             Enabled = new();
             EnableHBox.AddChild(Enabled);
             EnableHBox.AddChild(new Label() { Text = "Enabled?  " });
 
             TabBar = new();
+            Border.AddToTop(TabBar);
+            TabBar.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            TabBar.SizeFlagsVertical = SizeFlags.ExpandFill;
             TabBar.AddTab("Dependencies");
             TabBar.AddTab("Members");
             TabBar.AddTab("Initialize");
             TabBar.AddTab("Execute");
-            header.AddChild(TabBar);
             TabBar.CurrentTab = 3;
-            TabBar.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-
-            Border = new();
-            AddChild(Border);
 
             VBoxContainer contents = new();
             Border.AddChild(contents);

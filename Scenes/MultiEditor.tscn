@@ -133,3 +133,30 @@ layout_mode = 1
 anchors_preset = -1
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/DefinitionEditor/Control"]
+layout_mode = 0
+offset_left = 346.0
+offset_top = 213.0
+offset_right = 970.0
+offset_bottom = 244.0
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/DefinitionEditor/Control/HBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/DefinitionEditor/Control/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TabBar" type="TabBar" parent="MarginContainer/DefinitionEditor/Control/HBoxContainer/MarginContainer"]
+layout_mode = 2
+current_tab = 0
+tab_count = 3
+tab_0/title = "a"
+tab_1/title = "b"
+tab_2/title = "caaaaaaaaaaaaaaaaaaaaaaaa"
+tab_2/tooltip = "a="
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/DefinitionEditor/Control/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3

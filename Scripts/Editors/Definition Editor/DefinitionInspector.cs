@@ -1,5 +1,4 @@
 ﻿using Godot;
-using System.Xml;
 using Rusty.EditorUI;
 
 namespace Rusty.ISA.Editor.Definitions
@@ -108,8 +107,17 @@ namespace Rusty.ISA.Editor.Definitions
             AddChild(Opcode);
             Opcode.LabelText = "Opcode";
 
+            ScrollContainer scroll = new();
+            AddChild(scroll);
+            scroll.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            scroll.SizeFlagsVertical = SizeFlags.ExpandFill;
+
+            Border = new();
+            scroll.AddChild(Border);
+            Border.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
             TabBar = new();
-            AddChild(TabBar);
+            Border.AddToTop(TabBar);
             TabBar.AddTab("Parameters");
             TabBar.AddTab("Implementation");
             TabBar.AddTab("Metadata");
@@ -118,28 +126,33 @@ namespace Rusty.ISA.Editor.Definitions
             TabBar.AddTab("Pre-Instructions");
             TabBar.AddTab("Post-Instructions");
             TabBar.CurrentTab = 2;
+            TabBar.ClipTabs = false;
+            TabBar.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
-            ScrollContainer scroll = new();
-            AddChild(scroll);
-            scroll.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-            scroll.SizeFlagsVertical = SizeFlags.ExpandFill;
+            TabBar TabBar2 = new();
+            Border.AddToBottom(TabBar2);
+            TabBar2.AddTab("Parameters");
+            TabBar2.AddTab("Implementation");
+            TabBar2.AddTab("Metadata");
+            TabBar2.AddTab("Editor Node");
+            TabBar2.AddTab("Preview");
+            TabBar2.AddTab("Pre-Instructions");
+            TabBar2.AddTab("Post-Instructions");
+            TabBar2.CurrentTab = 2;
+            TabBar2.ClipTabs = false;
+            TabBar2.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
-            BorderContainer border = new();
-            scroll.AddChild(border);
-            border.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-
-            BorderLabel = new();
-            border.AddToTop(BorderLabel);
 
             Parameters = new();
-            border.AddChild(Parameters);
+            Border.AddChild(Parameters);
+
 
             Implementation = new();
-            border.AddChild(Implementation);
+            Border.AddChild(Implementation);
 
 
             Metadata = new();
-            border.AddChild(Metadata);
+            Border.AddChild(Metadata);
             Metadata.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             DisplayName = new();
@@ -161,7 +174,7 @@ namespace Rusty.ISA.Editor.Definitions
 
 
             Editor = new();
-            border.AddChild(Editor);
+            Border.AddChild(Editor);
             Editor.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             EditorNodeInfo = new();
@@ -169,17 +182,17 @@ namespace Rusty.ISA.Editor.Definitions
 
 
             Preview = new();
-            border.AddChild(Preview);
+            Border.AddChild(Preview);
             Preview.LabelText = "Preview";
             Preview.Height = 256;
 
 
             PreInstructions = new();
-            border.AddChild(PreInstructions);
+            Border.AddChild(PreInstructions);
 
 
             PostInstructions = new();
-            border.AddChild(PostInstructions);
+            Border.AddChild(PostInstructions);
         }
 
         public override void _Process(double delta)
@@ -191,7 +204,6 @@ namespace Rusty.ISA.Editor.Definitions
             Preview.Visible = TabBar.CurrentTab == 4;
             PreInstructions.Visible = TabBar.CurrentTab == 5;
             PostInstructions.Visible = TabBar.CurrentTab == 6;
-            BorderLabel.Text = TabBar.GetTabTitle(TabBar.CurrentTab);
         }
     }
 }
