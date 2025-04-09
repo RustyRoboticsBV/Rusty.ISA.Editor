@@ -51,19 +51,21 @@ namespace Rusty.ISA.Editor.Definitions
 
             HBoxContainer EnableHBox = new();
             Border.AddToTop(EnableHBox);
+            EnableHBox.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
             Enabled = new();
             EnableHBox.AddChild(Enabled);
             EnableHBox.AddChild(new Label() { Text = "Enabled?  " });
 
             TabBar = new();
-            Border.AddToTop(TabBar);
-            TabBar.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-            TabBar.SizeFlagsVertical = SizeFlags.ExpandFill;
+            EnableHBox.AddChild(TabBar);
             TabBar.AddTab("Dependencies");
             TabBar.AddTab("Members");
             TabBar.AddTab("Initialize");
             TabBar.AddTab("Execute");
             TabBar.CurrentTab = 3;
+            TabBar.ClipTabs = false;
+            TabBar.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             VBoxContainer contents = new();
             Border.AddChild(contents);
@@ -84,7 +86,6 @@ namespace Rusty.ISA.Editor.Definitions
         public override void _Process(double delta)
         {
             TabBar.Visible = Enabled.ButtonPressed;
-            Border.Visible = Enabled.ButtonPressed;
             Dependencies.Visible = TabBar.Visible && TabBar.CurrentTab == 0;
             Members.Visible = TabBar.Visible && TabBar.CurrentTab == 1;
             Initialize.Visible = TabBar.Visible && TabBar.CurrentTab == 2;

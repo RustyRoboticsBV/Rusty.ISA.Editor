@@ -10,8 +10,12 @@ namespace Rusty.ISA.Editor.Definitions
         /* Constants. */
         private const int MarginSize = 8;
 
+        /* Public properties. */
+        public bool HideBorderIfEmpty { get; set; } = true;
+
         /* Private properties. */
         private Control Border { get; set; }
+        private ColorRect BackgroundRect { get; set; }
         private VBoxContainer LeftContainer { get; set; }
         private VSeparator Left { get; set; }
         private VBoxContainer RightContainer { get; set; }
@@ -41,6 +45,10 @@ namespace Rusty.ISA.Editor.Definitions
             AddChild(Border, false, InternalMode.Front);
             Border.Name = "Border";
             Border.MouseFilter = MouseFilterEnum.Ignore;
+
+            BackgroundRect = new();
+            Border.AddChild(BackgroundRect);
+            BackgroundRect.Color = Colors.Transparent;
 
             // Left edge.
             LeftContainer = new();
@@ -81,7 +89,7 @@ namespace Rusty.ISA.Editor.Definitions
             TopContainer.AddChild(TopContents);
             TopContents.AddThemeConstantOverride("margin_left", 4);
             TopContents.AddThemeConstantOverride("margin_right", 4);
-            TopContents.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            TopContents.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
             TopContents.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             TopContents.MouseFilter = MouseFilterEnum.Ignore;
 
@@ -108,7 +116,7 @@ namespace Rusty.ISA.Editor.Definitions
             BottomContainer.AddChild(BottomContents);
             BottomContents.AddThemeConstantOverride("margin_left", 4);
             BottomContents.AddThemeConstantOverride("margin_right", 4);
-            BottomContents.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            BottomContents.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
             BottomContents.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             BottomContents.MouseFilter = MouseFilterEnum.Ignore;
 
@@ -120,6 +128,11 @@ namespace Rusty.ISA.Editor.Definitions
         }
 
         /* Public methods. */
+        public void SetBackgroundColor(Color color)
+        {
+            BackgroundRect.Color = color;
+        }
+
         public void AddToTop(Control element)
         {
             TopContents.AddChild(element);
@@ -135,41 +148,54 @@ namespace Rusty.ISA.Editor.Definitions
         /* Godot overrides. */
         public override void _Process(double delta)
         {
-            float topContentsSize = GetContentsSize(TopContainer);
-            float bottomContentsSize = GetContentsSize(BottomContainer);
+            BackgroundRect.Size = Border.Size;
 
-            int topBorderMargin = (int)(topContentsSize / 2) + MarginSize;
+            int visibleChildCount = GetVisibleChildCount(this);
+            if (HideBorderIfEmpty)
+            {
+                GD.Print(Name + " " + visibleChildCount);
+                BackgroundRect.Visible = visibleChildCount > 0;
+                LeftContainer.Visible = visibleChildCount > 0;
+                RightContainer.Visible = visibleChildCount > 0;
+                TopLeft.Visible = visibleChildCount > 0;
+                TopRight.Visible = visibleChildCount > 0;
+                BottomLeft.Visible = visibleChildCount > 0;
+                BottomRight.Visible = visibleChildCount > 0;
+            }
+
+            float topContentsSize = GetContentsSize(TopContainer);
             int topMargin = (int)topContentsSize + MarginSize;
-            int bottomBorderMargin = (int)(bottomContentsSize / 2) + MarginSize;
+            int topBorderMargin = (int)(topContentsSize / 2) + MarginSize;
+
+            float bottomContentsSize = GetContentsSize(BottomContainer);
             int bottomMargin = (int)bottomContentsSize + MarginSize;
+            int bottomBorderMargin = (int)(bottomContentsSize / 2) + MarginSize;
 
             AddThemeConstantOverride("margin_top", topMargin);
             AddThemeConstantOverride("margin_bottom", bottomMargin);
-            GD.Print("t" + topMargin);
-            GD.Print("b" + bottomMargin);
 
             LeftContainer.SetAnchorAndOffset(Side.Left, 0, -2 - MarginSize);
             LeftContainer.SetAnchorAndOffset(Side.Right, 0, 3 - MarginSize);
-            LeftContainer.SetAnchorAndOffset(Side.Top, 0, 1 - topBorderMargin);
-            LeftContainer.SetAnchorAndOffset(Side.Bottom, 1, -1 + bottomBorderMargin);
+            LeftContainer.SetAnchorAndOffset(Side.Top, 0, 5 - topBorderMargin);
+            LeftContainer.SetAnchorAndOffset(Side.Bottom, 1, -3 + bottomBorderMargin);
 
             RightContainer.SetAnchorAndOffset(Side.Left, 1, -3 + MarginSize);
             RightContainer.SetAnchorAndOffset(Side.Right, 1, 2 + MarginSize);
-            RightContainer.SetAnchorAndOffset(Side.Top, 0, 1 - topBorderMargin);
-            RightContainer.SetAnchorAndOffset(Side.Bottom, 1, -1 + bottomBorderMargin);
+            RightContainer.SetAnchorAndOffset(Side.Top, 0, 5 - topBorderMargin);
+            RightContainer.SetAnchorAndOffset(Side.Bottom, 1, -3 + bottomBorderMargin);
 
             TopContainer.SetAnchorAndOffset(Side.Left, 0, 1 - MarginSize);
             TopContainer.SetAnchorAndOffset(Side.Right, 1, -1 + MarginSize);
-            TopContainer.SetAnchorAndOffset(Side.Top, 0, -Border.Size.Y / 2 - topBorderMargin);
-            TopContainer.SetAnchorAndOffset(Side.Bottom, 0, Border.Size.Y / 2 - topBorderMargin);
+            TopContainer.SetAnchorAndOffset(Side.Top, 0, 4 - Border.Size.Y / 2 - topBorderMargin);
+            TopContainer.SetAnchorAndOffset(Side.Bottom, 0, 4 + Border.Size.Y / 2 - topBorderMargin);
             TopContents.Visible = TopContents.GetChildCount() > 0;
-            //TopContainer.Size = new(TopContainer.Size.X, GetContainerHeight(TopContainer));
 
             BottomContainer.SetAnchorAndOffset(Side.Left, 0, 1 - MarginSize);
             BottomContainer.SetAnchorAndOffset(Side.Right, 1, -1 + MarginSize);
-            BottomContainer.SetAnchorAndOffset(Side.Top, 1, -Border.Size.Y / 2 + bottomBorderMargin);
-            BottomContainer.SetAnchorAndOffset(Side.Bottom, 1, Border.Size.Y / 2 + bottomBorderMargin);
+            BottomContainer.SetAnchorAndOffset(Side.Top, 1, 0 -Border.Size.Y / 2 + bottomBorderMargin);
+            BottomContainer.SetAnchorAndOffset(Side.Bottom, 1, -5 + Border.Size.Y / 2 + bottomBorderMargin);
             BottomContents.Visible = BottomContents.GetChildCount() > 0;
+
 
         }
 
@@ -190,6 +216,32 @@ namespace Rusty.ISA.Editor.Definitions
                 }
             }
             return contentsSize;
+        }
+
+        /// <summary>
+        /// Get the number of visible children.
+        /// </summary>
+        private int GetVisibleChildCount(Container container)
+        {
+            int visible = 0;
+            for (int i = 0; i < container.GetChildCount(); i++)
+            {
+                if (container.GetChild(i) is Control control && control.Visible)
+                {
+                    if (control is Container childContainer)
+                    {
+                        if (control is BorderContainer borderContainer)
+                        {
+                            visible += GetVisibleChildCount(borderContainer.TopContents);
+                            visible += GetVisibleChildCount(borderContainer.BottomContents);
+                        }
+                        visible += GetVisibleChildCount(childContainer);
+                    }
+                    else
+                        visible++;
+                }
+            }
+            return visible;
         }
     }
 }

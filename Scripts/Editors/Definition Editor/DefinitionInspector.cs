@@ -127,20 +127,6 @@ namespace Rusty.ISA.Editor.Definitions
             TabBar.AddTab("Post-Instructions");
             TabBar.CurrentTab = 2;
             TabBar.ClipTabs = false;
-            TabBar.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-
-            TabBar TabBar2 = new();
-            Border.AddToBottom(TabBar2);
-            TabBar2.AddTab("Parameters");
-            TabBar2.AddTab("Implementation");
-            TabBar2.AddTab("Metadata");
-            TabBar2.AddTab("Editor Node");
-            TabBar2.AddTab("Preview");
-            TabBar2.AddTab("Pre-Instructions");
-            TabBar2.AddTab("Post-Instructions");
-            TabBar2.CurrentTab = 2;
-            TabBar2.ClipTabs = false;
-            TabBar2.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
 
             Parameters = new();
