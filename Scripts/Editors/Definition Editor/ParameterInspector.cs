@@ -30,7 +30,7 @@ namespace Rusty.ISA.Editor.Definitions
         public FloatField MinFloat { get; private set; }
         public FloatField MaxFloat { get; private set; }
 
-        public MultilineField Preview { get; private set; }
+        public TextEdit Preview { get; private set; }
 
         public ParameterDescriptor Value
         {
@@ -40,34 +40,34 @@ namespace Rusty.ISA.Editor.Definitions
                 {
                     case XmlKeywords.BoolParameter:
                         return new BoolParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultBool.Value,
-                            Preview.Value);
+                            Preview.Text);
                     case XmlKeywords.IntParameter:
                         return new IntParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultInt.Value,
-                            Preview.Value);
+                            Preview.Text);
                     case XmlKeywords.IntSliderParameter:
                         return new IntSliderParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultInt.Value,
-                            MinInt.Value, MaxInt.Value, Preview.Value);
+                            MinInt.Value, MaxInt.Value, Preview.Text);
                     case XmlKeywords.FloatParameter:
                         return new FloatParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultFloat.Value,
-                            Preview.Value);
+                            Preview.Text);
                     case XmlKeywords.FloatSliderParameter:
                         return new FloatSliderParameterDescriptor(ID.Value, DisplayName.Value, Description.Value,
-                            DefaultFloat.Value, MinFloat.Value, MaxFloat.Value, Preview.Value);
+                            DefaultFloat.Value, MinFloat.Value, MaxFloat.Value, Preview.Text);
                     case XmlKeywords.CharParameter:
                         return new CharParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultChar.Value,
-                            Preview.Value);
+                            Preview.Text);
                     case XmlKeywords.TextlineParameter:
                         return new TextlineParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultText.Value,
-                            Preview.Value);
+                            Preview.Text);
                     case XmlKeywords.MultilineParameter:
                         return new MultilineParameterDescriptor(ID.Value, DisplayName.Value, Description.Value,
-                            DefaultMultiline.Value, Preview.Value);
+                            DefaultMultiline.Value, Preview.Text);
                     case XmlKeywords.ColorParameter:
                         return new ColorParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, DefaultColor.Value,
-                            Preview.Value);
+                            Preview.Text);
                     case XmlKeywords.OutputParameter:
                         return new OutputParameterDescriptor(ID.Value, DisplayName.Value, Description.Value, RemoveDefault.Value,
-                            Preview.Value);
+                            Preview.Text);
                     default:
                         throw new Exception(Type.Options[Type.Value]);
                 }
@@ -151,16 +151,17 @@ namespace Rusty.ISA.Editor.Definitions
             };
             AddChild(ID);
 
+            BorderContainer border = new();
+            AddChild(border);
+
             TabBar = new();
-            AddChild(TabBar);
+            border.AddToTop(TabBar);
             TabBar.AddTab("Metadata");
             TabBar.AddTab("Preview");
+            TabBar.ClipTabs = false;
 
             HBoxContainer contents = new();
-            AddChild(contents);
-
-            VSeparator separator = new();
-            contents.AddChild(separator);
+            border.AddChild(contents);
 
             Metadata = new();
             contents.AddChild(Metadata);
@@ -228,8 +229,8 @@ namespace Rusty.ISA.Editor.Definitions
 
             Preview = new();
             contents.AddChild(Preview);
-            Preview.LabelText = "Preview";
-            Preview.Height = 256;
+            Preview.CustomMinimumSize = new(0, 256);
+            Preview.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         }
 
         /* Godot overrides. */

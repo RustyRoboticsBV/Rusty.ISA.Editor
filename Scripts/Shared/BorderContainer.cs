@@ -151,9 +151,9 @@ namespace Rusty.ISA.Editor.Definitions
             BackgroundRect.Size = Border.Size;
 
             int visibleChildCount = GetVisibleChildCount(this);
+
             if (HideBorderIfEmpty)
             {
-                GD.Print(Name + " " + visibleChildCount);
                 BackgroundRect.Visible = visibleChildCount > 0;
                 LeftContainer.Visible = visibleChildCount > 0;
                 RightContainer.Visible = visibleChildCount > 0;
@@ -166,10 +166,14 @@ namespace Rusty.ISA.Editor.Definitions
             float topContentsSize = GetContentsSize(TopContainer);
             int topMargin = (int)topContentsSize + MarginSize;
             int topBorderMargin = (int)(topContentsSize / 2) + MarginSize;
+            if (visibleChildCount == 0)
+                topBorderMargin = topMargin;
 
             float bottomContentsSize = GetContentsSize(BottomContainer);
             int bottomMargin = (int)bottomContentsSize + MarginSize;
             int bottomBorderMargin = (int)(bottomContentsSize / 2) + MarginSize;
+            if (visibleChildCount == 0)
+                bottomBorderMargin = bottomMargin;
 
             AddThemeConstantOverride("margin_top", topMargin);
             AddThemeConstantOverride("margin_bottom", bottomMargin);
@@ -192,11 +196,9 @@ namespace Rusty.ISA.Editor.Definitions
 
             BottomContainer.SetAnchorAndOffset(Side.Left, 0, 1 - MarginSize);
             BottomContainer.SetAnchorAndOffset(Side.Right, 1, -1 + MarginSize);
-            BottomContainer.SetAnchorAndOffset(Side.Top, 1, 0 -Border.Size.Y / 2 + bottomBorderMargin);
+            BottomContainer.SetAnchorAndOffset(Side.Top, 1, 0 - Border.Size.Y / 2 + bottomBorderMargin);
             BottomContainer.SetAnchorAndOffset(Side.Bottom, 1, -5 + Border.Size.Y / 2 + bottomBorderMargin);
             BottomContents.Visible = BottomContents.GetChildCount() > 0;
-
-
         }
 
         /* Private methods. */

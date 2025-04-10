@@ -10,8 +10,9 @@ namespace Rusty.ISA.Editor.Definitions
 
         /* Private properties. */
         private TabBar TabBar { get; set; }
-        private VBoxContainer Margin { get; set; }
+        private VBoxContainer Contents { get; set; }
         private Button RemoveButton { get; set; }
+        private Label NoneLabel { get; set; }
 
         /* Public methods. */
         public void Set(List<ParameterDescriptor> parameters)
@@ -28,13 +29,13 @@ namespace Rusty.ISA.Editor.Definitions
             ParameterInspector inspector = new();
             inspector.Value = parameter;
             TabBar.AddTab();
-            Margin.AddChild(inspector);
+            Contents.AddChild(inspector);
             Parameters.Add(inspector);
         }
 
         public void RemoveAt(int index)
         {
-            Margin.RemoveChild(Parameters[index]);
+            Contents.RemoveChild(Parameters[index]);
             Parameters.RemoveAt(index);
             TabBar.RemoveTab(index);
         }
@@ -52,24 +53,33 @@ namespace Rusty.ISA.Editor.Definitions
         {
             SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
-            HBoxContainer buttons = new();
-            AddChild(buttons);
+            BorderContainer border = new();
+            AddChild(border);
 
-            Button addButton = new Button() { Text = "Add Parameter" };
-            addButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-            buttons.AddChild(addButton);
-            addButton.Pressed += OnAdd;
-
-            RemoveButton = new Button() { Text = "Remove Parameter" };
-            RemoveButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-            buttons.AddChild(RemoveButton);
-            RemoveButton.Pressed += OnRemove;
+            HBoxContainer header = new();
+            border.AddToTop(header);
 
             TabBar = new();
-            AddChild(TabBar);
+            header.AddChild(TabBar);
+            TabBar.ClipTabs = false;
 
-            Margin = new();
-            AddChild(Margin);
+            Button addButton = new Button();
+            header.AddChild(addButton);
+            addButton.Text = "       +       ";
+            addButton.Pressed += OnAdd;
+
+            Contents = new();
+            border.AddChild(Contents);
+
+            NoneLabel = new();
+            Contents.AddChild(NoneLabel);
+            NoneLabel.Text = "This instruction currently has no parameters.\nClick on the '+' button to add one.";
+
+            RemoveButton = new();
+            Contents.AddChild(RemoveButton);
+            RemoveButton.Text = "Delete";
+            RemoveButton.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+            RemoveButton.Pressed += OnRemove;
         }
 
         public override void _Process(double delta)
@@ -80,7 +90,8 @@ namespace Rusty.ISA.Editor.Definitions
                 Parameters[i].Visible = TabBar.CurrentTab == i;
             }
 
-            RemoveButton.Visible = TabBar.TabCount != 0;
+            NoneLabel.Visible = Parameters.Count == 0;
+            RemoveButton.Visible = Parameters.Count != 0;
         }
 
         /* Private methods. */
@@ -89,7 +100,7 @@ namespace Rusty.ISA.Editor.Definitions
             ParameterInspector inspector = new();
             inspector.ID.Value = "parameter " + TabBar.TabCount;
             TabBar.AddTab();
-            Margin.AddChild(inspector);
+            Contents.AddChild(inspector);
             Parameters.Add(inspector);
         }
 
