@@ -26,16 +26,16 @@ namespace Rusty.ISA.Editor.Definitions
             FilePath.LabelText = "Icon Path";
             FilePath.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
+            Preview = new();
+            AddChild(Preview);
+            Preview.Name = "Preview";
+            Preview.SizeFlagsHorizontal = SizeFlags.ShrinkEnd;
+
             Button OpenButton = new();
             AddChild(OpenButton);
             OpenButton.Text = "Open";
             OpenButton.SizeFlagsHorizontal = SizeFlags.ShrinkEnd;
             OpenButton.Pressed += OnOpen;
-
-            Preview = new();
-            AddChild(Preview);
-            Preview.Name = "Preview";
-            Preview.SizeFlagsHorizontal = SizeFlags.ShrinkEnd;
 
             OpenIconDialog = FileDialogMaker.GetOpen("Open Icon", StandardPath, "", "bmp");
             OpenIconDialog.FileSelected += OnIconSelected;

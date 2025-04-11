@@ -8,37 +8,49 @@ namespace Rusty.ISA.Editor.Definitions
         /* Public properties. */
         public List<CompileRuleInspector> CompileRules { get; set; } = new();
         public bool MonoType { get; set; }
+        public bool MayNotBeEmpty { get; set; }
 
         /* Private properties. */
+        private BorderContainer Border { get; set; }
         private TabBar TabBar { get; set; }
-        private VBoxContainer Margin { get; set; }
+        private VBoxContainer Contents { get; set; }
         private Button AddButton { get; set; }
         private Button RemoveButton { get; set; }
+        private Label NoneLabel { get; set; }
 
         /* Constructors. */
         public CompileRuleBox()
         {
             SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
-            HBoxContainer buttons = new();
-            AddChild(buttons);
-
-            AddButton = new Button() { Text = "Add Rule" };
-            AddButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-            buttons.AddChild(AddButton);
-            AddButton.Pressed += OnAdd;
-
-            RemoveButton = new Button() { Text = "Remove Rule" };
-            RemoveButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-            buttons.AddChild(RemoveButton);
-            RemoveButton.Pressed += OnRemove;
+            Border = new();
+            AddChild(Border);
 
             TabBar = new();
-            AddChild(TabBar);
+            Border.AddToTop(TabBar);
+            TabBar.ClipTabs = false;
 
-            Margin = new();
-            AddChild(Margin);
-            Margin.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            AddButton = new Button();
+            Border.AddToTop(AddButton);
+            AddButton.Text = "       +       ";
+            AddButton.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+            AddButton.Pressed += OnAdd;
+
+            Contents = new();
+            Border.AddChild(Contents);
+
+            HBoxContainer buttons = new();
+            Contents.AddChild(buttons);
+
+            RemoveButton = new Button();
+            buttons.AddChild(RemoveButton);
+            RemoveButton.Text = "Delete";
+            RemoveButton.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+            RemoveButton.Pressed += OnRemove;
+
+            NoneLabel = new();
+            Contents.AddChild(NoneLabel);
+            NoneLabel.Text = "This instruction has no compile rules of this type.\nClick on the '+' button to add one.";
         }
 
         /* Public methods. */
@@ -62,7 +74,7 @@ namespace Rusty.ISA.Editor.Definitions
             CompileRuleInspector inspector = new();
             inspector.Value = rule;
             TabBar.AddTab();
-            Margin.AddChild(inspector);
+            Contents.AddChild(inspector);
             CompileRules.Add(inspector);
         }
 
@@ -91,7 +103,7 @@ namespace Rusty.ISA.Editor.Definitions
 
         public void RemoveAt(int index)
         {
-            Margin.RemoveChild(CompileRules[index]);
+            Contents.RemoveChild(CompileRules[index]);
             CompileRules.RemoveAt(index);
             TabBar.RemoveTab(index);
         }
@@ -114,7 +126,9 @@ namespace Rusty.ISA.Editor.Definitions
             AddButton.Visible = !MonoType;
             RemoveButton.Visible = !MonoType;
 
-            if (MonoType && TabBar.TabCount == 0)
+            Border.ForceHideBorder = MonoType;
+
+            if ((MayNotBeEmpty || MonoType) && TabBar.TabCount == 0)
                 OnAdd();
 
             // Set tab titles to match rule IDs.
@@ -127,6 +141,9 @@ namespace Rusty.ISA.Editor.Definitions
             // Set remove button visibility.
             if (!MonoType)
                 RemoveButton.Visible = TabBar.TabCount != 0;
+
+            // Set none label visibility.
+            NoneLabel.Visible = CompileRules.Count == 0;
         }
 
         /* Private methods. */
@@ -135,7 +152,7 @@ namespace Rusty.ISA.Editor.Definitions
             CompileRuleInspector inspector = new();
             inspector.ID.Value = "rule " + TabBar.TabCount;
             TabBar.AddTab();
-            Margin.AddChild(inspector);
+            Contents.AddChild(inspector);
             CompileRules.Add(inspector);
         }
 

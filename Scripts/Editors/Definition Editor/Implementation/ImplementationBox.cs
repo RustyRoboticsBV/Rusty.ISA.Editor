@@ -36,10 +36,12 @@ namespace Rusty.ISA.Editor.Definitions
                     Enabled.ButtonPressed = false;
             }
         }
+
         /* Private properties. */
         private BorderContainer Border { get; set; }
         private TabBar TabBar { get; set; }
         private Button AddButton { get; set; }
+        private Label DisabledLabel { get; set; }
 
         /* Godot overrides. */
         public override void _Ready()
@@ -75,12 +77,20 @@ namespace Rusty.ISA.Editor.Definitions
 
             Members = new() { CustomMinimumSize = new(0, 128f) };
             contents.AddChild(Members);
+            Members.TooltipText = "The class member definitions of the instruction. This should be in GDScript.";
 
             Initialize = new() { CustomMinimumSize = new(0, 128f) };
             contents.AddChild(Initialize);
+            Initialize.TooltipText = "The initialization code of the instruction. This should be in GDScript.";
 
             Execute = new() { CustomMinimumSize = new(0, 128f) };
             contents.AddChild(Execute);
+            Execute.TooltipText = "The execution code of the instruction. This should be in GDScript.";
+
+            DisabledLabel = new();
+            contents.AddChild(DisabledLabel);
+            DisabledLabel.Text = "This instruction currently has no implementation, and is an editor-only instruction."
+                + "\nClick on the 'enabled' checkbox to add an implementation.";
         }
 
         public override void _Process(double delta)
@@ -90,6 +100,7 @@ namespace Rusty.ISA.Editor.Definitions
             Members.Visible = TabBar.Visible && TabBar.CurrentTab == 1;
             Initialize.Visible = TabBar.Visible && TabBar.CurrentTab == 2;
             Execute.Visible = TabBar.Visible && TabBar.CurrentTab == 3;
+            DisabledLabel.Visible = !Enabled.ButtonPressed;
         }
     }
 }

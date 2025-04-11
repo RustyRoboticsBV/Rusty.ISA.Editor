@@ -26,7 +26,7 @@ namespace Rusty.ISA.Editor.Definitions
         public VBoxContainer Editor { get; private set; }
         public EditorNodeInfoInspector EditorNodeInfo { get; private set; }
 
-        public MultilineField Preview { get; private set; }
+        public TextEdit Preview { get; private set; }
 
         public CompileRuleBox PreInstructions { get; private set; }
         public CompileRuleBox PostInstructions { get; private set; }
@@ -61,7 +61,7 @@ namespace Rusty.ISA.Editor.Definitions
 
             // Add editor data.
             descriptor.EditorNodeInfo = EditorNodeInfo.Value;
-            descriptor.Preview = Preview.Value;
+            descriptor.Preview = Preview.Text;
 
             // Add pre-instructions.
             descriptor.PreInstructions.AddRange(PreInstructions.Get());
@@ -91,7 +91,7 @@ namespace Rusty.ISA.Editor.Definitions
 
             // Load editor data.
             EditorNodeInfo.Value = descriptor.EditorNodeInfo;
-            Preview.Value = descriptor.Preview;
+            Preview.Text = descriptor.Preview;
 
             // Load pre-instructions.
             PreInstructions.Set(descriptor.PreInstructions);
@@ -169,8 +169,8 @@ namespace Rusty.ISA.Editor.Definitions
 
             Preview = new();
             Border.AddChild(Preview);
-            Preview.LabelText = "Preview";
-            Preview.Height = 256;
+            Preview.CustomMinimumSize = new(0, 128);
+            Preview.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
 
             PreInstructions = new();

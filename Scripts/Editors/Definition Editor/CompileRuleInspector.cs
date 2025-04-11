@@ -23,7 +23,7 @@ namespace Rusty.ISA.Editor.Definitions
         public LineField Opcode { get; private set; }
         public CompileRuleBox ChildRules { get; private set; }
 
-        public MultilineField Preview { get; private set; }
+        public TextEdit Preview { get; private set; }
 
         public CompileRuleDescriptor Value
         {
@@ -33,19 +33,19 @@ namespace Rusty.ISA.Editor.Definitions
                 {
                     case XmlKeywords.InstructionRule:
                         return new InstructionRuleDescriptor(ID.Value, DisplayName.Value, Description.Value, Opcode.Value,
-                            Preview.Value);
+                            Preview.Text);
                     case XmlKeywords.OptionRule:
                         return new OptionRuleDescriptor(ID.Value, DisplayName.Value, Description.Value, ChildRules.GetFirst(),
-                            DefaultEnabled.Value, Preview.Value);
+                            DefaultEnabled.Value, Preview.Text);
                     case XmlKeywords.ChoiceRule:
                         return new ChoiceRuleDescriptor(ID.Value, DisplayName.Value, Description.Value, ChildRules.Get(),
-                            DefaultSelected.Value, Preview.Value);
+                            DefaultSelected.Value, Preview.Text);
                     case XmlKeywords.TupleRule:
                         return new TupleRuleDescriptor(ID.Value, DisplayName.Value, Description.Value, ChildRules.Get(),
-                            Preview.Value);
+                            Preview.Text);
                     case XmlKeywords.ListRule:
                         return new ListRuleDescriptor(ID.Value, DisplayName.Value, Description.Value, ChildRules.GetFirst(),
-                            AddButtonText.Value, Preview.Value);
+                            AddButtonText.Value, Preview.Text);
                     default:
                         throw new Exception(Type.Options[Type.Value]);
                 }
@@ -55,7 +55,7 @@ namespace Rusty.ISA.Editor.Definitions
                 ID.Value = value.ID;
                 DisplayName.Value = value.DisplayName;
                 Description.Value = value.Description;
-                Preview.Value = value.Preview;
+                Preview.Text = value.Preview;
                 if (value is InstructionRuleDescriptor instruction)
                 {
                     Type.Value = Types.IndexOf(XmlKeywords.InstructionRule);
@@ -110,23 +110,19 @@ namespace Rusty.ISA.Editor.Definitions
             AddChild(ID);
             ID.LabelText = "ID";
 
+            BorderContainer border = new();
+            AddChild(border);
+
             TabBar = new();
-            AddChild(TabBar);
+            border.AddToTop(TabBar);
             TabBar.AddTab("Contents");
             TabBar.AddTab("Metadata");
             TabBar.AddTab("Preview");
-
-
-            HBoxContainer contents = new();
-            AddChild(contents);
-            contents.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-
-            VSeparator separator = new();
-            contents.AddChild(separator);
+            TabBar.ClipTabs = false;
 
 
             Children = new();
-            contents.AddChild(Children);
+            border.AddChild(Children);
             Children.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             Opcode = new();
@@ -138,7 +134,7 @@ namespace Rusty.ISA.Editor.Definitions
 
 
             Metadata = new();
-            contents.AddChild(Metadata);
+            border.AddChild(Metadata);
             Metadata.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             DisplayName = new();
@@ -164,9 +160,8 @@ namespace Rusty.ISA.Editor.Definitions
 
 
             Preview = new();
-            contents.AddChild(Preview);
-            Preview.LabelText = "Preview";
-            Preview.Height = 256;
+            border.AddChild(Preview);
+            Preview.CustomMinimumSize = new(0, 128);
         }
 
         /* Godot overrides. */
@@ -183,6 +178,7 @@ namespace Rusty.ISA.Editor.Definitions
             AddButtonText.Visible = type == XmlKeywords.ListRule;
             ChildRules.Visible = type != XmlKeywords.InstructionRule;
             ChildRules.MonoType = type == XmlKeywords.OptionRule || type == XmlKeywords.ListRule;
+            ChildRules.MayNotBeEmpty = Type.Value != 0;
         }
     }
 }

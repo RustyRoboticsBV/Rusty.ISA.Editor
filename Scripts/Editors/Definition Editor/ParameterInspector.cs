@@ -229,7 +229,7 @@ namespace Rusty.ISA.Editor.Definitions
 
             Preview = new();
             contents.AddChild(Preview);
-            Preview.CustomMinimumSize = new(0, 256);
+            Preview.CustomMinimumSize = new(0, 128);
             Preview.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         }
 

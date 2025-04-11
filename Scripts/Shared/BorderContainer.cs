@@ -12,6 +12,8 @@ namespace Rusty.ISA.Editor.Definitions
 
         /* Public properties. */
         public bool HideBorderIfEmpty { get; set; } = true;
+        public bool ForceHideBorder { get; set; }
+        public bool Foldable { get; set; }
 
         /* Private properties. */
         private Control Border { get; set; }
@@ -22,12 +24,20 @@ namespace Rusty.ISA.Editor.Definitions
         private VSeparator Right { get; set; }
         private HBoxContainer TopContainer { get; set; }
         private HSeparator TopLeft { get; set; }
-        private MarginContainer TopContents { get; set; }
+        private MarginContainer TopContentsMargin { get; set; }
+        private HBoxContainer TopContents { get; set; }
         private HSeparator TopRight { get; set; }
         private HBoxContainer BottomContainer { get; set; }
         private HSeparator BottomLeft { get; set; }
-        private MarginContainer BottomContents { get; set; }
+        private MarginContainer BottomContentsMargin { get; set; }
+        private HBoxContainer BottomContents { get; set; }
         private HSeparator BottomRight { get; set; }
+
+        private MarginContainer Contents { get; set; }
+
+        private Label Foldout { get; set; }
+        private bool IsOpen { get; set; } = true;
+        private bool Highlighted { get; set; }
 
         /* Constructors. */
         public BorderContainer()
@@ -42,7 +52,7 @@ namespace Rusty.ISA.Editor.Definitions
 
             // Create border.
             Border = new();
-            AddChild(Border, false, InternalMode.Front);
+            base.AddChild(Border, false, InternalMode.Front);
             Border.Name = "Border";
             Border.MouseFilter = MouseFilterEnum.Ignore;
 
@@ -85,10 +95,16 @@ namespace Rusty.ISA.Editor.Definitions
             TopLeft.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             TopLeft.MouseFilter = MouseFilterEnum.Ignore;
 
+            TopContentsMargin = new();
+            TopContainer.AddChild(TopContentsMargin);
+            TopContentsMargin.AddThemeConstantOverride("margin_left", 4);
+            TopContentsMargin.AddThemeConstantOverride("margin_right", 4);
+            TopContentsMargin.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+            TopContentsMargin.SizeFlagsVertical = SizeFlags.ShrinkCenter;
+            TopContentsMargin.MouseFilter = MouseFilterEnum.Ignore;
+
             TopContents = new();
-            TopContainer.AddChild(TopContents);
-            TopContents.AddThemeConstantOverride("margin_left", 4);
-            TopContents.AddThemeConstantOverride("margin_right", 4);
+            TopContentsMargin.AddChild(TopContents);
             TopContents.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
             TopContents.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             TopContents.MouseFilter = MouseFilterEnum.Ignore;
@@ -112,10 +128,16 @@ namespace Rusty.ISA.Editor.Definitions
             BottomLeft.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             BottomLeft.MouseFilter = MouseFilterEnum.Ignore;
 
+            BottomContentsMargin = new();
+            BottomContainer.AddChild(BottomContentsMargin);
+            BottomContentsMargin.AddThemeConstantOverride("margin_left", 4);
+            BottomContentsMargin.AddThemeConstantOverride("margin_right", 4);
+            BottomContentsMargin.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+            BottomContentsMargin.SizeFlagsVertical = SizeFlags.ShrinkCenter;
+            BottomContentsMargin.MouseFilter = MouseFilterEnum.Ignore;
+
             BottomContents = new();
-            BottomContainer.AddChild(BottomContents);
-            BottomContents.AddThemeConstantOverride("margin_left", 4);
-            BottomContents.AddThemeConstantOverride("margin_right", 4);
+            BottomContentsMargin.AddChild(BottomContents);
             BottomContents.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
             BottomContents.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             BottomContents.MouseFilter = MouseFilterEnum.Ignore;
@@ -125,9 +147,29 @@ namespace Rusty.ISA.Editor.Definitions
             BottomRight.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             BottomRight.SizeFlagsVertical = SizeFlags.ShrinkCenter;
             BottomRight.MouseFilter = MouseFilterEnum.Ignore;
+
+            // Contents.
+            Contents = new();
+            base.AddChild(Contents);
+            Contents.Name = "Contents";
+
+            // Foldout.
+            Foldout = new();
+            TopContents.AddChild(Foldout);
+            Foldout.Hide();
         }
 
         /* Public methods. */
+        public new void AddChild(Node node, bool forceReadableName = false, InternalMode @internal = InternalMode.Disabled)
+        {
+            Contents.AddChild(node, forceReadableName, @internal);
+        }
+
+        public new void RemoveChild(Node node)
+        {
+            Contents.RemoveChild(node);
+        }
+
         public void SetBackgroundColor(Color color)
         {
             BackgroundRect.Color = color;
@@ -151,6 +193,8 @@ namespace Rusty.ISA.Editor.Definitions
             BackgroundRect.Size = Border.Size;
 
             int visibleChildCount = GetVisibleChildCount(this);
+            int topChildCount = GetVisibleChildCount(TopContents);
+            int bottomChildCount = GetVisibleChildCount(BottomContents);
 
             if (HideBorderIfEmpty)
             {
@@ -163,17 +207,27 @@ namespace Rusty.ISA.Editor.Definitions
                 BottomRight.Visible = visibleChildCount > 0;
             }
 
+            Border.Visible = !ForceHideBorder;
+
             float topContentsSize = GetContentsSize(TopContainer);
             int topMargin = (int)topContentsSize + MarginSize;
             int topBorderMargin = (int)(topContentsSize / 2) + MarginSize;
-            if (visibleChildCount == 0)
+            if (topChildCount == 0)
                 topBorderMargin = topMargin;
 
             float bottomContentsSize = GetContentsSize(BottomContainer);
             int bottomMargin = (int)bottomContentsSize + MarginSize;
             int bottomBorderMargin = (int)(bottomContentsSize / 2) + MarginSize;
-            if (visibleChildCount == 0)
+            if (bottomChildCount == 0)
                 bottomBorderMargin = bottomMargin;
+
+            if (ForceHideBorder)
+            {
+                topMargin = 0;
+                topBorderMargin = 0;
+                bottomMargin = 0;
+                bottomBorderMargin = 0;
+            }
 
             AddThemeConstantOverride("margin_top", topMargin);
             AddThemeConstantOverride("margin_bottom", bottomMargin);
@@ -192,13 +246,44 @@ namespace Rusty.ISA.Editor.Definitions
             TopContainer.SetAnchorAndOffset(Side.Right, 1, -1 + MarginSize);
             TopContainer.SetAnchorAndOffset(Side.Top, 0, 4 - Border.Size.Y / 2 - topBorderMargin);
             TopContainer.SetAnchorAndOffset(Side.Bottom, 0, 4 + Border.Size.Y / 2 - topBorderMargin);
-            TopContents.Visible = TopContents.GetChildCount() > 0;
+            TopContentsMargin.Visible = topChildCount > 0;
 
             BottomContainer.SetAnchorAndOffset(Side.Left, 0, 1 - MarginSize);
             BottomContainer.SetAnchorAndOffset(Side.Right, 1, -1 + MarginSize);
             BottomContainer.SetAnchorAndOffset(Side.Top, 1, 0 - Border.Size.Y / 2 + bottomBorderMargin);
             BottomContainer.SetAnchorAndOffset(Side.Bottom, 1, -5 + Border.Size.Y / 2 + bottomBorderMargin);
-            BottomContents.Visible = BottomContents.GetChildCount() > 0;
+            BottomContentsMargin.Visible = bottomChildCount > 0;
+
+            // Alter foldout.
+            Foldout.Visible = Foldable;
+            Foldout.Text = IsOpen ? "\u25B6" : "\u25BC";
+            Foldout.Modulate = Highlighted ? Colors.Gray : Colors.White;
+
+            if (!Foldable)
+                IsOpen = true;
+
+            if (TopContents.GetChild(TopContents.GetChildCount() - 1) != Foldout)
+            {
+                TopContents.RemoveChild(Foldout);
+                TopContents.AddChild(Foldout);
+            }
+
+            Contents.Visible = IsOpen;
+        }
+
+        public override void _GuiInput(InputEvent @event)
+        {
+            if (@event is InputEventMouseMotion mouseMotion)
+                Highlighted = Foldout.GetGlobalRect().HasPoint(mouseMotion.GlobalPosition);
+
+            else if (@event is InputEventMouseButton mouseButton && mouseButton.ButtonIndex == MouseButton.Left)
+            {
+                if (mouseButton.Pressed && Highlighted)
+                {
+                    IsOpen = !IsOpen;
+                    GrabFocus();
+                }
+            }
         }
 
         /* Private methods. */
