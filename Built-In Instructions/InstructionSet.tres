@@ -1,39 +1,32 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=95 format=3 uid="uid://dnt3g5dpjm0pd"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=70 format=3 uid="uid://dnt3g5dpjm0pd"]
 
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_gmmgc"]
+[ext_resource type="Script" uid="uid://cecyq1lx2acho" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="1_1x08l"]
+[ext_resource type="Script" uid="uid://btht0mxxam3r7" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="1_gmmgc"]
 [ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconISA.bmp" id="1_r4o3q"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
+[ext_resource type="Script" uid="uid://nj3anaafielp" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_uguea"]
 [ext_resource type="Texture2D" uid="uid://bdrkrwn8lh415" path="res://Built-In Instructions/IconCMT.bmp" id="2_unaab"]
 [ext_resource type="Texture2D" uid="uid://cg1l63y6ngo4a" path="res://Built-In Instructions/IconPRE.bmp" id="4_wahcg"]
 [ext_resource type="Texture2D" uid="uid://dfl3rdmo5gdiy" path="res://Built-In Instructions/IconFRM.bmp" id="5_sqci0"]
 [ext_resource type="Texture2D" uid="uid://chwtisxfc6sgf" path="res://Built-In Instructions/IconPST.bmp" id="5_yqtwi"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="8_1way0"]
+[ext_resource type="Script" uid="uid://b55qdbpegdq00" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="8_1way0"]
 [ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="9_dl4up"]
 [ext_resource type="Texture2D" uid="uid://b3v1nu6sd00l" path="res://Built-In Instructions/IconMBR.bmp" id="9_nx7m3"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="11_gxiqw"]
 [ext_resource type="Texture2D" uid="uid://nyag7iauyi0f" path="res://Built-In Instructions/IconINS.bmp" id="11_vnhvg"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/TextlineParameter.cs" id="12_rklps"]
+[ext_resource type="Script" uid="uid://dtxuwjx75byap" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="12_q4rbi"]
+[ext_resource type="Script" uid="uid://d02yl7f7rgu3u" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/TextlineParameter.cs" id="12_rklps"]
 [ext_resource type="Texture2D" uid="uid://d06v0b1l2xkth" path="res://Built-In Instructions/IconOPT.bmp" id="12_y4agh"]
 [ext_resource type="Texture2D" uid="uid://bn1xqf4r0frab" path="res://Built-In Instructions/IconDEF.bmp" id="13_y5iqg"]
 [ext_resource type="Texture2D" uid="uid://csuae1j5ge1uj" path="res://Built-In Instructions/IconCHO.bmp" id="14_42hs7"]
-[ext_resource type="Texture2D" uid="uid://c6nj8ormy6u2x" path="res://Submodules/ISA/Built-In Instructions/IconLAB.bmp" id="14_siv20"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/OutputParameter.cs" id="15_3ecvh"]
 [ext_resource type="Texture2D" uid="uid://bxhyuh5kvcdht" path="res://Built-In Instructions/IconPAR.bmp" id="15_5h8mm"]
 [ext_resource type="Texture2D" uid="uid://hebpbqr6ffha" path="res://Built-In Instructions/IconTPL.bmp" id="15_r7qq2"]
 [ext_resource type="Texture2D" uid="uid://bnxu4r33ccaum" path="res://Built-In Instructions/IconRUL.bmp" id="16_0cdng"]
 [ext_resource type="Texture2D" uid="uid://cw6aeeeuk5i85" path="res://Built-In Instructions/IconLST.bmp" id="16_6vvij"]
-[ext_resource type="Script" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="16_nc316"]
+[ext_resource type="Script" uid="uid://beorwwi6t13op" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="16_nc316"]
 [ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOG.bmp" id="17_eto4q"]
 [ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="17_txonn"]
 [ext_resource type="Texture2D" uid="uid://b5e8fbehuo4u6" path="res://Built-In Instructions/IconGTN.bmp" id="23_k4b7e"]
 [ext_resource type="Texture2D" uid="uid://u8wdpdq0vkps" path="res://Built-In Instructions/IconENN.bmp" id="24_rni85"]
-[ext_resource type="Texture2D" uid="uid://cqr70pp8lhjxg" path="res://Submodules/ISA/Built-In Instructions/IconBEG.bmp" id="24_xkbbv"]
-[ext_resource type="Texture2D" uid="uid://d2p6fihx03ulm" path="res://Submodules/ISA/Built-In Instructions/IconEND.bmp" id="26_xah47"]
-[ext_resource type="Texture2D" uid="uid://dbw2hjlfspdf" path="res://Submodules/ISA/Built-In Instructions/IconGTO.bmp" id="28_ywca6"]
-[ext_resource type="Texture2D" uid="uid://bmrw4vxts8i3o" path="res://Submodules/ISA/Built-In Instructions/IconWRN.bmp" id="30_6ix1t"]
-[ext_resource type="Texture2D" uid="uid://bhfjn5nohucmy" path="res://Submodules/ISA/Built-In Instructions/IconERR.bmp" id="31_g7on2"]
+[ext_resource type="Resource" uid="uid://brpnbl7l2o4ha" path="res://Submodules/ISA/Built-In Instructions/CoreInstructions.tres" id="26_4o8d3"]
 
 [sub_resource type="Resource" id="Resource_cimir"]
 resource_name = "ISA"
@@ -461,7 +454,7 @@ Opcode = "GTN"
 Parameters = []
 Icon = ExtResource("23_k4b7e")
 DisplayName = "Goto Group"
-Description = "Starts a goto instruction group. These are used to group goto instructions with a label instruction."
+Description = "Starts a goto instruction group. These are used to group goto instructions with a label instruction. The group should be closed with an EOG instruction."
 Category = "Editor"
 Preview = ""
 PreInstructions = []
@@ -474,7 +467,7 @@ Opcode = "ENN"
 Parameters = []
 Icon = ExtResource("24_rni85")
 DisplayName = "End Group"
-Description = "Starts an end instruction group. These are used to group end instructions with a label instruction."
+Description = "Starts an end instruction group. These are used to group end instructions with a label instruction. The group should be closed with an EOG instruction."
 Category = "Editor"
 Preview = ""
 PreInstructions = []
@@ -493,184 +486,7 @@ Preview = ""
 PreInstructions = []
 PostInstructions = []
 
-[sub_resource type="Resource" id="Resource_2wpiq"]
-script = ExtResource("11_gxiqw")
-Dependencies = []
-Members = ""
-Initialize = ""
-Execute = ""
-
-[sub_resource type="Resource" id="Resource_03qba"]
-resource_name = "name (text)"
-script = ExtResource("12_rklps")
-ID = "name"
-DisplayName = "Name"
-Description = "The name of this start point."
-DefaultValue = ""
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_3fopi"]
-resource_name = "BEG"
-script = ExtResource("2_uguea")
-Opcode = "BEG"
-Parameters = [SubResource("Resource_03qba")]
-Implementation = SubResource("Resource_2wpiq")
-Icon = ExtResource("24_xkbbv")
-DisplayName = "Begin"
-Description = "Defines a start point in a program. Cutscene players can start playing the program from these points."
-Category = "Core"
-Preview = ""
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_udtmp"]
-script = ExtResource("11_gxiqw")
-Dependencies = []
-Members = ""
-Initialize = ""
-Execute = "end();"
-
-[sub_resource type="Resource" id="Resource_usn25"]
-resource_name = "END"
-script = ExtResource("2_uguea")
-Opcode = "END"
-Parameters = []
-Implementation = SubResource("Resource_udtmp")
-Icon = ExtResource("26_xah47")
-DisplayName = "End"
-Description = ""
-Category = "Core"
-Preview = ""
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_08hnh"]
-script = ExtResource("11_gxiqw")
-Dependencies = []
-Members = ""
-Initialize = ""
-Execute = ""
-
-[sub_resource type="Resource" id="Resource_1e2l0"]
-resource_name = "name (line)"
-script = ExtResource("12_rklps")
-ID = "name"
-DisplayName = "Name"
-Description = "The name of this label."
-DefaultValue = ""
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_pm5es"]
-resource_name = "LAB"
-script = ExtResource("2_uguea")
-Opcode = "LAB"
-Parameters = [SubResource("Resource_1e2l0")]
-Implementation = SubResource("Resource_08hnh")
-Icon = ExtResource("14_siv20")
-DisplayName = "Label"
-Description = "Defines a point that can be jumped to by the goto function."
-Category = "Core"
-Preview = ""
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_yhvsr"]
-script = ExtResource("11_gxiqw")
-Dependencies = []
-Members = ""
-Initialize = ""
-Execute = "goto(%target_label%);"
-
-[sub_resource type="Resource" id="Resource_tgvxa"]
-resource_name = "target_label (output)"
-script = ExtResource("15_3ecvh")
-ID = "target_label"
-DisplayName = "Target Label"
-Description = "The name of the label that must be jumped to."
-RemoveDefaultOutput = true
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_6bfpp"]
-resource_name = "GTO"
-script = ExtResource("2_uguea")
-Opcode = "GTO"
-Parameters = [SubResource("Resource_tgvxa")]
-Implementation = SubResource("Resource_yhvsr")
-Icon = ExtResource("28_ywca6")
-DisplayName = "Goto"
-Description = "Jumps the program counter to a label instruction with some name."
-Category = "Core"
-Preview = ""
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_08wba"]
-script = ExtResource("11_gxiqw")
-Dependencies = []
-Members = ""
-Initialize = ""
-Execute = "warning(%message%);"
-
-[sub_resource type="Resource" id="Resource_b3lgy"]
-resource_name = "message (multiline)"
-script = ExtResource("16_nc316")
-ID = "message"
-DisplayName = "Message"
-Description = "The message of this warning."
-DefaultValue = "unknown warning"
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_b4qbb"]
-resource_name = "WRN"
-script = ExtResource("2_uguea")
-Opcode = "WRN"
-Parameters = [SubResource("Resource_b3lgy")]
-Implementation = SubResource("Resource_08wba")
-Icon = ExtResource("30_6ix1t")
-DisplayName = "Warning"
-Description = "Prints an warning message and stops cutscene execution."
-Category = "Core"
-Preview = ""
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_0mw74"]
-script = ExtResource("11_gxiqw")
-Dependencies = []
-Members = ""
-Initialize = ""
-Execute = "error(%message%);"
-
-[sub_resource type="Resource" id="Resource_x8fca"]
-resource_name = "message (multiline)"
-script = ExtResource("16_nc316")
-ID = "message"
-DisplayName = "Message"
-Description = "The message of this error."
-DefaultValue = "unknown error"
-Preview = ""
-
-[sub_resource type="Resource" id="Resource_es1ni"]
-resource_name = "ERR"
-script = ExtResource("2_uguea")
-Opcode = "ERR"
-Parameters = [SubResource("Resource_x8fca")]
-Implementation = SubResource("Resource_0mw74")
-Icon = ExtResource("31_g7on2")
-DisplayName = "Error"
-Description = "Prints an error message and stops cutscene execution."
-Category = "Core"
-Preview = ""
-PreInstructions = []
-PostInstructions = []
-
-[sub_resource type="Resource" id="Resource_eqo11"]
-resource_name = "Core (copy)"
-script = ExtResource("1_1x08l")
-Local = [SubResource("Resource_3fopi"), SubResource("Resource_usn25"), SubResource("Resource_pm5es"), SubResource("Resource_6bfpp"), SubResource("Resource_b4qbb"), SubResource("Resource_es1ni")]
-Modules = []
-
 [resource]
 script = ExtResource("1_1x08l")
 Local = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_a4bdl"), SubResource("Resource_leu7q"), SubResource("Resource_itw8j")]
-Modules = [SubResource("Resource_eqo11")]
+Modules = [ExtResource("26_4o8d3")]
