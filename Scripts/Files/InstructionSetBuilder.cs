@@ -10,6 +10,7 @@ namespace Rusty.ISA.Editor;
 /// </summary>
 public static class InstructionSetBuilder
 {
+    /* Public methods. */
     /// <summary>
     /// Build an instruction set, from a built-in instruction set and a folder containing all the user-defined instruction
     /// definitions.
@@ -17,6 +18,7 @@ public static class InstructionSetBuilder
     public static InstructionSet Build(InstructionSet builtIn, string folderPath)
     {
         List<InstructionDefinition> definitions = new();
+        List<InstructionSet> modules = new();
 
         // Get absolute path to folder.
         string absolutePath = PathUtility.GetPath(folderPath);
@@ -33,22 +35,24 @@ public static class InstructionSetBuilder
         {
             for (int i = 0; i < builtIn.Count; i++)
             {
-                definitions.Add(builtIn[i].DuplicateDeep() as InstructionDefinition);
+                InstructionDefinition definition = builtIn[i].DuplicateDeep() as InstructionDefinition;
+                definitions.Add(definition);
             }
         }
 
         // Recursively load folder contents.
-        HandleDirectory(definitions, absolutePath, absolutePath);
+        HandleDirectory(definitions, modules, absolutePath, absolutePath);
 
         // Create instruction set and return it.
-        return new InstructionSet(definitions.ToArray());
+        return new InstructionSet(definitions.ToArray(), modules.ToArray());
     }
 
     /* Private methods */
     /// <summary>
     /// Take all XML files in a directory hierarchy and try to load them as instruction definitions.
     /// </summary>
-    private static void HandleDirectory(List<InstructionDefinition> definitions, string folderPath, string rootFolderPath)
+    private static void HandleDirectory(List<InstructionDefinition> definitions, List<InstructionSet> modules,
+        string folderPath, string rootFolderPath)
     {
         // Handle files.
         string[] files = Directory.GetFiles(folderPath);
@@ -68,7 +72,8 @@ public static class InstructionSetBuilder
             // Case 2: Module file.
             else if (files[i].EndsWith(".zip"))
             {
-                // TODO: implement
+                InstructionSet module = SetDeserializer.Deserialize(files[i]);
+                modules.Add(module);
             }
         }
 
@@ -76,7 +81,7 @@ public static class InstructionSetBuilder
         string[] subFolders = Directory.GetDirectories(folderPath);
         for (int i = 0; i < subFolders.Length; i++)
         {
-            HandleDirectory(definitions, subFolders[i], rootFolderPath);
+            HandleDirectory(definitions, modules, subFolders[i], rootFolderPath);
         }
     }
 }
