@@ -11,7 +11,6 @@ public partial class CutsceneEditor : MarginContainer
     [Export(PropertyHint.MultilineText)] string Description { get; set; } = "";
     [Export] string Author { get; set; } = "";
     [Export] string Version { get; set; } = "1.0.0";
-    [Export] Texture2D Icon { get; set; }
 
     /* Godot overrides. */
     public override void _Ready()
@@ -23,7 +22,14 @@ public partial class CutsceneEditor : MarginContainer
 
         GraphNode node = new();
         node.CustomMinimumSize = new Vector2(100, 100);
-        node.SetIcon(Icon);
         graphEdit.AddElement(node);
+
+        GraphComment comment = new();
+        comment.CustomMinimumSize = new Vector2(100, 100);
+        graphEdit.AddElement(comment);
+
+        GraphFrame frame = new();
+        frame.CustomMinimumSize = new Vector2(100, 100);
+        graphEdit.AddElement(frame);
     }
 }

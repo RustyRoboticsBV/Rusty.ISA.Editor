@@ -7,6 +7,8 @@ public partial class GraphEdit : Godot.GraphEdit
 {
     /* Private properties. */
     private List<GraphNode> Nodes { get; } = new();
+    private List<GraphComment> Comments { get; } = new();
+    private List<GraphFrame> Frames { get; } = new();
 
     /* Public methods. */
     public void AddElement(GraphElement element)
@@ -15,6 +17,12 @@ public partial class GraphEdit : Godot.GraphEdit
         {
             case GraphNode node:
                 Nodes.Add(node);
+                break;
+            case GraphComment comment:
+                Comments.Add(comment);
+                break;
+            case GraphFrame frame:
+                Frames.Add(frame);
                 break;
         }
 
