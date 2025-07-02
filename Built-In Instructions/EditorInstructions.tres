@@ -1,0 +1,495 @@
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=69 format=3 uid="uid://d308mnoeq7xa"]
+
+[ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconISA.bmp" id="1_xv6kh"]
+[ext_resource type="Script" uid="uid://nj3anaafielp" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_xvlxa"]
+[ext_resource type="Texture2D" uid="uid://bn1xqf4r0frab" path="res://Built-In Instructions/IconDEF.bmp" id="3_m1uhb"]
+[ext_resource type="Script" uid="uid://d02yl7f7rgu3u" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/TextlineParameter.cs" id="4_513eb"]
+[ext_resource type="Texture2D" uid="uid://bxhyuh5kvcdht" path="res://Built-In Instructions/IconPAR.bmp" id="5_owem4"]
+[ext_resource type="Texture2D" uid="uid://bnxu4r33ccaum" path="res://Built-In Instructions/IconRUL.bmp" id="6_n23mp"]
+[ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="7_rqbqj"]
+[ext_resource type="Script" uid="uid://btht0mxxam3r7" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="8_w7twv"]
+[ext_resource type="Texture2D" uid="uid://bdrkrwn8lh415" path="res://Built-In Instructions/IconCMT.bmp" id="9_2ke5f"]
+[ext_resource type="Script" uid="uid://dtxuwjx75byap" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="10_2detx"]
+[ext_resource type="Script" uid="uid://beorwwi6t13op" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="11_6o02d"]
+[ext_resource type="Texture2D" uid="uid://dfl3rdmo5gdiy" path="res://Built-In Instructions/IconFRM.bmp" id="12_ybfo7"]
+[ext_resource type="Script" uid="uid://b55qdbpegdq00" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="13_leabi"]
+[ext_resource type="Texture2D" uid="uid://b3v1nu6sd00l" path="res://Built-In Instructions/IconMBR.bmp" id="14_h8koe"]
+[ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="15_iw3te"]
+[ext_resource type="Texture2D" uid="uid://nyag7iauyi0f" path="res://Built-In Instructions/IconINS.bmp" id="16_yfual"]
+[ext_resource type="Texture2D" uid="uid://cg1l63y6ngo4a" path="res://Built-In Instructions/IconPRE.bmp" id="17_2qpao"]
+[ext_resource type="Texture2D" uid="uid://chwtisxfc6sgf" path="res://Built-In Instructions/IconPST.bmp" id="18_ctg55"]
+[ext_resource type="Texture2D" uid="uid://d06v0b1l2xkth" path="res://Built-In Instructions/IconOPT.bmp" id="19_0ip1a"]
+[ext_resource type="Texture2D" uid="uid://csuae1j5ge1uj" path="res://Built-In Instructions/IconCHO.bmp" id="20_6grd4"]
+[ext_resource type="Texture2D" uid="uid://hebpbqr6ffha" path="res://Built-In Instructions/IconTPL.bmp" id="21_vqniu"]
+[ext_resource type="Texture2D" uid="uid://cw6aeeeuk5i85" path="res://Built-In Instructions/IconLST.bmp" id="22_8lt0d"]
+[ext_resource type="Texture2D" uid="uid://b5e8fbehuo4u6" path="res://Built-In Instructions/IconGTN.bmp" id="23_3kmtj"]
+[ext_resource type="Texture2D" uid="uid://u8wdpdq0vkps" path="res://Built-In Instructions/IconENN.bmp" id="24_hs76w"]
+[ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOG.bmp" id="25_4egf8"]
+[ext_resource type="Script" uid="uid://cecyq1lx2acho" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="26_b6f58"]
+
+[sub_resource type="Resource" id="Resource_cimir"]
+resource_name = "ISA"
+script = ExtResource("2_xvlxa")
+Opcode = "ISA"
+Parameters = []
+Icon = ExtResource("1_xv6kh")
+DisplayName = "Instruction Set Metadata"
+Description = "Starts an instruction set metadata group. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_avnf8"]
+resource_name = "opcode (text)"
+script = ExtResource("4_513eb")
+ID = "opcode"
+DisplayName = "Opcode"
+Description = "The opcode of the instruction definition."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_wldw7"]
+resource_name = "DEF"
+script = ExtResource("2_xvlxa")
+Opcode = "DEF"
+Parameters = [SubResource("Resource_avnf8")]
+Icon = ExtResource("3_m1uhb")
+DisplayName = "Instruction Metadata"
+Description = "Starts a metadata group for an instruction definition. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_shaub"]
+resource_name = "type (text)"
+script = ExtResource("4_513eb")
+ID = "type"
+DisplayName = "Type"
+Description = "The type of the parameter."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_2jvhx"]
+resource_name = "id (text)"
+script = ExtResource("4_513eb")
+ID = "id"
+DisplayName = "ID"
+Description = "The identifier of the parameter."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_n3emi"]
+resource_name = "PAR"
+script = ExtResource("2_xvlxa")
+Opcode = "PAR"
+Parameters = [SubResource("Resource_shaub"), SubResource("Resource_2jvhx")]
+Icon = ExtResource("5_owem4")
+DisplayName = "Parameter Metadata"
+Description = "Represents metadata related to an instruction parameter."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_4i0kw"]
+resource_name = "type (text)"
+script = ExtResource("4_513eb")
+ID = "type"
+DisplayName = "Type"
+Description = "The type of the compile rule. Should be one of the following: option, choice, tuple, or list."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_bdv4d"]
+resource_name = "id (text)"
+script = ExtResource("4_513eb")
+ID = "id"
+DisplayName = "ID"
+Description = "The identifier of the compile rule."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_hr6rg"]
+resource_name = "RUL"
+script = ExtResource("2_xvlxa")
+Opcode = "RUL"
+Parameters = [SubResource("Resource_4i0kw"), SubResource("Resource_bdv4d")]
+Icon = ExtResource("6_n23mp")
+DisplayName = "Compile Rule Metadata"
+Description = "Starts a compile rule metadata group. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_svoja"]
+resource_name = "opcode (text)"
+script = ExtResource("4_513eb")
+ID = "opcode"
+DisplayName = "Opcode"
+Description = "The opcode of the referenced instruction."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_jdrw3"]
+resource_name = "id (text)"
+script = ExtResource("4_513eb")
+ID = "id"
+DisplayName = "ID"
+Description = "The identifier of the parameter."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_d6p30"]
+resource_name = "REF"
+script = ExtResource("2_xvlxa")
+Opcode = "REF"
+Parameters = [SubResource("Resource_svoja"), SubResource("Resource_jdrw3")]
+Icon = ExtResource("7_rqbqj")
+DisplayName = "Reference"
+Description = "Represents metadata related to an instruction rule."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_mff5v"]
+script = ExtResource("8_w7twv")
+Priority = -1
+MinWidth = 128
+MinHeight = 32
+MainColor = Color(0.1, 0.1, 0.1, 1)
+TextColor = Color(0.3, 0.75, 0.3, 1)
+Preview = ""
+EnableWordWrap = true
+
+[sub_resource type="Resource" id="Resource_imjdl"]
+resource_name = "x (int)"
+script = ExtResource("10_2detx")
+ID = "x"
+DisplayName = "X"
+Description = "The horizontal position of the comment."
+DefaultValue = 0
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_bhdtu"]
+resource_name = "y (int)"
+script = ExtResource("10_2detx")
+ID = "y"
+DisplayName = "Y"
+Description = "The vertical position of the comment."
+DefaultValue = 0
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_53br1"]
+resource_name = "text (multiline)"
+script = ExtResource("11_6o02d")
+ID = "text"
+DisplayName = "Text"
+Description = "The text of the comment."
+DefaultValue = "Comment text."
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_t3exr"]
+resource_name = "CMT"
+script = ExtResource("2_xvlxa")
+Opcode = "CMT"
+Parameters = [SubResource("Resource_imjdl"), SubResource("Resource_bhdtu"), SubResource("Resource_53br1")]
+Icon = ExtResource("9_2ke5f")
+DisplayName = "Comment"
+Description = "An editor comment."
+Category = "Editor"
+EditorNode = SubResource("Resource_mff5v")
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_latm4"]
+script = ExtResource("8_w7twv")
+Priority = -1
+MinWidth = 128
+MinHeight = 32
+MainColor = Color(1, 1, 1, 0.878431)
+TextColor = Color(1, 1, 1, 1)
+Preview = ""
+EnableWordWrap = true
+
+[sub_resource type="Resource" id="Resource_imkvv"]
+resource_name = "id (text)"
+script = ExtResource("4_513eb")
+ID = "id"
+DisplayName = "ID"
+Description = "The id of the frame."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_g4ly1"]
+resource_name = "x (int)"
+script = ExtResource("10_2detx")
+ID = "x"
+DisplayName = "X"
+Description = "The horizontal position of the frame."
+DefaultValue = 0
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_kkrrb"]
+resource_name = "y (int)"
+script = ExtResource("10_2detx")
+ID = "y"
+DisplayName = "Y"
+Description = "The vertical position of the frame."
+DefaultValue = 0
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_vx1sj"]
+resource_name = "width (int)"
+script = ExtResource("10_2detx")
+ID = "width"
+DisplayName = "Width"
+Description = "The width of the frame."
+DefaultValue = 0
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_ujlnt"]
+resource_name = "height (int)"
+script = ExtResource("10_2detx")
+ID = "height"
+DisplayName = "Hidth"
+Description = "The height of the frame."
+DefaultValue = 0
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_qhjbc"]
+resource_name = "title (text)"
+script = ExtResource("4_513eb")
+ID = "title"
+DisplayName = "Title"
+Description = "The title text of the frame."
+DefaultValue = "New Frame"
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_qimco"]
+resource_name = "color (Color)"
+script = ExtResource("13_leabi")
+ID = "color_tint"
+DisplayName = "Color Tint"
+Description = "The color of the frame."
+DefaultValue = Color(0.129412, 0.129412, 0.129412, 1)
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_7hiv8"]
+resource_name = "FRM"
+script = ExtResource("2_xvlxa")
+Opcode = "FRM"
+Parameters = [SubResource("Resource_imkvv"), SubResource("Resource_g4ly1"), SubResource("Resource_kkrrb"), SubResource("Resource_vx1sj"), SubResource("Resource_ujlnt"), SubResource("Resource_qhjbc"), SubResource("Resource_qimco")]
+Icon = ExtResource("12_ybfo7")
+DisplayName = "Frame"
+Description = "Starts a frame group. The group may contain a single MBR instruction (to allow for nested frames), and should be closed with an EOG instruction."
+Category = "Editor"
+EditorNode = SubResource("Resource_latm4")
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_em22h"]
+resource_name = "frame_id (text)"
+script = ExtResource("4_513eb")
+ID = "frame_id"
+DisplayName = "Frame ID"
+Description = "The id of the frame that this node is contained in."
+DefaultValue = ""
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_cn6to"]
+resource_name = "MBR"
+script = ExtResource("2_xvlxa")
+Opcode = "MBR"
+Parameters = [SubResource("Resource_em22h")]
+Icon = ExtResource("14_h8koe")
+DisplayName = "Frame Member"
+Description = "Designates a NOD, CMT or FRM group as being a member of an editor frame with some ID."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_g65gn"]
+resource_name = "x (int)"
+script = ExtResource("10_2detx")
+ID = "x"
+DisplayName = "X"
+Description = "The x-position of the editor node."
+DefaultValue = 0
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_1ekkv"]
+resource_name = "y (int)"
+script = ExtResource("10_2detx")
+ID = "y"
+DisplayName = "Y"
+Description = "The y-position of the editor node."
+DefaultValue = 0
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_btai4"]
+resource_name = "NOD"
+script = ExtResource("2_xvlxa")
+Opcode = "NOD"
+Parameters = [SubResource("Resource_g65gn"), SubResource("Resource_1ekkv")]
+Icon = ExtResource("15_iw3te")
+DisplayName = "Editor Node"
+Description = "Starts an editor node. It should contain an inspector instruction, and optionally a label and/or begin instruction. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_qej85"]
+resource_name = "INS"
+script = ExtResource("2_xvlxa")
+Opcode = "INS"
+Parameters = []
+Icon = ExtResource("16_yfual")
+DisplayName = "Inspector"
+Description = "Starts an inspector group. This group contains an instruction and optionally its associated pre-instructions and post-instruction groups. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_adnbf"]
+resource_name = "PRE"
+script = ExtResource("2_xvlxa")
+Opcode = "PRE"
+Parameters = []
+Icon = ExtResource("17_2qpao")
+DisplayName = "Instruction Inspector"
+Description = "A compiler marker that starts a pre-instruction group. The group should be closed with an EOG instruction. All instruction between the two markers are interpreted as pre-instructions of the instruction that comes after the EOG."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_13ejn"]
+resource_name = "PST"
+script = ExtResource("2_xvlxa")
+Opcode = "PST"
+Parameters = []
+Icon = ExtResource("18_ctg55")
+DisplayName = "Post-Instructions"
+Description = "A compiler marker that starts a post-instruction group. The group should be closed with an EOB instruction. All instruction between the two markers are interpreted as post-instructions of the instruction that comes before this one."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_hn7y1"]
+resource_name = "OPT"
+script = ExtResource("2_xvlxa")
+Opcode = "OPT"
+Parameters = []
+Icon = ExtResource("19_0ip1a")
+DisplayName = "Option Rule"
+Description = "A compiler marker that starts an group collection. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_yjpwf"]
+resource_name = "Int: selected"
+script = ExtResource("10_2detx")
+ID = "selected"
+DisplayName = "Selected"
+Description = "The selected choice."
+DefaultValue = 0
+Preview = ""
+
+[sub_resource type="Resource" id="Resource_k3g4f"]
+resource_name = "CHO"
+script = ExtResource("2_xvlxa")
+Opcode = "CHO"
+Parameters = [SubResource("Resource_yjpwf")]
+Icon = ExtResource("20_6grd4")
+DisplayName = "Choice Rule"
+Description = "A compiler marker that starts a choice group. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_lgia3"]
+resource_name = "TPL"
+script = ExtResource("2_xvlxa")
+Opcode = "TPL"
+Parameters = []
+Icon = ExtResource("21_vqniu")
+DisplayName = "Tuple Rule"
+Description = "A compiler marker that starts a tuple rule group. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_ascot"]
+resource_name = "LST"
+script = ExtResource("2_xvlxa")
+Opcode = "LST"
+Parameters = []
+Icon = ExtResource("22_8lt0d")
+DisplayName = "List Rule"
+Description = "A compiler marker that starts a list group. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_a4bdl"]
+resource_name = "GTN"
+script = ExtResource("2_xvlxa")
+Opcode = "GTN"
+Parameters = []
+Icon = ExtResource("23_3kmtj")
+DisplayName = "Goto Group"
+Description = "Starts a goto instruction group. These are used to group goto instructions with a label instruction. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_leu7q"]
+resource_name = "ENN"
+script = ExtResource("2_xvlxa")
+Opcode = "ENN"
+Parameters = []
+Icon = ExtResource("24_hs76w")
+DisplayName = "End Group"
+Description = "Starts an end instruction group. These are used to group end instructions with a label instruction. The group should be closed with an EOG instruction."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_itw8j"]
+resource_name = "EOG"
+script = ExtResource("2_xvlxa")
+Opcode = "EOG"
+Parameters = []
+Icon = ExtResource("25_4egf8")
+DisplayName = "End of Block"
+Description = "A compiler marker that denotes the end of a group of instructions."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+
+[resource]
+script = ExtResource("26_b6f58")
+Name = "Editor"
+Description = "The instructions that are needed for the editor to function. Most are compiler flags that preserve program editability."
+Author = "Rusty Robotics B.V."
+Version = "1.0.0"
+Local = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_a4bdl"), SubResource("Resource_leu7q"), SubResource("Resource_itw8j")]
+Modules = []

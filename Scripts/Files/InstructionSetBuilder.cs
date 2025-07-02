@@ -15,7 +15,8 @@ public static class InstructionSetBuilder
     /// Build an instruction set, from a built-in instruction set and a folder containing all the user-defined instruction
     /// definitions.
     /// </summary>
-    public static InstructionSet Build(InstructionSet builtIn, string folderPath)
+    public static InstructionSet Build(string name, string description, string author, string version,
+        InstructionSet builtIn, string folderPath)
     {
         List<InstructionDefinition> definitions = new();
         List<InstructionSet> modules = new();
@@ -32,19 +33,13 @@ public static class InstructionSetBuilder
 
         // Copy over built-in instructions.
         if (builtIn != null)
-        {
-            for (int i = 0; i < builtIn.Count; i++)
-            {
-                InstructionDefinition definition = builtIn[i].DuplicateDeep() as InstructionDefinition;
-                definitions.Add(definition);
-            }
-        }
+            modules.Add(builtIn.DuplicateDeep() as InstructionSet);
 
         // Recursively load folder contents.
         HandleDirectory(definitions, modules, absolutePath, absolutePath);
 
         // Create instruction set and return it.
-        return new InstructionSet(definitions.ToArray(), modules.ToArray());
+        return new InstructionSet(name, description, author, version, definitions.ToArray(), modules.ToArray());
     }
 
     /* Private methods */
