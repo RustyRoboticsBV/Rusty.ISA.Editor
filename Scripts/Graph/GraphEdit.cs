@@ -5,6 +5,8 @@ namespace Rusty.ISA.Editor;
 
 public partial class GraphEdit : Godot.GraphEdit
 {
+    /* Public methods. */
+
     /* Private properties. */
     private List<GraphNode> Nodes { get; } = new();
     private List<GraphComment> Comments { get; } = new();
@@ -19,6 +21,7 @@ public partial class GraphEdit : Godot.GraphEdit
                 Nodes.Add(node);
                 break;
             case GraphComment comment:
+                comment.CustomMinimumSize = new(SnappingDistance * 4 - 10, SnappingDistance * 2 - 10);
                 Comments.Add(comment);
                 break;
             case GraphFrame frame:

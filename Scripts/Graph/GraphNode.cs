@@ -1,12 +1,34 @@
 ﻿using Godot;
+using System;
+using System.Xml.Linq;
 
 namespace Rusty.ISA.Editor;
 
-public partial class GraphNode : Godot.GraphNode
+public partial class GraphNode : Godot.GraphNode, IGraphElement
 {
+    /* Public properties. */
+    public GraphEdit GraphEdit
+    {
+        get
+        {
+            Node parent = GetParent();
+            if (parent is GraphEdit graphEdit)
+                return graphEdit;
+            else
+                return null;
+        }
+    }
+    public GraphFrame Frame { get; set; }
+
     /* Private properties. */
     private Label TitleLabel { get; set; }
     private TextureRect TitleIcon { get; set; }
+
+    /* Public events. */
+    public new event Action<IGraphElement> NodeSelected;
+    public new event Action<IGraphElement> NodeDeselected;
+    public new event Action<IGraphElement> Dragged;
+    public new event Action<IGraphElement> DeleteRequest;
 
     /* Constructors. */
     public GraphNode()
@@ -27,6 +49,16 @@ public partial class GraphNode : Godot.GraphNode
     }
 
     /* Public methods. */
+    public bool IsNestedIn(GraphFrame frame)
+    {
+        return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
+    }
+
+    public void RequestDelete()
+    {
+        DeleteRequest?.Invoke(this);
+    }
+
     public void SetTitleColor(Color color)
     {
         AddThemeStyleboxOverride("titlebar", new StyleBoxFlat() { BgColor = color });

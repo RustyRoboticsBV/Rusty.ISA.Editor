@@ -25,7 +25,6 @@ public partial class CutsceneEditor : MarginContainer
         graphEdit.AddElement(node);
 
         GraphComment comment = new();
-        comment.CustomMinimumSize = new Vector2(100, 100);
         graphEdit.AddElement(comment);
 
         GraphFrame frame = new();
