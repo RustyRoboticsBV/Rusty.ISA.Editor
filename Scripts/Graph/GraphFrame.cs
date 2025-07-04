@@ -1,6 +1,7 @@
 ﻿using Godot;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Rusty.ISA.Editor;
 
@@ -36,14 +37,15 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     {
         AutoshrinkEnabled = false;
         TintColorEnabled = true;
-        CustomMinimumSize = Vector2.One;
         Size = Vector2.One * 64f;
 
-        NodeSelected += OnNodeSelected;
-        NodeDeselected += OnNodeDeselected;
+        base.NodeSelected += OnNodeSelected;
+        base.NodeDeselected += OnNodeDeselected;
         base.Dragged += OnDragged;
+        base.DeleteRequest += OnDeleteRequest;
 
-        UpdateArguments();
+        Title = "New Frame";
+        TintColor = new(0.123f, 0.123f, 0.123f);
     }
 
     /* Public methods. */
@@ -105,8 +107,9 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     /* Godot overrides. */
     public override void _Process(double delta)
     {
-        // Copy title label from the inspector's value.
-        UpdateArguments();
+        // Update alpha.
+        float alpha = Selected ? 1f : 0.5f;
+        TintColor = new(TintColor.R, TintColor.G, TintColor.B, alpha);
 
         // If we move the frame, also move members with it.
         if (LastOffset != PositionOffset)
@@ -117,6 +120,14 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
             }
             LastOffset = PositionOffset;
         }
+
+        // Update drag margin.
+        // We use the smallest of the size axes' divided by two, because otherwise Godot will spam the 
+        // console with internal error logs if the drag margin exceeds the half-size on one of the two
+        // axes.
+        // TODO: Refactor if this ever gets fixed, because this means that our drag area won't encompass
+        // the entire frame if it's not perfectly square.
+        DragMargin = Mathf.FloorToInt(Mathf.Min(Size.X, Size.Y) / 2f);
     }
 
     /* Private methods. */
@@ -173,22 +184,13 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
             Frame.UpdateSizePosition();
     }
 
-    private void UpdateArguments()
-    {
-        Title = "Title Text";
 
-        Color color = new Color(0.5f, 0.5f, 1f);
-        color.A *= Selected ? 1f : 0.5f;
-        TintColor = color;
-    }
-
-
-    private void OnNodeSelected(IGraphElement element)
+    private void OnNodeSelected()
     {
         NodeSelected?.Invoke(this);
     }
 
-    private void OnNodeDeselected(IGraphElement element)
+    private void OnNodeDeselected()
     {
         NodeDeselected?.Invoke(this);
     }
@@ -197,6 +199,11 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     {
         Dragged?.Invoke(this);
         LastOffset = to;
+    }
+
+    private void OnDeleteRequest()
+    {
+        RequestDelete();
     }
 
     private void OnElementDragged(IGraphElement element)

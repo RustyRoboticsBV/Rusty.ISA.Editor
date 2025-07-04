@@ -22,7 +22,7 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
     }
     public GraphFrame Frame { get; set; }
 
-    public string Text { get; set; } = "Default text.";
+    public string CommentText { get; set; } = "New comment.";
     public Color BgColor { get; set; } = new Color(0.13f, 0.13f, 0.13f, 0.75f);
     public Color TextColor { get; set; } = new Color(0f, 1f, 0f, 1f);
 
@@ -34,17 +34,6 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
 
     /* Private properties. */
     private RichTextLabel Label { get; set; }
-
-    /* Public methods. */
-    public bool IsNestedIn(GraphFrame frame)
-    {
-        return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
-    }
-
-    public void RequestDelete()
-    {
-        DeleteRequest?.Invoke(this);
-    }
 
     /* Constructors. */
     public GraphComment()
@@ -90,8 +79,15 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
                 titleContainer.RemoveChild(titleContainer.GetChild(0, true));
             }
         }
+
+        // Subscribe to events.
+        base.NodeSelected += OnNodeSelected;
+        base.NodeDeselected += OnNodeDeselected;
+        base.Dragged += OnDragged;
+        base.DeleteRequest += OnDeleteRequest;
     }
 
+    /* Godot overrides. */
     public override void _Process(double delta)
     {
         // Update background color.
@@ -108,12 +104,44 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         if (Label != null)
         {
             Label.Size = Vector2.Zero;
-            Label.Text = Text + " ";
+            Label.Text = CommentText + " ";
             Label.AddThemeColorOverride("default_color", Selected ? EditorNodeInfo.SelectedTextColor : TextColor);
         }
 
         // Update size.
         Size = Vector2.Zero;
         Size += new Vector2(10f, 10f);
+    }
+
+    /* Public methods. */
+    public bool IsNestedIn(GraphFrame frame)
+    {
+        return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
+    }
+
+    public void RequestDelete()
+    {
+        DeleteRequest?.Invoke(this);
+    }
+
+    /* Private methods. */
+    private void OnNodeSelected()
+    {
+        NodeSelected?.Invoke(this);
+    }
+
+    private void OnNodeDeselected()
+    {
+        NodeDeselected?.Invoke(this);
+    }
+
+    private void OnDeleteRequest()
+    {
+        RequestDelete();
+    }
+
+    private void OnDragged(Vector2 from, Vector2 to)
+    {
+        Dragged?.Invoke(this);
     }
 }

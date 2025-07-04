@@ -46,6 +46,12 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         SetTitleColor(new Color(0.5f, 0.5f, 0.5f));
         SetPanelColor(new Color(0.13f, 0.13f, 0.13f));
         SetTitle("Node");
+
+        // Subscribe to events.
+        base.NodeSelected += OnNodeSelected;
+        base.NodeDeselected += OnNodeDeselected;
+        base.Dragged += OnDragged;
+        base.DeleteRequest += OnDeleteRequest;
     }
 
     /* Public methods. */
@@ -96,5 +102,26 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
             TitleIcon.Modulate = Colors.White;
             TitleLabel.Modulate = Colors.White;
         }
+    }
+
+    /* Private methods. */
+    private void OnNodeSelected()
+    {
+        NodeSelected?.Invoke(this);
+    }
+
+    private void OnNodeDeselected()
+    {
+        NodeDeselected?.Invoke(this);
+    }
+
+    private void OnDeleteRequest()
+    {
+        RequestDelete();
+    }
+
+    private void OnDragged(Vector2 from, Vector2 to)
+    {
+        Dragged?.Invoke(this);
     }
 }
