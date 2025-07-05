@@ -13,6 +13,11 @@ public partial class GraphEdit : Godot.GraphEdit
     public List<GraphComment> Comments { get; } = new();
     public List<GraphFrame> Frames { get; } = new();
 
+    /* Public events. */
+    public event Action<IGraphElement> SelectedElement;
+    public event Action<IGraphElement> DeselectedElement;
+    public event Action<IGraphElement> DeletedElement;
+
     /* Constructors. */
     public GraphEdit()
     {
@@ -20,14 +25,14 @@ public partial class GraphEdit : Godot.GraphEdit
         MinimapEnabled = false;
         ShowArrangeButton = false;
 
+        // Enable disconnection.
+        RightDisconnects = true;
+
         // Subscribe to events.
         DeleteNodesRequest += OnDeleteNodesRequest;
+        ConnectionRequest += OnConnectionRequest;
+        DisconnectionRequest += OnDisconnectionRequest;
     }
-
-    /* Public events. */
-    public event Action<IGraphElement> SelectedElement;
-    public event Action<IGraphElement> DeselectedElement;
-    public event Action<IGraphElement> DeletedElement;
 
     /* Public methods. */
     public void AddElement(IGraphElement element)
@@ -91,6 +96,11 @@ public partial class GraphEdit : Godot.GraphEdit
         AddElement(frame);
         frame.PositionOffset = new(x, y);
         return frame;
+    }
+
+    public void Connect(IGraphElement from, int fromSlot, IGraphElement to, int toSlot)
+    {
+        OnDisconnectionRequest((from as Node).Name, fromSlot, (to as Node).Name, toSlot);
     }
 
     /* Private methods. */
@@ -179,6 +189,16 @@ public partial class GraphEdit : Godot.GraphEdit
 
         // Invoke deleted event.
         DeletedElement?.Invoke(element);
+    }
+
+    private void OnConnectionRequest(StringName fromNode, long fromPort, StringName toNode, long toPort)
+    {
+        ConnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
+    }
+
+    private void OnDisconnectionRequest(StringName fromNode, long fromPort, StringName toNode, long toPort)
+    {
+        DisconnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
     }
 
     /// <summary>

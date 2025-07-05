@@ -33,6 +33,7 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
     public new event Action<IGraphElement> DeleteRequest;
 
     /* Private properties. */
+    private MarginContainer LabelMargin { get; set; }
     private RichTextLabel Label { get; set; }
 
     /* Constructors. */
@@ -45,24 +46,20 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         Label = new()
         {
             Name = "Text",
-            SizeFlagsHorizontal = SizeFlags.ExpandFill,
+            SizeFlagsHorizontal = SizeFlags.ShrinkBegin,
             SizeFlagsVertical = SizeFlags.ExpandFill,
             FitContent = true,
             AutowrapMode = TextServer.AutowrapMode.Off,
             MouseFilter = MouseFilterEnum.Pass
         };
 
-        HBoxContainer contents = new()
-        {
-            SizeFlagsHorizontal = SizeFlags.ExpandFill
-        };
-        contents.AddChild(Label);
-
-        MarginContainer margin = new();
-        margin.AddThemeConstantOverride("margin_top", 8);
-        margin.AddThemeConstantOverride("margin_left", 16);
-        margin.AddChild(contents);
-        AddChild(margin);
+        LabelMargin = new();
+        LabelMargin.AddThemeConstantOverride("margin_left", 16);
+        LabelMargin.AddThemeConstantOverride("margin_right", 16);
+        LabelMargin.AddThemeConstantOverride("margin_bottom", 8);
+        LabelMargin.AddThemeConstantOverride("margin_top", 8);
+        LabelMargin.AddChild(Label);
+        AddChild(LabelMargin);
 
         // Add style overrides.
         AddThemeStyleboxOverride("panel_selected", new StyleBoxFlat()

@@ -27,21 +27,25 @@ public partial class SlotLabels : HBoxContainer
     public SlotLabels()
     {
         MarginContainer margin = new();
-        margin.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         margin.AddThemeConstantOverride("margin_left", 8);
         margin.AddThemeConstantOverride("margin_right", 8);
         margin.MouseFilter = MouseFilterEnum.Ignore;
+        margin.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         AddChild(margin);
+
+        HBoxContainer hbox = new();
+        hbox.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        margin.AddChild(hbox);
 
         Left = new();
         Left.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         Left.MouseFilter = MouseFilterEnum.Ignore;
-        margin.AddChild(Left);
+        hbox.AddChild(Left);
 
         Right = new();
         Right.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         Right.HorizontalAlignment = HorizontalAlignment.Right;
         Right.MouseFilter = MouseFilterEnum.Ignore;
-        margin.AddChild(Right);
+        hbox.AddChild(Right);
     }
 }

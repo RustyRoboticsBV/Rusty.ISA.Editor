@@ -49,10 +49,11 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     public GraphNode()
     {
         // Set default minimum size.
-        CustomMinimumSize = new Vector2(160, 100);
+        CustomMinimumSize = new Vector2(160, 80);
 
         // Replace title elements.
         HBoxContainer titleContainer = GetChild(0, true) as HBoxContainer;
+        titleContainer.SizeFlagsHorizontal = SizeFlags.Fill;
         titleContainer.CustomMinimumSize = new(0f, 40f);
         titleContainer.RemoveChild(titleContainer.GetChild(0, true));
         TitleTextureRect = new();
@@ -66,8 +67,12 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         SetOutputPort(0, "Out");
 
         // Add preview label.
+        HBoxContainer labelContainer = new();
+        labelContainer.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        AddChild(labelContainer);
+
         Preview = new();
-        AddChild(Preview);
+        labelContainer.AddChild(Preview);
         Preview.Hide();
 
         // Set default values.
@@ -149,6 +154,15 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
 
         // Hide preview if it's empty.
         Preview.Visible = Preview.Text != "";
+
+        // Shrink to fit.
+        Rect2 totalRect = new();
+        foreach (Node child in GetChildren())
+        {
+            if (child is Control control && control.Visible)
+                totalRect = totalRect.Merge(new Rect2(control.Position, control.Size));
+        }
+        Size = totalRect.Size;
     }
 
     /* Private methods. */
