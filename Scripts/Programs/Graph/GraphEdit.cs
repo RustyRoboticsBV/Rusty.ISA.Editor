@@ -1,5 +1,6 @@
 ﻿using Godot;
 using Godot.Collections;
+using System;
 using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
@@ -22,6 +23,11 @@ public partial class GraphEdit : Godot.GraphEdit
         DeleteNodesRequest += OnDeleteNodesRequest;
     }
 
+    /* Public events. */
+    public event Action<IGraphElement> SelectedElement;
+    public event Action<IGraphElement> DeselectedElement;
+    public event Action<IGraphElement> DeletedElement;
+
     /* Public methods. */
     public void AddElement(IGraphElement element)
     {
@@ -32,11 +38,11 @@ public partial class GraphEdit : Godot.GraphEdit
                 Nodes.Add(node);
                 break;
             case GraphComment comment:
-                comment.CustomMinimumSize = new(SnappingDistance * 4 - 10, SnappingDistance * 2 - 10);
+                //comment.CustomMinimumSize = new(SnappingDistance * 10 - 10, SnappingDistance * 2 - 10);
                 Comments.Add(comment);
                 break;
             case GraphFrame frame:
-                frame.CustomMinimumSize = new(SnappingDistance * 8, SnappingDistance * 8);
+                //frame.CustomMinimumSize = new(SnappingDistance * 8, SnappingDistance * 8);
                 Frames.Add(frame);
                 break;
         }
@@ -51,6 +57,30 @@ public partial class GraphEdit : Godot.GraphEdit
         element.DeleteRequest += OnElementDeleteRequest;
     }
 
+    public GraphNode AddNode(int x, int y)
+    {
+        GraphNode node = new();
+        AddElement(node);
+        node.PositionOffset = new(x, y);
+        return node;
+    }
+
+    public GraphComment AddComment(int x, int y)
+    {
+        GraphComment comment = new();
+        AddElement(comment);
+        comment.PositionOffset = new(x, y);
+        return comment;
+    }
+
+    public GraphFrame AddFrame(int x, int y)
+    {
+        GraphFrame frame = new();
+        AddElement(frame);
+        frame.PositionOffset = new(x, y);
+        return frame;
+    }
+
     /* Private methods. */
     private void OnDeleteNodesRequest(Array<StringName> elements)
     {
@@ -61,9 +91,15 @@ public partial class GraphEdit : Godot.GraphEdit
         }
     }
 
-    private void OnElementSelected(IGraphElement element) { }
+    private void OnElementSelected(IGraphElement element)
+    {
+        SelectedElement?.Invoke(element);
+    }
 
-    private void OnElementDeselected(IGraphElement element) { }
+    private void OnElementDeselected(IGraphElement element)
+    {
+        DeselectedElement?.Invoke(element);
+    }
 
     private void OnElementDragged(IGraphElement element)
     {
@@ -128,6 +164,9 @@ public partial class GraphEdit : Godot.GraphEdit
                 Frames.Remove(frame);
                 break;
         }
+
+        // Invoke deleted event.
+        DeletedElement?.Invoke(element);
     }
 
     /// <summary>

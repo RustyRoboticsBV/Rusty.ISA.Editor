@@ -38,6 +38,9 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
     /* Constructors. */
     public GraphComment()
     {
+        // Set default minimum size.
+        CustomMinimumSize = new(200f - 10f, 40f - 10f);
+
         // Add contents.
         Label = new()
         {

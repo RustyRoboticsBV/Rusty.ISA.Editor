@@ -35,17 +35,22 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     /* Constructors. */
     public GraphFrame()
     {
+        // Set default minimum size.
+        CustomMinimumSize = new Vector2(160, 160);
+
+        // Enable/disable frame features.
         AutoshrinkEnabled = false;
         TintColorEnabled = true;
-        Size = Vector2.One * 64f;
 
+        // Set defaults.
+        Title = "New Frame";
+        TintColor = new(0.123f, 0.123f, 0.123f);
+
+        // Subscribe to events.
         base.NodeSelected += OnNodeSelected;
         base.NodeDeselected += OnNodeDeselected;
         base.Dragged += OnDragged;
         base.DeleteRequest += OnDeleteRequest;
-
-        Title = "New Frame";
-        TintColor = new(0.123f, 0.123f, 0.123f);
     }
 
     /* Public methods. */

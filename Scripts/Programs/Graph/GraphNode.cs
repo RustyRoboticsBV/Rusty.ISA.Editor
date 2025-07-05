@@ -1,6 +1,7 @@
 ﻿using Godot;
+using Rusty.Graphs;
 using System;
-using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
 
@@ -20,9 +21,23 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     }
     public GraphFrame Frame { get; set; }
 
+    public Color TitleColor { get; set; } = new Color(0.5f, 0.5f, 0.5f);
+    public string TitleText
+    {
+        get => TitleLabel.Text;
+        set => TitleLabel.Text = value;
+    }
+    public Texture2D TitleIcon
+    {
+        get => TitleTextureRect.Texture;
+        set => TitleTextureRect.Texture = value;
+    }
+
     /* Private properties. */
     private Label TitleLabel { get; set; }
-    private TextureRect TitleIcon { get; set; }
+    private TextureRect TitleTextureRect { get; set; }
+    private List<SlotLabels> SlotLabels { get; } = new();
+    private Label Preview { get; set; }
 
     /* Public events. */
     public new event Action<IGraphElement> NodeSelected;
@@ -33,19 +48,33 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     /* Constructors. */
     public GraphNode()
     {
-        // Fix title.
+        // Set default minimum size.
+        CustomMinimumSize = new Vector2(160, 100);
+
+        // Replace title elements.
         HBoxContainer titleContainer = GetChild(0, true) as HBoxContainer;
+        titleContainer.CustomMinimumSize = new(0f, 40f);
         titleContainer.RemoveChild(titleContainer.GetChild(0, true));
-        TitleIcon = new();
-        titleContainer.AddChild(TitleIcon);
+        TitleTextureRect = new();
+        titleContainer.AddChild(TitleTextureRect);
         TitleLabel = new();
         titleContainer.AddChild(TitleLabel);
+        TitleText = "New Node";
+
+        // Add default ports.
+        SetInputPort(0, "In");
+        SetOutputPort(0, "Out");
+
+        // Add preview label.
+        Preview = new();
+        AddChild(Preview);
+        Preview.Hide();
 
         // Set default values.
         AddThemeColorOverride("font_color", Colors.White);
-        SetTitleColor(new Color(0.5f, 0.5f, 0.5f));
-        SetPanelColor(new Color(0.13f, 0.13f, 0.13f));
-        SetTitle("Node");
+        AddThemeStyleboxOverride("panel", new StyleBoxFlat() { BgColor = new Color(0.13f, 0.13f, 0.13f) });
+        AddThemeStyleboxOverride("panel_selected", new StyleBoxFlat() { BgColor = new Color(0.13f, 0.13f, 0.13f) });
+        AddThemeStyleboxOverride("titlebar_selected", new StyleBoxFlat() { BgColor = Colors.White });
 
         // Subscribe to events.
         base.NodeSelected += OnNodeSelected;
@@ -65,46 +94,89 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         DeleteRequest?.Invoke(this);
     }
 
-    public void SetTitleColor(Color color)
+    /// <summary>
+    /// Add an input port.
+    /// </summary>
+    public void SetInputPort(int index, string text)
     {
-        AddThemeStyleboxOverride("titlebar", new StyleBoxFlat() { BgColor = color });
-        AddThemeStyleboxOverride("titlebar_selected", new StyleBoxFlat() { BgColor = Colors.White });
+        // Ensure that enough slots exist.
+        EnsureSlot(index);
+
+        // Enable slot.
+        SetSlot(index,
+            true, GetSlotTypeLeft(index), GetSlotColorLeft(index),
+            IsSlotEnabledRight(index), GetSlotTypeRight(index), GetSlotColorRight(index)
+        );
+
+        // Set slot label.
+        SlotLabels[index].InputText = text;
     }
 
-    public void SetPanelColor(Color color)
+    /// <summary>
+    /// Add an output port.
+    /// </summary>
+    public void SetOutputPort(int index, string text)
     {
-        AddThemeStyleboxOverride("panel", new StyleBoxFlat() { BgColor = color });
-        AddThemeStyleboxOverride("panel_selected", new StyleBoxFlat() { BgColor = color });
-    }
+        // Ensure that enough slots exist.
+        EnsureSlot(index);
 
-    public void SetIcon(Texture2D icon)
-    {
-        TitleIcon.Texture = icon;
-    }
+        // Enable slot.
+        SetSlot(index,
+            IsSlotEnabledLeft(index), GetSlotTypeLeft(index), GetSlotColorLeft(index),
+            true, GetSlotTypeRight(index), GetSlotColorRight(index)
+        );
 
-    public new void SetTitle(string title)
-    {
-        TitleLabel.Text = title;
+        // Set slot label.
+        SlotLabels[index].OutputText = text;
     }
 
     /* Godot overrides. */
     public override void _Process(double delta)
     {
-        base._Process(delta);
+        // Change title color depending on if we're selected or not.
+        AddThemeStyleboxOverride("titlebar", new StyleBoxFlat() { BgColor = TitleColor });
 
         if (Selected)
         {
-            TitleIcon.Modulate = Colors.Gray;
+            TitleTextureRect.Modulate = Colors.Gray;
             TitleLabel.Modulate = Colors.Gray;
         }
         else
         {
-            TitleIcon.Modulate = Colors.White;
+            TitleTextureRect.Modulate = Colors.White;
             TitleLabel.Modulate = Colors.White;
         }
+
+        // Hide preview if it's empty.
+        Preview.Visible = Preview.Text != "";
     }
 
     /* Private methods. */
+    /// <summary>
+    /// Ensure a number of input/output slot pairs. We don't enable them by default.
+    /// </summary>
+    private void EnsureSlot(int index)
+    {
+        if (SlotLabels.Count > index)
+            return;
+
+        // Temporarily remove the preview.
+        if (Preview != null)
+            RemoveChild(Preview);
+
+        // Add slots until we have enough.
+        while (SlotLabels.Count <= index)
+        {
+            SlotLabels labels = new();
+            SlotLabels.Add(labels);
+            AddChild(labels);
+        }
+
+        // Add the preview back as the last child.
+        if (Preview != null)
+            AddChild(Preview);
+    }
+
     private void OnNodeSelected()
     {
         NodeSelected?.Invoke(this);

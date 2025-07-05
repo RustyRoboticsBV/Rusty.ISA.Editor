@@ -39,15 +39,8 @@ public partial class CutsceneEditor : MarginContainer
         graphEdit.Name = "GraphEdit";
 
         // Add debug elements.
-        GraphNode node = new();
-        node.CustomMinimumSize = new Vector2(100, 100);
-        graphEdit.AddElement(node);
-
-        GraphComment comment = new();
-        graphEdit.AddElement(comment);
-
-        GraphFrame frame = new();
-        frame.CustomMinimumSize = new Vector2(100, 100);
-        graphEdit.AddElement(frame);
+        graphEdit.AddNode(200, 200);
+        graphEdit.AddComment(400, 200);
+        graphEdit.AddFrame(600, 200);
     }
 }
