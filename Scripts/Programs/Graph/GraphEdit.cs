@@ -17,6 +17,7 @@ public partial class GraphEdit : Godot.GraphEdit
     public event Action<IGraphElement> SelectedElement;
     public event Action<IGraphElement> DeselectedElement;
     public event Action<IGraphElement> DeletedElement;
+    public event Action RightClicked;
 
     /* Constructors. */
     public GraphEdit()
@@ -101,6 +102,13 @@ public partial class GraphEdit : Godot.GraphEdit
     public void Connect(IGraphElement from, int fromSlot, IGraphElement to, int toSlot)
     {
         OnDisconnectionRequest((from as Node).Name, fromSlot, (to as Node).Name, toSlot);
+    }
+
+    /* Godot overrides. */
+    public override void _GuiInput(InputEvent @event)
+    {
+        if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Right)
+            RightClicked?.Invoke();
     }
 
     /* Private methods. */

@@ -37,6 +37,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     private Label TitleLabel { get; set; }
     private TextureRect TitleTextureRect { get; set; }
     private List<SlotLabels> SlotLabels { get; } = new();
+    private MarginContainer PreviewContainer { get; set; }
     private Label Preview { get; set; }
 
     /* Public events. */
@@ -67,13 +68,16 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         SetOutputPort(0, "Out");
 
         // Add preview label.
-        HBoxContainer labelContainer = new();
-        labelContainer.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
-        AddChild(labelContainer);
+        PreviewContainer = new();
+        PreviewContainer.AddThemeConstantOverride("margin_left", 8);
+        PreviewContainer.AddThemeConstantOverride("margin_right", 8);
+        PreviewContainer.AddThemeConstantOverride("margin_bottom", 4);
+        PreviewContainer.AddThemeConstantOverride("margin_top", 4);
+        AddChild(PreviewContainer);
+        PreviewContainer.Hide();
 
         Preview = new();
-        labelContainer.AddChild(Preview);
-        Preview.Hide();
+        PreviewContainer.AddChild(Preview);
 
         // Set default values.
         AddThemeColorOverride("font_color", Colors.White);
@@ -153,7 +157,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         }
 
         // Hide preview if it's empty.
-        Preview.Visible = Preview.Text != "";
+        PreviewContainer.Visible = Preview.Text != "";
 
         // Shrink to minimum size.
         Rect2 totalRect = new();

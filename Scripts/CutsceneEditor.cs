@@ -15,33 +15,11 @@ public partial class CutsceneEditor : MarginContainer
     /* Godot overrides. */
     public override void _Ready()
     {
+        // Build instruction set.
         InstructionSet set = InstructionSetBuilder.Build(Name, Description, Author, Version, BuiltIn, FolderPath);
 
-        HBoxContainer hbox = new();
-        AddChild(hbox);
-
-        // Create inspector window.
-        InspectorWindow inspector = new();
-        inspector.SizeFlagsHorizontal = SizeFlags.Fill;
-        hbox.AddChild(inspector);
-        inspector.Name = "Inspector";
-
-        // Create resizer.
-        Resizer resizer = new();
-        resizer.Target = inspector;
-        hbox.AddChild(resizer);
-        resizer.Name = "Resizer";
-
-        // Create graph.
-        GraphEdit graphEdit = new();
-        graphEdit.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        hbox.AddChild(graphEdit);
-        graphEdit.Name = "GraphEdit";
-
-        // Add debug elements.
-        graphEdit.AddNode(200, 200);
-        graphEdit.AddJoint(400, 200);
-        graphEdit.AddComment(600, 200);
-        graphEdit.AddFrame(800, 200);
+        // Create program editor.
+        ProgramEditor programEditor = new(set);
+        AddChild(programEditor);
     }
 }
