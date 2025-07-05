@@ -30,15 +30,18 @@ public partial class SlotLabels : HBoxContainer
         margin.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         margin.AddThemeConstantOverride("margin_left", 8);
         margin.AddThemeConstantOverride("margin_right", 8);
+        margin.MouseFilter = MouseFilterEnum.Ignore;
         AddChild(margin);
 
         Left = new();
         Left.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        Left.MouseFilter = MouseFilterEnum.Ignore;
         margin.AddChild(Left);
 
         Right = new();
         Right.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         Right.HorizontalAlignment = HorizontalAlignment.Right;
+        Right.MouseFilter = MouseFilterEnum.Ignore;
         margin.AddChild(Right);
     }
 }

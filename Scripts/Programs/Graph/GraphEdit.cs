@@ -9,8 +9,8 @@ public partial class GraphEdit : Godot.GraphEdit
 {
     /* Public methods. */
     public List<GraphNode> Nodes { get; } = new();
-    public List<GraphComment> Comments { get; } = new();
     public List<GraphJoint> Joints { get; } = new();
+    public List<GraphComment> Comments { get; } = new();
     public List<GraphFrame> Frames { get; } = new();
 
     /* Constructors. */
