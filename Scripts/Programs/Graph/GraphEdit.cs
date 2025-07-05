@@ -7,15 +7,18 @@ namespace Rusty.ISA.Editor;
 public partial class GraphEdit : Godot.GraphEdit
 {
     /* Public methods. */
-
-    /* Private properties. */
-    private List<GraphNode> Nodes { get; } = new();
-    private List<GraphComment> Comments { get; } = new();
-    private List<GraphFrame> Frames { get; } = new();
+    public List<GraphNode> Nodes { get; } = new();
+    public List<GraphComment> Comments { get; } = new();
+    public List<GraphFrame> Frames { get; } = new();
 
     /* Constructors. */
     public GraphEdit()
     {
+        // Hide unwanted UI elements.
+        MinimapEnabled = false;
+        ShowArrangeButton = false;
+
+        // Subscribe to events.
         DeleteNodesRequest += OnDeleteNodesRequest;
     }
 

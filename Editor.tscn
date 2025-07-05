@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://mmxot80dkahv"]
+[gd_scene load_steps=3 format=3 uid="uid://mmxot80dkahv"]
 
 [ext_resource type="Script" uid="uid://2uojmemcu4qc" path="res://Scripts/CutsceneEditor.cs" id="1_1qsck"]
 [ext_resource type="Resource" uid="uid://dnt3g5dpjm0pd" path="res://Built-In Instructions/InstructionSet.tres" id="2_agv3s"]
-[ext_resource type="Texture2D" uid="uid://csuae1j5ge1uj" path="res://Built-In Instructions/IconCHO.bmp" id="3_agv3s"]
 
 [node name="CutsceneEditor" type="MarginContainer"]
 anchors_preset = 15
@@ -14,5 +13,4 @@ script = ExtResource("1_1qsck")
 BuiltIn = ExtResource("2_agv3s")
 Description = "The generated instruction set."
 Author = "Rusty Robotics B.V."
-Icon = ExtResource("3_agv3s")
 metadata/_custom_type_script = "uid://2uojmemcu4qc"
