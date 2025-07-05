@@ -40,7 +40,8 @@ public partial class CutsceneEditor : MarginContainer
 
         // Add debug elements.
         graphEdit.AddNode(200, 200);
-        graphEdit.AddComment(400, 200);
-        graphEdit.AddFrame(600, 200);
+        graphEdit.AddJoint(400, 200);
+        graphEdit.AddComment(600, 200);
+        graphEdit.AddFrame(800, 200);
     }
 }

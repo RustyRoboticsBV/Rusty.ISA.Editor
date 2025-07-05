@@ -10,6 +10,7 @@ public partial class GraphEdit : Godot.GraphEdit
     /* Public methods. */
     public List<GraphNode> Nodes { get; } = new();
     public List<GraphComment> Comments { get; } = new();
+    public List<GraphJoint> Joints { get; } = new();
     public List<GraphFrame> Frames { get; } = new();
 
     /* Constructors. */
@@ -37,6 +38,9 @@ public partial class GraphEdit : Godot.GraphEdit
             case GraphNode node:
                 Nodes.Add(node);
                 break;
+            case GraphJoint joint:
+                Joints.Add(joint);
+                break;
             case GraphComment comment:
                 //comment.CustomMinimumSize = new(SnappingDistance * 10 - 10, SnappingDistance * 2 - 10);
                 Comments.Add(comment);
@@ -63,6 +67,14 @@ public partial class GraphEdit : Godot.GraphEdit
         AddElement(node);
         node.PositionOffset = new(x, y);
         return node;
+    }
+
+    public GraphJoint AddJoint(int x, int y)
+    {
+        GraphJoint joint = new();
+        AddElement(joint);
+        joint.PositionOffset = new(x, y);
+        return joint;
     }
 
     public GraphComment AddComment(int x, int y)

@@ -168,6 +168,8 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         while (SlotLabels.Count <= index)
         {
             SlotLabels labels = new();
+            labels.CustomMinimumSize = new(0f, 40f);
+            labels.MouseFilter = MouseFilterEnum.Ignore;
             SlotLabels.Add(labels);
             AddChild(labels);
         }

@@ -4,9 +4,9 @@ using System;
 namespace Rusty.ISA.Editor;
 
 /// <summary>
-/// An ISA editor graph comment.
+/// An ISA editor graph joint.
 /// </summary>
-public partial class GraphComment : Godot.GraphNode, IGraphElement
+public partial class GraphJoint : Godot.GraphNode, IGraphElement
 {
     /* Public properties. */
     public GraphEdit GraphEdit
@@ -22,9 +22,7 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
     }
     public GraphFrame Frame { get; set; }
 
-    public string CommentText { get; set; } = "New comment.";
-    public Color BgColor { get; set; } = new Color(0.13f, 0.13f, 0.13f, 0.75f);
-    public Color TextColor { get; set; } = new Color(0f, 1f, 0f, 1f);
+    public Color BgColor { get; set; } = new Color(0.13f, 0.13f, 0.13f);
 
     /* Public events. */
     public new event Action<IGraphElement> NodeSelected;
@@ -36,33 +34,10 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
     private RichTextLabel Label { get; set; }
 
     /* Constructors. */
-    public GraphComment()
+    public GraphJoint()
     {
         // Set default minimum size.
-        CustomMinimumSize = new(200f, 40f);
-
-        // Add contents.
-        Label = new()
-        {
-            Name = "Text",
-            SizeFlagsHorizontal = SizeFlags.ExpandFill,
-            SizeFlagsVertical = SizeFlags.ExpandFill,
-            FitContent = true,
-            AutowrapMode = TextServer.AutowrapMode.Off,
-            MouseFilter = MouseFilterEnum.Pass
-        };
-
-        HBoxContainer contents = new()
-        {
-            SizeFlagsHorizontal = SizeFlags.ExpandFill
-        };
-        contents.AddChild(Label);
-
-        MarginContainer margin = new();
-        margin.AddThemeConstantOverride("margin_top", 8);
-        margin.AddThemeConstantOverride("margin_left", 16);
-        margin.AddChild(contents);
-        AddChild(margin);
+        CustomMinimumSize = new(60f, 40f);
 
         // Add style overrides.
         AddThemeStyleboxOverride("panel_selected", new StyleBoxFlat()
@@ -83,6 +58,14 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
             }
         }
 
+        // Add slots.
+        Control slots = new();
+        slots.MouseFilter = MouseFilterEnum.Ignore;
+        slots.CustomMinimumSize = CustomMinimumSize;
+        AddChild(slots);
+        SetSlotEnabledLeft(0, true);
+        SetSlotEnabledRight(0, true);
+
         // Subscribe to events.
         base.NodeSelected += OnNodeSelected;
         base.NodeDeselected += OnNodeDeselected;
@@ -102,14 +85,6 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         {
             BgColor = BgColor
         });
-
-        // Update label text color.
-        if (Label != null)
-        {
-            Label.Size = Vector2.Zero;
-            Label.Text = CommentText + " ";
-            Label.AddThemeColorOverride("default_color", Selected ? EditorNodeInfo.SelectedTextColor : TextColor);
-        }
 
         // Shrink to minimum size.
         Size = Vector2.Zero;
