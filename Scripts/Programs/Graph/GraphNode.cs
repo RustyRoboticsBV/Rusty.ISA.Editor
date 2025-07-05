@@ -155,14 +155,14 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         // Hide preview if it's empty.
         Preview.Visible = Preview.Text != "";
 
-        // Shrink to fit.
+        // Shrink to minimum size.
         Rect2 totalRect = new();
         foreach (Node child in GetChildren())
         {
             if (child is Control control && control.Visible)
                 totalRect = totalRect.Merge(new Rect2(control.Position, control.Size));
         }
-        Size = totalRect.Size;
+        Size = new(0, totalRect.Size.Y);
     }
 
     /* Private methods. */
