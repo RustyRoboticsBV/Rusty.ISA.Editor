@@ -1,4 +1,5 @@
 ﻿using Godot;
+using Godot.Collections;
 
 namespace Rusty.ISA.Editor;
 
@@ -10,8 +11,11 @@ public partial class ProgramEditor : MarginContainer
     /* Private properties. */
     private InstructionSet InstructionSet { get; set; }
 
+    private InspectorWindow InspectorWindow { get; set; }
     private GraphEdit GraphEdit { get; set; }
     private ContextMenu ContextMenu { get; set; }
+
+    private Dictionary<StringName, Label> Inspectors { get; } = new();
 
     /* Constructors. */
     public ProgramEditor(InstructionSet set)
@@ -20,25 +24,33 @@ public partial class ProgramEditor : MarginContainer
 
         MouseFilter = MouseFilterEnum.Pass;
 
+        // Add background.
+        ColorRect background = new();
+        background.Color = new(0.5f, 0.5f, 0.5f);
+        AddChild(background);
+
         // Add root container.
         HBoxContainer hbox = new();
         AddChild(hbox);
 
         // Create inspector window.
-        InspectorWindow inspector = new();
-        inspector.SizeFlagsHorizontal = SizeFlags.Fill;
-        hbox.AddChild(inspector);
-        inspector.Name = "Inspector";
+        InspectorWindow = new();
+        InspectorWindow.SizeFlagsHorizontal = SizeFlags.Fill;
+        hbox.AddChild(InspectorWindow);
+        InspectorWindow.Name = "Inspector";
 
         // Create resizer.
         Resizer resizer = new();
-        resizer.Target = inspector;
+        resizer.Target = InspectorWindow;
         hbox.AddChild(resizer);
         resizer.Name = "Resizer";
 
         // Create graph.
         GraphEdit = new();
         GraphEdit.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        GraphEdit.SelectedElement += OnSelectedGraphElement;
+        GraphEdit.DeselectedElement += OnDeselectedGraphElement;
+        GraphEdit.DeletedElement += OnDeletedGraphElement;
         GraphEdit.RightClicked += OnRightClickedGraph;
         hbox.AddChild(GraphEdit);
         GraphEdit.Name = "GraphEdit";
@@ -65,29 +77,64 @@ public partial class ProgramEditor : MarginContainer
         int spawnY = (int)spawnPosition.Y;
 
         // Spawn element.
+        Node element = null;
         switch (definition.Opcode)
         {
             case BuiltIn.JointOpcode:
                 GraphJoint joint = GraphEdit.AddJoint(spawnX, spawnY);
+                element = joint;
                 joint.BgColor = definition.EditorNode.MainColor;
                 break;
             case BuiltIn.CommentOpcode:
                 GraphComment comment = GraphEdit.AddComment(spawnX, spawnY);
+                element = comment;
                 comment.CommentText = definition.GetParameter<MultilineParameter>(BuiltIn.CommentText).DefaultValue;
                 comment.BgColor = definition.EditorNode.MainColor;
                 comment.TextColor = definition.EditorNode.TextColor;
                 break;
             case BuiltIn.FrameOpcode:
                 GraphFrame frame = GraphEdit.AddFrame(spawnX, spawnY);
+                element = frame;
                 frame.Title = definition.GetParameter<TextlineParameter>(BuiltIn.FrameTitle).DefaultValue;
                 frame.TintColor = definition.GetParameter<ColorParameter>(BuiltIn.FrameColor).DefaultValue;
                 break;
             default:
                 GraphNode node = GraphEdit.AddNode(spawnX, spawnY);
+                element = node;
                 node.TitleText = definition.DisplayName;
                 node.TitleIcon = definition.Icon;
                 node.TitleColor = definition.EditorNode.MainColor;
                 break;
         }
+
+        // Add inspector.
+        Inspectors.Add(element.Name, new Label() { Text = element.Name });
+    }
+
+    private void OnSelectedGraphElement(IGraphElement element)
+    {
+        // Retrieve element's inspector.
+        Control inspector = Inspectors[((Node)element).Name];
+
+        // Add element's inspector to inspector window.
+        InspectorWindow.Add(inspector);
+    }
+
+    private void OnDeselectedGraphElement(IGraphElement element)
+    {
+        // Retrieve element's inspector.
+        Control inspector = Inspectors[((Node)element).Name];
+
+        // Add element's inspector to inspector window.
+        InspectorWindow.Remove(inspector);
+    }
+
+    private void OnDeletedGraphElement(IGraphElement element)
+    {
+        // Invoke deselection handler.
+        OnDeselectedGraphElement(element);
+
+        // Delete inspector.
+        Inspectors.Remove(((Node)element).Name);
     }
 }

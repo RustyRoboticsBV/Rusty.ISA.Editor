@@ -38,6 +38,17 @@ public partial class InspectorWindow : MarginContainer
         separator.Name = "Separator";
     }
 
+    /* Public methods. */
+    public void Add(Control inspector) 
+    {
+        Contents.AddChild(inspector);
+    }
+
+    public void Remove(Control inspector)
+    {
+        Contents.RemoveChild(inspector);
+    }
+
     /* Godot overrides. */
     public override void _Ready()
     {
