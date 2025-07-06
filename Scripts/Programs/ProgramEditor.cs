@@ -15,7 +15,7 @@ public partial class ProgramEditor : MarginContainer
     private GraphEdit GraphEdit { get; set; }
     private ContextMenu ContextMenu { get; set; }
 
-    private Dictionary<StringName, Label> Inspectors { get; } = new();
+    private Dictionary<StringName, Control> Inspectors { get; } = new();
 
     /* Constructors. */
     public ProgramEditor(InstructionSet set)
@@ -110,7 +110,7 @@ public partial class ProgramEditor : MarginContainer
 
         // Add inspector.
         if (!(element is GraphJoint))
-            Inspectors.Add(element.Name, new Label() { Text = element.Name });
+            Inspectors.Add(element.Name, new InstructionInspector(definition));
     }
 
     private void OnSelectedGraphElement(IGraphElement element)

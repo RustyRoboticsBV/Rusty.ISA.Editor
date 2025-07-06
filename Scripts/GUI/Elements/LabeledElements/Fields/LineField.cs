@@ -5,7 +5,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A string line-edit field.
 /// </summary>
-public partial class ImageField : LabeledElement, Field<string>
+public partial class LineField : LabeledElement, Field<string>
 {
     /* Public properties. */
     object Field.Value
@@ -23,14 +23,14 @@ public partial class ImageField : LabeledElement, Field<string>
     private LineEdit Field { get; set; }
 
     /* Public methods. */
-    public override ImageField Copy()
+    public override LineField Copy()
     {
-        ImageField copy = new();
+        LineField copy = new();
         copy.CopyFrom(this);
         return copy;
     }
 
-    public void CopyFrom(ImageField other)
+    public void CopyFrom(LineField other)
     {
         CopyFrom(other as LabeledElement);
         Value = other.Value;
