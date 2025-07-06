@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=69 format=3 uid="uid://d308mnoeq7xa"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=76 format=3 uid="uid://d308mnoeq7xa"]
 
 [ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconISA.bmp" id="1_xv6kh"]
 [ext_resource type="Script" uid="uid://nj3anaafielp" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_xvlxa"]
@@ -9,7 +9,9 @@
 [ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="7_rqbqj"]
 [ext_resource type="Script" uid="uid://btht0mxxam3r7" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="8_w7twv"]
 [ext_resource type="Texture2D" uid="uid://bdrkrwn8lh415" path="res://Built-In Instructions/IconCMT.bmp" id="9_2ke5f"]
+[ext_resource type="Texture2D" uid="uid://bd3m0r4tfpjfy" path="res://Built-In Instructions/IconJNT.bmp" id="9_xvlxa"]
 [ext_resource type="Script" uid="uid://dtxuwjx75byap" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="10_2detx"]
+[ext_resource type="Script" uid="uid://yv1p0xvly16v" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="10_m1uhb"]
 [ext_resource type="Script" uid="uid://beorwwi6t13op" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="11_6o02d"]
 [ext_resource type="Texture2D" uid="uid://dfl3rdmo5gdiy" path="res://Built-In Instructions/IconFRM.bmp" id="12_ybfo7"]
 [ext_resource type="Script" uid="uid://b55qdbpegdq00" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="13_leabi"]
@@ -155,6 +157,61 @@ Preview = ""
 PreInstructions = []
 PostInstructions = []
 
+[sub_resource type="Resource" id="Resource_m1uhb"]
+script = ExtResource("8_w7twv")
+Priority = -1
+MinWidth = 3
+MinHeight = 2
+MainColor = Color(0.4117647, 0.4117647, 0.4117647, 1)
+TextColor = Color(1, 1, 1, 1)
+Preview = ""
+EnableWordWrap = false
+metadata/_custom_type_script = "uid://btht0mxxam3r7"
+
+[sub_resource type="Resource" id="Resource_rqbqj"]
+script = ExtResource("10_m1uhb")
+Dependencies = []
+Members = ""
+Initialize = ""
+Execute = ""
+metadata/_custom_type_script = "uid://yv1p0xvly16v"
+
+[sub_resource type="Resource" id="Resource_513eb"]
+resource_name = "x (int)"
+script = ExtResource("10_2detx")
+ID = "x"
+DisplayName = "X"
+Description = "The horizontal position of the joint."
+DefaultValue = 0
+Preview = ""
+metadata/_custom_type_script = "uid://dtxuwjx75byap"
+
+[sub_resource type="Resource" id="Resource_owem4"]
+resource_name = "y (int)"
+script = ExtResource("10_2detx")
+ID = "y"
+DisplayName = "Y"
+Description = "The vertical position of the joint."
+DefaultValue = 0
+Preview = ""
+metadata/_custom_type_script = "uid://dtxuwjx75byap"
+
+[sub_resource type="Resource" id="Resource_n23mp"]
+resource_name = "JNT"
+script = ExtResource("2_xvlxa")
+Opcode = "JNT"
+Parameters = [SubResource("Resource_513eb"), SubResource("Resource_owem4")]
+Implementation = SubResource("Resource_rqbqj")
+Icon = ExtResource("9_xvlxa")
+DisplayName = "Joint"
+Description = "Starts an editor joint. Allows more control over edges in the editor graph. The group may contain a single MBR instruction, and should be closed with an EOG instruction."
+Category = "Editor"
+EditorNode = SubResource("Resource_m1uhb")
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+metadata/_custom_type_script = "uid://nj3anaafielp"
+
 [sub_resource type="Resource" id="Resource_mff5v"]
 script = ExtResource("8_w7twv")
 Priority = -1
@@ -199,7 +256,7 @@ Opcode = "CMT"
 Parameters = [SubResource("Resource_imjdl"), SubResource("Resource_bhdtu"), SubResource("Resource_53br1")]
 Icon = ExtResource("9_2ke5f")
 DisplayName = "Comment"
-Description = "An editor comment."
+Description = "Starts an editor comment. The group may contain a single MBR instruction, and should be closed with an EOG instruction."
 Category = "Editor"
 EditorNode = SubResource("Resource_mff5v")
 Preview = ""
@@ -491,5 +548,5 @@ Name = "Editor"
 Description = "The instructions that are needed for the editor to function. Most are compiler flags that preserve program editability."
 Author = "Rusty Robotics B.V."
 Version = "1.0.0"
-Local = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_a4bdl"), SubResource("Resource_leu7q"), SubResource("Resource_itw8j")]
+Local = [SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_n23mp"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_a4bdl"), SubResource("Resource_leu7q"), SubResource("Resource_itw8j")]
 Modules = []
