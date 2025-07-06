@@ -110,7 +110,7 @@ public partial class ProgramEditor : MarginContainer
 
         // Add inspector.
         if (!(element is GraphJoint))
-            Inspectors.Add(element.Name, new InstructionInspector(definition));
+            Inspectors.Add(element.Name, new Label() { Text = definition.Opcode });
     }
 
     private void OnSelectedGraphElement(IGraphElement element)
