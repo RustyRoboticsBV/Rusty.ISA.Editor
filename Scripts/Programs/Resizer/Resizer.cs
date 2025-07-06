@@ -56,13 +56,6 @@ public partial class Resizer : MarginContainer
             float dragDelta = GetGlobalMousePosition().X - StartDragPosition;
             float targetX = StartTargetWidth + dragDelta;
 
-            // Localize target position.
-            if (GetParent() is Control control)
-                targetX -= control.GlobalPosition.X;
-
-            // Clamp target position within viewport bounds.
-            targetX = Mathf.Clamp(targetX, Margin, GetViewport().GetVisibleRect().Size.X - Margin);
-
             // Apply target position as custom minimum width.
             Target.CustomMinimumSize = new Vector2(targetX, Target.CustomMinimumSize.Y);
         }

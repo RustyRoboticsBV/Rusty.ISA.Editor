@@ -29,7 +29,7 @@ public partial class ProgramEditor : MarginContainer
         background.Color = new(0.5f, 0.5f, 0.5f);
         AddChild(background);
 
-        // Add root container.
+        // Add inspector / resizer / graph hbox.
         HBoxContainer hbox = new();
         AddChild(hbox);
 
@@ -48,6 +48,7 @@ public partial class ProgramEditor : MarginContainer
         // Create graph.
         GraphEdit = new();
         GraphEdit.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        GraphEdit.CustomMinimumSize = new(256f, 256f);
         GraphEdit.SelectedElement += OnSelectedGraphElement;
         GraphEdit.DeselectedElement += OnDeselectedGraphElement;
         GraphEdit.DeletedElement += OnDeletedGraphElement;
@@ -108,11 +109,15 @@ public partial class ProgramEditor : MarginContainer
         }
 
         // Add inspector.
-        Inspectors.Add(element.Name, new Label() { Text = element.Name });
+        if (!(element is GraphJoint))
+            Inspectors.Add(element.Name, new Label() { Text = element.Name });
     }
 
     private void OnSelectedGraphElement(IGraphElement element)
     {
+        if (element is GraphJoint)
+            return;
+
         // Retrieve element's inspector.
         Control inspector = Inspectors[((Node)element).Name];
 
@@ -122,6 +127,9 @@ public partial class ProgramEditor : MarginContainer
 
     private void OnDeselectedGraphElement(IGraphElement element)
     {
+        if (element is GraphJoint)
+            return;
+
         // Retrieve element's inspector.
         Control inspector = Inspectors[((Node)element).Name];
 
@@ -131,6 +139,9 @@ public partial class ProgramEditor : MarginContainer
 
     private void OnDeletedGraphElement(IGraphElement element)
     {
+        if (element is GraphJoint)
+            return;
+
         // Invoke deselection handler.
         OnDeselectedGraphElement(element);
 

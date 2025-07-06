@@ -10,12 +10,6 @@ public partial class InspectorWindow : MarginContainer
     /* Constructors. */
     public InspectorWindow()
     {
-        // Set margins.
-        AddThemeConstantOverride("margin_left", 4);
-        AddThemeConstantOverride("margin_right", 4);
-        AddThemeConstantOverride("margin_bottom", 4);
-        AddThemeConstantOverride("margin_top", 4);
-
         // Add background.
         ColorRect bg = new();
         bg.Color = new Color(0.3f, 0.3f, 0.3f);
