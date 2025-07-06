@@ -104,6 +104,14 @@ public partial class GraphEdit : Godot.GraphEdit
         OnDisconnectionRequest((from as Node).Name, fromSlot, (to as Node).Name, toSlot);
     }
 
+    /// <summary>
+    /// Returns the current mouse position as a graph position offset.
+    /// </summary>
+    public Vector2 GetMousePosition()
+    {
+        return (GetGlobalMousePosition() - GlobalPosition + ScrollOffset) / Zoom;
+    }
+
     /* Godot overrides. */
     public override void _GuiInput(InputEvent @event)
     {
@@ -220,13 +228,5 @@ public partial class GraphEdit : Godot.GraphEdit
                 return element;
         }
         return null;
-    }
-
-    /// <summary>
-    /// Returns the current mouse position as a graph position offset.
-    /// </summary>
-    private Vector2 GetMousePosition()
-    {
-        return (GetGlobalMousePosition() - GlobalPosition + ScrollOffset) / Zoom;
     }
 }

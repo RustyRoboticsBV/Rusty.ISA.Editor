@@ -79,11 +79,11 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
         // Update background color.
         AddThemeStyleboxOverride("panel", new StyleBoxFlat()
         {
-            BgColor = BgColor
+            BgColor = Selected ? EditorNodeInfo.SelectedMainColor : BgColor
         });
         AddThemeStyleboxOverride("titlebar", new StyleBoxFlat()
         {
-            BgColor = BgColor
+            BgColor = Selected ? EditorNodeInfo.SelectedMainColor : BgColor
         });
 
         // Shrink to minimum size.

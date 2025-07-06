@@ -1,7 +1,6 @@
 ﻿using Godot;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Rusty.ISA.Editor;
 
@@ -113,7 +112,7 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     public override void _Process(double delta)
     {
         // Update alpha.
-        float alpha = Selected ? 1f : 0.5f;
+        float alpha = Selected ? 0.75f : 0.5f;
         TintColor = new(TintColor.R, TintColor.G, TintColor.B, alpha);
 
         // If we move the frame, also move members with it.

@@ -14,6 +14,7 @@ public static class BuiltIn
     public const string ErrorOpcode = "ERR";
     public const string EndOpcode = "END";
 
+    public const string JointOpcode = "JNT";
     public const string CommentOpcode = "CMT";
     public const string FrameOpcode = "FRM";
     public const string FrameMemberOpcode = "MBR";
@@ -41,6 +42,8 @@ public static class BuiltIn
     public const string GotoTargetLabel = "target_label";
     public const string ErrorMessage = "message";
 
+    public const string JointX = "x";
+    public const string JointY = "y";
     public const string CommentText = "text";
     public const string CommentX = "x";
     public const string CommentY = "y";

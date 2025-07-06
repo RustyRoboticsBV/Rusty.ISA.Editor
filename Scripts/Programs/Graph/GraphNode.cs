@@ -57,10 +57,21 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         titleContainer.SizeFlagsHorizontal = SizeFlags.Fill;
         titleContainer.CustomMinimumSize = new(0f, 40f);
         titleContainer.RemoveChild(titleContainer.GetChild(0, true));
+
+        MarginContainer titleMargin = new();
+        titleMargin.AddThemeConstantOverride("margin_left", 4);
+        titleMargin.AddThemeConstantOverride("margin_right", 4);
+        titleContainer.AddChild(titleMargin);
+
+        HBoxContainer titleSpacer = new();
+        titleMargin.AddChild(titleSpacer);
+
         TitleTextureRect = new();
-        titleContainer.AddChild(TitleTextureRect);
+        TitleTextureRect.SizeFlagsVertical = SizeFlags.ShrinkCenter;
+        titleSpacer.AddChild(TitleTextureRect);
+
         TitleLabel = new();
-        titleContainer.AddChild(TitleLabel);
+        titleSpacer.AddChild(TitleLabel);
         TitleText = "New Node";
 
         // Add default ports.
