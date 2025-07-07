@@ -8,6 +8,16 @@ namespace Rusty.ISA.Editor;
 public partial class ToggleTextField : GenericField<string, LineEdit>
 {
     /* Public properties. */
+    public bool Checked
+    {
+        get => CheckBox.ButtonPressed;
+        set => CheckBox.ButtonPressed = value;
+    }
+    public string FieldText
+    {
+        get => Field.Text;
+        set => Field.Text = value;
+    }
     public override string Value
     {
         get => CheckBox.ButtonPressed ? Field.Text : null;
