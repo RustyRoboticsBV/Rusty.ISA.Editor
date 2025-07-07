@@ -41,7 +41,10 @@ public partial class ListBorderContainer : FoldoutBorderContainer
         base.CopyFrom(other);
 
         if (other is ListBorderContainer list)
+        {
             Template = list.Template;
+            AddButton.Pressed += OnAddButtonPressed;
+        }
     }
 
     /* Godot overrides. */

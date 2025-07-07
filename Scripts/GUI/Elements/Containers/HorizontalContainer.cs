@@ -23,11 +23,9 @@ public partial class HorizontalContainer : HBoxContainer, IContainer
     {
         if (other is HorizontalContainer hbox)
         {
-            GD.Print("HBOX: Copying another hbox with " + hbox.Elements.Count + " elements");
             ClearContents();
             for (int i = 0; i < hbox.Elements.Count; i++)
             {
-                GD.Print("HBOX: Copying a " + hbox.Elements[i].GetType());
                 AddToContents(hbox.Elements[i].Copy());
             }
         }
