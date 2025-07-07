@@ -18,15 +18,17 @@ public partial class BorderContainer : MarginContainer, IContainer
     public bool HideContents { get; set; }
     public bool HideFooter { get; set; }
 
+    /* Protected properties. */
+    protected Header Top { get; private set; }
+    protected Header Bottom { get; private set; }
+
     /* Private properties. */
     private ColorRect Background { get; set; }
-    private Header Top { get; set; }
     private MarginContainer Middle { get; set; }
     private ColorRect Left { get; set; }
     private MarginContainer ContentsMargin { get; set; }
     private VerticalContainer Contents { get; set; }
     private ColorRect Right { get; set; }
-    private Header Bottom { get; set; }
     private bool Initialized { get; set; }
 
     /* Constructors. */

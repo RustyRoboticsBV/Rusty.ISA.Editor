@@ -53,6 +53,9 @@ public partial class LabeledElement : HBoxContainer, IGuiElement
             LabelText = label.LabelText;
             LabelColor = label.LabelColor;
             LabelFontSize = label.LabelFontSize;
+            SizeFlagsHorizontal = label.SizeFlagsHorizontal;
+            SizeFlagsVertical = label.SizeFlagsVertical;
+            CustomMinimumSize = label.CustomMinimumSize;
         }
     }
 

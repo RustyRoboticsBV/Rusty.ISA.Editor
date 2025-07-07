@@ -47,6 +47,7 @@ public partial class Header : HBoxContainer, IGuiElement
         get => !Contents.Visible;
         set => Contents.Visible = !value;
     }
+    public bool ShrinkRightEdge { get; set; }
 
     /* Private properties. */
     private ColorRect Background { get; set; }
@@ -79,6 +80,7 @@ public partial class Header : HBoxContainer, IGuiElement
             LineColor = header.LineColor;
             HideLine = header.HideLine;
             HideContents = header.HideContents;
+            ShrinkRightEdge = header.ShrinkRightEdge;
             Contents.CopyFrom(header.Contents);
         }
     }
@@ -110,6 +112,10 @@ public partial class Header : HBoxContainer, IGuiElement
         // Set margins.
         ContentsMargin.AddThemeConstantOverride("margin_left", Left.Visible ? 4 : 0);
         ContentsMargin.AddThemeConstantOverride("margin_right", Right.Visible ? 4 : 0);
+
+        // Shrink/expand right edge.
+        ContentsMargin.SizeFlagsHorizontal = ShrinkRightEdge ? SizeFlags.ExpandFill : SizeFlags.ShrinkBegin;
+        Right.SizeFlagsHorizontal = ShrinkRightEdge ? SizeFlags.ShrinkEnd : SizeFlags.ExpandFill;
     }
 
     /* Private methods. */
