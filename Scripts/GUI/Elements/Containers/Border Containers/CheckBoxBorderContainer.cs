@@ -1,3 +1,5 @@
+using Godot;
+
 namespace Rusty.ISA.Editor;
 
 public partial class CheckBoxBorderContainer : BorderContainer

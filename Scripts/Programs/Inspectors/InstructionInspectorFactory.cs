@@ -44,21 +44,18 @@ public static class InstructionInspectorFactory
             case BoolParameter b:
                 element = new BoolField()
                 {
-                    LabelText = b.DisplayName,
                     Value = b.DefaultValue
                 };
                 break;
             case IntParameter i:
                 element = new IntField()
                 {
-                    LabelText = i.DisplayName,
                     Value = i.DefaultValue
                 };
                 break;
             case IntSliderParameter isl:
                 element = new IntSliderField()
                 {
-                    LabelText = isl.DisplayName,
                     Value = isl.DefaultValue,
                     MinValue = isl.MinValue,
                     MaxValue = isl.MaxValue
@@ -67,14 +64,12 @@ public static class InstructionInspectorFactory
             case FloatParameter f:
                 element = new FloatField()
                 {
-                    LabelText = f.DisplayName,
                     Value = f.DefaultValue
                 };
                 break;
             case FloatSliderParameter fsl:
                 element = new FloatSliderField()
                 {
-                    LabelText = fsl.DisplayName,
                     Value = fsl.DefaultValue,
                     MinValue = fsl.MinValue,
                     MaxValue = fsl.MaxValue
@@ -83,34 +78,36 @@ public static class InstructionInspectorFactory
             case CharParameter c:
                 element = new CharField()
                 {
-                    LabelText = c.DisplayName,
                     Value = c.DefaultValue
                 };
                 break;
             case TextlineParameter l:
                 element = new LineField()
                 {
-                    LabelText = l.DisplayName,
                     Value = l.DefaultValue
                 };
                 break;
             case MultilineParameter ml:
                 element = new MultilineField()
                 {
-                    LabelText = ml.DisplayName,
                     Value = ml.DefaultValue
                 };
                 break;
             case ColorParameter col:
                 element = new ColorField()
                 {
-                    LabelText = col.DisplayName,
                     Value = col.DefaultValue
                 };
                 break;
             default:
                 element = null;
                 break;
+        }
+
+        if (element is IField field)
+        {
+            field.LabelText = parameter.DisplayName;
+            field.TooltipText = parameter.Description;
         }
 
         return element;

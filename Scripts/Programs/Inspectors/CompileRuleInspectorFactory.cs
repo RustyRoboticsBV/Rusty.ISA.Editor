@@ -69,6 +69,8 @@ public static class CompileRuleInspectorFactory
                 }
         }
 
+        inspector.TooltipText = rule.Description;
+
         return inspector;
     }
 }

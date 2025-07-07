@@ -15,6 +15,15 @@ public abstract partial class GenericField<T, U> : LabeledElement, IField<T>
         set => Value = (T)value;
     }
     public abstract T Value { get; set; }
+    public override string TooltipText
+    {
+        get => base.TooltipText;
+        set
+        {
+            base.TooltipText = value;
+            Field.TooltipText = value;
+        }
+    }
 
     /* Protected properties. */
     protected U Field { get; set; }

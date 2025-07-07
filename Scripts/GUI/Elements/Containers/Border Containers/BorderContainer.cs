@@ -17,6 +17,18 @@ public partial class BorderContainer : MarginContainer, IContainer
     public bool HideHeader { get; set; }
     public bool HideContents { get; set; }
     public bool HideFooter { get; set; }
+    public new virtual string TooltipText
+    {
+        get => base.TooltipText;
+        set
+        {
+            base.TooltipText = value;
+            Background.TooltipText = value;
+            Contents.TooltipText = value;
+            Top.TooltipText = value;
+            Bottom.TooltipText = value;
+        }
+    }
 
     /* Protected properties. */
     protected Header Top { get; private set; }
@@ -61,6 +73,7 @@ public partial class BorderContainer : MarginContainer, IContainer
             HideHeader = border.HideHeader;
             HideContents = border.HideContents;
             HideFooter = border.HideFooter;
+            TooltipText = border.TooltipText;
 
             Top.CopyFrom(border.Top);
             Contents.CopyFrom(border.Contents);

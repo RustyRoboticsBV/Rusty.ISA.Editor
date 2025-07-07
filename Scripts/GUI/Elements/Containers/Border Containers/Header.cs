@@ -49,6 +49,19 @@ public partial class Header : HBoxContainer, IGuiElement
     }
     public bool ShrinkRightEdge { get; set; }
 
+    public new string TooltipText
+    {
+        get => base.TooltipText;
+        set
+        {
+            base.TooltipText = value;
+            for (int i = 0; i < Contents.GetContentsCount(); i++)
+            {
+                Contents.GetFromContents(i).TooltipText = value;
+            }
+        }
+    }
+
     /* Private properties. */
     private ColorRect Background { get; set; }
     private ColorRect Left { get; set; }

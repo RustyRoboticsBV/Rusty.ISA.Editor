@@ -42,6 +42,7 @@ public partial class Inspector : MarginContainer, IGuiElement
                 Elements.Add(key, inspector.Elements[key]);
             }
 
+            TooltipText = inspector.TooltipText;
         }
     }
 

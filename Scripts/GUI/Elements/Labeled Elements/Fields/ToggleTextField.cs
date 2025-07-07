@@ -17,6 +17,15 @@ public partial class ToggleTextField : GenericField<string, LineEdit>
             Field.Text = value != null ? value : "";
         }
     }
+    public override string TooltipText
+    {
+        get => base.TooltipText;
+        set
+        {
+            base.TooltipText = value;
+            CheckBox.TooltipText = value;
+        }
+    }
 
     /* Private properties. */
     private CheckBox CheckBox { get; set; }

@@ -58,6 +58,7 @@ public static class ElementInspectorFactory
                 ToggleTextField startPoint = new();
                 startPoint.LabelText = "Start Point";
                 startPoint.Value = "Start";
+                startPoint.TooltipText = "Defines whether or not this node is a start point from which this program can be ran.";
                 inspector.Add("start_point", startPoint);
 
                 // Add instruction inspector.

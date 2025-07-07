@@ -28,6 +28,17 @@ public abstract partial class GenericSlider<T> : LabeledElement, IRangeField<T>
     }
     public abstract T MaxValue { get; set; }
 
+    public override string TooltipText
+    {
+        get => base.TooltipText;
+        set
+        {
+            base.TooltipText = value;
+            Slider.TooltipText = value;
+            SpinBox.TooltipText = value;
+        }
+    }
+
     /* Protected properties. */
     protected HSlider Slider { get; set; }
     protected SpinBox SpinBox { get; set; }

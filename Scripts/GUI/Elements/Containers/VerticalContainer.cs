@@ -1,5 +1,6 @@
 ﻿using Godot;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Rusty.ISA.Editor;
 
@@ -28,6 +29,8 @@ public partial class VerticalContainer : VBoxContainer, IContainer
             {
                 AddToContents(vbox.Elements[i].Copy());
             }
+
+            TooltipText = vbox.TooltipText;
         }
     }
 

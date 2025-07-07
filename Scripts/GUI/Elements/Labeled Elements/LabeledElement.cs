@@ -24,6 +24,15 @@ public partial class LabeledElement : HBoxContainer, IGuiElement
         get => Label.GetThemeFontSize("font_size");
         set => Label.AddThemeFontSizeOverride("font_size", value);
     }
+    public virtual new string TooltipText
+    {
+        get => base.TooltipText;
+        set
+        {
+            base.TooltipText = value;
+            Label.TooltipText = value;
+        }
+    }
 
     /* Protected properties. */
     protected Label Label { get; private set; }
@@ -53,6 +62,7 @@ public partial class LabeledElement : HBoxContainer, IGuiElement
             LabelText = label.LabelText;
             LabelColor = label.LabelColor;
             LabelFontSize = label.LabelFontSize;
+            TooltipText = label.TooltipText;
             SizeFlagsHorizontal = label.SizeFlagsHorizontal;
             SizeFlagsVertical = label.SizeFlagsVertical;
             CustomMinimumSize = label.CustomMinimumSize;

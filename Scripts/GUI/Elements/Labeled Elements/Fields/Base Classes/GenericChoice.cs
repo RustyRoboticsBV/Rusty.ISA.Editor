@@ -15,6 +15,15 @@ public abstract partial class GenericChoice<T> : LabeledElement, IChoiceField
         get => Selected;
         set => Selected = (int)value;
     }
+    public override string TooltipText
+    {
+        get => base.TooltipText;
+        set
+        {
+            base.TooltipText = value;
+            Field.TooltipText = value;
+        }
+    }
     public abstract string[] Options { get; set; }
     public abstract int Selected { get; set; }
 
