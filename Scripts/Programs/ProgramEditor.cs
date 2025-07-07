@@ -92,12 +92,23 @@ public partial class ProgramEditor : MarginContainer
                 comment.CommentText = definition.GetParameter<MultilineParameter>(BuiltIn.CommentText).DefaultValue;
                 comment.BgColor = definition.EditorNode.MainColor;
                 comment.TextColor = definition.EditorNode.TextColor;
+
+                Inspector commentInspector = new();
+                commentInspector.Add("text", new MultilineField() { Value = comment.CommentText });
+                Inspectors.Add(element.Name, commentInspector);
+
                 break;
             case BuiltIn.FrameOpcode:
                 GraphFrame frame = GraphEdit.AddFrame(spawnX, spawnY);
                 element = frame;
                 frame.Title = definition.GetParameter<TextlineParameter>(BuiltIn.FrameTitle).DefaultValue;
                 frame.TintColor = definition.GetParameter<ColorParameter>(BuiltIn.FrameColor).DefaultValue;
+
+                Inspector frameInspector = new();
+                frameInspector.Add("title", new LineField() { Value = frame.Title });
+                frameInspector.Add("color", new ColorField() { Value = frame.TintColor});
+                Inspectors.Add(element.Name, frameInspector);
+
                 break;
             default:
                 GraphNode node = GraphEdit.AddNode(spawnX, spawnY);
@@ -105,12 +116,12 @@ public partial class ProgramEditor : MarginContainer
                 node.TitleText = definition.DisplayName;
                 node.TitleIcon = definition.Icon;
                 node.TitleColor = definition.EditorNode.MainColor;
+
+                Inspector nodeInspector = NodeInspectorFactory.Create(InstructionSet, definition);
+                Inspectors.Add(element.Name, nodeInspector);
+
                 break;
         }
-
-        // Add inspector.
-        if (!(element is GraphJoint))
-            Inspectors.Add(element.Name, new Label() { Text = definition.Opcode });
     }
 
     private void OnSelectedGraphElement(IGraphElement element)

@@ -15,10 +15,23 @@ public partial class ListBorderContainer : FoldoutBorderContainer
     /* Private properties. */
     private LabeledButton AddButton => GetFromFooter(0) as LabeledButton;
 
+    /* Constructors. */
+    public ListBorderContainer() : base()
+    {
+        // Never hide the border depending on if the container is empty.
+        HideBorderIfEmpty = false;
+
+        // Create "add element" button.
+        LabeledButton addButton = new();
+        addButton.ButtonText = "Add Element";
+        addButton.Pressed += OnAddButtonPressed;
+        AddToFooter(addButton);
+    }
+
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        LabelBorderContainer copy = new();
+        ListBorderContainer copy = new();
         copy.CopyFrom(this);
         return copy;
     }
@@ -39,21 +52,6 @@ public partial class ListBorderContainer : FoldoutBorderContainer
         // Hide the border & add button if the foldout is closed.
         ForceHideBorder = !IsOpen;
         AddButton.Visible = IsOpen;
-    }
-
-    /* Protected methods. */
-    protected override void Initialize()
-    {
-        base.Initialize();
-
-        // Never hide the border depending on if the container is empty.
-        HideBorderIfEmpty = false;
-
-        // Create "add element" button.
-        LabeledButton addButton = new();
-        addButton.ButtonText = "Add Element";
-        addButton.Pressed += OnAddButtonPressed;
-        AddToFooter(addButton);
     }
 
     /* Private methods. */

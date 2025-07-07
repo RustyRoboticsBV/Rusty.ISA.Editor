@@ -3,7 +3,7 @@
 /// <summary>
 /// An interface for an option field.
 /// </summary>
-public interface ChoiceField : Field
+public interface IChoiceField : IField
 {
     /// <summary>
     /// The available options that the user can select.
@@ -18,4 +18,4 @@ public interface ChoiceField : Field
 /// <summary>
 /// An interface for an option field.
 /// </summary>
-public interface OptionField<T> : Field<T>, ChoiceField { }
+public interface IOptionField<T> : IField<T>, IChoiceField { }

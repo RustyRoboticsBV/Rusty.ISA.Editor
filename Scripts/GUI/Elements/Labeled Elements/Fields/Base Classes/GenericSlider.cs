@@ -6,22 +6,22 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A base class for sliders.
 /// </summary>
-public abstract partial class GenericSlider<T> : LabeledElement, RangeField<T>
+public abstract partial class GenericSlider<T> : LabeledElement, IRangeField<T>
 {
     /* Public properties. */
-    object Field.Value
+    object IField.Value
     {
         get => Value;
         set => Value = (T)value;
     }
     public abstract T Value { get; set; }
-    object RangeField.MinValue
+    object IRangeField.MinValue
     {
         get => MinValue;
         set => MinValue = (T)value;
     }
     public abstract T MinValue { get; set; }
-    object RangeField.MaxValue
+    object IRangeField.MaxValue
     {
         get => MaxValue;
         set => MaxValue = (T)value;

@@ -5,11 +5,11 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A base class for fields.
 /// </summary>
-public abstract partial class GenericField<T, U> : LabeledElement, Field<T>
+public abstract partial class GenericField<T, U> : LabeledElement, IField<T>
     where U : Control, new()
 {
     /* Public properties. */
-    object Field.Value
+    object IField.Value
     {
         get => Value;
         set => Value = (T)value;

@@ -21,6 +21,16 @@ public partial class TabBorderContainer : BorderContainer
     /* Private properties. */
     private TabBarField TabBar => GetFromHeader(0) as TabBarField;
 
+    /* Constructors. */
+    public TabBorderContainer() : base()
+    {
+        // Add tab-bar.
+        TabBarField tabBar = new();
+        tabBar.LabelText = "";
+        tabBar.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        AddToHeader(tabBar);
+    }
+
     /* Public methods. */
     public override IGuiElement Copy()
     {
@@ -48,17 +58,5 @@ public partial class TabBorderContainer : BorderContainer
         {
             GetFromContents(i).Visible = TabBar.Selected == i;
         }
-    }
-
-    /* Protected methods. */
-    protected override void Initialize()
-    {
-        base.Initialize();
-
-        // Add tab-bar.
-        TabBarField tabBar = new();
-        tabBar.LabelText = "";
-        tabBar.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        AddToHeader(tabBar);
     }
 }

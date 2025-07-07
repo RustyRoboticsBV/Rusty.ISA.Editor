@@ -17,6 +17,16 @@ public partial class FoldoutBorderContainer : BorderContainer
     /* Private properties. */
     private Foldout Foldout => GetFromHeader(0) as Foldout;
 
+    /* Constructors. */
+    public FoldoutBorderContainer() : base()
+    {
+        // Add fold-out.
+        Foldout foldout = new();
+        foldout.LabelText = "Foldout";
+        foldout.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        AddToHeader(foldout);
+    }
+
     /* Public methods. */
     public override IGuiElement Copy()
     {
@@ -37,17 +47,5 @@ public partial class FoldoutBorderContainer : BorderContainer
 
         HideContents = !Foldout.IsOpen;
         HideFooter = !Foldout.IsOpen;
-    }
-
-    /* Protected methods. */
-    protected override void Initialize()
-    {
-        base.Initialize();
-
-        // Add fold-out.
-        Foldout foldout = new();
-        foldout.LabelText = FoldoutText;
-        foldout.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
-        AddToHeader(foldout);
     }
 }

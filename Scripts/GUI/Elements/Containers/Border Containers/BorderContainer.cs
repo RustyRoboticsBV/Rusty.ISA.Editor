@@ -5,7 +5,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A margin container with a border background.
 /// </summary>
-public partial class BorderContainer : MarginContainer, IGuiElement
+public partial class BorderContainer : MarginContainer, IContainer
 {
     /* Public properties. */
     public int MarginSize { get; set; } = 8;
@@ -50,6 +50,7 @@ public partial class BorderContainer : MarginContainer, IGuiElement
     {
         if (other is BorderContainer border)
         {
+            GD.Print("BORDER: begin copy from " + other);
             MarginSize = border.MarginSize;
             BorderThickness = border.BorderThickness;
             BorderColor = border.BorderColor;
@@ -67,17 +68,27 @@ public partial class BorderContainer : MarginContainer, IGuiElement
     }
 
 
-    public void AddToContents(IGuiElement element)
-    {
-        Contents.Add(element);
-    }
+    public int GetContentsCount() => Contents.GetChildCount();
 
     public IGuiElement GetFromContents(int index)
     {
-        return Contents.GetAt(index);
+        return Contents.GetFromContents(index);
     }
 
-    public int GetContentsCount() => Contents.GetChildCount();
+    public void AddToContents(IGuiElement element)
+    {
+        Contents.AddToContents(element);
+    }
+
+    public void RemoveFromContents(IGuiElement element)
+    {
+        Contents.RemoveFromContents(element);
+    }
+
+    public void ClearContents()
+    {
+        Contents.ClearContents();
+    }
 
 
     public void AddToHeader(IGuiElement element)

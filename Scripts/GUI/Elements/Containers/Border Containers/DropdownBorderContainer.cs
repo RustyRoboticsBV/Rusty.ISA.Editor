@@ -24,10 +24,20 @@ public partial class DropdownBorderContainer : BorderContainer
     /* Private properties. */
     private DropdownField Dropdown => GetFromHeader(0) as DropdownField;
 
+    /* Constructors. */
+    public DropdownBorderContainer() : base()
+    {
+        // Add dropdown.
+        DropdownField dropdown = new();
+        dropdown.LabelText = "";
+        dropdown.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        AddToHeader(dropdown);
+    }
+
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        CheckBoxBorderContainer copy = new();
+        DropdownBorderContainer copy = new();
         copy.CopyFrom(this);
         return copy;
     }
@@ -52,17 +62,5 @@ public partial class DropdownBorderContainer : BorderContainer
         {
             GetFromContents(i).Visible = Dropdown.Selected == i;
         }
-    }
-
-    /* Protected methods. */
-    protected override void Initialize()
-    {
-        base.Initialize();
-
-        // Add dropdown.
-        DropdownField dropdown = new();
-        dropdown.LabelText = "";
-        dropdown.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        AddToHeader(dropdown);
     }
 }

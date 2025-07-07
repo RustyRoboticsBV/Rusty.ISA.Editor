@@ -6,11 +6,11 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A base class for choice elements.
 /// </summary>
-public abstract partial class GenericChoice<T> : LabeledElement, ChoiceField
+public abstract partial class GenericChoice<T> : LabeledElement, IChoiceField
     where T : Control, new()
 {
     /* Public properties. */
-    object Field.Value
+    object IField.Value
     {
         get => Selected;
         set => Selected = (int)value;

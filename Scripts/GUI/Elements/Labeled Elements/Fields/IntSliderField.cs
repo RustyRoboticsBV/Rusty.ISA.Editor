@@ -23,7 +23,7 @@ public partial class IntSliderField : GenericSlider<int>
     }
 
     /* Constructors. */
-    IntSliderField()
+    public IntSliderField()
     {
         Slider.Step = 1;
     }

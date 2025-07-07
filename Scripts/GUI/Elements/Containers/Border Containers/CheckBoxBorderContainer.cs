@@ -17,6 +17,16 @@ public partial class CheckBoxBorderContainer : BorderContainer
     /* Private properties. */
     private CheckBoxField CheckBox => GetFromHeader(0) as CheckBoxField;
 
+    /* Constructors. */
+    public CheckBoxBorderContainer() : base()
+    {
+        // Add check-box.
+        CheckBoxField checkbox = new();
+        checkbox.LabelText = "Enabled?";
+        checkbox.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        AddToHeader(checkbox);
+    }
+
     /* Public methods. */
     public override IGuiElement Copy()
     {
@@ -41,17 +51,5 @@ public partial class CheckBoxBorderContainer : BorderContainer
         base._Process(delta);
 
         HideContents = !CheckBox.Value;
-    }
-
-    /* Protected methods. */
-    protected override void Initialize()
-    {
-        base.Initialize();
-        
-        // Add check-box.
-        CheckBoxField checkbox = new();
-        checkbox.LabelText = CheckBoxText;
-        checkbox.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
-        AddToHeader(checkbox);
     }
 }

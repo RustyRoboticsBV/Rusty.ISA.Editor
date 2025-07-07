@@ -23,7 +23,7 @@ public partial class FloatSliderField : GenericSlider<float>
     }
 
     /* Constructors. */
-    FloatSliderField()
+    public FloatSliderField()
     {
         Slider.Step = 0.00001;
     }

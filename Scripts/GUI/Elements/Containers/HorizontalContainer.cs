@@ -6,7 +6,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A horizontal container for GUI elements.
 /// </summary>
-public partial class HorizontalContainer : HBoxContainer, IGuiElement
+public partial class HorizontalContainer : HBoxContainer, IContainer
 {
     /* Private properties. */
     private List<IGuiElement> Elements { get; } = new();
@@ -21,42 +21,44 @@ public partial class HorizontalContainer : HBoxContainer, IGuiElement
 
     public void CopyFrom(IGuiElement other)
     {
-        Clear();
         if (other is HorizontalContainer hbox)
         {
+            ClearContents();
             for (int i = 0; i < hbox.Elements.Count; i++)
             {
-                Elements.Add(hbox.Elements[i].Copy());
+                AddToContents(hbox.Elements[i].Copy());
             }
         }
     }
 
-    public int GetCount()
+    public int GetContentsCount()
     {
         return Elements.Count;
     }
 
-    public IGuiElement GetAt(int index)
+    public IGuiElement GetFromContents(int index)
     {
-        return GetChild(index) as IGuiElement;
+        return Elements[index];
     }
 
-    public void Add(IGuiElement element)
+    public void AddToContents(IGuiElement element)
     {
+        Elements.Add(element);
         AddChild(element as Node);
     }
 
-    public void Remove(IGuiElement element)
+    public void RemoveFromContents(IGuiElement element)
     {
+        Elements.Remove(element);
         RemoveChild(element as Node);
     }
 
-    public void Clear()
+    public void ClearContents()
     {
-        while (Elements.Count > 0)
+        foreach (IGuiElement element in Elements)
         {
-            RemoveChild(Elements[0] as Node);
-            Elements.RemoveAt(0);
+            RemoveChild(element as Node);
         }
+        Elements.Clear();
     }
 }

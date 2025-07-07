@@ -15,22 +15,21 @@ public partial class LabelBorderContainer : BorderContainer
     /* Private properties. */
     private LabeledElement Label => GetFromHeader(0) as LabeledElement;
 
+    /* Constructors. */
+    public LabelBorderContainer() : base()
+    {
+        // Add label.
+        LabeledElement label = new();
+        label.LabelText = "Default text.";
+        label.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        AddToHeader(label);
+    }
+
     /* Public methods. */
     public override IGuiElement Copy()
     {
         LabelBorderContainer copy = new();
         copy.CopyFrom(this);
         return copy;
-    }
-
-    /* Protected methods. */
-    protected override void Initialize()
-    {
-        base.Initialize();
-
-        // Add label.
-        LabeledElement label = new();
-        label.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
-        AddToHeader(label);
     }
 }

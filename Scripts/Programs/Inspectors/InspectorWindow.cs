@@ -15,9 +15,23 @@ public partial class InspectorWindow : MarginContainer
         bg.Color = new Color(0.3f, 0.3f, 0.3f);
         AddChild(bg);
 
+        // Add scroll view.
+        ScrollContainer scroll = new();
+        AddChild(scroll);
+
+        // Add margin around contents.
+        MarginContainer contentsMargin = new();
+        contentsMargin.AddThemeConstantOverride("margin_left", 4);
+        contentsMargin.AddThemeConstantOverride("margin_right", 4);
+        contentsMargin.AddThemeConstantOverride("margin_bottom", 4);
+        contentsMargin.AddThemeConstantOverride("margin_top", 4);
+        contentsMargin.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        contentsMargin.SizeFlagsVertical = SizeFlags.ExpandFill;
+        scroll.AddChild(contentsMargin);
+
         // Add contents.
         Contents = new();
-        AddChild(Contents);
+        contentsMargin.AddChild(Contents);
 
         // Add title elements.
         Label title = new();

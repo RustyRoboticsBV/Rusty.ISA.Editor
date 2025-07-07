@@ -5,7 +5,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// An interface for a field; an element that contains a label and a value and can be indented.
 /// </summary>
-public interface Field : IGuiElement
+public interface IField : IGuiElement
 {
     public string LabelText { get; set; }
     public int LabelWidth { get; set; }
@@ -18,7 +18,7 @@ public interface Field : IGuiElement
 /// <summary>
 /// An interface for a field; an element that contains a label and a value and can be indented.
 /// </summary>
-public interface Field<T> : Field
+public interface IField<T> : IField
 {
     public new T Value { get; set; }
 }
