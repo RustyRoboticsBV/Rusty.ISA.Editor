@@ -53,7 +53,10 @@ public static class CompileRuleInspectorFactory
             case ListRule l:
                 {
                     Inspector template = Create(set, l.Type);
-                    template.ReplaceContainer(new FoldoutBorderContainer() { FoldoutText = l.Type.DisplayName });
+                    FoldoutBorderContainer templateFoldout = new();
+                    templateFoldout.FoldoutText = l.Type.DisplayName;
+                    templateFoldout.IsOpen = true;
+                    template.ReplaceContainer(templateFoldout);
 
                     ListBorderContainer list = new();
                     list.FoldoutText = l.DisplayName;
