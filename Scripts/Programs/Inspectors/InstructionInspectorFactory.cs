@@ -7,6 +7,14 @@ public static class InstructionInspectorFactory
         // Create inspector.
         Inspector inspector = new();
 
+        // Add pre-instructions.
+        foreach (CompileRule rule in definition.PreInstructions)
+        {
+            IGuiElement element = CompileRuleInspectorFactory.Create(set, rule);
+            if (element != null)
+                inspector.Add("pre_" + rule.ID, element);
+        }
+
         // Add parameters.
         foreach (Parameter parameter in definition.Parameters)
         {
@@ -14,14 +22,6 @@ public static class InstructionInspectorFactory
             IGuiElement element = CreateField(parameter);
             if (element != null)
                 inspector.Add("par_" + parameter.ID, element);
-        }
-
-        // Add pre-instructions.
-        foreach (CompileRule rule in definition.PreInstructions)
-        {
-            IGuiElement element = CompileRuleInspectorFactory.Create(set, rule);
-            if (element != null)
-                inspector.Add("pre_" + rule.ID, element);
         }
 
         // Add post-instructions.
