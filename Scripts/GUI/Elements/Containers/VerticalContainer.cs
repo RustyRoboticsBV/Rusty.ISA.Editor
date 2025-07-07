@@ -23,11 +23,9 @@ public partial class VerticalContainer : VBoxContainer, IContainer
     {
         if (other is VerticalContainer vbox)
         {
-            GD.Print("VBOX: Begin copy from " + vbox);
             ClearContents();
             for (int i = 0; i < vbox.Elements.Count; i++)
             {
-                GD.Print("VBOX: Copying " + vbox.Elements[i]);
                 AddToContents(vbox.Elements[i].Copy());
             }
         }

@@ -50,7 +50,6 @@ public partial class BorderContainer : MarginContainer, IContainer
     {
         if (other is BorderContainer border)
         {
-            GD.Print("BORDER: begin copy from " + other);
             MarginSize = border.MarginSize;
             BorderThickness = border.BorderThickness;
             BorderColor = border.BorderColor;

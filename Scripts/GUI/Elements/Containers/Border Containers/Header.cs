@@ -74,6 +74,7 @@ public partial class Header : HBoxContainer, IGuiElement
     {
         if (other is Header header)
         {
+            GD.Print("HEADER: Copying from another header with " + header.Contents.GetContentsCount() + " elements");
             BackgroundColor = header.BackgroundColor;
             LineThickness = header.LineThickness;
             LineColor = header.LineColor;
@@ -85,12 +86,12 @@ public partial class Header : HBoxContainer, IGuiElement
 
     public void Add(IGuiElement element)
     {
-        Contents.AddChild(element as Node);
+        Contents.AddToContents(element);
     }
 
     public IGuiElement GetAt(int index)
     {
-        return Contents.GetChild(index) as IGuiElement;
+        return Contents.GetFromContents(index);
     }
 
     /* Godot overrides. */

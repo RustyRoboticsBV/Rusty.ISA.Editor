@@ -45,9 +45,9 @@ public partial class LabeledElement : HBoxContainer, IGuiElement
         return copy;
     }
 
-    public virtual void CopyFrom(IGuiElement element)
+    public virtual void CopyFrom(IGuiElement other)
     {
-        if (element is LabeledElement label)
+        if (other is LabeledElement label)
         {
             LabelWidth = label.LabelWidth;
             LabelText = label.LabelText;

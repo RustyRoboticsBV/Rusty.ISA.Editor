@@ -30,7 +30,6 @@ public partial class Inspector : MarginContainer, IGuiElement
     {
         if (other is Inspector inspector)
         {
-            GD.Print("INSPECTOR: Begin copy from " + other + " (my contents is a " + ContentsContainer.GetType().Name);
             // Replace contents container with a copy of the other inspector's contents container.
             Clear();
 
@@ -40,7 +39,6 @@ public partial class Inspector : MarginContainer, IGuiElement
 
             foreach (string key in inspector.Elements.LeftValues)
             {
-                GD.Print("INSPECTOR: Copying " + key + " (" + inspector.Elements[key] + ")");
                 Elements.Add(key, inspector.Elements[key]);
             }
 
