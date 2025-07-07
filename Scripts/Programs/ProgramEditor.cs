@@ -83,44 +83,36 @@ public partial class ProgramEditor : MarginContainer
         {
             case BuiltIn.JointOpcode:
                 GraphJoint joint = GraphEdit.AddJoint(spawnX, spawnY);
-                element = joint;
                 joint.BgColor = definition.EditorNode.MainColor;
+                element = joint;
                 break;
             case BuiltIn.CommentOpcode:
                 GraphComment comment = GraphEdit.AddComment(spawnX, spawnY);
-                element = comment;
-                comment.CommentText = definition.GetParameter<MultilineParameter>(BuiltIn.CommentText).DefaultValue;
+                comment.CommentText = GetParameter<MultilineParameter>(definition, BuiltIn.CommentText).DefaultValue;
                 comment.BgColor = definition.EditorNode.MainColor;
                 comment.TextColor = definition.EditorNode.TextColor;
-
-                Inspector commentInspector = new();
-                commentInspector.Add("text", new MultilineField() { Value = comment.CommentText });
-                Inspectors.Add(element.Name, commentInspector);
-
+                element = comment;
                 break;
             case BuiltIn.FrameOpcode:
                 GraphFrame frame = GraphEdit.AddFrame(spawnX, spawnY);
+                frame.Title = GetParameter<TextlineParameter>(definition, BuiltIn.FrameTitle).DefaultValue;
+                frame.TintColor = GetParameter<ColorParameter>(definition, BuiltIn.FrameColor).DefaultValue;
                 element = frame;
-                frame.Title = definition.GetParameter<TextlineParameter>(BuiltIn.FrameTitle).DefaultValue;
-                frame.TintColor = definition.GetParameter<ColorParameter>(BuiltIn.FrameColor).DefaultValue;
-
-                Inspector frameInspector = new();
-                frameInspector.Add("title", new LineField() { Value = frame.Title });
-                frameInspector.Add("color", new ColorField() { Value = frame.TintColor});
-                Inspectors.Add(element.Name, frameInspector);
-
                 break;
             default:
                 GraphNode node = GraphEdit.AddNode(spawnX, spawnY);
-                element = node;
                 node.TitleText = definition.DisplayName;
                 node.TitleIcon = definition.Icon;
                 node.TitleColor = definition.EditorNode.MainColor;
-
-                Inspector nodeInspector = NodeInspectorFactory.Create(InstructionSet, definition);
-                Inspectors.Add(element.Name, nodeInspector);
-
+                element = node;
                 break;
+        }
+
+        // Add inspector.
+        if (definition.Opcode != BuiltIn.JointOpcode)
+        {
+            Inspector nodeInspector = ElementInspectorFactory.Create(InstructionSet, definition);
+            Inspectors.Add(element.Name, nodeInspector);
         }
     }
 
@@ -158,5 +150,10 @@ public partial class ProgramEditor : MarginContainer
 
         // Delete inspector.
         Inspectors.Remove(((Node)element).Name);
+    }
+
+    private static T GetParameter<T>(InstructionDefinition definition, string id) where T : Parameter
+    {
+        return definition.GetParameter(id) as T;
     }
 }
