@@ -48,8 +48,8 @@ public partial class CheckBoxBorderContainer : BorderContainer
 
     public override void _Process(double delta)
     {
-        base._Process(delta);
-
         HideContents = !CheckBox.Value;
+
+        base._Process(delta);
     }
 }

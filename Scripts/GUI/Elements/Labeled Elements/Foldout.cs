@@ -36,17 +36,13 @@ public partial class Foldout : LabeledElement
     public override void _Ready()
     {
         base._Ready();
-        _Process(0.0);
+        UpdateLabel();
     }
 
     public override void _Process(double delta)
     {
         base._Process(delta);
-
-        if (IsOpen)
-            base.LabelText = $"\u25BC  {LabelText}";
-        else
-            base.LabelText = $"\u25B6  {LabelText}";
+        UpdateLabel();
     }
 
     public override void _Input(InputEvent @event)
@@ -61,6 +57,15 @@ public partial class Foldout : LabeledElement
             }
             else
                 base.LabelColor = LabelColor;
-            }
         }
+    }
+
+    /* Private methods. */
+    private void UpdateLabel()
+    {
+        if (IsOpen)
+            base.LabelText = $"\u25BC  {LabelText}";
+        else
+            base.LabelText = $"\u25B6  {LabelText}";
+    }
 }

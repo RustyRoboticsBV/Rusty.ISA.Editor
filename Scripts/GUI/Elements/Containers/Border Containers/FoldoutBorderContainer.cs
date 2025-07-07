@@ -25,6 +25,9 @@ public partial class FoldoutBorderContainer : BorderContainer
         foldout.LabelText = "Foldout";
         foldout.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
         AddToHeader(foldout);
+
+        HideContents = !Foldout.IsOpen;
+        HideFooter = !Foldout.IsOpen;
     }
 
     /* Public methods. */
@@ -43,9 +46,9 @@ public partial class FoldoutBorderContainer : BorderContainer
 
     public override void _Process(double delta)
     {
-        base._Process(delta);
-
         HideContents = !Foldout.IsOpen;
         HideFooter = !Foldout.IsOpen;
+
+        base._Process(delta);
     }
 }
