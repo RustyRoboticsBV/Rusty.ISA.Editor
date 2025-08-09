@@ -15,6 +15,6 @@ public class SubNode : Graphs.SubNode
     /// </summary>
     public void SetArgument(string id, object value)
     {
-        Data.SetArgument(id, value);
+        Data?.SetArgument(id, value);
     }
 }

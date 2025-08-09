@@ -15,6 +15,6 @@ public class RootNode : Graphs.RootNode
     /// </summary>
     public void SetArgument(string id, object value)
     {
-        Data.SetArgument(id, value);
+        Data?.SetArgument(id, value);
     }
 }

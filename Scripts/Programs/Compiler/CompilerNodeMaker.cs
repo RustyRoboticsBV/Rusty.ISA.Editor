@@ -6,26 +6,16 @@ public static class CompilerNodeMaker
 {
     public static RootNode MakeRoot(InstructionSet set, string opcode)
     {
-        NodeData data = new();
-        data.Set = set;
-        data.Definition = set[opcode];
-        data.Instance = new(data.Definition);
-
-        RootNode node = new();
-        node.Data = data;
-        return node;
+        RootNode root = new();
+        root.Data = new(set, opcode);
+        return root;
     }
 
     public static SubNode MakeSub(InstructionSet set, string opcode)
     {
-        NodeData data = new();
-        data.Set = set;
-        data.Definition = set[opcode];
-        data.Instance = new(data.Definition);
-
-        SubNode node = new();
-        node.Data = data;
-        return node;
+        SubNode sub = new();
+        sub.Data = new(set, opcode);
+        return sub;
     }
 
     public static SubNode MakeSub(InstructionSet set, Inspector inspector)

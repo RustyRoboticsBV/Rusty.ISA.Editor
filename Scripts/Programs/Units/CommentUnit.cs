@@ -19,7 +19,7 @@ public sealed class CommentUnit : Unit
     {
         // Compile comment.
         RootNode comment = CompilerNodeMaker.MakeRoot(Set, BuiltIn.CommentOpcode);
-        comment.Data.SetArgument(BuiltIn.CommentText, GetArgument(BuiltIn.CommentText));
+        comment.Data.SetArgument(BuiltIn.CommentText, GetInspectorArg(BuiltIn.CommentText));
         comment.Data.SetArgument(BuiltIn.CommentX, Math.Round(Element.PositionOffset.X));
         comment.Data.SetArgument(BuiltIn.CommentY, Math.Round(Element.PositionOffset.Y));
 
