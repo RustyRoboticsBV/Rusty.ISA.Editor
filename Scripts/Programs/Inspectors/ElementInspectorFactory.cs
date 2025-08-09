@@ -2,6 +2,12 @@
 
 public static class ElementInspectorFactory
 {
+    /* Constants. */
+    public const string StartPoint = "start_point";
+    public const string Instruction = "instruction";
+    public const string Parameter = InstructionInspectorFactory.Parameter;
+
+    /* Public methods. */
     public static Inspector Create(InstructionSet set, InstructionDefinition definition)
     {
         // Create inspector.
@@ -32,7 +38,7 @@ public static class ElementInspectorFactory
                 commentText.LabelText = commentTextParam.DisplayName;
                 commentText.Value = commentTextParam.DefaultValue;
                 commentText.TooltipText = commentTextParam.Description;
-                inspector.Add(BuiltIn.CommentText, commentText);
+                inspector.Add(Parameter + BuiltIn.CommentText, commentText);
                 break;
 
             case BuiltIn.FrameOpcode:
@@ -42,7 +48,7 @@ public static class ElementInspectorFactory
                 frameTitleField.LabelText = frameTitleParam.DisplayName;
                 frameTitleField.Value = frameTitleParam.DefaultValue;
                 frameTitleField.TooltipText = frameTitleParam.Description;
-                inspector.Add(BuiltIn.FrameTitle, frameTitleField);
+                inspector.Add(Parameter + BuiltIn.FrameTitle, frameTitleField);
 
                 // Add color field.
                 ColorParameter frameColorParam = definition.GetParameter(BuiltIn.FrameColor) as ColorParameter;
@@ -50,7 +56,7 @@ public static class ElementInspectorFactory
                 frameColorField.LabelText = frameColorParam.DisplayName;
                 frameColorField.Value = frameColorParam.DefaultValue;
                 frameColorField.TooltipText = frameColorParam.Description;
-                inspector.Add(BuiltIn.FrameColor, frameColorField);
+                inspector.Add(Parameter + BuiltIn.FrameColor, frameColorField);
                 break;
 
             default:
@@ -59,11 +65,11 @@ public static class ElementInspectorFactory
                 startPoint.LabelText = "Start Point";
                 startPoint.FieldText = "Start";
                 startPoint.TooltipText = "Defines whether or not this node is a start point from which this program can be ran.";
-                inspector.Add("start_point", startPoint);
+                inspector.Add(StartPoint, startPoint);
 
                 // Add instruction inspector.
                 Inspector instructionInspector = InstructionInspectorFactory.Create(set, definition);
-                inspector.Add("instruction", instructionInspector);
+                inspector.Add(Instruction, instructionInspector);
                 break;
         }
 

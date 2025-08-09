@@ -9,6 +9,9 @@ namespace Rusty.ISA.Editor;
 public interface IGraphElement
 {
     /* Public properties. */
+    public StringName Name { get; set; }
+    public string TooltipText { get; set; }
+
     /// <summary>
     /// The position on the graph of this element.
     /// </summary>

@@ -19,6 +19,7 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         }
     }
     public GraphFrame Frame { get; set; }
+    public int ID { get; set; } = -1;
 
     /* Private properties. */
     private List<IGraphElement> Elements { get; } = new();

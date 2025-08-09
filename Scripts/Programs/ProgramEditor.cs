@@ -1,5 +1,5 @@
 ﻿using Godot;
-using Godot.Collections;
+using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
 
@@ -11,11 +11,12 @@ public partial class ProgramEditor : MarginContainer
     /* Private properties. */
     private InstructionSet InstructionSet { get; set; }
 
+    private Button CopyButton { get; set; }
     private InspectorWindow InspectorWindow { get; set; }
     private GraphEdit GraphEdit { get; set; }
     private ContextMenu ContextMenu { get; set; }
 
-    private Dictionary<StringName, Control> Inspectors { get; } = new();
+    private DualDict<IGraphElement, Inspector, Unit> Contents { get; } = new();
 
     /* Constructors. */
     public ProgramEditor(InstructionSet set)
@@ -29,9 +30,20 @@ public partial class ProgramEditor : MarginContainer
         background.Color = new(0.5f, 0.5f, 0.5f);
         AddChild(background);
 
+        // Add vertical box.
+        VBoxContainer vbox = new();
+        AddChild(vbox);
+
+        // Add buttons.
+        CopyButton = new();
+        CopyButton.Text = "Copy";
+        CopyButton.Pressed += OnPressedCopy;
+        vbox.AddChild(CopyButton);
+
         // Add inspector / resizer / graph hbox.
         HBoxContainer hbox = new();
-        AddChild(hbox);
+        hbox.SizeFlagsVertical = SizeFlags.ExpandFill;
+        vbox.AddChild(hbox);
 
         // Create inspector window.
         InspectorWindow = new();
@@ -64,6 +76,25 @@ public partial class ProgramEditor : MarginContainer
     }
 
     /* Private methods. */
+    private void OnPressedCopy()
+    {
+        // Set frame IDs.
+        int nextFrameID = 0;
+        foreach (Unit unit in Contents)
+        {
+            if (unit.Element is GraphFrame frame)
+                frame.ID = nextFrameID;
+            nextFrameID++;
+        }
+
+        // Compile each program unit into a root node.
+        foreach (Unit unit in Contents)
+        {
+            var node = unit.Compile();
+            GD.Print(node);
+        }
+    }
+
     private void OnRightClickedGraph()
     {
         ContextMenu.Position = (Vector2I)GetGlobalMousePosition();
@@ -77,8 +108,11 @@ public partial class ProgramEditor : MarginContainer
         int spawnX = (int)spawnPosition.X;
         int spawnY = (int)spawnPosition.Y;
 
+        // Create inspector.
+        Inspector inspector = ElementInspectorFactory.Create(InstructionSet, definition);
+
         // Spawn element.
-        Node element = null;
+        IGraphElement element = null;
         switch (definition.Opcode)
         {
             case BuiltIn.JointOpcode:
@@ -108,12 +142,26 @@ public partial class ProgramEditor : MarginContainer
                 break;
         }
 
-        // Add inspector.
-        if (definition.Opcode != BuiltIn.JointOpcode)
+        // Create unit.
+        Unit unit = null;
+        switch (definition.Opcode)
         {
-            Inspector nodeInspector = ElementInspectorFactory.Create(InstructionSet, definition);
-            Inspectors.Add(element.Name, nodeInspector);
+            case BuiltIn.JointOpcode:
+                unit = new JointUnit(InstructionSet, definition.Opcode, element as GraphJoint, inspector);
+                break;
+            case BuiltIn.CommentOpcode:
+                unit = new CommentUnit(InstructionSet, definition.Opcode, element as GraphComment, inspector);
+                break;
+            case BuiltIn.FrameOpcode:
+                unit = new FrameUnit(InstructionSet, definition.Opcode, element as GraphFrame, inspector);
+                break;
+            default:
+                unit = new NodeUnit(InstructionSet, definition.Opcode, element as GraphNode, inspector);
+                break;
         }
+
+        // Add contents.
+        Contents.Add(element, inspector, unit);
     }
 
     private void OnSelectedGraphElement(IGraphElement element)
@@ -122,7 +170,7 @@ public partial class ProgramEditor : MarginContainer
             return;
 
         // Retrieve element's inspector.
-        Control inspector = Inspectors[((Node)element).Name];
+        Inspector inspector = Contents[element].Inspector;
 
         // Add element's inspector to inspector window.
         InspectorWindow.Add(inspector);
@@ -134,7 +182,7 @@ public partial class ProgramEditor : MarginContainer
             return;
 
         // Retrieve element's inspector.
-        Control inspector = Inspectors[((Node)element).Name];
+        Inspector inspector = Contents[element].Inspector;
 
         // Add element's inspector to inspector window.
         InspectorWindow.Remove(inspector);
@@ -149,7 +197,7 @@ public partial class ProgramEditor : MarginContainer
         OnDeselectedGraphElement(element);
 
         // Delete inspector.
-        Inspectors.Remove(((Node)element).Name);
+        Contents.Remove(element);
     }
 
     private static T GetParameter<T>(InstructionDefinition definition, string id) where T : Parameter

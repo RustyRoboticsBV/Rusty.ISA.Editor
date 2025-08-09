@@ -1,27 +1,39 @@
 ﻿namespace Rusty.ISA.Editor;
 
+/// <summary>
+/// A factory for instruction inspectors.
+/// </summary>
 public static class InstructionInspectorFactory
 {
+    /* Constants. */
+    public const string Opcode = "opcode";
+    public const string Parameter = "par_";
+    public const string PreInstruction = "pre_";
+    public const string PostInstruction = "pst_";
+
+    /* Public methods. */
     public static Inspector Create(InstructionSet set, InstructionDefinition definition)
     {
         // Create inspector.
         Inspector inspector = new();
+
+        // Store opcode.
+        inspector.WriteMetaData(Opcode, definition.Opcode);
 
         // Add pre-instructions.
         foreach (CompileRule rule in definition.PreInstructions)
         {
             IGuiElement element = CompileRuleInspectorFactory.Create(set, rule);
             if (element != null)
-                inspector.Add("pre_" + rule.ID, element);
+                inspector.Add(PreInstruction + rule.ID, element);
         }
 
         // Add parameters.
         foreach (Parameter parameter in definition.Parameters)
         {
-            Godot.GD.Print(parameter);
             IGuiElement element = CreateField(parameter);
             if (element != null)
-                inspector.Add("par_" + parameter.ID, element);
+                inspector.Add(Parameter + parameter.ID, element);
         }
 
         // Add post-instructions.
@@ -29,7 +41,7 @@ public static class InstructionInspectorFactory
         {
             IGuiElement element = CompileRuleInspectorFactory.Create(set, rule);
             if (element != null)
-                inspector.Add("pst_" + rule.ID, element);
+                inspector.Add(PostInstruction + rule.ID, element);
         }
 
         return inspector;

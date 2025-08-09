@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
 
@@ -8,6 +9,7 @@ public partial class Inspector : MarginContainer, IGuiElement
     public IContainer ContentsContainer { get; private set; }
 
     /* Private properties. */
+    private Dictionary<string, string> MetaData { get; } = new();
     private BiDict<string, int> Elements { get; } = new();
 
     /* Constructors. */
@@ -30,6 +32,13 @@ public partial class Inspector : MarginContainer, IGuiElement
     {
         if (other is Inspector inspector)
         {
+            // Copy metadata.
+            MetaData.Clear();
+            foreach (var metaData in inspector.MetaData)
+            {
+                MetaData.Add(metaData.Key, metaData.Value);
+            }
+
             // Replace contents container with a copy of the other inspector's contents container.
             Clear();
 
@@ -46,6 +55,22 @@ public partial class Inspector : MarginContainer, IGuiElement
         }
     }
 
+    public void WriteMetaData(string key, string value)
+    {
+        if (MetaData.ContainsKey(key))
+            MetaData[key] = value;
+        else
+            MetaData.Add(key, value);
+    }
+
+    public string ReadMetaData(string key)
+    {
+        if (MetaData.ContainsKey(key))
+            return MetaData[key];
+        else
+            return "";
+    }
+
     /// <summary>
     /// Get the number of elements on this inspector.
     /// </summary>
@@ -55,11 +80,27 @@ public partial class Inspector : MarginContainer, IGuiElement
     }
 
     /// <summary>
+    /// Get the key associated with the index of an element from the contents.
+    /// </summary>
+    public string GetKey(int index)
+    {
+        return Elements[index];
+    }
+
+    /// <summary>
     /// Get an element on this inspector.
     /// </summary>
     public IGuiElement GetAt(string key)
     {
         int index = Elements[key];
+        return ContentsContainer.GetFromContents(index);
+    }
+
+    /// <summary>
+    /// Get an element on this inspector.
+    /// </summary>
+    public IGuiElement GetAt(int index)
+    {
         return ContentsContainer.GetFromContents(index);
     }
 
