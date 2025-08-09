@@ -17,6 +17,7 @@ public partial class ProgramEditor : MarginContainer
     private ContextMenu ContextMenu { get; set; }
 
     private DualDict<IGraphElement, Inspector, Unit> Contents { get; } = new();
+    private int NextFrameID { get; set; } = 0;
 
     /* Constructors. */
     public ProgramEditor(InstructionSet set)
@@ -78,15 +79,6 @@ public partial class ProgramEditor : MarginContainer
     /* Private methods. */
     private void OnPressedCopy()
     {
-        // Set frame IDs.
-        int nextFrameID = 0;
-        foreach (Unit unit in Contents)
-        {
-            if (unit.Element is GraphFrame frame)
-                frame.ID = nextFrameID;
-            nextFrameID++;
-        }
-
         // Compile each program unit into a root node.
         foreach (Unit unit in Contents)
         {
@@ -129,8 +121,10 @@ public partial class ProgramEditor : MarginContainer
                 break;
             case BuiltIn.FrameOpcode:
                 GraphFrame frame = GraphEdit.AddFrame(spawnX, spawnY);
+                frame.ID = NextFrameID;
                 frame.Title = GetParameter<TextlineParameter>(definition, BuiltIn.FrameTitle).DefaultValue;
                 frame.TintColor = GetParameter<ColorParameter>(definition, BuiltIn.FrameColor).DefaultValue;
+                NextFrameID++;
                 element = frame;
                 break;
             default:

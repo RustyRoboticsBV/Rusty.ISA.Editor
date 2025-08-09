@@ -1,4 +1,6 @@
-﻿namespace Rusty.ISA.Editor;
+﻿using Godot;
+
+namespace Rusty.ISA.Editor;
 
 public class NodeData : Graphs.NodeData
 {
@@ -15,6 +17,13 @@ public class NodeData : Graphs.NodeData
         Instance = new(Definition);
     }
 
+    public NodeData(InstructionSet set, InstructionInstance instance)
+    {
+        Set = set;
+        Definition = set[instance.Opcode];
+        Instance = new(instance);
+    }
+
     /* Public methods. */
     public override string ToString()
     {
@@ -23,7 +32,7 @@ public class NodeData : Graphs.NodeData
 
     public override NodeData Copy()
     {
-        return new NodeData(Set, Definition.Opcode);
+        return new NodeData(Set, Instance);
     }
 
     /// <summary>
@@ -31,7 +40,9 @@ public class NodeData : Graphs.NodeData
     /// </summary>
     public void SetArgument(string id, object value)
     {
+        GD.Print(id + " to " + value);
         int index = Definition.GetParameterIndex(id);
-        Instance.Arguments[index] = value.ToString();
+        string str = value is Color color ? '#' + color.ToHtml(color.A != 1f) : value.ToString();
+        Instance.Arguments[index] = str;
     }
 }

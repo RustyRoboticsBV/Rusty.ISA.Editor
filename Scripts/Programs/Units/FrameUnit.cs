@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using Godot;
+using System.Xml.Linq;
 
 namespace Rusty.ISA.Editor;
 
@@ -32,6 +33,7 @@ public sealed class FrameUnit : Unit
             SubNode frameMember = CompilerNodeMaker.MakeSub(Set, BuiltIn.FrameMemberOpcode);
             frameMember.SetArgument(BuiltIn.FrameMemberID, Element.Frame.ID);
             frame.AddChild(frameMember);
+            GD.Print("Set frame member to " + frameMember);
         }
 
         // Compile end-of-group.
