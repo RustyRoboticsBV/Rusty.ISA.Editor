@@ -40,7 +40,6 @@ public class NodeData : Graphs.NodeData
     /// </summary>
     public void SetArgument(string id, object value)
     {
-        GD.Print(id + " to " + value);
         int index = Definition.GetParameterIndex(id);
         string str = value is Color color ? '#' + color.ToHtml(color.A != 1f) : value.ToString();
         Instance.Arguments[index] = str;

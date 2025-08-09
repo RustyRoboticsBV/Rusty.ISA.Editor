@@ -24,6 +24,12 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
 
     public Color BgColor { get; set; } = new Color(0.13f, 0.13f, 0.13f);
 
+    /* Private propertise. */
+    private Label Slots { get; set; }
+    private bool Dragging { get; set; }
+    private Vector2 DragStartPositionOffset { get; set; }
+    private Vector2 DragStartMousePosition { get; set; }
+
     /* Public events. */
     public new event Action<IGraphElement> NodeSelected;
     public new event Action<IGraphElement> NodeDeselected;
@@ -37,7 +43,7 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
     public GraphJoint()
     {
         // Set default minimum size.
-        CustomMinimumSize = new(60f, 40f);
+        CustomMinimumSize = new(40f, 40f);
 
         // Add style overrides.
         AddThemeStyleboxOverride("panel_selected", new StyleBoxFlat()
@@ -59,10 +65,14 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
         }
 
         // Add slots.
-        Control slots = new();
-        slots.MouseFilter = MouseFilterEnum.Ignore;
-        slots.CustomMinimumSize = CustomMinimumSize;
-        AddChild(slots);
+        Slots = new();
+        Slots.MouseFilter = MouseFilterEnum.Stop;
+        Slots.GuiInput += OnLabelGuiInput;
+        Slots.CustomMinimumSize = CustomMinimumSize - new Vector2(16f, 0f);
+        Slots.SizeFlagsHorizontal = SizeFlags.ShrinkCenter;
+        Slots.HorizontalAlignment = HorizontalAlignment.Center;
+        Slots.VerticalAlignment = VerticalAlignment.Center;
+        AddChild(Slots);
         SetSlotEnabledLeft(0, true);
         SetSlotEnabledRight(0, true);
 
@@ -88,6 +98,30 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
 
         // Shrink to minimum size.
         Size = Vector2.Zero;
+    }
+
+    public void OnLabelGuiInput(InputEvent @event)
+    {
+        if (@event is InputEventMouseButton mouseButton && mouseButton.ButtonIndex == MouseButton.Left)
+        {
+            if (mouseButton.Pressed)
+            {
+                Selected = true;
+                Dragging = true;
+                DragStartPositionOffset = PositionOffset;
+                DragStartMousePosition = mouseButton.GlobalPosition;
+                NodeSelected?.Invoke(this);
+            }
+            else
+                Dragging = false;
+        }
+        else if (@event is InputEventMouseMotion mouseMotion && Selected && Dragging)
+        {
+            Vector2 unsnapped = mouseMotion.GlobalPosition + (DragStartPositionOffset - DragStartMousePosition);
+            PositionOffset = SnapToGrid(unsnapped, GraphEdit);
+            GD.Print("Moved to " + PositionOffset);
+            Dragged?.Invoke(this);
+        }
     }
 
     /* Public methods. */
@@ -120,5 +154,17 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
     private void OnDragged(Vector2 from, Vector2 to)
     {
         Dragged?.Invoke(this);
+    }
+
+    private static Vector2 SnapToGrid(Vector2 positionOffset, GraphEdit graph)
+    {
+        if (graph == null || !graph.SnappingEnabled)
+            return positionOffset;
+
+        var step = graph.SnapDistance;
+        return new Vector2(
+            Mathf.Round(positionOffset.X / step) * step,
+            Mathf.Round(positionOffset.Y / step) * step
+        );
     }
 }
