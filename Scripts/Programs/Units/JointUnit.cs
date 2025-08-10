@@ -7,6 +7,7 @@ public sealed class JointUnit : Unit
 {
     /* Public properties. */
     public new GraphJoint Element => base.Element as GraphJoint;
+    public new JointInspector Inspector => base.Inspector as JointInspector; 
 
     /* Constructors. */
     public JointUnit(InstructionSet set, string opcode, GraphJoint element, Inspector inspector)
@@ -17,6 +18,8 @@ public sealed class JointUnit : Unit
     {
         // Compile joint header.
         RootNode joint = CompilerNodeMaker.MakeRoot(Set, BuiltIn.JointOpcode);
+        joint.SetArgument(BuiltIn.JointX, (int)Element.PositionOffset.X);
+        joint.SetArgument(BuiltIn.JointY, (int)Element.PositionOffset.Y);
 
         // Compile frame member.
         if (Element.Frame != null)

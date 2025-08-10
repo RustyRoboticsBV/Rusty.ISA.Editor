@@ -9,7 +9,6 @@ public partial class Inspector : MarginContainer, IGuiElement
     public IContainer ContentsContainer { get; private set; }
 
     /* Private properties. */
-    private Dictionary<string, string> MetaData { get; } = new();
     private BiDict<string, int> Elements { get; } = new();
 
     /* Constructors. */
@@ -21,24 +20,17 @@ public partial class Inspector : MarginContainer, IGuiElement
     }
 
     /* Public methods. */
-    public IGuiElement Copy()
+    public virtual IGuiElement Copy()
     {
         Inspector copy = new();
         copy.CopyFrom(this);
         return copy;
     }
 
-    public void CopyFrom(IGuiElement other)
+    public virtual void CopyFrom(IGuiElement other)
     {
         if (other is Inspector inspector)
         {
-            // Copy metadata.
-            MetaData.Clear();
-            foreach (var metaData in inspector.MetaData)
-            {
-                MetaData.Add(metaData.Key, metaData.Value);
-            }
-
             // Replace contents container with a copy of the other inspector's contents container.
             Clear();
 
@@ -53,22 +45,6 @@ public partial class Inspector : MarginContainer, IGuiElement
 
             TooltipText = inspector.TooltipText;
         }
-    }
-
-    public void WriteMetaData(string key, string value)
-    {
-        if (MetaData.ContainsKey(key))
-            MetaData[key] = value;
-        else
-            MetaData.Add(key, value);
-    }
-
-    public string ReadMetaData(string key)
-    {
-        if (MetaData.ContainsKey(key))
-            return MetaData[key];
-        else
-            return "";
     }
 
     /// <summary>

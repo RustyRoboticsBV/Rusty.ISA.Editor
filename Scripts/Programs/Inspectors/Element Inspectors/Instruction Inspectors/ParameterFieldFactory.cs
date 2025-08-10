@@ -1,54 +1,17 @@
 ﻿namespace Rusty.ISA.Editor;
 
 /// <summary>
-/// A factory for instruction inspectors.
+/// A factory for parameter fields.
 /// </summary>
-public static class InstructionInspectorFactory
+public static class ParameterFieldFactory
 {
-    /* Constants. */
-    public const string Opcode = "opcode";
-    public const string Parameter = "par_";
-    public const string PreInstruction = "pre_";
-    public const string PostInstruction = "pst_";
-
     /* Public methods. */
-    public static Inspector Create(InstructionSet set, InstructionDefinition definition)
+    public static IGuiElement Create(InstructionDefinition definition, string parameterID)
     {
-        // Create inspector.
-        Inspector inspector = new();
-
-        // Store opcode.
-        inspector.WriteMetaData(Opcode, definition.Opcode);
-
-        // Add pre-instructions.
-        foreach (CompileRule rule in definition.PreInstructions)
-        {
-            IGuiElement element = CompileRuleInspectorFactory.Create(set, rule);
-            if (element != null)
-                inspector.Add(PreInstruction + rule.ID, element);
-        }
-
-        // Add parameters.
-        foreach (Parameter parameter in definition.Parameters)
-        {
-            IGuiElement element = CreateField(parameter);
-            if (element != null)
-                inspector.Add(Parameter + parameter.ID, element);
-        }
-
-        // Add post-instructions.
-        foreach (CompileRule rule in definition.PostInstructions)
-        {
-            IGuiElement element = CompileRuleInspectorFactory.Create(set, rule);
-            if (element != null)
-                inspector.Add(PostInstruction + rule.ID, element);
-        }
-
-        return inspector;
+        return Create(definition.Parameters[definition.GetParameterIndex(parameterID)]);
     }
 
-    /* Private methods. */
-    private static IGuiElement CreateField(Parameter parameter)
+    public static IGuiElement Create(Parameter parameter)
     {
         IGuiElement element;
         switch (parameter)
@@ -110,6 +73,9 @@ public static class InstructionInspectorFactory
                 {
                     Value = col.DefaultValue
                 };
+                break;
+            case OutputParameter o:
+                element = new OutputField();
                 break;
             default:
                 element = null;

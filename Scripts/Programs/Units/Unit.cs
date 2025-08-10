@@ -26,17 +26,4 @@ public abstract class Unit
     /// Compile this unit.
     /// </summary>
     public abstract RootNode Compile();
-
-    /* Protected methods. */
-    /// <summary>
-    /// Get an argument from the inspector.
-    /// </summary>
-    protected object GetInspectorArg(string id)
-    {
-        IGuiElement element = Inspector.GetAt(ElementInspectorFactory.Parameter + id);
-        if (element is IField field)
-            return field.Value;
-        else
-            return "";
-    }
 }

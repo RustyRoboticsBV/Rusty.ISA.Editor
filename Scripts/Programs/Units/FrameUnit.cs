@@ -1,7 +1,4 @@
-﻿using Godot;
-using System.Xml.Linq;
-
-namespace Rusty.ISA.Editor;
+﻿namespace Rusty.ISA.Editor;
 
 /// <summary>
 /// A frame program unit.
@@ -10,6 +7,7 @@ public sealed class FrameUnit : Unit
 {
     /* Public properties. */
     public new GraphFrame Element => base.Element as GraphFrame;
+    public new FrameInspector Inspector => base.Inspector as FrameInspector;
 
     /* Constructors. */
     public FrameUnit(InstructionSet set, string opcode, GraphFrame element, Inspector inspector)
@@ -24,8 +22,8 @@ public sealed class FrameUnit : Unit
         frame.SetArgument(BuiltIn.FrameY, (int)Element.PositionOffset.Y);
         frame.SetArgument(BuiltIn.FrameWidth, (int)Element.Size.X);
         frame.SetArgument(BuiltIn.FrameHeight, (int)Element.Size.Y);
-        frame.SetArgument(BuiltIn.FrameTitle, GetInspectorArg(BuiltIn.FrameTitle));
-        frame.SetArgument(BuiltIn.FrameColor, GetInspectorArg(BuiltIn.FrameColor));
+        frame.SetArgument(BuiltIn.FrameTitle, Inspector.GetTitleField().Value);
+        frame.SetArgument(BuiltIn.FrameColor, Inspector.GetColorField().Value);
 
         // Compile frame member.
         if (Element.Frame != null)

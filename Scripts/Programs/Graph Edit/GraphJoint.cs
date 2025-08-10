@@ -119,7 +119,6 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
         {
             Vector2 unsnapped = mouseMotion.GlobalPosition + (DragStartPositionOffset - DragStartMousePosition);
             PositionOffset = SnapToGrid(unsnapped, GraphEdit);
-            GD.Print("Moved to " + PositionOffset);
             Dragged?.Invoke(this);
         }
     }

@@ -9,6 +9,7 @@ public sealed class CommentUnit : Unit
 {
     /* Public properties. */
     public new GraphComment Element => base.Element as GraphComment;
+    public new CommentInspector Inspector => base.Inspector as CommentInspector;
 
     /* Constructors. */
     public CommentUnit(InstructionSet set, string opcode, GraphComment element, Inspector inspector)
@@ -19,7 +20,7 @@ public sealed class CommentUnit : Unit
     {
         // Compile comment.
         RootNode comment = CompilerNodeMaker.MakeRoot(Set, BuiltIn.CommentOpcode);
-        comment.Data.SetArgument(BuiltIn.CommentText, GetInspectorArg(BuiltIn.CommentText));
+        comment.Data.SetArgument(BuiltIn.CommentText, Inspector.GetTextField().Value);
         comment.Data.SetArgument(BuiltIn.CommentX, Math.Round(Element.PositionOffset.X));
         comment.Data.SetArgument(BuiltIn.CommentY, Math.Round(Element.PositionOffset.Y));
 
