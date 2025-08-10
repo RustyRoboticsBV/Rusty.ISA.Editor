@@ -1,5 +1,4 @@
 ﻿using Godot;
-using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
 
@@ -11,12 +10,16 @@ public partial class Inspector : MarginContainer, IGuiElement
     /* Private properties. */
     private BiDict<string, int> Elements { get; } = new();
 
+    /* Public events. */
+    public event ChangedHandler Changed;
+
     /* Constructors. */
     public Inspector()
     {
         VerticalContainer container = new();
         AddChild(container);
         ContentsContainer = container;
+        container.Changed += OnContainerChanged;
     }
 
     /* Public methods. */
@@ -36,6 +39,7 @@ public partial class Inspector : MarginContainer, IGuiElement
 
             RemoveChild(ContentsContainer as Node);
             ContentsContainer = inspector.ContentsContainer.Copy() as IContainer;
+            ContentsContainer.Changed += OnContainerChanged;
             AddChild(ContentsContainer as Node);
 
             foreach (string key in inspector.Elements.LeftValues)
@@ -44,6 +48,8 @@ public partial class Inspector : MarginContainer, IGuiElement
             }
 
             TooltipText = inspector.TooltipText;
+
+            Changed?.Invoke();
         }
     }
 
@@ -131,5 +137,15 @@ public partial class Inspector : MarginContainer, IGuiElement
         RemoveChild(ContentsContainer as Node);
         ContentsContainer = container;
         AddChild(container as Node);
+
+        // Subscribe to changed event.
+        container.Changed += OnContainerChanged;
+    }
+
+    /* Private methods. */
+    private void OnContainerChanged()
+    {
+        Godot.GD.Print("Inspector: an element was changed.");
+        Changed?.Invoke();
     }
 }

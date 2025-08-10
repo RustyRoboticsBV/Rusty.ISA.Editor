@@ -2,6 +2,7 @@ using Godot;
 
 namespace Rusty.ISA.Editor;
 
+[GlobalClass]
 /// <summary>
 /// A margin container with a border background.
 /// </summary>
@@ -42,6 +43,9 @@ public partial class BorderContainer : MarginContainer, IContainer
     private VerticalContainer Contents { get; set; }
     private ColorRect Right { get; set; }
     private bool Initialized { get; set; }
+
+    /* Public events. */
+    public event ChangedHandler Changed;
 
     /* Constructors. */
     public BorderContainer()
@@ -92,16 +96,20 @@ public partial class BorderContainer : MarginContainer, IContainer
     public void AddToContents(IGuiElement element)
     {
         Contents.AddToContents(element);
+        Godot.GD.Print("Added " + element.Name + " to border container.");
+        Changed?.Invoke();
     }
 
     public void RemoveFromContents(IGuiElement element)
     {
         Contents.RemoveFromContents(element);
+        Changed?.Invoke();
     }
 
     public void ClearContents()
     {
         Contents.ClearContents();
+        Changed?.Invoke();
     }
 
 
@@ -220,6 +228,8 @@ public partial class BorderContainer : MarginContainer, IContainer
         ContentsMargin.AddChild(Contents);
         Contents.Name = "Contents";
 
+        Contents.Changed += OnContentsChanged;
+
         // Create right edge.
         Right = new();
         Middle.AddChild(Right);
@@ -236,6 +246,8 @@ public partial class BorderContainer : MarginContainer, IContainer
         Top.SizeFlagsVertical = SizeFlags.ShrinkBegin;
         Top.Name = "TopEdge";
 
+        Top.Changed += OnContentsChanged;
+
         // Create bottom edge.
         Bottom = new();
         AddChild(Bottom);
@@ -243,9 +255,7 @@ public partial class BorderContainer : MarginContainer, IContainer
         Bottom.SizeFlagsVertical = SizeFlags.ShrinkEnd;
         Bottom.Name = "BottomEdge";
 
-        /*Top.Contents.AddChild(new Label() { Text = "Top text!\nObtained e." });
-        Contents.AddChild(new Label() { Text = "These are the\nmain contents." });
-        Bottom.Contents.AddChild(new Label() { Text = "Bottom\ntext!" });*/
+        Bottom.Changed += OnContentsChanged;
     }
 
     /* Private methods. */
@@ -283,5 +293,11 @@ public partial class BorderContainer : MarginContainer, IContainer
         }
 
         return true;
+    }
+
+    private void OnContentsChanged()
+    {
+        Godot.GD.Print("Border container: the contents were changed.");
+        Changed?.Invoke();
     }
 }

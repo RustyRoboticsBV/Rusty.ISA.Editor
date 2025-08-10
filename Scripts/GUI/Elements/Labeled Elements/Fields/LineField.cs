@@ -5,7 +5,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A single-line text field.
 /// </summary>
-public partial class LineField : GenericField<string, LineEdit>
+public partial class LineField : LineEditField<string>
 {
     /* Public properties. */
     public override string Value

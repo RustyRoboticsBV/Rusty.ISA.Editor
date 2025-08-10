@@ -41,6 +41,7 @@ public partial class DropdownField : GenericChoice<OptionButton>
     public DropdownField()
     {
         Field.CustomMinimumSize = new(0f, 32f);
+        Field.ItemSelected += OnItemSelected;
     }
 
     /* Public methods. */
@@ -63,5 +64,11 @@ public partial class DropdownField : GenericChoice<OptionButton>
             options.Add(option.ToString());
         }
         Options = options.ToArray();
+    }
+
+    /* Private methods. */
+    private void OnItemSelected(long index)
+    {
+        InvokeChanged();
     }
 }

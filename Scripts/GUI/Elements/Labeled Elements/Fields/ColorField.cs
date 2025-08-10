@@ -18,6 +18,7 @@ public partial class ColorField : GenericField<Color, ColorPickerButton>
     public ColorField() : base()
     {
         Field.CustomMinimumSize = new(0f, 32f);
+        Field.ColorChanged += OnColorChanged;
     }
 
     /* Public methods. */
@@ -26,5 +27,11 @@ public partial class ColorField : GenericField<Color, ColorPickerButton>
         ColorField copy = new();
         copy.CopyFrom(this);
         return copy;
+    }
+
+    /* Private methods. */
+    private void OnColorChanged(Color color)
+    {
+        InvokeChanged();
     }
 }

@@ -29,6 +29,7 @@ public partial class MultilineField : GenericField<string, TextEdit>
         AddChild(vbox);
 
         Field.CustomMinimumSize = new(0, 128);
+        Field.TextChanged += InvokeChanged;
     }
 
     /* Public methods. */

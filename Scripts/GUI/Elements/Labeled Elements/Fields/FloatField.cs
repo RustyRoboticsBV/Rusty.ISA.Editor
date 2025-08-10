@@ -5,7 +5,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A float field.
 /// </summary>
-public partial class FloatField : GenericField<float, SpinBox>
+public partial class FloatField : SpinBoxField<float>
 {
     /* Public properties. */
     public override float Value

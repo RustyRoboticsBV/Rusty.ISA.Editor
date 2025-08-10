@@ -5,6 +5,7 @@
 /// </summary>
 public interface IContainer : IGuiElement
 {
+    /* Public methods. */
     /// <summary>
     /// Get the number of elements inside of this container.
     /// </summary>

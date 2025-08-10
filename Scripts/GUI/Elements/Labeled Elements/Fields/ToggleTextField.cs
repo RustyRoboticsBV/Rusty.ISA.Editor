@@ -44,6 +44,8 @@ public partial class ToggleTextField : GenericField<string, LineEdit>
     public ToggleTextField() : base()
     {
         CheckBox = new();
+        CheckBox.Pressed += OnCheckBoxPressed;
+        Field.TextChanged += OnTextChanged;
         AddChild(CheckBox);
         MoveChild(CheckBox, 1);
     }
@@ -62,5 +64,16 @@ public partial class ToggleTextField : GenericField<string, LineEdit>
         base._Process(delta);
 
         Field.Visible = CheckBox.ButtonPressed;
+    }
+
+    /* Private methods. */
+    private void OnCheckBoxPressed()
+    {
+        InvokeChanged();
+    }
+    
+    private void OnTextChanged(string str)
+    {
+        InvokeChanged();
     }
 }

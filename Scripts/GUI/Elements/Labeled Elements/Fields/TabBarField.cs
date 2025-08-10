@@ -40,6 +40,7 @@ public partial class TabBarField : GenericChoice<TabBar>
     public TabBarField()
     {
         Field.CustomMinimumSize = new(0f, 32f);
+        Field.TabButtonPressed += OnTabPressed;
     }
 
     /* Public methods. */
@@ -71,5 +72,10 @@ public partial class TabBarField : GenericChoice<TabBar>
         }
 
         return totalWidth;
+    }
+
+    private void OnTabPressed(long tab)
+    {
+        InvokeChanged();
     }
 }

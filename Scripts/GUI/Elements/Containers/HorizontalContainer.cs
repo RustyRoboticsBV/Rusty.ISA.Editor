@@ -12,6 +12,9 @@ public partial class HorizontalContainer : HBoxContainer, IContainer
     /* Private properties. */
     private List<IGuiElement> Elements { get; } = new();
 
+    /* Public events. */
+    public event ChangedHandler Changed;
+
     /* Public methods. */
     public IGuiElement Copy()
     {
@@ -48,12 +51,15 @@ public partial class HorizontalContainer : HBoxContainer, IContainer
     {
         Elements.Add(element);
         AddChild(element as Node);
+        Changed?.Invoke();
+        element.Changed += OnElementChanged;
     }
 
     public void RemoveFromContents(IGuiElement element)
     {
         Elements.Remove(element);
         RemoveChild(element as Node);
+        Changed?.Invoke();
     }
 
     public void ClearContents()
@@ -63,5 +69,13 @@ public partial class HorizontalContainer : HBoxContainer, IContainer
             RemoveChild(element as Node);
         }
         Elements.Clear();
+        Changed?.Invoke();
+    }
+
+    /* Private methods. */
+    private void OnElementChanged()
+    {
+        Godot.GD.Print("Horizontal container: an element was changed.");
+        Changed?.Invoke();
     }
 }

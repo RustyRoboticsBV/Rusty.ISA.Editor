@@ -19,6 +19,7 @@ public abstract class Unit
         Opcode = opcode;
         Element = element;
         Inspector = inspector;
+        inspector.Changed += OnInspectorChanged;
     }
 
     /* Public methods. */
@@ -26,4 +27,10 @@ public abstract class Unit
     /// Compile this unit.
     /// </summary>
     public abstract RootNode Compile();
+
+    /* Private methods. */
+    private void OnInspectorChanged()
+    {
+        Godot.GD.Print("The inspector " + Opcode + " was changed.");
+    }
 }

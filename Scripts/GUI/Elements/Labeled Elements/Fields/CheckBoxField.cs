@@ -14,11 +14,23 @@ public partial class CheckBoxField : GenericField<bool, CheckBox>
         set => Field.ButtonPressed = value;
     }
 
+    /* Contructors. */
+    public CheckBoxField() : base()
+    {
+        Field.ButtonDown += OnPressed;
+    }
+
     /* Public methods. */
     public override IGuiElement Copy()
     {
         CheckBoxField copy = new();
         copy.CopyFrom(this);
         return copy;
+    }
+
+    /* Private methods. */
+    private void OnPressed()
+    {
+        InvokeChanged();
     }
 }

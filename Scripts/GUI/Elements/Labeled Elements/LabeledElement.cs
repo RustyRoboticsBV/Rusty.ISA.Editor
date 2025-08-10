@@ -37,7 +37,10 @@ public partial class LabeledElement : HBoxContainer, IGuiElement
     /* Protected properties. */
     protected Label Label { get; private set; }
 
-    /* COnstructors. */
+    /* Public events. */
+    public event ChangedHandler Changed;
+
+    /* Constructors. */
     public LabeledElement()
     {
         // Create label.
@@ -77,5 +80,12 @@ public partial class LabeledElement : HBoxContainer, IGuiElement
 
         // Hide label if it is empty.
         Label.Visible = Label.Text != "";
+    }
+
+    /* Protected methods. */
+    protected void InvokeChanged()
+    {
+        Godot.GD.Print("An element " + GetType().Name + " was changed.");
+        Changed?.Invoke();
     }
 }

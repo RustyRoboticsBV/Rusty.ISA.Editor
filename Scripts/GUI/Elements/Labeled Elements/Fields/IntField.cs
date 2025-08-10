@@ -5,7 +5,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A integer field.
 /// </summary>
-public partial class IntField : GenericField<int, SpinBox>
+public partial class IntField : SpinBoxField<int>
 {
     /* Public properties. */
     public override int Value

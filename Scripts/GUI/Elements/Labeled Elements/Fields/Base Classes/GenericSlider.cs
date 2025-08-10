@@ -1,5 +1,4 @@
 ﻿using Godot;
-using System.Diagnostics.Metrics;
 
 namespace Rusty.ISA.Editor;
 
@@ -89,10 +88,12 @@ public abstract partial class GenericSlider<T> : LabeledElement, IRangeField<T>
     private void OnSliderChanged(double value)
     {
         SpinBox.Value = value;
+        InvokeChanged();
     }
 
     private void OnSpinBoxChanged(double value)
     {
         Slider.Value = value;
+        InvokeChanged();
     }
 }

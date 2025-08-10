@@ -12,6 +12,9 @@ public partial class VerticalContainer : VBoxContainer, IContainer
     /* Private properties. */
     private List<IGuiElement> Elements { get; } = new();
 
+    /* Public events. */
+    public event ChangedHandler Changed;
+
     /* Public methods. */
     public IGuiElement Copy()
     {
@@ -48,12 +51,15 @@ public partial class VerticalContainer : VBoxContainer, IContainer
     {
         Elements.Add(element);
         AddChild(element as Node);
+        element.Changed += OnElementChanged;
+        Changed?.Invoke();
     }
 
     public void RemoveFromContents(IGuiElement element)
     {
         Elements.Remove(element);
         RemoveChild(element as Node);
+        Changed?.Invoke();
     }
 
     public void ClearContents()
@@ -63,5 +69,13 @@ public partial class VerticalContainer : VBoxContainer, IContainer
             RemoveChild(element as Node);
         }
         Elements.Clear();
+        Changed?.Invoke();
+    }
+
+    /* Private methods. */
+    private void OnElementChanged()
+    {
+        Godot.GD.Print($"Vertical container {Name}: an element was changed.");
+        Changed?.Invoke();
     }
 }

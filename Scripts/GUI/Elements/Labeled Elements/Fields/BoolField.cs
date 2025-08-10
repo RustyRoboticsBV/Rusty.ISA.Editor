@@ -1,4 +1,5 @@
 using Godot;
+using System;
 
 namespace Rusty.ISA.Editor;
 
@@ -14,11 +15,23 @@ public partial class BoolField : GenericField<bool, CheckButton>
         set => Field.ButtonPressed = value;
     }
 
+    /* Contructors. */
+    public BoolField() : base()
+    {
+        Field.ButtonDown += OnPressed;
+    }
+
     /* Public methods. */
     public override IGuiElement Copy()
     {
         BoolField copy = new();
         copy.CopyFrom(this);
         return copy;
+    }
+
+    /* Private methods. */
+    private void OnPressed()
+    {
+        InvokeChanged();
     }
 }

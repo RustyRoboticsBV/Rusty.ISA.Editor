@@ -70,6 +70,9 @@ public partial class Header : HBoxContainer, IGuiElement
     private ColorRect Right { get; set; }
     private bool Initialized { get; set; }
 
+    /* Public events. */
+    public event ChangedHandler Changed;
+
     /* Constructors. */
     public Header()
     {
@@ -101,6 +104,7 @@ public partial class Header : HBoxContainer, IGuiElement
     public void Add(IGuiElement element)
     {
         Contents.AddToContents(element);
+        element.Changed += OnElementChanged;
     }
 
     public IGuiElement GetAt(int index)
@@ -198,5 +202,10 @@ public partial class Header : HBoxContainer, IGuiElement
         }
 
         return true;
+    }
+
+    private void OnElementChanged()
+    {
+        Changed?.Invoke();
     }
 }

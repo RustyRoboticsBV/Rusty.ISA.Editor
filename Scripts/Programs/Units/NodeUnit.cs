@@ -194,7 +194,6 @@ public sealed class NodeUnit : Unit
         SubNode list = CompilerNodeMaker.MakeSub(Set, BuiltIn.ListRuleOpcode);
 
         // Compile elements.
-        GD.Print("The list has " + inspector.GetElementCount() + " elements");
         for (int i = 0; i < inspector.GetElementCount(); i++)
         {
             SubNode element = CompileRule(inspector.GetElementInspector(i));

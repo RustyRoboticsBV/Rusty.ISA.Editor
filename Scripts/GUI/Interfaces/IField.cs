@@ -7,6 +7,7 @@ namespace Rusty.ISA.Editor;
 /// </summary>
 public interface IField : IGuiElement
 {
+    /* Public properties. */
     public string LabelText { get; set; }
     public int LabelWidth { get; set; }
     public Color LabelColor { get; set; }

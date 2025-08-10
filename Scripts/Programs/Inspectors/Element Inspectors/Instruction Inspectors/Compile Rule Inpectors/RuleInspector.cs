@@ -2,16 +2,13 @@
 
 public partial class RuleInspector : Inspector
 {
-    /* Constants. */
-    private const string Title = "title+icon";
-
     /* Public properties. */
     public CompileRule Rule { get; private set; }
 
     /* Constructors. */
     public RuleInspector() : base() { }
 
-    public RuleInspector(InstructionSet set, CompileRule rule) : this()
+    public RuleInspector(InstructionSet set, CompileRule rule) : base()
     {
         Rule = rule;
     }
