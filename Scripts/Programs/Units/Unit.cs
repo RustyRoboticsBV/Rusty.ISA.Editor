@@ -1,4 +1,6 @@
-﻿namespace Rusty.ISA.Editor;
+﻿using System.Collections.Generic;
+
+namespace Rusty.ISA.Editor;
 
 /// <summary>
 /// A program unit. It consists of a graph element and its associated inspector.
@@ -31,6 +33,18 @@ public abstract class Unit
     /* Private methods. */
     private void OnInspectorChanged()
     {
-        Godot.GD.Print("The inspector " + Opcode + " was changed.");
+        // Update node outputs.
+        OutputData outputs = OutputDataGetter.GetOutputData(Inspector);
+        if (Element is GraphNode node)
+        {
+            List<string> outputLabels = outputs.GetAllOutputs();
+            for (int i = 0; i < outputLabels.Count; i++)
+            {
+                node.SetOutputPort(i, outputLabels[i]);
+            }
+        }
+
+        // Update previews.
+        // TODO
     }
 }

@@ -96,7 +96,6 @@ public partial class BorderContainer : MarginContainer, IContainer
     public void AddToContents(IGuiElement element)
     {
         Contents.AddToContents(element);
-        Godot.GD.Print("Added " + element.Name + " to border container.");
         Changed?.Invoke();
     }
 
@@ -297,7 +296,6 @@ public partial class BorderContainer : MarginContainer, IContainer
 
     private void OnContentsChanged()
     {
-        Godot.GD.Print("Border container: the contents were changed.");
         Changed?.Invoke();
     }
 }

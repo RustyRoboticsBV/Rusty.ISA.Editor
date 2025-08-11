@@ -40,8 +40,6 @@ public partial class InstructionInspector : Inspector
             if (element != null)
                 Add(PostInstruction + rule.ID, element);
         }
-
-        Changed += OnChanged;
     }
 
     /* Public methods. */
@@ -80,10 +78,5 @@ public partial class InstructionInspector : Inspector
         if (GetAt(PostInstruction + id) is Inspector inspector)
             return inspector as RuleInspector;
         return null;
-    }
-
-    private void OnChanged()
-    {
-        Godot.GD.Print($"InstructionInspector {Definition.Opcode} was changed");
     }
 }

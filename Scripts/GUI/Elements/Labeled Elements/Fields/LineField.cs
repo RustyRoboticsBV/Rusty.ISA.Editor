@@ -1,5 +1,3 @@
-using Godot;
-
 namespace Rusty.ISA.Editor;
 
 /// <summary>

@@ -17,7 +17,6 @@ public partial class InstructionRuleInspector : RuleInspector
     {
         InstructionInspector instruction = new(set, set[rule.Opcode]);
         Add(Instruction, instruction);
-        Changed += OnChanged;
     }
 
     /* Public methods. */
@@ -31,10 +30,5 @@ public partial class InstructionRuleInspector : RuleInspector
     public InstructionInspector GetInstructionInspector()
     {
         return GetAt(Instruction) as InstructionInspector;
-    }
-
-    private void OnChanged()
-    {
-        Godot.GD.Print($"InstructionRuleInspector {Rule.ID} changed");
     }
 }

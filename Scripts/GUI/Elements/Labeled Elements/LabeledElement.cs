@@ -85,7 +85,6 @@ public partial class LabeledElement : HBoxContainer, IGuiElement
     /* Protected methods. */
     protected void InvokeChanged()
     {
-        Godot.GD.Print("An element " + GetType().Name + " was changed.");
         Changed?.Invoke();
     }
 }

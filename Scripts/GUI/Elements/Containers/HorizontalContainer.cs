@@ -1,6 +1,5 @@
 ﻿using Godot;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Rusty.ISA.Editor;
 
@@ -75,7 +74,6 @@ public partial class HorizontalContainer : HBoxContainer, IContainer
     /* Private methods. */
     private void OnElementChanged()
     {
-        Godot.GD.Print("Horizontal container: an element was changed.");
         Changed?.Invoke();
     }
 }

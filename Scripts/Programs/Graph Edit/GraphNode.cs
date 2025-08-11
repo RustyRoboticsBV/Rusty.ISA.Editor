@@ -38,6 +38,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     private List<SlotLabels> SlotLabels { get; } = new();
     private MarginContainer PreviewContainer { get; set; }
     private Label Preview { get; set; }
+    private Control BottomMargin { get; set; }
 
     /* Public events. */
     public new event Action<IGraphElement> NodeSelected;
@@ -73,9 +74,14 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         titleSpacer.AddChild(TitleLabel);
         TitleText = "New Node";
 
+        // Add top margin.
+        Control marginTop = new();
+        marginTop.CustomMinimumSize = new(0f, 5f);
+        AddChild(marginTop);
+
         // Add default ports.
-        SetInputPort(0, "In");
-        SetOutputPort(0, "Out");
+        SetInputPort(0, "");
+        SetOutputPort(0, "");
 
         // Add preview label.
         PreviewContainer = new();
@@ -88,6 +94,12 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
 
         Preview = new();
         PreviewContainer.AddChild(Preview);
+
+        // Add bottom margin.
+        BottomMargin = new();
+        BottomMargin.CustomMinimumSize = new(0f, 5f);
+        AddChild(BottomMargin);
+        BottomMargin.Name = "Bottom Margin";
 
         // Set default values.
         AddThemeColorOverride("font_color", Colors.White);
@@ -122,9 +134,9 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         EnsureSlot(index);
 
         // Enable slot.
-        SetSlot(index,
-            true, GetSlotTypeLeft(index), GetSlotColorLeft(index),
-            IsSlotEnabledRight(index), GetSlotTypeRight(index), GetSlotColorRight(index)
+        SetSlot(index + 1,
+            true, GetSlotTypeLeft(index + 1), GetSlotColorLeft(index + 1),
+            IsSlotEnabledRight(index + 1), GetSlotTypeRight(index + 1), GetSlotColorRight(index + 1)
         );
 
         // Set slot label.
@@ -140,9 +152,9 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         EnsureSlot(index);
 
         // Enable slot.
-        SetSlot(index,
-            IsSlotEnabledLeft(index), GetSlotTypeLeft(index), GetSlotColorLeft(index),
-            true, GetSlotTypeRight(index), GetSlotColorRight(index)
+        SetSlot(index + 1,
+            IsSlotEnabledLeft(index + 1), GetSlotTypeLeft(index + 1), GetSlotColorLeft(index + 1),
+            true, GetSlotTypeRight(index + 1), GetSlotColorRight(index + 1)
         );
 
         // Set slot label.
@@ -188,23 +200,29 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         if (SlotLabels.Count > index)
             return;
 
-        // Temporarily remove the preview.
-        if (Preview != null)
-            RemoveChild(Preview);
+        // Temporarily remove the preview & bottom margin.
+        if (PreviewContainer != null && BottomMargin != null)
+        {
+            RemoveChild(PreviewContainer);
+            RemoveChild(BottomMargin);
+        }
 
         // Add slots until we have enough.
         while (SlotLabels.Count <= index)
         {
             SlotLabels labels = new();
-            labels.CustomMinimumSize = new(0f, 40f);
+            labels.CustomMinimumSize = new(0f, 25f);
             labels.MouseFilter = MouseFilterEnum.Ignore;
             SlotLabels.Add(labels);
             AddChild(labels);
         }
 
         // Add the preview back as the last child.
-        if (Preview != null)
-            AddChild(Preview);
+        if (PreviewContainer != null && BottomMargin != null)
+        {
+            AddChild(PreviewContainer);
+            AddChild(BottomMargin);
+        }
     }
 
     private void OnNodeSelected()

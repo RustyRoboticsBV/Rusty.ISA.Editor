@@ -75,7 +75,6 @@ public partial class VerticalContainer : VBoxContainer, IContainer
     /* Private methods. */
     private void OnElementChanged()
     {
-        Godot.GD.Print($"Vertical container {Name}: an element was changed.");
         Changed?.Invoke();
     }
 }

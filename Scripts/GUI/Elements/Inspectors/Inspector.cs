@@ -145,7 +145,6 @@ public partial class Inspector : MarginContainer, IGuiElement
     /* Private methods. */
     private void OnContainerChanged()
     {
-        Godot.GD.Print("Inspector: an element was changed.");
         Changed?.Invoke();
     }
 }
