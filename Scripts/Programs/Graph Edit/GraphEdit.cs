@@ -105,11 +105,11 @@ public partial class GraphEdit : Godot.GraphEdit
     }
 
     /// <summary>
-    /// Returns the current mouse position as a graph position offset.
+    /// Convert a global position to a local position offset.
     /// </summary>
-    public Vector2 GetMousePosition()
+    public Vector2 GetPositionOffsetFromGlobalPosition(Vector2 globalPosition)
     {
-        return (GetGlobalMousePosition() - GlobalPosition + ScrollOffset) / Zoom;
+        return (globalPosition - GlobalPosition + ScrollOffset) / Zoom;
     }
 
     /* Godot overrides. */
@@ -154,7 +154,8 @@ public partial class GraphEdit : Godot.GraphEdit
             float x2 = x1 + Frames[i].Size.X;
             float y2 = y1 + Frames[i].Size.Y;
 
-            Vector2 mousePosition = GetMousePosition();
+            Vector2 globalMousePosition = GetGlobalMousePosition();
+            Vector2 mousePosition = GetPositionOffsetFromGlobalPosition(globalMousePosition);
 
             if (mousePosition.X > x1 && mousePosition.X < x2 && mousePosition.Y > y1 && mousePosition.Y < y2
                 && (frame == null || Frames[i].IsNestedIn(frame)))

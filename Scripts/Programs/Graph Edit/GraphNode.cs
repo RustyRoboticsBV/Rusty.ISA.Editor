@@ -112,6 +112,9 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         base.NodeDeselected += OnNodeDeselected;
         base.Dragged += OnDragged;
         base.DeleteRequest += OnDeleteRequest;
+
+        // Force one update.
+        _Process(0);
     }
 
     /* Public methods. */
