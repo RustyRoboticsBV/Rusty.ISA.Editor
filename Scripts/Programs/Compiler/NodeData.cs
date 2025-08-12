@@ -2,6 +2,9 @@
 
 namespace Rusty.ISA.Editor;
 
+/// <summary>
+/// A compiler node data object.
+/// </summary>
 public class NodeData : Graphs.NodeData
 {
     /* Public properties. */

@@ -1,5 +1,8 @@
 ﻿namespace Rusty.ISA.Editor;
 
+/// <summary>
+/// A compiler sub-node.
+/// </summary>
 public class SubNode : Graphs.SubNode
 {
     /* Public properties. */

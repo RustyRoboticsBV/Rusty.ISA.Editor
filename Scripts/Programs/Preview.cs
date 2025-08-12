@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Godot;
 
-namespace ISA.Editor.Scripts.Programs
+namespace Rusty.ISA.Editor;
+
+public class Preview
 {
-    internal class Preview
+    private const string SkeletonCode = """
+func eval() -> String:
+    EVAL
+""";
+
+    public Preview(string code)
     {
+        string source = SkeletonCode.Replace("EVAL", code);
     }
 }

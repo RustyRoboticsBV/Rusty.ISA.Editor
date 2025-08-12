@@ -1,5 +1,8 @@
 ﻿namespace Rusty.ISA.Editor;
 
+/// <summary>
+/// A compiler root node.
+/// </summary>
 public class RootNode : Graphs.RootNode
 {
     /* Public properties. */

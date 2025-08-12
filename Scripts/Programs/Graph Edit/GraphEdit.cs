@@ -13,6 +13,8 @@ public partial class GraphEdit : Godot.GraphEdit
     public List<GraphComment> Comments { get; } = new();
     public List<GraphFrame> Frames { get; } = new();
 
+    public GraphEdges Edges { get; } = new();
+
     /* Public events. */
     public event Action<IGraphElement> SelectedElement;
     public event Action<IGraphElement> DeselectedElement;
@@ -184,6 +186,7 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         // Remove element from graph.
         RemoveChild(element as Node);
+        Edges.RemoveElement(element);
 
         // Remove it from the typed element array.
         switch (element)
@@ -220,11 +223,13 @@ public partial class GraphEdit : Godot.GraphEdit
 
         // Connect node.
         ConnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
+        Edges.Connect(GetElement(fromNode), (int)fromPort, GetElement(toNode), (int)toPort);
     }
 
     private void OnDisconnectionRequest(StringName fromNode, long fromPort, StringName toNode, long toPort)
     {
         DisconnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
+        Edges.Disconnect(GetElement(fromNode), (int)fromPort);
     }
 
     /// <summary>

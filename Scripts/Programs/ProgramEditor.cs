@@ -79,12 +79,30 @@ public partial class ProgramEditor : MarginContainer
     /* Private methods. */
     private void OnPressedCopy()
     {
+        // Create a graph.
+        Graph graph = new();
+        BiDict<IGraphElement, RootNode> nodes = new();
+
         // Compile each program unit into a root node.
         foreach (Unit unit in Contents)
         {
-            var node = unit.Compile();
-            GD.Print(node);
+            RootNode node = unit.Compile();
+            graph.AddNode(node);
+            nodes.Add(unit.Element, node);
         }
+
+        // Connect the compiler nodes according to the graph connections.
+        foreach (var element in GraphEdit.Edges)
+        {
+            foreach (var port in element)
+            {
+                RootNode from = nodes[element.Element];
+                RootNode to = nodes[port.Element];
+                from.ConnectTo(from.OutputCount, to, port.PortIndex);
+            }
+        }
+
+        GD.Print(graph);
     }
 
     private void OnRightClickedGraph()
