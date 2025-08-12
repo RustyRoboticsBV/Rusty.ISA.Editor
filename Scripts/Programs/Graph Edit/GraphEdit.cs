@@ -99,11 +99,6 @@ public partial class GraphEdit : Godot.GraphEdit
         return frame;
     }
 
-    public void Connect(IGraphElement from, int fromSlot, IGraphElement to, int toSlot)
-    {
-        OnDisconnectionRequest((from as Node).Name, fromSlot, (to as Node).Name, toSlot);
-    }
-
     /// <summary>
     /// Convert a global position to a local position offset.
     /// </summary>
@@ -210,6 +205,20 @@ public partial class GraphEdit : Godot.GraphEdit
 
     private void OnConnectionRequest(StringName fromNode, long fromPort, StringName toNode, long toPort)
     {
+        // Disconnect from port if it was already connected.
+        foreach (var connection in Connections)
+        {
+            if ((StringName)connection["from_node"] == fromNode
+                && (long)connection["from_port"] == fromPort)
+            {
+                StringName toNodeOld = (StringName)connection["to_node"];
+                int toPortOld = (int)connection["to_port"];
+                DisconnectNode(fromNode, (int)fromPort, toNodeOld, toPortOld);
+                break;
+            }
+        }
+
+        // Connect node.
         ConnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
     }
 

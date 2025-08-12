@@ -43,7 +43,6 @@ public sealed class NodeUnit : Unit
 
         // Compile instruction inspector.
         SubNode instructionInspector = CompileInstruction(Inspector.GetInstructionInspector());
-        GD.Print(instructionInspector);
         node.AddChild(instructionInspector);
 
         // Compile end-of-group.

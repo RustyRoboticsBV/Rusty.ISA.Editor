@@ -96,7 +96,8 @@ public partial class ProgramEditor : MarginContainer
     private void OnMustSpawn(InstructionDefinition definition)
     {
         // Get spawn position.
-        Vector2 spawnPosition = GraphEdit.GetPositionOffsetFromGlobalPosition(ContextMenu.Position);
+        Vector2 globalSpawnPosition = (ContextMenu.Position + GetGlobalMousePosition()) / 2f;
+        Vector2 spawnPosition = GraphEdit.GetPositionOffsetFromGlobalPosition(globalSpawnPosition);
         int spawnX = (int)spawnPosition.X;
         int spawnY = (int)spawnPosition.Y;
 
