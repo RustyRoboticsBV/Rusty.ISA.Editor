@@ -1,4 +1,6 @@
-﻿namespace Rusty.ISA.Editor;
+﻿using Godot;
+
+namespace Rusty.ISA.Editor;
 
 /// <summary>
 /// A frame program unit.
@@ -37,5 +39,15 @@ public sealed class FrameUnit : Unit
         frame.AddChild(CompilerNodeMaker.MakeSub(Set, BuiltIn.EndOfGroupOpcode));
 
         return frame;
+    }
+
+    /* Protected methods. */
+    protected override void OnInspectorChanged()
+    {
+        base.OnInspectorChanged();
+
+        // Update graph element.
+        Element.Title = (string)Inspector.GetTitleField().Value;
+        Element.TintColor = (Color)Inspector.GetColorField().Value;
     }
 }

@@ -37,4 +37,13 @@ public sealed class CommentUnit : Unit
 
         return comment;
     }
+
+    /* Protected methods. */
+    protected override void OnInspectorChanged()
+    {
+        base.OnInspectorChanged();
+
+        // Update graph element.
+        Element.CommentText = Inspector.GetTextField().Value as string;
+    }
 }

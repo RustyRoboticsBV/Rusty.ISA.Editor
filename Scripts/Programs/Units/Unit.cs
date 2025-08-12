@@ -30,8 +30,8 @@ public abstract class Unit
     /// </summary>
     public abstract RootNode Compile();
 
-    /* Private methods. */
-    private void OnInspectorChanged()
+    /* Protected methods. */
+    protected virtual void OnInspectorChanged()
     {
         // Update node outputs.
         OutputData outputs = OutputDataGetter.GetOutputData(Inspector);
