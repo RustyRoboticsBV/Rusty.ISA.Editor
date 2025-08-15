@@ -37,7 +37,7 @@ public partial class ListBorderContainer : FoldoutBorderContainer
         // Create "add element" button.
         LabeledButton addButton = new();
         addButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        addButton.ButtonText = "Add Element";
+        addButton.ButtonText = "Connect FromElement";
         addButton.Pressed += OnAddButtonPressed;
         Bottom.ShrinkRightEdge = true;
         AddToFooter(addButton);

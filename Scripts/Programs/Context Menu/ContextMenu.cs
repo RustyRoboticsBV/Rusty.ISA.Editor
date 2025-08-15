@@ -9,7 +9,7 @@ namespace Rusty.ISA.Editor;
 public partial class ContextMenu : PopupMenu
 {
     /* Public properties. */
-    public string MenuName { get; set; } = "Add Node";
+    public string MenuName { get; set; } = "Connect Node";
     public List<InstructionDefinition> Definitions { get; private set; } = new();
     public List<PopupMenu> Submenus { get; set; } = new();
 

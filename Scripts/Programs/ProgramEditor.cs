@@ -87,7 +87,7 @@ public partial class ProgramEditor : MarginContainer
         SyntaxTree syntaxTree = new(InstructionSet, GraphEdit, Contents);
 
         // Serialize to code.
-        string code = syntaxTree.Serialize();
+        string code = syntaxTree.Compile();
 
         // Compress code if enabled.
         if (CompressCode)

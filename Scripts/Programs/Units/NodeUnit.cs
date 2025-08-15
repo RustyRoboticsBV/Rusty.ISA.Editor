@@ -1,8 +1,4 @@
-﻿using Godot;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace Rusty.ISA.Editor;
+﻿namespace Rusty.ISA.Editor;
 
 /// <summary>
 /// A node program unit.

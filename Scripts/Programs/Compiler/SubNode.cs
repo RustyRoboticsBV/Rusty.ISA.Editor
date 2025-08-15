@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using System.Text;
 
 namespace Rusty.ISA.Editor;
 
@@ -25,6 +24,11 @@ public class SubNode : Graphs.SubNode
         return child;
     }
 
+    public new SubNode GetChildAt(int index)
+    {
+        return base.GetChildAt(index) as SubNode;
+    }
+
     /// <summary>
     /// Set an argument on the data object.
     /// </summary>
@@ -38,10 +42,13 @@ public class SubNode : Graphs.SubNode
     /// </summary>
     public void AddToChecksum(MD5 md5)
     {
+        // Add out data to the checksum builder.
+        Data.AddToChecksum(md5);
+
+        // Add the data of our children to the checksum builder (recursively).
         for (int i = 0; i < ChildCount; i++)
         {
-            if (GetChildAt(i) is SubNode child)
-                child.AddToChecksum(md5);
+            GetChildAt(i).AddToChecksum(md5);
         }
     }
 }

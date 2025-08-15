@@ -4,71 +4,71 @@ using System.Collections.Generic;
 namespace Rusty.ISA.Editor;
 
 /// <summary>
-/// Represents a graph element's input or output slot. Used for tracking connections.
+/// A single edge from the graph.
 /// </summary>
-public struct Port
+public class Edge
 {
-    public static Port None => new(null, -1);
+    /* Public properties. */
+    public IGraphElement FromElement { get; private set; }
+    public int FromPortIndex { get; private set; }
+    public IGraphElement ToElement { get; private set; }
+    public int ToPortIndex { get; private set; }
 
-    public IGraphElement Element;
-    public int PortIndex;
-
-    public Port(IGraphElement element, int portIndex)
+    /* Constructors. */
+    public Edge(IGraphElement fromElement, int fromPortIndex, IGraphElement toElement, int toPortIndex)
     {
-        Element = element;
-        PortIndex = portIndex;
-    }
-
-    public override int GetHashCode()
-    {
-        return Element.GetHashCode() * 23 + PortIndex.GetHashCode();
+        FromElement = fromElement;
+        FromPortIndex = fromPortIndex;
+        ToElement = toElement;
+        ToPortIndex = toPortIndex;
     }
 }
 
 /// <summary>
 /// A look-up table for a graph element's outgoing edges.
 /// </summary>
-public class ElementEdges : IEnumerable<Port>
+public class ElementEdges : IEnumerable<Edge>
 {
-    public IGraphElement Element { get; private set; }
+    /* Public properties. */
+    public IGraphElement FromElement { get; private set; }
+    public Dictionary<int, Edge> Edges { get; } = new();
 
-    private List<Port> Ports { get; } = new();
-
+    /* Constructors. */
     public ElementEdges(IGraphElement element)
     {
-        Element = element;
+        FromElement = element;
     }
 
-    public void Connect(int from, Port to)
+    /* Public methods. */
+    public void Connect(IGraphElement fromElement, int fromPortIndex, IGraphElement toElement, int toPortIndex)
     {
-        while (Ports.Count <= from)
-        {
-            Ports.Add(Port.None);
-        }
-
-        Ports[from] = to;
+        Edge edge = new(fromElement, fromPortIndex, toElement, toPortIndex);
+        Edges.Add(edge.FromPortIndex, edge);
     }
 
-    public void Disconnect(int from)
+    public void Disconnect(int fromPortIndex)
     {
-        if (Ports.Count <= from)
-            return;
-
-        Ports[from] = Port.None;
+        if (Edges.ContainsKey(fromPortIndex))
+            Edges.Remove(fromPortIndex);
     }
 
-    public Port GetConnectedTo(int from)
+    public Edge Get(int fromPortIndex)
     {
-        while (Ports.Count <= from)
-        {
-            Ports.Add(Port.None);
-        }
-
-        return Ports[from];
+        if (Edges.ContainsKey(fromPortIndex))
+            return Edges[fromPortIndex];
+        return null;
     }
 
-    public IEnumerator<Port> GetEnumerator() => Ports.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    /* Enumerating. */
+    public IEnumerator<Edge> GetEnumerator()
+    {
+        return Edges.Values.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 }
 
 /// <summary>
@@ -76,52 +76,44 @@ public class ElementEdges : IEnumerable<Port>
 /// </summary>
 public class GraphEdges : IEnumerable<ElementEdges>
 {
-    private Dictionary<IGraphElement, ElementEdges> Edges { get; } = new();
+    /* Public properties. */
+    public Dictionary<IGraphElement, ElementEdges> Elements { get; } = new();
 
-    public void Connect(IGraphElement fromElement, int fromPort, IGraphElement toElement, int toPort)
+    /* Public methods. */
+    public void Connect(IGraphElement fromElement, int fromPortIndex, IGraphElement toElement, int toPortIndex)
     {
-        Connect(new(fromElement, fromPort), new(toElement, toPort));
+        if (!Elements.ContainsKey(fromElement))
+            Elements.Add(fromElement, new(fromElement));
+        Elements[fromElement].Connect(fromElement, fromPortIndex, toElement, toPortIndex);
     }
 
-    public void Connect(Port from, Port to)
+    public void Disconnect(IGraphElement fromElement, int fromPortIndex)
     {
-        // Add from element key if it wasn't there yet.
-        if (!Edges.ContainsKey(from.Element))
-            Edges.Add(from.Element, new(from.Element));
-
-        // Create edge between ports.
-        Edges[from.Element].Connect(from.PortIndex, to);
-    }
-
-    public void Disconnect(IGraphElement fromElement, int fromPort)
-    {
-        Disconnect(new(fromElement, fromPort));
-    }
-
-    public void Disconnect(Port from)
-    {
-        // Do nothing if the element wasn't used as a key.
-        if (!Edges.ContainsKey(from.Element))
-            return;
-
-        // Disconnect the outgoing edge.
-        Edges[from.Element].Disconnect(from.PortIndex);
+        if (Elements.ContainsKey(fromElement))
+            Elements[fromElement].Disconnect(fromPortIndex);
     }
 
     public void RemoveElement(IGraphElement element)
     {
-        if (!Edges.ContainsKey(element))
-            Edges.Remove(element);
+        if (!Elements.ContainsKey(element))
+            Elements.Remove(element);
     }
 
-    public Port GetConnectedTo(Port from)
+    public Edge GetEdge(IGraphElement fromElement, int fromPortIndex)
     {
-        if (!Edges.ContainsKey(from.Element))
-            return Port.None;
-
-        return Edges[from.Element].GetConnectedTo(from.PortIndex);
+        if (!Elements.ContainsKey(fromElement))
+            return null;
+        return Elements[fromElement].Edges[fromPortIndex];
     }
 
-    public IEnumerator<ElementEdges> GetEnumerator() => Edges.Values.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    /* Enumerating. */
+    public IEnumerator<ElementEdges> GetEnumerator()
+    {
+        return Elements.Values.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 }

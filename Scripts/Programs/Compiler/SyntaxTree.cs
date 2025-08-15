@@ -1,13 +1,14 @@
 ﻿using Godot;
-using System.Reflection;
 using Rusty.Graphs;
+using System.Reflection;
+using System.Security.Cryptography;
 
 namespace Rusty.ISA.Editor;
 
 /// <summary>
 /// A compiler graph.
 /// </summary>
-public class SyntaxTree : Graphs.Graph
+public class SyntaxTree
 {
     public RootNode Root { get; private set; }
     public InstructionSet InstructionSet { get; private set; }
@@ -40,19 +41,42 @@ public class SyntaxTree : Graphs.Graph
         // Compile each program unit into a root node.
         foreach (Unit unit in contents)
         {
+            // Compile program unit
             RootNode node = unit.Compile();
             graph.AddNode(node);
             nodes.Add(unit.Element, node);
+
+            // Ensure the correct number of outputs.
+            OutputArguments outputs = node.GetOutputArguments();
+            while (node.OutputCount < outputs.TotalOutputNumber)
+            {
+                node.CreateOutput();
+            }
+
+            // Store references to the output arguments inside of the output ports.
+            for (int i = 0; i < outputs.Arguments.Count; i++)
+            {
+                int portIndex = outputs.UsesDefaultOutput ? i + 1 : i;
+
+                OutputPort output = node.GetOutputAt(portIndex);
+                output.OutputParameterNode = outputs.Arguments[portIndex].Node;
+                output.OutputParameterID = outputs.Arguments[portIndex].ParameterID;
+                output = node.GetOutputAt(portIndex);
+                Godot.GD.Print(node.Data + ": setting output " + portIndex + " to " + output.OutputParameterNode.Data + "/" + output.OutputParameterID);
+            }
         }
 
         // Connect the compiler nodes according to the graph edit's connections.
         foreach (var element in graphEdit.Edges)
         {
-            foreach (var port in element)
+            foreach (var edge in element.Edges)
             {
-                RootNode from = nodes[element.Element];
-                RootNode to = nodes[port.Element];
-                from.ConnectTo(from.OutputCount, to, port.PortIndex);
+                RootNode from = nodes[edge.Value.FromElement];
+                int fromPortIndex = edge.Value.FromPortIndex;
+                RootNode to = nodes[edge.Value.ToElement];
+                int toPortIndex = edge.Value.ToPortIndex;
+                GD.Print("Connecting " + from.Data + ", which has " + from.OutputCount + " outputs");
+                from.ConnectTo(fromPortIndex, to, to.InputCount);
             }
         }
 
@@ -90,7 +114,7 @@ public class SyntaxTree : Graphs.Graph
 
         Root = file;
         GD.Print(this);
-        GD.Print(Serialize());
+        GD.Print(Compile());
     }
 
     /* Public methods. */
@@ -99,13 +123,16 @@ public class SyntaxTree : Graphs.Graph
         return Root.ToString();
     }
 
-
-    public string Serialize()
+    /// <summary>
+    /// Generate code.
+    /// </summary>
+    public string Compile()
     {
-        return Serialize(Root);
+        return Compile(Root);
     }
 
     /* Private methods. */
+    // Graph.
     private void ProcessSubGraph(Graph graph, RootNode node, BiDict<int, RootNode> executionOrder, ref int nextLabel)
     {
         // Do nothing if the node was already in the execution order.
@@ -114,6 +141,13 @@ public class SyntaxTree : Graphs.Graph
 
         // Add to execution order.
         executionOrder.Add(executionOrder.Count, node);
+
+        // Add label if necessary.
+        if (NeedsLabel(node))
+        {
+            SetLabel(node, nextLabel.ToString());
+            nextLabel++;
+        }
 
         // Continue with output nodes.
         for (int i = 0; i < node.OutputCount; i++)
@@ -132,6 +166,13 @@ public class SyntaxTree : Graphs.Graph
                 // Connect it.
                 from.ConnectTo(endGroup.CreateInput());
 
+                // Add label if necessary.
+                if (NeedsLabel(endGroup))
+                {
+                    SetLabel(endGroup, nextLabel.ToString());
+                    nextLabel++;
+                }
+
                 // Add to execution order.
                 executionOrder.Add(executionOrder.Count, endGroup);
             }
@@ -148,6 +189,13 @@ public class SyntaxTree : Graphs.Graph
                 // Insert it in-between the current connection.
                 gotoGroup.CreateOutput().ConnectTo(from.To);
                 from.ConnectTo(gotoGroup.CreateInput());
+
+                // Add label if necessary.
+                if (NeedsLabel(gotoGroup))
+                {
+                    SetLabel(gotoGroup, nextLabel.ToString());
+                    nextLabel++;
+                }
 
                 // Add to execution order.
                 executionOrder.Add(executionOrder.Count, gotoGroup);
@@ -167,90 +215,76 @@ public class SyntaxTree : Graphs.Graph
 
     private void SetOutputArguments(RootNode node, ref int nextLabel)
     {
-        OutputArguments outputs = node.GetOutputArguments();
-
-        for (int i = 0; i < outputs.Arguments.Count; i++)
+        for (int i = 0; i < node.OutputCount; i++)
         {
-            // Get output port index.
-            int portIndex = outputs.GetOutputPortIndex(i);
-
-            // Get label value.
-            // Add a label if the target node did not have one yet.
-            RootNode toNode = node.GetOutputAt(portIndex).To.Node as RootNode;
-            SubNode label = GetLabel(toNode);
-            if (label == null)
+            OutputPort output = node.GetOutputAt(i);
+            if (!output.IsDefaultOutput)
             {
-                SetLabel(toNode, nextLabel.ToString());
-                nextLabel++;
+                switch (output.OutputParameterNode)
+                {
+                    case RootNode root:
+                        root.SetArgument(output.OutputParameterID, GetLabel(output.To.Node));
+                        break;
+                    case SubNode sub:
+                        sub.SetArgument(output.OutputParameterID, GetLabel(output.To.Node));
+                        break;
+                }
             }
         }
     }
 
-    private SubNode GetLabel(RootNode node)
+    /// <summary>
+    /// Check if a root node needs a label:<br/>
+    /// - If it has more than one inputs.<br/>
+    /// - If it connects to an output port associated with an output parameter.<br/>
+    /// - If it connects to a goto.
+    /// </summary>
+    private bool NeedsLabel(RootNode node)
     {
-        for (int i = 0; i < node.ChildCount; i++)
+        if (node.InputCount > 1)
+            return true;
+
+        if (node.InputCount == 1)
         {
-            if (node.GetChildAt(i) is SubNode child && child.Opcode == BuiltIn.LabelOpcode)
-                return child;
+            OutputPort from = node.GetInputAt(0).From;
+            if (!from.IsDefaultOutput)
+                return true;
+            if (from.Node.Opcode == BuiltIn.GotoGroupOpcode)
+                return true;
         }
-        return null;
+
+        GD.Print(node.Data + ": no label needed.");
+        GD.Print("Input count: " + node.InputCount);
+        if (node.InputCount == 1)
+            GD.Print("Input 0 leads to: " + node.GetInputAt(0).From.OutputParameterID + " on " + node.GetInputAt(0).From.Node.Data + " (which has " + node.GetInputAt(0).From.Node.OutputCount + " outputs)");
+        return false;
     }
 
+    /// <summary>
+    /// Get the label of a node.
+    /// </summary>
+    private SubNode GetLabel(RootNode node)
+    {
+        return node.GetChildWith(BuiltIn.LabelOpcode);
+    }
+
+    /// <summary>
+    /// Set the label of a node.
+    /// </summary>
     private void SetLabel(RootNode node, string value)
     {
         // Find label sub-node.
-        SubNode label = null;
-        if (node.ChildCount > 0 && node.GetChildAt(0) is SubNode child && child.Opcode == BuiltIn.LabelOpcode)
-            label = child;
+        SubNode label = node.GetChildWith(BuiltIn.LabelOpcode);
 
         // Or create it if it wasn't found.
-        else
+        if (label == null)
         {
             label = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.LabelOpcode);
             node.InsertChild(0, label);
-            label = node.GetChildAt(0) as SubNode;
         }
 
         // Set label name argument.
         label.SetArgument(BuiltIn.LabelName, value);
-    }
-
-    private string Serialize(INode node)
-    {
-        string code = Serialize(node.Data is NodeData data ? data : null);
-        for (int i = 0; i < node.ChildCount; i++)
-        {
-            code += $"\n{Serialize(node.GetChildAt(i))}";
-        }
-        return code;
-    }
-
-    private string Serialize(NodeData data)
-    {
-        if (data == null)
-            return "";
-
-        string code = data.Instance.Opcode;
-        for (int i = 0; i < data.Instance.Arguments.Length; i++)
-        {
-            // Get argument.
-            string arg = data.Instance.Arguments[i];
-
-            // Make argument CSV-safe:
-            // - Replace " with "".
-            // - Enclose in " if containing a , or " character.
-            // - Replace \n with \\n.
-            // - Replace line-breaks with \n.
-            arg = arg.Replace("\"", "\"\"");
-            if (arg.Contains(',') || arg.Contains('"'))
-                arg = '"' + arg + '"';
-            arg = arg.Replace("\\n", "\\\\n").Replace("\n", "\\n");
-
-            // Add to code.
-            code += $",{arg}";
-        }
-
-        return code;
     }
 
     // Metadata.
@@ -346,5 +380,50 @@ public class SyntaxTree : Graphs.Graph
             definition.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
             return definition;
         }
+    }
+
+    // Compilation.
+    /// <summary>
+    /// Compile a node.
+    /// </summary>
+    private static string Compile(INode node)
+    {
+        string code = Compile(node.Data is NodeData data ? data : null);
+        for (int i = 0; i < node.ChildCount; i++)
+        {
+            code += $"\n{Compile(node.GetChildAt(i))}";
+        }
+        return code;
+    }
+
+    /// <summary>
+    /// Compile node data.
+    /// </summary>
+    private static string Compile(NodeData data)
+    {
+        if (data == null)
+            return "";
+
+        string code = data.Instance.Opcode;
+        for (int i = 0; i < data.Instance.Arguments.Length; i++)
+        {
+            // Get argument.
+            string arg = data.Instance.Arguments[i];
+
+            // Make argument CSV-safe:
+            // - Replace " with "".
+            // - Enclose in " if containing a , or " character.
+            // - Replace \n with \\n.
+            // - Replace line-breaks with \n.
+            arg = arg.Replace("\"", "\"\"");
+            if (arg.Contains(',') || arg.Contains('"'))
+                arg = '"' + arg + '"';
+            arg = arg.Replace("\\n", "\\\\n").Replace("\n", "\\n");
+
+            // Add to code.
+            code += $",{arg}";
+        }
+
+        return code;
     }
 }
