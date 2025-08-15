@@ -72,7 +72,7 @@ public class SyntaxTree : Graphs.Graph
         GD.Print(graph);
 
         // Wrap in a program node.
-        RootNode program = CompilerNodeMaker.MakeRoot(set, BuiltIn.ProgramOpcode);
+        RootNode program = CompilerNodeMaker.MakeRoot(set, BuiltIn.GraphOpcode);
         foreach ((int, RootNode) root in executionOrder)
         {
             program.AddChild(root.Item2);
@@ -80,7 +80,7 @@ public class SyntaxTree : Graphs.Graph
         program.AddChild(CompilerNodeMaker.MakeSub(set, BuiltIn.EndOfGroupOpcode));
 
         // Wrap in file node.
-        RootNode file = CompilerNodeMaker.MakeRoot(set, BuiltIn.FileOpcode);
+        RootNode file = CompilerNodeMaker.MakeRoot(set, BuiltIn.ProgramOpcode);
         file.AddChild(metadata);
         file.AddChild(program);
         file.AddChild(CompilerNodeMaker.MakeSub(set, BuiltIn.EndOfGroupOpcode));

@@ -14,7 +14,7 @@ public static class BuiltIn
     public const string ErrorOpcode = "ERR";
     public const string EndOpcode = "END";
 
-    public const string FileOpcode = "FIL";
+    public const string ProgramOpcode = "PRO";
 
     public const string MetadataOpcode = "MTA";
     public const string ChecksumOpcode = "MD5";
@@ -24,7 +24,7 @@ public static class BuiltIn
     public const string CompileRuleOpcode = "RUL";
     public const string ReferenceOpcode = "REF";
 
-    public const string ProgramOpcode = "PRO";
+    public const string GraphOpcode = "GRA";
     public const string JointOpcode = "JNT";
     public const string CommentOpcode = "CMT";
     public const string FrameOpcode = "FRM";

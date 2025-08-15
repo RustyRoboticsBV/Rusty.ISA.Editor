@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=83 format=3 uid="uid://d308mnoeq7xa"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=84 format=3 uid="uid://d308mnoeq7xa"]
 
 [ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconISA.bmp" id="1_xv6kh"]
 [ext_resource type="Texture2D" uid="uid://dirnyk1o5ojkj" path="res://Built-In Instructions/IconMD5.bmp" id="2_owem4"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://bd3m0r4tfpjfy" path="res://Built-In Instructions/IconJNT.bmp" id="9_xvlxa"]
 [ext_resource type="Script" uid="uid://dtxuwjx75byap" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="10_2detx"]
 [ext_resource type="Script" uid="uid://yv1p0xvly16v" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="10_m1uhb"]
+[ext_resource type="Texture2D" uid="uid://bcbcaqtumydtb" path="res://Built-In Instructions/IconGRA.bmp" id="10_n23mp"]
 [ext_resource type="Script" uid="uid://beorwwi6t13op" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="11_6o02d"]
 [ext_resource type="Texture2D" uid="uid://dfl3rdmo5gdiy" path="res://Built-In Instructions/IconFRM.bmp" id="12_ybfo7"]
 [ext_resource type="Script" uid="uid://b55qdbpegdq00" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="13_leabi"]
@@ -32,11 +33,12 @@
 [ext_resource type="Texture2D" uid="uid://u8wdpdq0vkps" path="res://Built-In Instructions/IconENG.bmp" id="28_w7twv"]
 
 [sub_resource type="Resource" id="Resource_w7twv"]
-resource_name = "FIL"
+resource_name = "PRO"
 script = ExtResource("2_xvlxa")
-Opcode = "FIL"
+Opcode = "PRO"
 Parameters = []
-DisplayName = "File"
+Icon = ExtResource("9_n23mp")
+DisplayName = "Program"
 Description = "A root container for editor-generated programs."
 Category = "Editor"
 Preview = ""
@@ -75,7 +77,7 @@ Parameters = [SubResource("Resource_2detx")]
 Icon = ExtResource("2_owem4")
 DisplayName = "Checksum"
 Description = "A checksum marker. Used for data validation."
-Category = ""
+Category = "Editor"
 Preview = ""
 PreInstructions = []
 PostInstructions = []
@@ -210,13 +212,13 @@ PreInstructions = []
 PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_leabi"]
-resource_name = "PRO"
+resource_name = "GRA"
 script = ExtResource("2_xvlxa")
-Opcode = "PRO"
+Opcode = "GRA"
 Parameters = []
-Icon = ExtResource("9_n23mp")
-DisplayName = "Program"
-Description = "A program group."
+Icon = ExtResource("10_n23mp")
+DisplayName = "Graph"
+Description = "A graph group. Contains all nodes, joints, comments and frames."
 Category = "Editor"
 Preview = ""
 PreInstructions = []
