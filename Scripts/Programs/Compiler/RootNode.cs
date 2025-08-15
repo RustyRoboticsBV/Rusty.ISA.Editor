@@ -80,14 +80,6 @@ public class RootNode : Graphs.RootNode
         Data?.SetArgument(id, value);
     }
 
-    /// <summary>
-    /// Get the output data of this node.
-    /// </summary>
-    public OutputArguments GetOutputArguments()
-    {
-        return new(this);
-    }
-
     public string GetChecksum()
     {
         // Create checksum builder.

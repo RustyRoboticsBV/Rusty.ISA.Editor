@@ -46,23 +46,8 @@ public class SyntaxTree
             graph.AddNode(node);
             nodes.Add(unit.Element, node);
 
-            // Ensure the correct number of outputs.
-            OutputArguments outputs = node.GetOutputArguments();
-            while (node.OutputCount < outputs.TotalOutputNumber)
-            {
-                node.CreateOutput();
-            }
-
-            // Store references to the output arguments inside of the output ports.
-            for (int i = 0; i < outputs.Arguments.Count; i++)
-            {
-                int portIndex = outputs.UsesDefaultOutput ? i + 1 : i;
-
-                OutputPort output = node.GetOutputAt(portIndex);
-                output.OutputParameterNode = outputs.Arguments[portIndex].Node;
-                output.OutputParameterID = outputs.Arguments[portIndex].ParameterID;
-                output = node.GetOutputAt(portIndex);
-            }
+            // Find output data.
+            FindOutputArguments(node);
         }
 
         // Connect the compiler nodes according to the graph edit's connections.
@@ -150,7 +135,7 @@ public class SyntaxTree
         // Continue with output nodes.
         for (int i = 0; i < node.OutputCount; i++)
         {
-            IOutputPort from = node.GetOutputAt(i);
+            OutputPort from = node.GetOutputAt(i);
 
             // If the output was not connected...
             if (from.To == null || from.To.Node == null)
@@ -176,7 +161,7 @@ public class SyntaxTree
             }
 
             // If the target was already in the execution order...
-            else if (executionOrder.ContainsRight(from.To.Node as RootNode))
+            else if (executionOrder.ContainsRight(from.To.Node))
             {
                 // Create goto group.
                 RootNode gotoGroup = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.GotoGroupOpcode);
@@ -185,8 +170,12 @@ public class SyntaxTree
                 graph.AddNode(gotoGroup);
 
                 // Insert it in-between the current connection.
-                gotoGroup.CreateOutput().ConnectTo(from.To);
+                InputPort to = from.To;
                 from.ConnectTo(gotoGroup.CreateInput());
+                gotoGroup.CreateOutput().ConnectTo(to);
+
+                // Find output data.
+                FindOutputArguments(gotoGroup);
 
                 // Add label if necessary.
                 if (NeedsLabel(gotoGroup))
@@ -204,11 +193,34 @@ public class SyntaxTree
 
             // Else, continue with sub-graph.
             else
-                ProcessSubGraph(graph, from.To.Node as RootNode, executionOrder, ref nextLabel);
+                ProcessSubGraph(graph, from.To.Node, executionOrder, ref nextLabel);
         }
 
         // Set output arguments.
         SetOutputArguments(node, ref nextLabel);
+    }
+
+    private void FindOutputArguments(RootNode node)
+    {
+        // Collect output data.
+        OutputArguments outputs = new(node);
+
+        // Ensure the correct number of outputs.
+        while (node.OutputCount < outputs.TotalOutputNumber)
+        {
+            node.CreateOutput();
+        }
+
+        // Store references to the output arguments inside of the output ports.
+        for (int i = 0; i < outputs.Arguments.Count; i++)
+        {
+            int portIndex = outputs.UsesDefaultOutput ? i + 1 : i;
+
+            OutputPort output = node.GetOutputAt(portIndex);
+            output.OutputParameterNode = outputs.Arguments[portIndex].Node;
+            output.OutputParameterID = outputs.Arguments[portIndex].ParameterID;
+            output = node.GetOutputAt(portIndex);
+        }
     }
 
     private void SetOutputArguments(RootNode node, ref int nextLabel)
@@ -251,10 +263,6 @@ public class SyntaxTree
                 return true;
         }
 
-        GD.Print(node.Data + ": no label needed.");
-        GD.Print("Input count: " + node.InputCount);
-        if (node.InputCount == 1)
-            GD.Print("Input 0 leads to: " + node.GetInputAt(0).From.OutputParameterID + " on " + node.GetInputAt(0).From.Node.Data + " (which has " + node.GetInputAt(0).From.Node.OutputCount + " outputs)");
         return false;
     }
 
