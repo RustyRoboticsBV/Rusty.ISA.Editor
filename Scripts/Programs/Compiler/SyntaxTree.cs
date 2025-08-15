@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 namespace Rusty.ISA.Editor;
 
 /// <summary>
-/// A compiler graph.
+/// A program syntax tree.
 /// </summary>
 public class SyntaxTree
 {
@@ -98,6 +98,92 @@ public class SyntaxTree
         Root = file;
         GD.Print(this);
         GD.Print(Compile());
+    }
+
+    public SyntaxTree(InstructionSet set, string code)
+    {
+        // Read CSV table.
+        Csv.CsvTable csv = new("code", code);
+
+        // Decompile instruction instances.
+        InstructionInstance[] instances = new InstructionInstance[csv.Height];
+        for (int i = 0; i < csv.Height; i++)
+        {
+            InstructionDefinition definition = set[csv[0, i]];
+            instances[i] = new(definition);
+            for (int j = 0; j < definition.Parameters.Length; j++)
+            {
+                instances[i].Arguments[j] = csv[j + 1, i];
+            }
+        }
+
+        // Create syntax tree.
+        int current = 0;
+        SubNode root = Decompile(set, instances, ref current);
+        Root = root.ToRoot();
+        Root.StealChildren(root);
+
+        // Evaluate checksum.
+        string checksum = Root?.GetChildWith(BuiltIn.MetadataOpcode)?.GetChildWith(BuiltIn.ChecksumOpcode)
+            .GetArgument(BuiltIn.ChecksumValue);
+        string checksumNew = Root?.GetChecksum();
+        if (checksumNew != checksum)
+        {
+            GD.PrintErr("Loaded program had a wrong checksum! This means the data was either modified or corrupted!");
+            GD.PrintErr("File checksum: " + checksum);
+            GD.PrintErr("Recalculated checksum: " + checksumNew);
+        }
+        else
+            GD.Print("Checksum result: the data was valid.");
+    }
+
+    private SubNode Decompile(InstructionSet set, InstructionInstance[] instances, ref int current)
+    {
+        // Create node for current instruction.
+        InstructionInstance instance = instances[current];
+
+        SubNode node = CompilerNodeMaker.MakeSub(set, instance.Opcode);
+        node.Data.Instance = instance;
+
+        // Determine how to proceed.
+        current++;
+        switch (instance.Opcode)
+        {
+            // Groups.
+            case BuiltIn.ProgramOpcode:
+            case BuiltIn.MetadataOpcode:
+            case BuiltIn.InstructionSetOpcode:
+            case BuiltIn.DefinitionOpcode:
+            case BuiltIn.CompileRuleOpcode:
+            case BuiltIn.GraphOpcode:
+            case BuiltIn.CommentOpcode:
+            case BuiltIn.FrameOpcode:
+            case BuiltIn.JointOpcode:
+            case BuiltIn.NodeOpcode:
+            case BuiltIn.InspectorOpcode:
+            case BuiltIn.PreInstructionOpcode:
+            case BuiltIn.PostInstructionOpcode:
+            case BuiltIn.OptionRuleOpcode:
+            case BuiltIn.ChoiceRuleOpcode:
+            case BuiltIn.TupleRuleOpcode:
+            case BuiltIn.ListRuleOpcode:
+            case BuiltIn.GotoGroupOpcode:
+            case BuiltIn.EndGroupOpcode:
+                while (current < instances.Length)
+                {
+                    SubNode child = Decompile(set, instances, ref current);
+                    node.AddChild(child);
+                    if (child.Opcode == BuiltIn.EndOfGroupOpcode)
+                        break;
+                }
+                break;
+
+            // Non-groups.
+            default:
+                break;
+        }
+
+        return node;
     }
 
     /* Public methods. */

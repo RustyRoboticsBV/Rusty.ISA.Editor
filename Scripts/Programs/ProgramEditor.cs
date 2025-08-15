@@ -14,6 +14,7 @@ public partial class ProgramEditor : MarginContainer
     private InstructionSet InstructionSet { get; set; }
 
     private Button CopyButton { get; set; }
+    private Button PasteButton { get; set; }
     private InspectorWindow InspectorWindow { get; set; }
     private GraphEdit GraphEdit { get; set; }
     private ContextMenu ContextMenu { get; set; }
@@ -40,10 +41,18 @@ public partial class ProgramEditor : MarginContainer
         AddChild(vbox);
 
         // Add buttons.
+        HBoxContainer buttons = new();
+        vbox.AddChild(buttons);
+
         CopyButton = new();
         CopyButton.Text = "Copy";
         CopyButton.Pressed += OnPressedCopy;
-        vbox.AddChild(CopyButton);
+        buttons.AddChild(CopyButton);
+
+        PasteButton = new();
+        PasteButton.Text = "Paste";
+        PasteButton.Pressed += OnPressedPaste;
+        buttons.AddChild(PasteButton);
 
         // Add inspector / resizer / graph hbox.
         HBoxContainer hbox = new();
@@ -95,6 +104,20 @@ public partial class ProgramEditor : MarginContainer
 
         // Write to clipboard.
         DisplayServer.ClipboardSet(code);
+    }
+
+    private void OnPressedPaste()
+    {
+        // Read from clipboard.
+        string code = DisplayServer.ClipboardGet();
+
+        // Decompress if necessary.
+        if (!code.StartsWith($"{BuiltIn.ProgramOpcode}\n") && !code.StartsWith($"{BuiltIn.ProgramOpcode}\r"))
+            code = StringCompressor.CompressString(code);
+
+        // Create syntax tree.
+        SyntaxTree syntaxTree = new(InstructionSet, code);
+        GD.Print(syntaxTree);
     }
 
     private void OnRightClickedGraph()

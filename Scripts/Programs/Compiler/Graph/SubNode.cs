@@ -29,12 +29,31 @@ public class SubNode : Graphs.SubNode
         return base.GetChildAt(index) as SubNode;
     }
 
+    public SubNode GetChildWith(string opcode)
+    {
+        for (int i = 0; i < ChildCount; i++)
+        {
+            SubNode child = GetChildAt(i);
+            if (child.Opcode == opcode)
+                return child;
+        }
+        return null;
+    }
+
     /// <summary>
     /// Set an argument on the data object.
     /// </summary>
     public void SetArgument(string id, object value)
     {
         Data?.SetArgument(id, value);
+    }
+
+    /// <summary>
+    /// Get an argument on the data object.
+    /// </summary>
+    public string GetArgument(string id)
+    {
+        return Data?.GetArgument(id);
     }
 
     /// <summary>
@@ -50,5 +69,12 @@ public class SubNode : Graphs.SubNode
         {
             GetChildAt(i).AddToChecksum(md5);
         }
+    }
+
+    public RootNode ToRoot()
+    {
+        RootNode root = new();
+        root.Data = Data.Copy();
+        return root;
     }
 }

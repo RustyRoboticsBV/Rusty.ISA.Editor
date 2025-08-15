@@ -80,6 +80,14 @@ public class RootNode : Graphs.RootNode
         Data?.SetArgument(id, value);
     }
 
+    /// <summary>
+    /// Get an argument on the data object.
+    /// </summary>
+    public string GetArgument(string id)
+    {
+        return Data?.GetArgument(id);
+    }
+
     public string GetChecksum()
     {
         // Create checksum builder.
