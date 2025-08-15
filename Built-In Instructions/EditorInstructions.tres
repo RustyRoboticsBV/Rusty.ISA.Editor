@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=84 format=3 uid="uid://d308mnoeq7xa"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=83 format=3 uid="uid://d308mnoeq7xa"]
 
 [ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconISA.bmp" id="1_xv6kh"]
 [ext_resource type="Texture2D" uid="uid://dirnyk1o5ojkj" path="res://Built-In Instructions/IconMD5.bmp" id="2_owem4"]
@@ -147,16 +147,6 @@ Preview = ""
 PreInstructions = []
 PostInstructions = []
 
-[sub_resource type="Resource" id="Resource_ybfo7"]
-resource_name = "category (text)"
-script = ExtResource("4_513eb")
-ID = "category"
-DisplayName = "Category"
-Description = "The category of the compile rule. Must be either \"pre\" or \"post\"."
-DefaultValue = "pre"
-Preview = ""
-metadata/_custom_type_script = "uid://d02yl7f7rgu3u"
-
 [sub_resource type="Resource" id="Resource_4i0kw"]
 resource_name = "type (text)"
 script = ExtResource("4_513eb")
@@ -179,7 +169,7 @@ Preview = ""
 resource_name = "RUL"
 script = ExtResource("2_xvlxa")
 Opcode = "RUL"
-Parameters = [SubResource("Resource_ybfo7"), SubResource("Resource_4i0kw"), SubResource("Resource_bdv4d")]
+Parameters = [SubResource("Resource_4i0kw"), SubResource("Resource_bdv4d")]
 Icon = ExtResource("6_n23mp")
 DisplayName = "Compile Rule"
 Description = "A compile rule metadata group. Used for option, choice, tuple and list rules (but NOT instruction rules)."

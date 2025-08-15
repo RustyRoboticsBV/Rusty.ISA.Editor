@@ -21,6 +21,8 @@ public partial class ProgramEditor : MarginContainer
     private DualDict<IGraphElement, Inspector, Unit> Contents { get; } = new();
     private int NextFrameID { get; set; } = 0;
 
+    private bool CompressCode { get; set; } = false;
+
     /* Constructors. */
     public ProgramEditor(InstructionSet set)
     {
@@ -81,7 +83,18 @@ public partial class ProgramEditor : MarginContainer
     /* Private methods. */
     private void OnPressedCopy()
     {
+        // Create syntax tree.
         SyntaxTree syntaxTree = new(InstructionSet, GraphEdit, Contents);
+
+        // Serialize to code.
+        string code = syntaxTree.Serialize();
+
+        // Compress code if enabled.
+        if (CompressCode)
+            code = StringCompressor.CompressString(code);
+
+        // Write to clipboard.
+        DisplayServer.ClipboardSet(code);
     }
 
     private void OnRightClickedGraph()

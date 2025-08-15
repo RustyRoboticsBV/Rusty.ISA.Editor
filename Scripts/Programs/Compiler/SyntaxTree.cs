@@ -1,7 +1,6 @@
 ﻿using Godot;
-using Microsoft.VisualBasic;
+using System.Reflection;
 using Rusty.Graphs;
-using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
 
@@ -20,8 +19,18 @@ public class SyntaxTree : Graphs.Graph
 
         // Create metadata.
         RootNode metadata = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.MetadataOpcode);
+
         SubNode checksum = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.ChecksumOpcode);
         metadata.AddChild(checksum);
+
+        SubNode isa = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.InstructionSetOpcode);
+        metadata.AddChild(isa);
+        for (int i = 0; i < set.Count; i++)
+        {
+            metadata.AddChild(ProcessDefinition(set[i]));
+        }
+        isa.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
+
         metadata.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
 
         // Create a program graph.
@@ -81,6 +90,7 @@ public class SyntaxTree : Graphs.Graph
 
         Root = file;
         GD.Print(this);
+        GD.Print(Serialize());
     }
 
     /* Public methods. */
@@ -223,8 +233,118 @@ public class SyntaxTree : Graphs.Graph
         string code = data.Instance.Opcode;
         for (int i = 0; i < data.Instance.Arguments.Length; i++)
         {
-            code += $",{data.Instance.Arguments[i]}";
+            // Get argument.
+            string arg = data.Instance.Arguments[i];
+
+            // Make argument CSV-safe:
+            // - Replace " with "".
+            // - Enclose in " if containing a , or " character.
+            // - Replace \n with \\n.
+            // - Replace line-breaks with \n.
+            arg = arg.Replace("\"", "\"\"");
+            if (arg.Contains(',') || arg.Contains('"'))
+                arg = '"' + arg + '"';
+            arg = arg.Replace("\\n", "\\\\n").Replace("\n", "\\n");
+
+            // Add to code.
+            code += $",{arg}";
         }
+
         return code;
+    }
+
+    // Metadata.
+    private SubNode ProcessDefinition(InstructionDefinition instruction)
+    {
+        // Instruction definition header.
+        SubNode definition = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.DefinitionOpcode);
+        definition.SetArgument(BuiltIn.DefinitionOpcodeParameter, instruction.Opcode);
+
+        // Parameters.
+        for (int i = 0; i < instruction.Parameters.Length; i++)
+        {
+            definition.AddChild(ProcessParameter(instruction.Parameters[i]));
+        }
+
+        // Pre-instructions.
+        if (instruction.PreInstructions.Length > 0)
+        {
+            SubNode pre = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.PreInstructionOpcode);
+            foreach (CompileRule rule in instruction.PreInstructions)
+            {
+                pre.AddChild(ProcessRule(rule));
+            }
+            pre.AddChild(CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.EndOfGroupOpcode));
+            definition.AddChild(pre);
+        }
+
+        // Post-instructions.
+        if (instruction.PostInstructions.Length > 0)
+        {
+            SubNode post = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.PostInstructionOpcode);
+            foreach (CompileRule rule in instruction.PostInstructions)
+            {
+                post.AddChild(ProcessRule(rule));
+            }
+            post.AddChild(CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.EndOfGroupOpcode));
+            definition.AddChild(post);
+        }
+
+        // End-of-group.
+        definition.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
+
+        return definition;
+    }
+
+    private SubNode ProcessParameter(Parameter parameter)
+    {
+        SubNode definition = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.ParameterOpcode);
+        definition.SetArgument(BuiltIn.ParameterType, parameter.GetType().GetCustomAttribute<XmlClassAttribute>().XmlKeyword);
+        definition.SetArgument(BuiltIn.ParameterID, parameter.ID);
+        return definition;
+    }
+
+    private SubNode ProcessRule(CompileRule rule)
+    {
+        if (rule is InstructionRule instruction)
+        {
+            SubNode reference = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.ReferenceOpcode);
+            reference.SetArgument(BuiltIn.ReferenceID, rule.ID);
+            reference.SetArgument(BuiltIn.ReferenceOpcodeParameter, instruction.Opcode);
+            return reference;
+        }
+        else
+        {
+            SubNode definition = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.CompileRuleOpcode);
+            definition.SetArgument(BuiltIn.CompileRuleType, rule.GetType().GetCustomAttribute<XmlClassAttribute>().XmlKeyword);
+            definition.SetArgument(BuiltIn.CompileRuleID, rule.ID);
+            switch (rule)
+            {
+                case OptionRule option:
+                    if (option.Type != null)
+                        definition.AddChild(ProcessRule(option.Type));
+                    break;
+                case ChoiceRule choice:
+                    foreach (CompileRule type in choice.Types)
+                    {
+                        if (type != null)
+                            definition.AddChild(ProcessRule(type));
+                    }
+                    break;
+                case TupleRule tuple:
+                    foreach (CompileRule type in tuple.Types)
+                    {
+                        if (type != null)
+                            definition.AddChild(ProcessRule(type));
+                    }
+                    break;
+                case ListRule list:
+                    if (list.Type != null)
+                        definition.AddChild(ProcessRule(list.Type));
+                    break;
+            }
+            definition.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
+            return definition;
+        }
     }
 }
