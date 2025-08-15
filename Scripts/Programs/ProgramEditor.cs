@@ -157,19 +157,19 @@ public partial class ProgramEditor : MarginContainer
         switch (definition.Opcode)
         {
             case BuiltIn.JointOpcode:
-                GraphJoint joint = GraphEdit.AddJoint(spawnX, spawnY);
+                GraphJoint joint = GraphEdit.SpawnJoint(spawnX, spawnY);
                 joint.BgColor = definition.EditorNode.MainColor;
                 element = joint;
                 break;
             case BuiltIn.CommentOpcode:
-                GraphComment comment = GraphEdit.AddComment(spawnX, spawnY);
+                GraphComment comment = GraphEdit.SpawnComment(spawnX, spawnY);
                 comment.CommentText = GetParameter<MultilineParameter>(definition, BuiltIn.CommentText).DefaultValue;
                 comment.BgColor = definition.EditorNode.MainColor;
                 comment.TextColor = definition.EditorNode.TextColor;
                 element = comment;
                 break;
             case BuiltIn.FrameOpcode:
-                GraphFrame frame = GraphEdit.AddFrame(spawnX, spawnY);
+                GraphFrame frame = GraphEdit.SpawnFrame(spawnX, spawnY);
                 frame.ID = NextFrameID;
                 frame.Title = GetParameter<TextlineParameter>(definition, BuiltIn.FrameTitle).DefaultValue;
                 frame.TintColor = GetParameter<ColorParameter>(definition, BuiltIn.FrameColor).DefaultValue;
@@ -177,7 +177,7 @@ public partial class ProgramEditor : MarginContainer
                 element = frame;
                 break;
             default:
-                GraphNode node = GraphEdit.AddNode(spawnX, spawnY);
+                GraphNode node = GraphEdit.SpawnNode(spawnX, spawnY);
                 node.TitleText = definition.DisplayName;
                 node.TitleIcon = definition.Icon;
                 node.TitleColor = definition.EditorNode.MainColor;

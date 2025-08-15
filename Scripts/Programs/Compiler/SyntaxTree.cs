@@ -155,15 +155,15 @@ public class SyntaxTree
 
     public void ApplyTo(ProgramUnits programUnits)
     {
-        SubNode pfovfm = Root?.GetChildWith(BuiltIn.GraphOpcode);
+        SubNode programNode = Root?.GetChildWith(BuiltIn.GraphOpcode);
 
         // Create graph.
         Graph graph = new();
         Dictionary<string, RootNode> labeledNodes = new();
-        for (int i = 0; i < pfovfm.ChildCount; i++)
+        for (int i = 0; i < programNode.ChildCount; i++)
         {
             // Find element node.
-            SubNode child = pfovfm.GetChildAt(i);
+            SubNode child = programNode.GetChildAt(i);
 
             // Ignore the end-of-group.
             if (child.Opcode == BuiltIn.EndOfGroupOpcode)
@@ -399,16 +399,19 @@ public class SyntaxTree
     }
 
     /// <summary>
+    /// Get whether or not a node has a label.
+    /// </summary>
+    private bool HasLabel(RootNode node)
+    {
+        return node.GetChildWith(BuiltIn.LabelOpcode) != null;
+    }
+
+    /// <summary>
     /// Get the label of a node.
     /// </summary>
     private string GetLabel(RootNode node)
     {
         return node.GetChildWith(BuiltIn.LabelOpcode).Data.GetArgument(BuiltIn.LabelName);
-    }
-
-    private bool HasLabel(RootNode node)
-    {
-        return node.GetChildWith(BuiltIn.LabelOpcode) != null;//ewruen no
     }
 
     /// <summary>

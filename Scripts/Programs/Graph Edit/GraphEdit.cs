@@ -38,6 +38,38 @@ public partial class GraphEdit : Godot.GraphEdit
     }
 
     /* Public methods. */
+    public GraphNode SpawnNode(int x, int y)
+    {
+        GraphNode node = new();
+        AddElement(node);
+        node.PositionOffset = new(x, y);
+        return node;
+    }
+
+    public GraphJoint SpawnJoint(int x, int y)
+    {
+        GraphJoint joint = new();
+        AddElement(joint);
+        joint.PositionOffset = new(x, y);
+        return joint;
+    }
+
+    public GraphComment SpawnComment(int x, int y)
+    {
+        GraphComment comment = new();
+        AddElement(comment);
+        comment.PositionOffset = new(x, y);
+        return comment;
+    }
+
+    public GraphFrame SpawnFrame(int x, int y)
+    {
+        GraphFrame frame = new();
+        AddElement(frame);
+        frame.PositionOffset = new(x, y);
+        return frame;
+    }
+
     public void AddElement(IGraphElement element)
     {
         // Add to typed array.
@@ -50,11 +82,9 @@ public partial class GraphEdit : Godot.GraphEdit
                 Joints.Add(joint);
                 break;
             case GraphComment comment:
-                //comment.CustomMinimumSize = new(SnappingDistance * 10 - 10, SnappingDistance * 2 - 10);
                 Comments.Add(comment);
                 break;
             case GraphFrame frame:
-                //frame.CustomMinimumSize = new(SnappingDistance * 8, SnappingDistance * 8);
                 Frames.Add(frame);
                 break;
         }
@@ -69,36 +99,33 @@ public partial class GraphEdit : Godot.GraphEdit
         element.DeleteRequest += OnElementDeleteRequest;
     }
 
-    public GraphNode AddNode(int x, int y)
+    public void RemoveElement(IGraphElement element)
     {
-        GraphNode node = new();
-        AddElement(node);
-        node.PositionOffset = new(x, y);
-        return node;
-    }
+        // Remove from typed array.
+        switch (element)
+        {
+            case GraphNode node:
+                Nodes.Remove(node);
+                break;
+            case GraphJoint joint:
+                Joints.Remove(joint);
+                break;
+            case GraphComment comment:
+                Comments.Remove(comment);
+                break;
+            case GraphFrame frame:
+                Frames.Remove(frame);
+                break;
+        }
 
-    public GraphJoint AddJoint(int x, int y)
-    {
-        GraphJoint joint = new();
-        AddElement(joint);
-        joint.PositionOffset = new(x, y);
-        return joint;
-    }
+        // Add as child node.
+        RemoveChild(element as Node);
 
-    public GraphComment AddComment(int x, int y)
-    {
-        GraphComment comment = new();
-        AddElement(comment);
-        comment.PositionOffset = new(x, y);
-        return comment;
-    }
-
-    public GraphFrame AddFrame(int x, int y)
-    {
-        GraphFrame frame = new();
-        AddElement(frame);
-        frame.PositionOffset = new(x, y);
-        return frame;
+        // Subscribe to events.
+        element.NodeSelected -= OnElementSelected;
+        element.NodeDeselected -= OnElementDeselected;
+        element.Dragged -= OnElementDragged;
+        element.DeleteRequest -= OnElementDeleteRequest;
     }
 
     /// <summary>
