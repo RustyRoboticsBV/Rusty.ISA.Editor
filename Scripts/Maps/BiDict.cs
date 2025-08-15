@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
@@ -5,7 +6,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A bi-directional dictionary.
 /// </summary>
-public class BiDict<T1, T2>
+public class BiDict<T1, T2> : IEnumerable<(T1, T2)>
 {
     /* Public properties. */
     public int Count => Forward.Count;
@@ -111,5 +112,19 @@ public class BiDict<T1, T2>
     {
         Forward.Clear();
         Inverse.Clear();
+    }
+
+    /* Enumeration. */
+    public IEnumerator<(T1, T2)> GetEnumerator()
+    {
+        foreach (var pair in Forward)
+        {
+            yield return (pair.Key, pair.Value);
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

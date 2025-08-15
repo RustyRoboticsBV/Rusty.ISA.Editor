@@ -14,6 +14,15 @@ public static class BuiltIn
     public const string ErrorOpcode = "ERR";
     public const string EndOpcode = "END";
 
+    public const string MetadataOpcode = "MTA";
+    public const string ChecksumOpcode = "MD5";
+    public const string InstructionSetOpcode = "ISA";
+    public const string DefinitionOpcode = "DEF";
+    public const string ParameterOpcode = "PAR";
+    public const string CompileRuleOpcode = "RUL";
+    public const string ReferenceOpcode = "REF";
+
+    public const string ProgramOpcode = "PRO";
     public const string JointOpcode = "JNT";
     public const string CommentOpcode = "CMT";
     public const string FrameOpcode = "FRM";
@@ -26,15 +35,9 @@ public static class BuiltIn
     public const string ChoiceRuleOpcode = "CHO";
     public const string TupleRuleOpcode = "TPL";
     public const string ListRuleOpcode = "LST";
-    public const string GotoGroupOpcode = "GTN";
-    public const string EndGroupOpcode = "ENN";
+    public const string GotoGroupOpcode = "GTG";
+    public const string EndGroupOpcode = "ENG";
     public const string EndOfGroupOpcode = "EOG";
-
-    public const string InstructionSetOpcode = "ISA";
-    public const string DefinitionOpcode = "DEF";
-    public const string ParameterOpcode = "PAR";
-    public const string CompileRuleOpcode = "RUL";
-    public const string ReferenceOpcode = "REF";
 
     // Parameter ids.
     public const string BeginName = "name";

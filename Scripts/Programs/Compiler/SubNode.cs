@@ -12,7 +12,16 @@ public class SubNode : Graphs.SubNode
         set => base.Data = value;
     }
 
+    public string Opcode => Data.Definition.Opcode;
+
     /* Public methods. */
+    public override SubNode CreateChild()
+    {
+        SubNode child = new();
+        AddChild(child);
+        return child;
+    }
+
     /// <summary>
     /// Set an argument on the data object.
     /// </summary>
