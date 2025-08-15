@@ -6,6 +6,6 @@
 public class InputPort : Graphs.InputPort
 {
     /* Public properties. */
-    public new OutputPort From => base.From as OutputPort;
-    public new RootNode Node => base.Node as RootNode;
+    public override OutputPort From => base.From as OutputPort;
+    public override RootNode Node => base.Node as RootNode;
 }

@@ -24,7 +24,7 @@ public class SubNode : Graphs.SubNode
         return child;
     }
 
-    public new SubNode GetChildAt(int index)
+    public override SubNode GetChildAt(int index)
     {
         return base.GetChildAt(index) as SubNode;
     }

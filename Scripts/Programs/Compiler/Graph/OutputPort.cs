@@ -11,8 +11,7 @@ public class OutputPort : Graphs.OutputPort
     public new InputPort To => base.To as InputPort;
     public new RootNode Node => base.Node as RootNode;
 
+    public bool IsDefaultOutput => OutputParameterNode == null;
     public INode OutputParameterNode { get; set; }
     public string OutputParameterID { get; set; } = "";
-
-    public bool IsDefaultOutput => OutputParameterNode == null;
 }

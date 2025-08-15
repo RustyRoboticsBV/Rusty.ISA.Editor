@@ -19,7 +19,7 @@ public partial class ProgramEditor : MarginContainer
     private GraphEdit GraphEdit { get; set; }
     private ContextMenu ContextMenu { get; set; }
 
-    private DualDict<IGraphElement, Inspector, Unit> Contents { get; } = new();
+    private ProgramUnits ProgramUnits { get; set; }
     private int NextFrameID { get; set; } = 0;
 
     private bool CompressCode { get; set; } = false;
@@ -87,13 +87,16 @@ public partial class ProgramEditor : MarginContainer
         ContextMenu.UpdateInstructionSet(InstructionSet);
         ContextMenu.SelectedItem += OnMustSpawn;
         AddChild(ContextMenu);
+
+        // Create program units container.
+        ProgramUnits = new(set, GraphEdit);
     }
 
     /* Private methods. */
     private void OnPressedCopy()
     {
         // Create syntax tree.
-        SyntaxTree syntaxTree = new(InstructionSet, GraphEdit, Contents);
+        SyntaxTree syntaxTree = new(ProgramUnits);
 
         // Serialize to code.
         string code = syntaxTree.Compile();
@@ -118,6 +121,12 @@ public partial class ProgramEditor : MarginContainer
         // Create syntax tree.
         SyntaxTree syntaxTree = new(InstructionSet, code);
         GD.Print(syntaxTree);
+
+        // Clear graph.
+        ProgramUnits.Clear();
+
+        // Decompile syntax tree.
+        syntaxTree.ApplyTo(ProgramUnits);
     }
 
     private void OnRightClickedGraph()
@@ -195,7 +204,7 @@ public partial class ProgramEditor : MarginContainer
         }
 
         // Add contents.
-        Contents.Add(element, inspector, unit);
+        ProgramUnits.Contents.Add(element, inspector, unit);
     }
 
     private void OnSelectedGraphElement(IGraphElement element)
@@ -204,7 +213,7 @@ public partial class ProgramEditor : MarginContainer
             return;
 
         // Retrieve element's inspector.
-        Inspector inspector = Contents[element].Inspector;
+        Inspector inspector = ProgramUnits.Contents[element].Inspector;
 
         // Add element's inspector to inspector window.
         InspectorWindow.Add(inspector);
@@ -216,7 +225,7 @@ public partial class ProgramEditor : MarginContainer
             return;
 
         // Retrieve element's inspector.
-        Inspector inspector = Contents[element].Inspector;
+        Inspector inspector = ProgramUnits.Contents[element].Inspector;
 
         // Add element's inspector to inspector window.
         InspectorWindow.Remove(inspector);
@@ -231,7 +240,7 @@ public partial class ProgramEditor : MarginContainer
         OnDeselectedGraphElement(element);
 
         // Delete inspector.
-        Contents.Remove(element);
+        ProgramUnits.Contents.Remove(element);
     }
 
     private static T GetParameter<T>(InstructionDefinition definition, string id) where T : Parameter

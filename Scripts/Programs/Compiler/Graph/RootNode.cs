@@ -25,7 +25,7 @@ public class RootNode : Graphs.RootNode
         return child;
     }
 
-    public new SubNode GetChildAt(int index)
+    public override SubNode GetChildAt(int index)
     {
         return base.GetChildAt(index) as SubNode;
     }
@@ -48,7 +48,7 @@ public class RootNode : Graphs.RootNode
         return output;
     }
 
-    public new InputPort GetInputAt(int index)
+    public override InputPort GetInputAt(int index)
     {
         return base.GetInputAt(index) as InputPort;
     }
@@ -60,7 +60,7 @@ public class RootNode : Graphs.RootNode
         return output;
     }
 
-    public new OutputPort GetOutputAt(int index)
+    public override OutputPort GetOutputAt(int index)
     {
         return base.GetOutputAt(index) as OutputPort;
     }

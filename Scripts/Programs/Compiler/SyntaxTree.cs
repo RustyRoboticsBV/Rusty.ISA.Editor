@@ -1,7 +1,9 @@
 ﻿using Godot;
-using Rusty.Graphs;
 using System.Reflection;
-using System.Security.Cryptography;
+using Rusty.Csv;
+using Rusty.Graphs;
+using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Rusty.ISA.Editor;
 
@@ -14,9 +16,9 @@ public class SyntaxTree
     public InstructionSet InstructionSet { get; private set; }
 
     /* Constructors. */
-    public SyntaxTree(InstructionSet set, GraphEdit graphEdit, DualDict<IGraphElement, Inspector, Unit> contents)
+    public SyntaxTree(ProgramUnits programUnits)
     {
-        InstructionSet = set;
+        InstructionSet = programUnits.InstructionSet;
 
         // Create metadata.
         RootNode metadata = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.MetadataOpcode);
@@ -26,9 +28,9 @@ public class SyntaxTree
 
         SubNode isa = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.InstructionSetOpcode);
         metadata.AddChild(isa);
-        for (int i = 0; i < set.Count; i++)
+        for (int i = 0; i < InstructionSet.Count; i++)
         {
-            metadata.AddChild(ProcessDefinition(set[i]));
+            metadata.AddChild(ProcessDefinition(InstructionSet[i]));
         }
         isa.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
 
@@ -39,7 +41,7 @@ public class SyntaxTree
         BiDict<IGraphElement, RootNode> nodes = new();
 
         // Compile each program unit into a root node.
-        foreach (Unit unit in contents)
+        foreach (Unit unit in programUnits.Contents)
         {
             // Compile program unit
             RootNode node = unit.Compile();
@@ -51,7 +53,7 @@ public class SyntaxTree
         }
 
         // Connect the compiler nodes according to the graph edit's connections.
-        foreach (var element in graphEdit.Edges)
+        foreach (var element in programUnits.GraphEdit.Edges)
         {
             foreach (var edge in element.Edges)
             {
@@ -79,18 +81,18 @@ public class SyntaxTree
         GD.Print(graph);
 
         // Wrap in a program node.
-        RootNode program = CompilerNodeMaker.MakeRoot(set, BuiltIn.GraphOpcode);
+        RootNode program = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.GraphOpcode);
         foreach ((int, RootNode) root in executionOrder)
         {
             program.AddChild(root.Item2);
         }
-        program.AddChild(CompilerNodeMaker.MakeSub(set, BuiltIn.EndOfGroupOpcode));
+        program.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
 
         // Wrap in file node.
-        RootNode file = CompilerNodeMaker.MakeRoot(set, BuiltIn.ProgramOpcode);
+        RootNode file = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.ProgramOpcode);
         file.AddChild(metadata);
         file.AddChild(program);
-        file.AddChild(CompilerNodeMaker.MakeSub(set, BuiltIn.EndOfGroupOpcode));
+        file.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
 
         // Compute checksum.
         checksum.SetArgument(BuiltIn.ChecksumValue, file.GetChecksum());
@@ -103,7 +105,7 @@ public class SyntaxTree
     public SyntaxTree(InstructionSet set, string code)
     {
         // Read CSV table.
-        Csv.CsvTable csv = new("code", code);
+        CsvTable csv = new("code", code);
 
         // Decompile instruction instances.
         InstructionInstance[] instances = new InstructionInstance[csv.Height];
@@ -137,55 +139,6 @@ public class SyntaxTree
             GD.Print("Checksum result: the data was valid.");
     }
 
-    private SubNode Decompile(InstructionSet set, InstructionInstance[] instances, ref int current)
-    {
-        // Create node for current instruction.
-        InstructionInstance instance = instances[current];
-
-        SubNode node = CompilerNodeMaker.MakeSub(set, instance.Opcode);
-        node.Data.Instance = instance;
-
-        // Determine how to proceed.
-        current++;
-        switch (instance.Opcode)
-        {
-            // Groups.
-            case BuiltIn.ProgramOpcode:
-            case BuiltIn.MetadataOpcode:
-            case BuiltIn.InstructionSetOpcode:
-            case BuiltIn.DefinitionOpcode:
-            case BuiltIn.CompileRuleOpcode:
-            case BuiltIn.GraphOpcode:
-            case BuiltIn.CommentOpcode:
-            case BuiltIn.FrameOpcode:
-            case BuiltIn.JointOpcode:
-            case BuiltIn.NodeOpcode:
-            case BuiltIn.InspectorOpcode:
-            case BuiltIn.PreInstructionOpcode:
-            case BuiltIn.PostInstructionOpcode:
-            case BuiltIn.OptionRuleOpcode:
-            case BuiltIn.ChoiceRuleOpcode:
-            case BuiltIn.TupleRuleOpcode:
-            case BuiltIn.ListRuleOpcode:
-            case BuiltIn.GotoGroupOpcode:
-            case BuiltIn.EndGroupOpcode:
-                while (current < instances.Length)
-                {
-                    SubNode child = Decompile(set, instances, ref current);
-                    node.AddChild(child);
-                    if (child.Opcode == BuiltIn.EndOfGroupOpcode)
-                        break;
-                }
-                break;
-
-            // Non-groups.
-            default:
-                break;
-        }
-
-        return node;
-    }
-
     /* Public methods. */
     public override string ToString()
     {
@@ -198,6 +151,85 @@ public class SyntaxTree
     public string Compile()
     {
         return Compile(Root);
+    }
+
+    public void ApplyTo(ProgramUnits programUnits)
+    {
+        SubNode pfovfm = Root?.GetChildWith(BuiltIn.GraphOpcode);
+
+        // Create graph.
+        Graph graph = new();
+        Dictionary<string, RootNode> labeledNodes = new();
+        for (int i = 0; i < pfovfm.ChildCount; i++)
+        {
+            // Find element node.
+            SubNode child = pfovfm.GetChildAt(i);
+
+            // Ignore the end-of-group.
+            if (child.Opcode == BuiltIn.EndOfGroupOpcode)
+                continue;
+
+            // Convert it to a root node.
+            RootNode root = child.ToRoot();
+            root.StealChildren(child);
+            graph.AddNode(root);
+
+            // Find output argument data.
+            if (child.Opcode != BuiltIn.EndGroupOpcode)
+                FindOutputArguments(root);
+
+            // Find label.
+            if (HasLabel(root))
+                labeledNodes.Add(GetLabel(root), root);
+        }
+
+        // Connect argument outputs.
+        for (int i = 0; i < graph.NodeCount; i++)
+        {
+            RootNode node = graph.GetNodeAt(i);
+            if (node.Opcode == BuiltIn.EndGroupOpcode)
+                continue;
+            for (int j = 0; j < node.OutputCount; j++)
+            {
+                OutputPort output = node.GetOutputAt(j);
+                if (output.IsDefaultOutput && i < graph.NodeCount - 1)
+                    output.ConnectTo(graph.GetNodeAt(i + 1));
+                else
+                {
+                    string label = null;
+                    switch (output.OutputParameterNode)
+                    {
+                        case RootNode root:
+                            label = root.GetArgument(output.OutputParameterID);
+                            break;
+                        case SubNode sub:
+                            label = sub.GetArgument(output.OutputParameterID);
+                            break;
+                        default:
+                            break;
+                    }
+                    if (label != null)
+                    {
+                        RootNode to = labeledNodes[label];
+                        output.ConnectTo(to.CreateInput());
+                    }
+                }
+            }
+        }
+
+        // Remove gotos and ends.
+        for (int i = graph.NodeCount - 1; i >= 0; i--)
+        {
+            RootNode node = graph.GetNodeAt(i);
+            if (node.Opcode == BuiltIn.EndGroupOpcode)
+                node.Remove();
+            else if (node.Opcode == BuiltIn.GotoGroupOpcode)
+                node.Dissolve();
+        }
+
+        GD.Print(graph);
+
+        Root = null;
     }
 
     /* Private methods. */
@@ -374,6 +406,11 @@ public class SyntaxTree
         return node.GetChildWith(BuiltIn.LabelOpcode).Data.GetArgument(BuiltIn.LabelName);
     }
 
+    private bool HasLabel(RootNode node)
+    {
+        return node.GetChildWith(BuiltIn.LabelOpcode) != null;//ewruen no
+    }
+
     /// <summary>
     /// Set the label of a node.
     /// </summary>
@@ -540,5 +577,55 @@ public class SyntaxTree
         }
 
         return code;
+    }
+
+    // Decompilation.
+    private SubNode Decompile(InstructionSet set, InstructionInstance[] instances, ref int current)
+    {
+        // Create node for current instruction.
+        InstructionInstance instance = instances[current];
+
+        SubNode node = CompilerNodeMaker.MakeSub(set, instance.Opcode);
+        node.Data.Instance = instance;
+
+        // Determine how to proceed.
+        current++;
+        switch (instance.Opcode)
+        {
+            // Groups.
+            case BuiltIn.ProgramOpcode:
+            case BuiltIn.MetadataOpcode:
+            case BuiltIn.InstructionSetOpcode:
+            case BuiltIn.DefinitionOpcode:
+            case BuiltIn.CompileRuleOpcode:
+            case BuiltIn.GraphOpcode:
+            case BuiltIn.CommentOpcode:
+            case BuiltIn.FrameOpcode:
+            case BuiltIn.JointOpcode:
+            case BuiltIn.NodeOpcode:
+            case BuiltIn.InspectorOpcode:
+            case BuiltIn.PreInstructionOpcode:
+            case BuiltIn.PostInstructionOpcode:
+            case BuiltIn.OptionRuleOpcode:
+            case BuiltIn.ChoiceRuleOpcode:
+            case BuiltIn.TupleRuleOpcode:
+            case BuiltIn.ListRuleOpcode:
+            case BuiltIn.GotoGroupOpcode:
+            case BuiltIn.EndGroupOpcode:
+                while (current < instances.Length)
+                {
+                    SubNode child = Decompile(set, instances, ref current);
+                    node.AddChild(child);
+                    if (child.Opcode == BuiltIn.EndOfGroupOpcode)
+                        break;
+                }
+                break;
+
+            // Non-groups.
+            default:
+                break;
+        }
+
+        return node;
     }
 }

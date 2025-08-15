@@ -17,4 +17,22 @@ public class Graph : Graphs.Graph
             AddNode(node);
         }
     }
+
+    /* Public methods. */
+    public override RootNode GetNodeAt(int index)
+    {
+        return base.GetNodeAt(index) as RootNode;
+    }
+
+    public override RootNode CreateNode()
+    {
+        // Create a node.
+        RootNode node = new();
+
+        // Add the node.
+        AddNode(node);
+
+        // Return the result.
+        return node;
+    }
 }
