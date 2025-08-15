@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=83 format=3 uid="uid://d308mnoeq7xa"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=84 format=3 uid="uid://d308mnoeq7xa"]
 
 [ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconISA.bmp" id="1_xv6kh"]
 [ext_resource type="Texture2D" uid="uid://dirnyk1o5ojkj" path="res://Built-In Instructions/IconMD5.bmp" id="2_owem4"]
@@ -30,6 +30,19 @@
 [ext_resource type="Script" uid="uid://cecyq1lx2acho" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="26_b6f58"]
 [ext_resource type="Texture2D" uid="uid://b5e8fbehuo4u6" path="res://Built-In Instructions/IconGTG.bmp" id="27_rqbqj"]
 [ext_resource type="Texture2D" uid="uid://u8wdpdq0vkps" path="res://Built-In Instructions/IconENG.bmp" id="28_w7twv"]
+
+[sub_resource type="Resource" id="Resource_w7twv"]
+resource_name = "FIL"
+script = ExtResource("2_xvlxa")
+Opcode = "FIL"
+Parameters = []
+DisplayName = "File"
+Description = "A root container for editor-generated programs."
+Category = "Editor"
+Preview = ""
+PreInstructions = []
+PostInstructions = []
+metadata/_custom_type_script = "uid://nj3anaafielp"
 
 [sub_resource type="Resource" id="Resource_2ke5f"]
 resource_name = "MTA"
@@ -611,5 +624,5 @@ Name = "Editor"
 Description = "The instructions that are needed for the editor to function. Most are compiler flags that preserve program editability."
 Author = "Rusty Robotics B.V."
 Version = "1.0.0"
-Local = [SubResource("Resource_2ke5f"), SubResource("Resource_6o02d"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_leabi"), SubResource("Resource_n23mp"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_a4bdl"), SubResource("Resource_leu7q"), SubResource("Resource_itw8j")]
+Local = [SubResource("Resource_w7twv"), SubResource("Resource_2ke5f"), SubResource("Resource_6o02d"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_leabi"), SubResource("Resource_n23mp"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_a4bdl"), SubResource("Resource_leu7q"), SubResource("Resource_itw8j")]
 Modules = []

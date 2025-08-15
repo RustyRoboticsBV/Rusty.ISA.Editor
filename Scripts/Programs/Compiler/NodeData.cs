@@ -1,4 +1,6 @@
 ﻿using Godot;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Rusty.ISA.Editor;
 
@@ -56,5 +58,20 @@ public class NodeData : Graphs.NodeData
     {
         int index = Definition.GetParameterIndex(id);
         return Instance.Arguments[index];
+    }
+
+    /// <summary>
+    /// Feed this data to a MD5 checksum generator.
+    /// </summary>
+    public void AddToChecksum(MD5 md5)
+    {
+        // Serialize data. Checksum instructions are serialized using empty arguments.
+        string data = Instance.ToString();
+        if (Instance.Opcode == BuiltIn.ChecksumOpcode)
+            data = new InstructionInstance(Definition).ToString();
+
+        byte[] bytes = Encoding.UTF8.GetBytes(data);
+
+        md5.TransformBlock(bytes, 0, bytes.Length, null, 0);
     }
 }

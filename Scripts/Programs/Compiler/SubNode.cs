@@ -1,4 +1,7 @@
-﻿namespace Rusty.ISA.Editor;
+﻿using System.Security.Cryptography;
+using System.Text;
+
+namespace Rusty.ISA.Editor;
 
 /// <summary>
 /// A compiler sub-node.
@@ -28,5 +31,17 @@ public class SubNode : Graphs.SubNode
     public void SetArgument(string id, object value)
     {
         Data?.SetArgument(id, value);
+    }
+
+    /// <summary>
+    /// Feed this data to a MD5 checksum generator.
+    /// </summary>
+    public void AddToChecksum(MD5 md5)
+    {
+        for (int i = 0; i < ChildCount; i++)
+        {
+            if (GetChildAt(i) is SubNode child)
+                child.AddToChecksum(md5);
+        }
     }
 }

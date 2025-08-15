@@ -14,6 +14,8 @@ public static class BuiltIn
     public const string ErrorOpcode = "ERR";
     public const string EndOpcode = "END";
 
+    public const string FileOpcode = "FIL";
+
     public const string MetadataOpcode = "MTA";
     public const string ChecksumOpcode = "MD5";
     public const string InstructionSetOpcode = "ISA";
@@ -62,6 +64,7 @@ public static class BuiltIn
     public const string NodeY = "y";
     public const string ChoiceRuleSelected = "selected";
 
+    public const string ChecksumValue = "value";
     public const string DefinitionOpcodeParameter = "opcode";
     public const string ParameterType = "type";
     public const string ParameterID = "id";
