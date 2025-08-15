@@ -116,6 +116,14 @@ public class SyntaxTree
 
     /* Private methods. */
     // Graph.
+    /// <summary>
+    /// Process a sub-graph. This does a number of things:<br/>
+    /// - Figuring out the execution order.<br/>
+    /// - Adding labels.<br/>
+    /// - Adding end instructions.<br/>
+    /// - Inserting goto instructions.<br/>
+    /// - Setting output arguments.
+    /// </summary>
     private void ProcessSubGraph(Graph graph, RootNode node, BiDict<int, RootNode> executionOrder, ref int nextLabel)
     {
         // Do nothing if the node was already in the execution order.
@@ -200,6 +208,9 @@ public class SyntaxTree
         SetOutputArguments(node, ref nextLabel);
     }
 
+    /// <summary>
+    /// Find all output arguments of a root node and save the node and ID of each in the associated output port.
+    /// </summary>
     private void FindOutputArguments(RootNode node)
     {
         // Collect output data.
@@ -223,6 +234,9 @@ public class SyntaxTree
         }
     }
 
+    /// <summary>
+    /// Set all output arguments of a node hierarchy, depending on the node its root is connected to.
+    /// </summary>
     private void SetOutputArguments(RootNode node, ref int nextLabel)
     {
         for (int i = 0; i < node.OutputCount; i++)
@@ -294,6 +308,9 @@ public class SyntaxTree
     }
 
     // Metadata.
+    /// <summary>
+    /// Generate a sub-node hierarchy for an instruction definition.
+    /// </summary>
     private SubNode ProcessDefinition(InstructionDefinition instruction)
     {
         // Instruction definition header.
@@ -336,6 +353,9 @@ public class SyntaxTree
         return definition;
     }
 
+    /// <summary>
+    /// Generate a sub-node for a parameter.
+    /// </summary>
     private SubNode ProcessParameter(Parameter parameter)
     {
         SubNode definition = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.ParameterOpcode);
@@ -344,6 +364,9 @@ public class SyntaxTree
         return definition;
     }
 
+    /// <summary>
+    /// Generate a sub-node / sub-node hierarchy for a compile rule.
+    /// </summary>
     private SubNode ProcessRule(CompileRule rule)
     {
         if (rule is InstructionRule instruction)

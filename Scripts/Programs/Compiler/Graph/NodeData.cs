@@ -47,7 +47,6 @@ public class NodeData : Graphs.NodeData
     {
         int index = Definition.GetParameterIndex(id);
         string str = value is Color color ? '#' + color.ToHtml(color.A != 1f) : value.ToString();
-        Godot.GD.Print("FOOKIN " + id + " AND " + value + " MATE");
         Instance.Arguments[index] = str;
     }
 
