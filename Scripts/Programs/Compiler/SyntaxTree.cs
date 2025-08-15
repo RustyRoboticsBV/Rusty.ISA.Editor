@@ -62,7 +62,6 @@ public class SyntaxTree
                 output.OutputParameterNode = outputs.Arguments[portIndex].Node;
                 output.OutputParameterID = outputs.Arguments[portIndex].ParameterID;
                 output = node.GetOutputAt(portIndex);
-                Godot.GD.Print(node.Data + ": setting output " + portIndex + " to " + output.OutputParameterNode.Data + "/" + output.OutputParameterID);
             }
         }
 
@@ -75,7 +74,6 @@ public class SyntaxTree
                 int fromPortIndex = edge.Value.FromPortIndex;
                 RootNode to = nodes[edge.Value.ToElement];
                 int toPortIndex = edge.Value.ToPortIndex;
-                GD.Print("Connecting " + from.Data + ", which has " + from.OutputCount + " outputs");
                 from.ConnectTo(fromPortIndex, to, to.InputCount);
             }
         }
@@ -263,9 +261,9 @@ public class SyntaxTree
     /// <summary>
     /// Get the label of a node.
     /// </summary>
-    private SubNode GetLabel(RootNode node)
+    private string GetLabel(RootNode node)
     {
-        return node.GetChildWith(BuiltIn.LabelOpcode);
+        return node.GetChildWith(BuiltIn.LabelOpcode).Data.GetArgument(BuiltIn.LabelName);
     }
 
     /// <summary>
