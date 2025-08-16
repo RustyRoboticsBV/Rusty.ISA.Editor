@@ -71,10 +71,16 @@ public class SyntaxTree
         {
             foreach (KeyValuePair<int, Edge> edge in element.Edges)
             {
+                try
+                {
+                    RootNode from2 = nodes[edge.Value.FromElement];
+                }
+                catch {
+                    GD.Print("OH FUCK " + edge.Value.FromElement.Name + " WAS NOT FOUND");
+                }
                 RootNode from = nodes[edge.Value.FromElement];
                 int fromPortIndex = edge.Value.FromPortIndex;
                 RootNode to = nodes[edge.Value.ToElement];
-                int toPortIndex = edge.Value.ToPortIndex;
                 from.ConnectTo(fromPortIndex, to, to.InputCount);
             }
         }

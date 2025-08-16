@@ -130,6 +130,9 @@ public partial class GraphEdit : Godot.GraphEdit
         element.NodeDeselected -= OnElementDeselected;
         element.Dragged -= OnElementDragged;
         element.DeleteRequest -= OnElementDeleteRequest;
+
+        // Remove all tracked edges.
+        Edges.RemoveElement(element);
     }
 
     public void ConnectElements(IGraphElement fromElement, int fromPort, IGraphElement toElement)

@@ -92,6 +92,7 @@ public class Ledger
         Items.Clear();
         ElementsLookup.Clear();
         InspectorsLookup.Clear();
+        GraphEdit.Edges.Clear();
     }
 
     /* Private methods. */

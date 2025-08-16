@@ -22,6 +22,12 @@ public class Edge
         ToElement = toElement;
         ToPortIndex = toPortIndex;
     }
+
+    /* Public methods. */
+    public override string ToString()
+    {
+        return FromElement.Name + "/" + FromPortIndex + " --> " + ToElement.Name + "/" + ToPortIndex;
+    }
 }
 
 /// <summary>
@@ -95,7 +101,7 @@ public class GraphEdges : IEnumerable<ElementEdges>
 
     public void RemoveElement(IGraphElement element)
     {
-        if (!Elements.ContainsKey(element))
+        if (Elements.ContainsKey(element))
             Elements.Remove(element);
     }
 
@@ -104,6 +110,11 @@ public class GraphEdges : IEnumerable<ElementEdges>
         if (!Elements.ContainsKey(fromElement))
             return null;
         return Elements[fromElement].Edges[fromPortIndex];
+    }
+
+    public void Clear()
+    {
+        Elements.Clear();
     }
 
     /* Enumerating. */
