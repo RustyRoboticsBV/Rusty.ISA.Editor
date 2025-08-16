@@ -83,6 +83,9 @@ public class OutputArguments
     {
         if (node.Data is NodeData data)
         {
+            if (data.Definition.Opcode == BuiltIn.CommentOpcode || data.Definition.Opcode == BuiltIn.FrameOpcode)
+                UsesDefaultOutput = false;
+
             foreach (Parameter parameter in data.Definition.Parameters)
             {
                 if (parameter is OutputParameter output)

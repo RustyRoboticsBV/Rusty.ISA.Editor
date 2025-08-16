@@ -12,6 +12,7 @@ public class Ledger
     public List<LedgerItem> Items { get; private set; } = new();
 
     /* Private properties. */
+    private int NextFrameID { get; set; } = 0;
     private BiDict<IGraphElement, LedgerItem> ElementsLookup { get; set; } = new();
     private BiDict<Inspector, LedgerItem> InspectorsLookup { get; set; } = new();
 
@@ -45,6 +46,8 @@ public class Ledger
 
             case BuiltIn.FrameOpcode:
                 GraphFrame frame = GraphEdit.SpawnFrame(position.X, position.Y);
+                frame.ID = NextFrameID;
+                NextFrameID++;
                 item = new LedgerFrame(Set, frame);
                 break;
 
@@ -71,6 +74,8 @@ public class Ledger
     /// </summary>
     public void Clear()
     {
+        NextFrameID = 0;
+
         foreach (LedgerItem item in Items)
         {
             GraphEdit.RemoveElement(item.Element);
