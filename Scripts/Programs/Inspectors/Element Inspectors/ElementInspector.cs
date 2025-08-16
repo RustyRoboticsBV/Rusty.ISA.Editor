@@ -18,9 +18,9 @@ public partial class ElementInspector : Inspector
         Add(Title, title);
     }
 
-    public ElementInspector(InstructionSet set, InstructionDefinition definition) : this()
+    public ElementInspector(InstructionSet set, string opcode) : this()
     {
-        (ContentsContainer as FoldoutBorderContainer).FoldoutText = definition.DisplayName;
+        (ContentsContainer as FoldoutBorderContainer).FoldoutText = set[opcode].DisplayName;
     }
 
     /* Public methods. */

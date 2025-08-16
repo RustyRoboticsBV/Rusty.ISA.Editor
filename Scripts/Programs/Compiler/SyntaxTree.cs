@@ -1,9 +1,8 @@
 ﻿using Godot;
+using System.Collections.Generic;
 using System.Reflection;
 using Rusty.Csv;
 using Rusty.Graphs;
-using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Rusty.ISA.Editor;
 
@@ -16,9 +15,9 @@ public class SyntaxTree
     public InstructionSet InstructionSet { get; private set; }
 
     /* Constructors. */
-    public SyntaxTree(ProgramUnits programUnits)
+    public SyntaxTree(Ledger ledger)
     {
-        InstructionSet = programUnits.InstructionSet;
+        InstructionSet = ledger.Set;
 
         // Create metadata.
         RootNode metadata = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.MetadataOpcode);
@@ -41,21 +40,36 @@ public class SyntaxTree
         BiDict<IGraphElement, RootNode> nodes = new();
 
         // Compile each program unit into a root node.
-        foreach (Unit unit in programUnits.Contents)
+        foreach (LedgerItem item in ledger.Items)
         {
-            // Compile program unit
-            RootNode node = unit.Compile();
-            graph.AddNode(node);
-            nodes.Add(unit.Element, node);
+            // Compile ledger item.
+            RootNode root = null;
+            switch (item)
+            {
+                case LedgerNode node:
+                    root = NodeCompiler.Compile(ledger.Set, node.Element, node.Inspector);
+                    break;
+                case LedgerJoint joint:
+                    root = JointCompiler.Compile(ledger.Set, joint.Element, joint.Inspector);
+                    break;
+                case LedgerComment comment:
+                    root = CommentCompiler.Compile(ledger.Set, comment.Element, comment.Inspector);
+                    break;
+                case LedgerFrame frame:
+                    root = FrameCompiler.Compile(ledger.Set, frame.Element, frame.Inspector);
+                    break;
+            }
+            graph.AddNode(root);
+            nodes.Add(item.Element, root);
 
             // Find output data.
-            FindOutputArguments(node);
+            FindOutputArguments(root);
         }
 
         // Connect the compiler nodes according to the graph edit's connections.
-        foreach (var element in programUnits.GraphEdit.Edges)
+        foreach (ElementEdges element in ledger.GraphEdit.Edges)
         {
-            foreach (var edge in element.Edges)
+            foreach (KeyValuePair<int, Edge> edge in element.Edges)
             {
                 RootNode from = nodes[edge.Value.FromElement];
                 int fromPortIndex = edge.Value.FromPortIndex;
@@ -153,7 +167,11 @@ public class SyntaxTree
         return Compile(Root);
     }
 
-    public void ApplyTo(ProgramUnits programUnits)
+    /// <summary>
+    /// Spawn graph elements from this syntax tree into a graph edit, create inspectors for each and write arguments into the
+    /// inspectors.
+    /// </summary>
+    public void ApplyTo(Ledger ledger)
     {
         SubNode programNode = Root?.GetChildWith(BuiltIn.GraphOpcode);
 
@@ -584,6 +602,9 @@ public class SyntaxTree
     }
 
     // Decompilation.
+    /// <summary>
+    /// Decompile a subset of a list of instruction instances.
+    /// </summary>
     private SubNode Decompile(InstructionSet set, InstructionInstance[] instances, ref int current)
     {
         // Create node for current instruction.

@@ -19,7 +19,7 @@ public partial class ProgramEditor : MarginContainer
     private GraphEdit GraphEdit { get; set; }
     private ContextMenu ContextMenu { get; set; }
 
-    private ProgramUnits ProgramUnits { get; set; }
+    private Ledger Ledger { get; set; }
     private int NextFrameID { get; set; } = 0;
 
     private bool CompressCode { get; set; } = false;
@@ -75,9 +75,6 @@ public partial class ProgramEditor : MarginContainer
         GraphEdit = new();
         GraphEdit.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         GraphEdit.CustomMinimumSize = new(256f, 256f);
-        GraphEdit.SelectedElement += OnSelectedGraphElement;
-        GraphEdit.DeselectedElement += OnDeselectedGraphElement;
-        GraphEdit.DeletedElement += OnDeletedGraphElement;
         GraphEdit.RightClicked += OnRightClickedGraph;
         hbox.AddChild(GraphEdit);
         GraphEdit.Name = "GraphEdit";
@@ -89,14 +86,14 @@ public partial class ProgramEditor : MarginContainer
         AddChild(ContextMenu);
 
         // Create program units container.
-        ProgramUnits = new(set, GraphEdit);
+        Ledger = new(set, GraphEdit, InspectorWindow);
     }
 
     /* Private methods. */
     private void OnPressedCopy()
     {
         // Create syntax tree.
-        SyntaxTree syntaxTree = new(ProgramUnits);
+        SyntaxTree syntaxTree = new(Ledger);
 
         // Serialize to code.
         string code = syntaxTree.Compile();
@@ -123,10 +120,10 @@ public partial class ProgramEditor : MarginContainer
         GD.Print(syntaxTree);
 
         // Clear graph.
-        ProgramUnits.Clear();
+        Ledger.Clear();
 
         // Decompile syntax tree.
-        syntaxTree.ApplyTo(ProgramUnits);
+        syntaxTree.ApplyTo(Ledger);
     }
 
     private void OnRightClickedGraph()
@@ -149,102 +146,7 @@ public partial class ProgramEditor : MarginContainer
             spawnY = (int)(Mathf.Floor(spawnY / snap) * snap);
         }
 
-        // Create inspector.
-        Inspector inspector = ElementInspectorFactory.Create(InstructionSet, definition);
-
-        // Spawn element.
-        IGraphElement element = null;
-        switch (definition.Opcode)
-        {
-            case BuiltIn.JointOpcode:
-                GraphJoint joint = GraphEdit.SpawnJoint(spawnX, spawnY);
-                joint.BgColor = definition.EditorNode.MainColor;
-                element = joint;
-                break;
-            case BuiltIn.CommentOpcode:
-                GraphComment comment = GraphEdit.SpawnComment(spawnX, spawnY);
-                comment.CommentText = GetParameter<MultilineParameter>(definition, BuiltIn.CommentText).DefaultValue;
-                comment.BgColor = definition.EditorNode.MainColor;
-                comment.TextColor = definition.EditorNode.TextColor;
-                element = comment;
-                break;
-            case BuiltIn.FrameOpcode:
-                GraphFrame frame = GraphEdit.SpawnFrame(spawnX, spawnY);
-                frame.ID = NextFrameID;
-                frame.Title = GetParameter<TextlineParameter>(definition, BuiltIn.FrameTitle).DefaultValue;
-                frame.TintColor = GetParameter<ColorParameter>(definition, BuiltIn.FrameColor).DefaultValue;
-                NextFrameID++;
-                element = frame;
-                break;
-            default:
-                GraphNode node = GraphEdit.SpawnNode(spawnX, spawnY);
-                node.TitleText = definition.DisplayName;
-                node.TitleIcon = definition.Icon;
-                node.TitleColor = definition.EditorNode.MainColor;
-                element = node;
-                break;
-        }
-
-        // Create unit.
-        Unit unit = null;
-        switch (definition.Opcode)
-        {
-            case BuiltIn.JointOpcode:
-                unit = new JointUnit(InstructionSet, definition.Opcode, element as GraphJoint, inspector);
-                break;
-            case BuiltIn.CommentOpcode:
-                unit = new CommentUnit(InstructionSet, definition.Opcode, element as GraphComment, inspector);
-                break;
-            case BuiltIn.FrameOpcode:
-                unit = new FrameUnit(InstructionSet, definition.Opcode, element as GraphFrame, inspector);
-                break;
-            default:
-                unit = new NodeUnit(InstructionSet, definition.Opcode, element as GraphNode, inspector);
-                break;
-        }
-
-        // Add contents.
-        ProgramUnits.Contents.Add(element, inspector, unit);
-    }
-
-    private void OnSelectedGraphElement(IGraphElement element)
-    {
-        if (element is GraphJoint)
-            return;
-
-        // Retrieve element's inspector.
-        Inspector inspector = ProgramUnits.Contents[element].Inspector;
-
-        // Add element's inspector to inspector window.
-        InspectorWindow.Add(inspector);
-    }
-
-    private void OnDeselectedGraphElement(IGraphElement element)
-    {
-        if (element is GraphJoint)
-            return;
-
-        // Retrieve element's inspector.
-        Inspector inspector = ProgramUnits.Contents[element].Inspector;
-
-        // Add element's inspector to inspector window.
-        InspectorWindow.Remove(inspector);
-    }
-
-    private void OnDeletedGraphElement(IGraphElement element)
-    {
-        if (element is GraphJoint)
-            return;
-
-        // Invoke deselection handler.
-        OnDeselectedGraphElement(element);
-
-        // Delete inspector.
-        ProgramUnits.Contents.Remove(element);
-    }
-
-    private static T GetParameter<T>(InstructionDefinition definition, string id) where T : Parameter
-    {
-        return definition.GetParameter(id) as T;
+        // Spawn.
+        Ledger.CreateElement(definition, new(spawnX, spawnY));
     }
 }

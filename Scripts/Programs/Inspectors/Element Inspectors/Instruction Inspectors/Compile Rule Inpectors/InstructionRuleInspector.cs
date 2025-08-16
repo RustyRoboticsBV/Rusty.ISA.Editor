@@ -15,7 +15,7 @@ public partial class InstructionRuleInspector : RuleInspector
     public InstructionRuleInspector(InstructionSet set, InstructionRule rule)
         : base(set, rule)
     {
-        InstructionInspector instruction = new(set, set[rule.Opcode]);
+        InstructionInspector instruction = new(set, rule.Opcode);
         Add(Instruction, instruction);
     }
 

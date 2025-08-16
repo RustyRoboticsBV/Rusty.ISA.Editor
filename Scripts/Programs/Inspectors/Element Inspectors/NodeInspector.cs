@@ -6,13 +6,10 @@ public partial class NodeInspector : ElementInspector
     private const string StartPoint = "start_point";
     private const string Instruction = "instruction";
 
-    /* Public properties. */
-    public InstructionDefinition Definition => GetInstructionInspector().Definition;
-
     /* Constructors. */
     public NodeInspector() : base() { }
 
-    public NodeInspector(InstructionSet set, InstructionDefinition definition) : base(set, definition)
+    public NodeInspector(InstructionSet set, string opcode) : base(set, opcode)
     {
         // Add start point checkbox.
         ToggleTextField startPoint = new();
@@ -22,7 +19,7 @@ public partial class NodeInspector : ElementInspector
         Add(StartPoint, startPoint);
 
         // Add instruction inspector.
-        InstructionInspector instruction = new(set, definition);
+        InstructionInspector instruction = new(set, opcode);
         Add(Instruction, instruction);
     }
 

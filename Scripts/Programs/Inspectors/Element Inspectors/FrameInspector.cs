@@ -2,15 +2,12 @@
 
 public partial class FrameInspector : ElementInspector
 {
-    /* Public properties. */
-    public InstructionDefinition Definition { get; private set; }
-
     /* Constructors. */
     public FrameInspector() : base() { }
 
-    public FrameInspector(InstructionSet set, InstructionDefinition definition) : base(set, definition)
+    public FrameInspector(InstructionSet set) : base(set, BuiltIn.FrameOpcode)
     {
-        Definition = definition;
+        InstructionDefinition definition = set[BuiltIn.FrameOpcode];
 
         // Title field.
         IGuiElement title = ParameterFieldFactory.Create(definition, BuiltIn.FrameTitle);

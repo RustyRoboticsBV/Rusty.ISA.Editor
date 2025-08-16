@@ -13,12 +13,12 @@ public partial class InstructionInspector : Inspector
     /* Constructors. */
     public InstructionInspector() : base() { }
 
-    public InstructionInspector(InstructionSet set, InstructionDefinition definition) : base()
+    public InstructionInspector(InstructionSet set, string opcode) : base()
     {
-        Definition = definition;
+        Definition = set[opcode];
 
         // Add pre-instructions.
-        foreach (CompileRule rule in definition.PreInstructions)
+        foreach (CompileRule rule in Definition.PreInstructions)
         {
             Inspector element = RuleInspectorFactory.Create(set, rule);
             if (element != null)
@@ -26,7 +26,7 @@ public partial class InstructionInspector : Inspector
         }
 
         // Add parameters.
-        foreach (Parameter parameter in definition.Parameters)
+        foreach (Parameter parameter in Definition.Parameters)
         {
             IGuiElement element = ParameterFieldFactory.Create(parameter);
             if (element != null)
@@ -34,7 +34,7 @@ public partial class InstructionInspector : Inspector
         }
 
         // Add post-instructions.
-        foreach (CompileRule rule in definition.PostInstructions)
+        foreach (CompileRule rule in Definition.PostInstructions)
         {
             Inspector element = RuleInspectorFactory.Create(set, rule);
             if (element != null)

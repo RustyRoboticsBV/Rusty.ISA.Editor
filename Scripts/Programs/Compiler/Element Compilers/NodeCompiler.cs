@@ -1,80 +1,72 @@
 ﻿namespace Rusty.ISA.Editor;
 
 /// <summary>
-/// A node program unit.
+/// A node element compiler.
 /// </summary>
-public sealed class NodeUnit : Unit
+public static class NodeCompiler
 {
-    /* Public properties. */
-    public new GraphNode Element => base.Element as GraphNode;
-    public new NodeInspector Inspector => base.Inspector as NodeInspector;
-
-    /* Constructors. */
-    public NodeUnit(InstructionSet set, string opcode, GraphNode element, Inspector inspector)
-        : base(set, opcode, element, inspector) { }
-
     /* Public methods. */
-    public override RootNode Compile()
+    public static RootNode Compile(InstructionSet set, GraphNode element, NodeInspector inspector)
     {
-        RootNode node = CompilerNodeMaker.MakeRoot(Set, BuiltIn.NodeOpcode);
-        node.SetArgument(BuiltIn.NodeX, (int)Element.PositionOffset.X);
-        node.SetArgument(BuiltIn.NodeY, (int)Element.PositionOffset.Y);
+        RootNode node = CompilerNodeMaker.MakeRoot(set, BuiltIn.NodeOpcode);
+        node.SetArgument(BuiltIn.NodeX, (int)element.PositionOffset.X);
+        node.SetArgument(BuiltIn.NodeY, (int)element.PositionOffset.Y);
 
         // Compile begin.
-        ToggleTextField startPoint = Inspector.GetStartPointField();
+        ToggleTextField startPoint = inspector.GetStartPointField();
         if (startPoint.Checked)
         {
-            SubNode begin = CompilerNodeMaker.MakeSub(Set, BuiltIn.BeginOpcode);
+            SubNode begin = CompilerNodeMaker.MakeSub(set, BuiltIn.BeginOpcode);
             begin.SetArgument(BuiltIn.BeginName, startPoint.Value);
             node.AddChild(begin);
         }
 
         // Compile frame member.
-        if (Element.Frame != null)
+        if (element.Frame != null)
         {
-            SubNode frameMember = CompilerNodeMaker.MakeSub(Set, BuiltIn.FrameMemberOpcode);
-            frameMember.SetArgument(BuiltIn.FrameMemberID, Element.Frame.ID);
+            SubNode frameMember = CompilerNodeMaker.MakeSub(set, BuiltIn.FrameMemberOpcode);
+            frameMember.SetArgument(BuiltIn.FrameMemberID, element.Frame.ID);
             node.AddChild(frameMember);
         }
 
         // Compile instruction inspector.
-        SubNode instructionInspector = CompileInstruction(Inspector.GetInstructionInspector());
+        SubNode instructionInspector = CompileInstruction(set, inspector.GetInstructionInspector());
         node.AddChild(instructionInspector);
 
         // Compile end-of-group.
-        node.AddChild(EndOfGroup());
+        node.AddChild(EndOfGroup(set));
 
         return node;
     }
 
     /* Private methods. */
-    private SubNode CompileInstruction(InstructionInspector inspector)
+    private static SubNode CompileInstruction(InstructionSet set, InstructionInspector inspector)
     {
         // Compile inspector header.
-        SubNode instructionInspector = CompilerNodeMaker.MakeSub(Set, BuiltIn.InspectorOpcode);
+        SubNode instructionInspector = CompilerNodeMaker.MakeSub(set, BuiltIn.InspectorOpcode);
 
         // Compile pre-instructions.
         if (inspector.Definition.PreInstructions.Length > 0)
         {
             // Compile pre-instruction header.
-            SubNode preIntructions = CompilerNodeMaker.MakeSub(Set, BuiltIn.PreInstructionOpcode);
+            SubNode preIntructions = CompilerNodeMaker.MakeSub(set, BuiltIn.PreInstructionOpcode);
 
             // Compile pre-instructions.
             for (int i = 0; i < inspector.Definition.PreInstructions.Length; i++)
             {
                 string id = inspector.Definition.PreInstructions[i].ID;
-                SubNode preInstruction = CompileRule(inspector.GetPreInstruction(id));
+                SubNode preInstruction = CompileRule(set, inspector.GetPreInstruction(id));
                 preIntructions.AddChild(preInstruction);
             }
 
             // Compile end-of-group.
-            preIntructions.AddChild(EndOfGroup());
+            preIntructions.AddChild(EndOfGroup(set));
 
             instructionInspector.AddChild(preIntructions);
         }
 
         // Compile contents.
-        SubNode contents = CompilerNodeMaker.MakeSub(Set, inspector.Definition.Opcode);
+        SubNode contents = CompilerNodeMaker.MakeSub(set, inspector.Definition.Opcode);
         for (int i = 0; i < inspector.Definition.Parameters.Length; i++)
         {
             string id = inspector.Definition.Parameters[i].ID;
@@ -88,121 +80,121 @@ public sealed class NodeUnit : Unit
         if (inspector.Definition.PostInstructions.Length > 0)
         {
             // Compile post-instruction header.
-            SubNode postIntructions = CompilerNodeMaker.MakeSub(Set, BuiltIn.PostInstructionOpcode);
+            SubNode postIntructions = CompilerNodeMaker.MakeSub(set, BuiltIn.PostInstructionOpcode);
 
             // Compile post-instructions.
             for (int i = 0; i < inspector.Definition.PostInstructions.Length; i++)
             {
                 string id = inspector.Definition.PostInstructions[i].ID;
-                SubNode postInstruction = CompileRule(inspector.GetPostInstruction(id));
+                SubNode postInstruction = CompileRule(set, inspector.GetPostInstruction(id));
                 postIntructions.AddChild(postInstruction);
             }
 
             // Compile end-of-group.
-            postIntructions.AddChild(EndOfGroup());
+            postIntructions.AddChild(EndOfGroup(set));
 
             instructionInspector.AddChild(postIntructions);
         }
 
         // Compile end-of-group.
-        instructionInspector.AddChild(EndOfGroup());
+        instructionInspector.AddChild(EndOfGroup(set));
 
         return instructionInspector;
     }
 
-    private SubNode CompileRule(RuleInspector inspector)
+    private static SubNode CompileRule(InstructionSet set, RuleInspector inspector)
     {
         switch (inspector)
         {
             case InstructionRuleInspector i:
-                return CompileInstruction(i.GetInstructionInspector());
+                return CompileInstruction(set, i.GetInstructionInspector());
             case OptionRuleInspector o:
-                return CompileOption(inspector as OptionRuleInspector);
+                return CompileOption(set, inspector as OptionRuleInspector);
             case ChoiceRuleInspector c:
-                return CompileChoice(inspector as ChoiceRuleInspector);
+                return CompileChoice(set, inspector as ChoiceRuleInspector);
             case TupleRuleInspector t:
-                return CompileTuple(inspector as TupleRuleInspector);
+                return CompileTuple(set, inspector as TupleRuleInspector);
             case ListRuleInspector l:
-                return CompileList(inspector as ListRuleInspector);
+                return CompileList(set, inspector as ListRuleInspector);
             default:
                 return null;
         }
     }
 
-    private SubNode CompileOption(OptionRuleInspector inspector)
+    private static SubNode CompileOption(InstructionSet set, OptionRuleInspector inspector)
     {
         // Compile option header.
-        SubNode option = CompilerNodeMaker.MakeSub(Set, BuiltIn.OptionRuleOpcode);
+        SubNode option = CompilerNodeMaker.MakeSub(set, BuiltIn.OptionRuleOpcode);
 
         // Compile element.
         if (inspector.GetEnabled())
         {
-            SubNode element = CompileRule(inspector.GetChildRule());
+            SubNode element = CompileRule(set, inspector.GetChildRule());
             option.AddChild(element);
         }
 
         // Compile end-of-group.
-        option.AddChild(EndOfGroup());
+        option.AddChild(EndOfGroup(set));
 
         return option;
     }
 
-    private SubNode CompileChoice(ChoiceRuleInspector inspector)
+    private static SubNode CompileChoice(InstructionSet set, ChoiceRuleInspector inspector)
     {
         // Compile option header.
-        SubNode choice = CompilerNodeMaker.MakeSub(Set, BuiltIn.ChoiceRuleOpcode);
+        SubNode choice = CompilerNodeMaker.MakeSub(set, BuiltIn.ChoiceRuleOpcode);
         int selectedIndex = inspector.GetSelectedIndex();
         string selectedID = inspector.Rule.Types[selectedIndex].ID;
         choice.SetArgument(BuiltIn.ChoiceRuleSelected, selectedID);
 
         // Compile selected element.
-        SubNode element = CompileRule(inspector.GetSelectedElement());
+        SubNode element = CompileRule(set, inspector.GetSelectedElement());
         choice.AddChild(element);
 
         // Compile end-of-group.
-        choice.AddChild(EndOfGroup());
+        choice.AddChild(EndOfGroup(set));
 
         return choice;
     }
 
-    private SubNode CompileTuple(TupleRuleInspector inspector)
+    private static SubNode CompileTuple(InstructionSet set, TupleRuleInspector inspector)
     {
         // Compile option header.
-        SubNode tuple = CompilerNodeMaker.MakeSub(Set, BuiltIn.TupleRuleOpcode);
+        SubNode tuple = CompilerNodeMaker.MakeSub(set, BuiltIn.TupleRuleOpcode);
 
         // Compile elements.
         for (int i = 0; i < inspector.GetElementCount(); i++)
         {
-            SubNode element = CompileRule(inspector.GetElementInspector(i));
+            SubNode element = CompileRule(set, inspector.GetElementInspector(i));
             tuple.AddChild(element);
         }
 
         // Compile end-of-group.
-        tuple.AddChild(EndOfGroup());
+        tuple.AddChild(EndOfGroup(set));
 
         return tuple;
     }
 
-    private SubNode CompileList(ListRuleInspector inspector)
+    private static SubNode CompileList(InstructionSet set, ListRuleInspector inspector)
     {
         // Compile list header.
-        SubNode list = CompilerNodeMaker.MakeSub(Set, BuiltIn.ListRuleOpcode);
+        SubNode list = CompilerNodeMaker.MakeSub(set, BuiltIn.ListRuleOpcode);
 
         // Compile elements.
         for (int i = 0; i < inspector.GetElementCount(); i++)
         {
-            SubNode element = CompileRule(inspector.GetElementInspector(i));
+            SubNode element = CompileRule(set, inspector.GetElementInspector(i));
             list.AddChild(element);
         }
 
         // Compile end-of-group.
-        list.AddChild(EndOfGroup());
+        list.AddChild(EndOfGroup(set));
 
         return list;
     }
 
-    private SubNode EndOfGroup()
+    private static SubNode EndOfGroup(InstructionSet set)
     {
-        return CompilerNodeMaker.MakeSub(Set, BuiltIn.EndOfGroupOpcode);
+        return CompilerNodeMaker.MakeSub(set, BuiltIn.EndOfGroupOpcode);
     }
 }

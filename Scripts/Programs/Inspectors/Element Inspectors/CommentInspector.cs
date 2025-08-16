@@ -2,18 +2,13 @@
 
 public partial class CommentInspector : ElementInspector
 {
-    /* Public properties. */
-    public InstructionDefinition Definition { get; private set; }
-
     /* Constructors. */
     public CommentInspector() : base() { }
 
-    public CommentInspector(InstructionSet set, InstructionDefinition definition) : base(set, definition)
+    public CommentInspector(InstructionSet set) : base(set, BuiltIn.CommentOpcode)
     {
-        Definition = definition;
-
         // Text field.
-        IGuiElement field = ParameterFieldFactory.Create(definition, BuiltIn.CommentText);
+        IGuiElement field = ParameterFieldFactory.Create(set[BuiltIn.CommentOpcode], BuiltIn.CommentText);
         Add(BuiltIn.CommentText, field);
     }
 

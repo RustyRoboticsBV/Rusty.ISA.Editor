@@ -16,6 +16,7 @@ public partial class GraphEdit : Godot.GraphEdit
     public GraphEdges Edges { get; } = new();
 
     /* Public events. */
+    public event Action<IGraphElement> AddedElement;
     public event Action<IGraphElement> SelectedElement;
     public event Action<IGraphElement> DeselectedElement;
     public event Action<IGraphElement> DeletedElement;
@@ -97,6 +98,9 @@ public partial class GraphEdit : Godot.GraphEdit
         element.NodeDeselected += OnElementDeselected;
         element.Dragged += OnElementDragged;
         element.DeleteRequest += OnElementDeleteRequest;
+
+        // Invoke event.
+        AddedElement?.Invoke(element);
     }
 
     public void RemoveElement(IGraphElement element)
