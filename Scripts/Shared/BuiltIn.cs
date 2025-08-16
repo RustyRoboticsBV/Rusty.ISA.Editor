@@ -66,6 +66,7 @@ public static class BuiltIn
 
     public const string ChecksumValue = "value";
     public const string DefinitionOpcodeParameter = "opcode";
+    public const string DefinitionEditorOnly = "editor_only";
     public const string ParameterType = "type";
     public const string ParameterID = "id";
     public const string CompileRuleType = "type";

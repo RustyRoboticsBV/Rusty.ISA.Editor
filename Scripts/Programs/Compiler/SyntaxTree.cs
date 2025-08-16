@@ -27,12 +27,12 @@ public class SyntaxTree
         metadata.AddChild(checksum);
 
         SubNode isa = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.InstructionSetOpcode);
-        metadata.AddChild(isa);
         for (int i = 0; i < InstructionSet.Count; i++)
         {
-            metadata.AddChild(ProcessDefinition(InstructionSet[i]));
+            isa.AddChild(ProcessDefinition(InstructionSet[i]));
         }
         isa.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
+        metadata.AddChild(isa);
 
         metadata.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
 
@@ -442,6 +442,7 @@ public class SyntaxTree
         // Instruction definition header.
         SubNode definition = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.DefinitionOpcode);
         definition.SetArgument(BuiltIn.DefinitionOpcodeParameter, instruction.Opcode);
+        definition.SetArgument(BuiltIn.DefinitionEditorOnly, instruction.Implementation == null);
 
         // Parameters.
         for (int i = 0; i < instruction.Parameters.Length; i++)

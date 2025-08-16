@@ -47,6 +47,8 @@ public class NodeData : Graphs.NodeData
     {
         int index = Definition.GetParameterIndex(id);
         string str = value is Color color ? '#' + color.ToHtml(color.A != 1f) : value.ToString();
+        if (value is bool)
+            str = str.ToLower();
         Instance.Arguments[index] = str;
     }
 
