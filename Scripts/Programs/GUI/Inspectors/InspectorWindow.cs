@@ -47,14 +47,19 @@ public partial class InspectorWindow : MarginContainer
     }
 
     /* Public methods. */
-    public void Add(Control inspector) 
+    public void Add(Inspector inspector) 
     {
         Contents.AddChild(inspector);
     }
 
-    public void Remove(Control inspector)
+    public void Remove(Inspector inspector)
     {
         Contents.RemoveChild(inspector);
+    }
+
+    public bool Contains(Inspector inspector)
+    {
+        return inspector.GetParent() == Contents;
     }
 
     /* Godot overrides. */

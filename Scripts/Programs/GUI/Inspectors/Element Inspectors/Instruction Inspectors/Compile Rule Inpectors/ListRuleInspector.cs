@@ -40,6 +40,11 @@ public partial class ListRuleInspector : RuleInspector
         return copy;
     }
 
+    public void AddElement()
+    {
+        (ContentsContainer as ListBorderContainer).Add();
+    }
+
     public int GetElementCount()
     {
         return ContentsContainer.GetContentsCount();

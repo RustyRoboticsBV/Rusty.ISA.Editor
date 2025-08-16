@@ -19,7 +19,8 @@ public sealed class LedgerNode : LedgerItem
         element.TitleIcon = definition.Icon;
         element.TitleText = definition.DisplayName;
         element.TooltipText = definition.Description;
-        element.TitleColor = definition.EditorNode.MainColor;
+        if (definition.EditorNode != null)
+            element.TitleColor = definition.EditorNode.MainColor;
 
         OnInspectorChanged();
     }

@@ -42,6 +42,11 @@ public partial class ChoiceRuleInspector : RuleInspector
         return (ContentsContainer as DropdownBorderContainer).SelectedOption;
     }
 
+    public int SetSelectedIndex(int index)
+    {
+        return (ContentsContainer as DropdownBorderContainer).SelectedOption = index;
+    }
+
     public RuleInspector GetSelectedElement()
     {
         return GetAt(GetSelectedIndex()) as RuleInspector;

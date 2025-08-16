@@ -38,7 +38,7 @@ public partial class ListBorderContainer : FoldoutBorderContainer
         LabeledButton addButton = new();
         addButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         addButton.ButtonText = "Connect FromElement";
-        addButton.Pressed += OnAddButtonPressed;
+        addButton.Pressed += Add;
         Bottom.ShrinkRightEdge = true;
         AddToFooter(addButton);
     }
@@ -60,8 +60,19 @@ public partial class ListBorderContainer : FoldoutBorderContainer
             Template = list.Template;
             FoldButton.Pressed += OnFoldButtonPressed;
             ExpandButton.Pressed += OnExpandButtonPressed;
-            AddButton.Pressed += OnAddButtonPressed;
+            AddButton.Pressed += Add;
         }
+    }
+
+    /// <summary>
+    /// Simulate an add button press.
+    /// </summary>
+    public void Add()
+    {
+        if (Template != null)
+            AddToContents(Template.Copy());
+        else
+            GD.PrintErr($"We couldn't create an element because the list inspector '{Name}' did not have a template!");
     }
 
     /* Godot overrides. */
@@ -103,13 +114,5 @@ public partial class ListBorderContainer : FoldoutBorderContainer
                     foldout.IsOpen = true;
             }
         }
-    }
-
-    private void OnAddButtonPressed()
-    {
-        if (Template != null)
-            AddToContents(Template.Copy());
-        else
-            GD.PrintErr($"We couldn't create an element because the list inspector '{Name}' did not have a template!");
     }
 }

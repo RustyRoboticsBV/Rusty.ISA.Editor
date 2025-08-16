@@ -123,7 +123,7 @@ public partial class ProgramEditor : MarginContainer
         Ledger.Clear();
 
         // Decompile syntax tree.
-        syntaxTree.ApplyTo(Ledger);
+        syntaxTree.Decompile(Ledger);
     }
 
     private void OnRightClickedGraph()

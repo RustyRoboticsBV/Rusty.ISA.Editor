@@ -70,6 +70,14 @@ public class Ledger
     }
 
     /// <summary>
+    /// Connect two elements.
+    /// </summary>
+    public void ConnectElements(LedgerItem fromItem, int fromPort, LedgerItem toItem)
+    {
+        GraphEdit.ConnectElements(fromItem.Element, fromPort, toItem.Element);
+    }
+
+    /// <summary>
     /// Delete all graph elements and inspectors.
     /// </summary>
     public void Clear()
@@ -101,6 +109,9 @@ public class Ledger
 
     private void OnElementDeleted(LedgerItem item)
     {
+        if (InspectorWindow.Contains(item.Inspector))
+            InspectorWindow.Remove(item.Inspector);
+
         Items.Remove(item);
         ElementsLookup.Remove(item);
         InspectorsLookup.Remove(item);

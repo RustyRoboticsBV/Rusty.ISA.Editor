@@ -35,7 +35,7 @@ public class SyntaxTree
 
         metadata.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
 
-        // Create a program graph.
+        // Compile graph.
         Graph graph = new();
         BiDict<IGraphElement, RootNode> nodes = new();
 
@@ -63,7 +63,7 @@ public class SyntaxTree
             nodes.Add(item.Element, root);
 
             // Find output data.
-            FindOutputArguments(root);
+            CreateOutputs(root);
         }
 
         // Connect the compiler nodes according to the graph edit's connections.
@@ -88,7 +88,7 @@ public class SyntaxTree
         int nextLabel = 0;
         for (int i = 0; i < startNodes.Length; i++)
         {
-            RootNode node = graph.GetNodeAt(startNodes[i]) as RootNode;
+            RootNode node = graph.GetNodeAt(startNodes[i]);
             ProcessSubGraph(graph, node, executionOrder, ref nextLabel);
         }
 
@@ -118,6 +118,8 @@ public class SyntaxTree
 
     public SyntaxTree(InstructionSet set, string code)
     {
+        InstructionSet = set;
+
         // Read CSV table.
         CsvTable csv = new("code", code);
 
@@ -171,7 +173,7 @@ public class SyntaxTree
     /// Spawn graph elements from this syntax tree into a graph edit, create inspectors for each and write arguments into the
     /// inspectors.
     /// </summary>
-    public void ApplyTo(Ledger ledger)
+    public void Decompile(Ledger ledger)
     {
         SubNode programNode = Root?.GetChildWith(BuiltIn.GraphOpcode);
 
@@ -194,7 +196,7 @@ public class SyntaxTree
 
             // Find output argument data.
             if (child.Opcode != BuiltIn.EndGroupOpcode)
-                FindOutputArguments(root);
+                CreateOutputs(root);
 
             // Find label.
             if (HasLabel(root))
@@ -247,6 +249,42 @@ public class SyntaxTree
 
         GD.Print(graph);
 
+        // Spawn objects.
+        ledger.Clear();
+        Dictionary<RootNode, LedgerItem> items = new();
+        for (int i = 0; i < graph.NodeCount; i++)
+        {
+            RootNode node = graph.GetNodeAt(i);
+            switch (node.Opcode)
+            {
+                case BuiltIn.NodeOpcode:
+                    items.Add(node, SpawnNode(ledger, node));
+                    break;
+                case BuiltIn.JointOpcode:
+                    items.Add(node, SpawnJoint(ledger, node));
+                    break;
+                case BuiltIn.CommentOpcode:
+                    items.Add(node, SpawnComment(ledger, node));
+                    break;
+                case BuiltIn.FrameOpcode:
+                    items.Add(node, SpawnFrame(ledger, node));
+                    break;
+            }
+        }
+
+        // Copy connections to graph edit.
+        foreach (var item in items)
+        {
+            for (int i = 0; i < item.Key.OutputCount; i++)
+            {
+                RootNode fromNode = item.Key;
+                RootNode toNode = fromNode.GetOutputAt(i).To?.Node;
+                if (toNode != null)
+                    ledger.ConnectElements(items[fromNode], i, items[toNode]);
+            }
+        }
+
+        // Clear the syntax tree.
         Root = null;
     }
 
@@ -319,7 +357,7 @@ public class SyntaxTree
                 gotoGroup.CreateOutput().ConnectTo(to);
 
                 // Find output data.
-                FindOutputArguments(gotoGroup);
+                CreateOutputs(gotoGroup);
 
                 // Add label if necessary.
                 if (NeedsLabel(gotoGroup))
@@ -347,7 +385,7 @@ public class SyntaxTree
     /// <summary>
     /// Find all output arguments of a root node and save the node and ID of each in the associated output port.
     /// </summary>
-    private void FindOutputArguments(RootNode node)
+    private void CreateOutputs(RootNode node)
     {
         // Collect output data.
         OutputArguments outputs = new(node);
@@ -652,5 +690,193 @@ public class SyntaxTree
         }
 
         return node;
+    }
+
+    private LedgerItem SpawnNode(Ledger ledger, RootNode root)
+    {
+        // Find inspector instruction.
+        SubNode inspector = root.GetChildWith(BuiltIn.InspectorOpcode);
+
+        // Find main instruction.
+        SubNode instruction = null;
+        for (int j = 0; j < inspector.ChildCount; j++)
+        {
+            SubNode child = inspector.GetChildAt(j);
+            if (child.Opcode != BuiltIn.PreInstructionOpcode && child.Opcode != BuiltIn.PostInstructionOpcode)
+            {
+                instruction = child;
+                break;
+            }
+        }
+
+        // Spawn node.
+        int.TryParse(root.GetArgument(BuiltIn.NodeX), out int nodeX);
+        int.TryParse(root.GetArgument(BuiltIn.NodeY), out int nodeY);
+        LedgerNode item = ledger.CreateElement(InstructionSet[instruction.Opcode], new(nodeX, nodeY)) as LedgerNode;
+
+        // Copy start point.
+        SubNode startPoint = root.GetChildWith(BuiltIn.BeginOpcode);
+        if (startPoint != null)
+        {
+            ToggleTextField startPointField = item.Inspector.GetStartPointField();
+            startPointField.Checked = true;
+            startPointField.Value = startPoint.GetArgument(BuiltIn.BeginOpcode);
+        }
+
+        // Write node state to inspector.
+        ApplyToInspector(inspector, item.Inspector.GetInstructionInspector());
+
+        return item;// fdgufn itmd
+    }
+
+    private void ApplyToInspector(SubNode node, InstructionInspector inspector)
+    {
+        // Find main instruction, pre-instructions and post-instructions.
+        SubNode main = null;
+        SubNode pre = null;
+        SubNode post = null;
+        for (int i = 0; i < node.ChildCount; i++)
+        {
+            SubNode child = node.GetChildAt(i);
+            if (child.Opcode == BuiltIn.PreInstructionOpcode)
+                pre = child;
+            else if (child.Opcode == BuiltIn.PostInstructionOpcode)
+                post = child;
+            else
+                main = child;
+        }
+
+        // Write arguments to inspector.
+        for (int i = 0; i < main.Data.Definition.Parameters.Length && i < main.Data.Instance.Arguments.Length; i++)
+        {
+            string id = main.Data.Definition.Parameters[i].ID;
+            string value = main.Data.Instance.Arguments[i];
+            inspector.SetParameterField(id, value);
+        }
+
+        // Handle pre-instructions.
+        if (pre != null)
+        {
+            for (int i = 0; i < pre.ChildCount && i < inspector.Definition.PreInstructions.Length; i++)
+            {
+                string id = inspector.Definition.PreInstructions[i].ID;
+                SubNode ruleNode = pre.GetChildAt(i);
+                RuleInspector ruleInspector = inspector.GetPreInstruction(id);
+                ApplyToInspector(ruleNode, ruleInspector);
+            }
+        }
+
+        // Handle post-instructions.
+        if (post != null)
+        {
+            for (int i = 0; i < post.ChildCount && i < inspector.Definition.PostInstructions.Length; i++)
+            {
+                string id = inspector.Definition.PostInstructions[i].ID;
+                SubNode ruleNode = post.GetChildAt(i);
+                RuleInspector ruleInspector = inspector.GetPostInstruction(id);
+                ApplyToInspector(ruleNode, ruleInspector);
+            }
+        }
+    }
+
+    private void ApplyToInspector(SubNode node, RuleInspector inspector)
+    {
+        switch (inspector)
+        {
+            case InstructionRuleInspector instruction:
+                ApplyToInspector(node, instruction);
+                break;
+            case OptionRuleInspector option:
+                ApplyToInspector(node, option);
+                break;
+            case ChoiceRuleInspector choice:
+                ApplyToInspector(node, choice);
+                break;
+            case TupleRuleInspector tuple:
+                ApplyToInspector(node, tuple);
+                break;
+            case ListRuleInspector list:
+                ApplyToInspector(node, list);
+                break;
+        }
+    }
+
+    private void ApplyToInspector(SubNode node, InstructionRuleInspector inspector)
+    {
+        ApplyToInspector(node, inspector.GetInstructionInspector());
+    }
+
+    private void ApplyToInspector(SubNode node, OptionRuleInspector inspector)
+    {
+        if (node.ChildCount > 1)
+        {
+            SubNode childNode = node.GetChildAt(0);
+            RuleInspector childInspector = inspector.GetChildRule();
+            ApplyToInspector(childNode, childInspector);
+        }
+    }
+
+    private void ApplyToInspector(SubNode node, ChoiceRuleInspector inspector)
+    {
+        if (node.ChildCount > 1 && int.TryParse(node.GetArgument(BuiltIn.ChoiceRuleSelected), out int selected))
+        {
+            inspector.SetSelectedIndex(selected);
+
+            SubNode childNode = node.GetChildAt(0);
+            RuleInspector childInspector = inspector.GetSelectedElement();
+            ApplyToInspector(childNode, childInspector);
+        }
+    }
+
+    private void ApplyToInspector(SubNode node, TupleRuleInspector inspector)
+    {
+        for (int i = 0; i < node.ChildCount - 1; i++)
+        {
+            SubNode childNode = node.GetChildAt(i);
+            RuleInspector childInspector = inspector.GetElementInspector(i);
+            ApplyToInspector(childNode, childInspector);
+        }
+    }
+
+    private void ApplyToInspector(SubNode node, ListRuleInspector inspector)
+    {
+        for (int i = 0; i < node.ChildCount - 1; i++)
+        {
+            inspector.AddElement();
+
+            SubNode childNode = node.GetChildAt(i);
+            RuleInspector childInspector = inspector.GetElementInspector(i);
+            ApplyToInspector(childNode, childInspector);
+        }
+    }
+
+    /// <summary>
+    /// Spawn a joint from a compiler node.
+    /// </summary>
+    private LedgerItem SpawnJoint(Ledger ledger, RootNode root)
+    {
+        int.TryParse(root.GetArgument(BuiltIn.JointX), out int jointX);
+        int.TryParse(root.GetArgument(BuiltIn.JointY), out int jointY);
+        return ledger.CreateElement(InstructionSet[root.Opcode], new(jointX, jointY));
+    }
+
+    /// <summary>
+    /// Spawn a comment from a compiler node.
+    /// </summary>
+    private LedgerItem SpawnComment(Ledger ledger, RootNode root)
+    {
+        int.TryParse(root.GetArgument(BuiltIn.CommentX), out int commentX);
+        int.TryParse(root.GetArgument(BuiltIn.CommentY), out int commentY);
+        return ledger.CreateElement(InstructionSet[root.Opcode], new(commentX, commentY));
+    }
+
+    /// <summary>
+    /// Spawn a frame from a compiler node.
+    /// </summary>
+    private LedgerItem SpawnFrame(Ledger ledger, RootNode root)
+    {
+        int.TryParse(root.GetArgument(BuiltIn.FrameX), out int frameX);
+        int.TryParse(root.GetArgument(BuiltIn.FrameY), out int frameY);
+        return ledger.CreateElement(InstructionSet[root.Opcode], new(frameX, frameY));
     }
 }

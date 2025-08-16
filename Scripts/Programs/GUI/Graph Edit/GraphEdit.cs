@@ -132,6 +132,12 @@ public partial class GraphEdit : Godot.GraphEdit
         element.DeleteRequest -= OnElementDeleteRequest;
     }
 
+    public void ConnectElements(IGraphElement fromElement, int fromPort, IGraphElement toElement)
+    {
+        ConnectNode(fromElement.Name, fromPort, toElement.Name, 0);
+        Edges.Connect(fromElement, fromPort, toElement, 0);
+    }
+
     /// <summary>
     /// Convert a global position to a local position offset.
     /// </summary>

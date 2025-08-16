@@ -1,4 +1,6 @@
-﻿namespace Rusty.ISA.Editor;
+﻿using Godot;
+
+namespace Rusty.ISA.Editor;
 
 public partial class InstructionInspector : Inspector
 {
@@ -61,8 +63,8 @@ public partial class InstructionInspector : Inspector
 
     public RuleInspector GetPreInstruction(string id)
     {
-        if (GetAt(PreInstruction + id) is Inspector inspector)
-            return inspector as RuleInspector;
+        if (GetAt(PreInstruction + id) is RuleInspector inspector)
+            return inspector;
         return null;
     }
 
@@ -73,10 +75,49 @@ public partial class InstructionInspector : Inspector
         return null;
     }
 
+    public void SetParameterField(string id, string value)
+    {
+        IField field = GetParameterField(id);
+        try
+        {
+            switch (field)
+            {
+                case BoolField boolField:
+                    boolField.Value = bool.Parse(value);
+                    break;
+                case IntField intField:
+                    intField.Value = int.Parse(value);
+                    break;
+                case FloatField floatField:
+                    floatField.Value = float.Parse(value);
+                    break;
+                case IntSliderField intSlider:
+                    intSlider.Value = int.Parse(value);
+                    break;
+                case FloatSliderField floatSlider:
+                    floatSlider.Value = float.Parse(value);
+                    break;
+                case CharField charField:
+                    charField.Value = char.Parse(value);
+                    break;
+                case LineField lineField:
+                    lineField.Value = value;
+                    break;
+                case MultilineField multilineField:
+                    multilineField.Value = value;
+                    break;
+                case ColorField colorField:
+                    colorField.Value = Color.FromHtml(value);
+                    break;
+            }
+        }
+        catch { }
+    }
+
     public RuleInspector GetPostInstruction(string id)
     {
-        if (GetAt(PostInstruction + id) is Inspector inspector)
-            return inspector as RuleInspector;
+        if (GetAt(PostInstruction + id) is RuleInspector inspector)
+            return inspector;
         return null;
     }
 }
