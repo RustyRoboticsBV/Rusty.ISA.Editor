@@ -732,7 +732,7 @@ public class SyntaxTree
         // Write node state to inspector.
         ApplyToInspector(inspector, item.Inspector.GetInstructionInspector());
 
-        return item;// fdgufn itmd
+        return item;
     }
 
     private void ApplyToInspector(SubNode node, InstructionInspector inspector)

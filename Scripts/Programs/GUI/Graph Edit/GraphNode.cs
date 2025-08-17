@@ -31,6 +31,15 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         get => TitleTextureRect.Texture;
         set => TitleTextureRect.Texture = value;
     }
+    public string PreviewText
+    {
+        get => Preview.Text;
+        set
+        {
+            Preview.Text = value;
+            PreviewContainer.Visible = Preview.Text != "";
+        }
+    }
 
     /* Private properties. */
     private Label TitleLabel { get; set; }
@@ -93,6 +102,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         PreviewContainer.Hide();
 
         Preview = new();
+        Preview.AddThemeFontSizeOverride("font_size", 13);
         PreviewContainer.AddChild(Preview);
 
         // Add bottom margin.
@@ -180,9 +190,6 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
             TitleTextureRect.Modulate = Colors.White;
             TitleLabel.Modulate = Colors.White;
         }
-
-        // Hide preview if it's empty.
-        PreviewContainer.Visible = Preview.Text != "";
 
         // Shrink to minimum size.
         Rect2 totalRect = new();

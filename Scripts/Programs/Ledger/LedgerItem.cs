@@ -11,6 +11,7 @@ public abstract class LedgerItem
     public InstructionSet Set { get; private set; }
     public IGraphElement Element { get; private set; }
     public Inspector Inspector { get; private set; }
+    public Preview Preview { get; protected set; }
 
     /* Public events. */
     public event Action<LedgerItem> ElementSelected;

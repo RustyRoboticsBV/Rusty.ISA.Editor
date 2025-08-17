@@ -109,6 +109,9 @@ public partial class InstructionInspector : Inspector
                 case ColorField colorField:
                     colorField.Value = Color.FromHtml(value);
                     break;
+                case OutputField outputField:
+                    outputField.Value = value;
+                    break;
             }
         }
         catch { }

@@ -36,6 +36,8 @@ public sealed class LedgerNode : LedgerItem
             Element.SetOutputPort(i, outputLabels[i]);
         }
 
-        // TODO: update preview.
+        // Update preview.
+        Preview = PreviewMaker.GraphNode(Inspector);
+        Element.PreviewText = Preview.Evaluate();
     }
 }
