@@ -10,9 +10,35 @@ namespace Rusty.ISA.Editor;
 public class Preview
 {
     /* Fields. */
-    private const string SkeletonCode = "func eval(_input : PreviewInput) -> String:\n    EVAL";
+    private const string SkeletonCode = "func eval(_input) -> String:\n    EVAL";
 
-    private const string LimitFunction = "\n\nfunc limit(string : String, length : int) -> String:\n    return string;";
+    private const string LimitFunction = "\n\nfunc limit(string : String, length : int) -> String:"
+        + "\n    if string.length() <= length:"
+        + "\n        return string;"
+        + "\n    return string.substr(0, length);";
+
+    private const string WrapFunction = "\n\nfunc wordwrap(text : String, max_width : int) -> String:"
+        + "\n    var result = \"\";"
+        + "\n    var lines = text.split(\"\\n\", false);"
+        + "\n    for line in lines:"
+        + "\n        var words = line.split(\" \", false);"
+        + "\n        var line2 = \"\";"
+        + "\n        "
+        + "\n        for word in words:"
+        + "\n            var candidate = line2 + (\" \" if line2 != \"\" else \"\") + word;"
+        + "\n            if candidate.length() > max_width:"
+        + "\n                if result != \"\":"
+        + "\n                    result += '\\n';"
+        + "\n                result += line2;"
+        + "\n                line2 = word;"
+        + "\n            else:"
+        + "\n                line2 = candidate;"
+        + "\n        "
+        + "\n        if result != \"\":"
+        + "\n            result += '\\n';"
+        + "\n        result += line2;"
+        + "\n    "
+        + "\n    return result;";
 
     /* Public properties. */
     /// <summary>
@@ -80,6 +106,8 @@ public class Preview
         // Add functions if they are used.
         if (code.Contains("limit("))
             code += LimitFunction;
+        if (code.Contains("wrap("))
+            code += WrapFunction;
 
         // Generate evaluation class.
         GD.Print(code);
