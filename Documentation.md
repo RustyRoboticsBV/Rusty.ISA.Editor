@@ -1,7 +1,8 @@
 # Compiler Documentation
 This document describe the way in which the editor compiles structures of multiple instructions.
-
-Elements within (parentheses) are optional, only being added when necessary.
+- Elements between (parentheses) are optional, only being added when necessary.
+- Instructions separated by vertical bars ( | ) are alternatives, meaning only one of them can appear.
+- Instructions followed by a Kleene star ( * ) indicate any number of repetitions of these instructions, including none.
 
 The `EOG` instruction is used throughout the program to close groups of instructions.
 
@@ -11,40 +12,34 @@ PRO
 ├MTA
 │ ├MD5
 │ ├ISA
-│ │ ├<definitions>
+│ │ ├(DEF)*
 │ │ └EOG
 │ └EOG
 ├GRA
-│ ├<graph elements>
+│ ├(NOD | JNT | CMT | FRM)*
 │ └EOG
 └EOG
 ```
-
-The `<definitions>` block may only contain `DEF` instructions. The `<graph elements>` block may only contain `NOD`, `JNT`, `CMT` and `FRM` instructions.
 
 ### Instruction Definition Metadata
 ```
 DEF
-├<parameters>
+├(PAR)*
 ├(PRE)
-│ ├<rules>
+│ ├(RUL | REF)*
 │ └EOG
 ├(PST)
-│ ├<rules>
+│ ├(RUL | REF)*
 │ └EOG
 └EOG
 ```
-
-The `<parameters>` block may only contains `PAR` instructions. The `<rules>` blocks may only contains `RUL` and `REF` instructions.
 
 ### Compile Rule Metadata
 ```
 RUL
-├<child rules>
+├(RUL | REF)*
 └EOG
 ```
-
-The `<child rules>` block may only contain `RUL` and `REF` instructions.
 
 ### Graph Node
 ```
@@ -54,16 +49,15 @@ NOD
 ├(MBR)
 ├INS
 │ ├(PRE)
-│ │ ├<rules>
+│ │ ├(OPT | CHO | TPL | LST)*
 │ │ └EOG
 │ ├<main instruction>
 │ ├(PST)
-│ │ ├<rules>
+│ │ ├(OPT | CHO | TPL | LST)*
 │ │ └EOG
 │ └EOG
 └EOG
 ```
-The `rules` blocks may contain any number of `INS`, `OPT`, `CHO`, `TPL`, or `LST` rules.
 
 ### Graph Comment
 ```
