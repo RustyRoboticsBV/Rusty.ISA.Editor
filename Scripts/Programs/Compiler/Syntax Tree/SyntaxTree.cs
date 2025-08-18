@@ -230,7 +230,7 @@ public class SyntaxTree
         {
             ToggleTextField startPointField = item.Inspector.GetStartPointField();
             startPointField.Checked = true;
-            startPointField.Value = startPoint.GetArgument(BuiltIn.BeginOpcode);
+            startPointField.Value = startPoint.GetArgument(BuiltIn.BeginName);
         }
 
         // Write node state to inspector.
