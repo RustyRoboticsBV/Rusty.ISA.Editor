@@ -3,63 +3,6 @@ using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
 
-public partial class ConsoleLine : MarginContainer
-{
-    public string LabelText { get; set; } = "";
-    public Color LabelColor
-    {
-        get => Foldout.LabelColor;
-        set => Foldout.LabelColor = value;
-    }
-    public Font LabelFont
-    {
-        get => Foldout.LabelFont;
-        set => Foldout.LabelFont = value;
-    }
-    public Color BackgroundColor
-    {
-        get => Background.Color;
-        set => Background.Color = value;
-    }
-
-    private ColorRect Background { get; set; }
-    private Foldout Foldout { get; set; }
-
-    public ConsoleLine()
-    {
-        Background = new();
-        AddChild(Background);
-
-        MarginContainer contents = new();
-        contents.AddThemeConstantOverride("margin_left", 4);
-        contents.AddThemeConstantOverride("margin_right", 4);
-        contents.AddThemeConstantOverride("margin_bottom", 4);
-        contents.AddThemeConstantOverride("margin_top", 4);
-        AddChild(contents);
-
-        Foldout = new();
-        Foldout.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        Foldout.SizeFlagsVertical = SizeFlags.ExpandFill;
-        contents.AddChild(Foldout);
-    }
-
-    public override void _Process(double delta)
-    {
-        if (Foldout.IsOpen)
-            Foldout.LabelText = LabelText;
-        else
-        {
-            int linebreakIndex = LabelText.IndexOf('\n');
-            if (linebreakIndex != -1)
-                Foldout.LabelText = LabelText.Substring(0, linebreakIndex);
-            else
-                Foldout.LabelText = LabelText;
-        }
-
-        base._Process(delta);
-    }
-}
-
 public partial class Console : MarginContainer
 {
     /* Public methods. */
@@ -84,6 +27,23 @@ public partial class Console : MarginContainer
 
         VBoxContainer vbox = new();
         AddChild(vbox);
+
+        HBoxContainer buttons = new();
+        vbox.AddChild(buttons);
+
+        Label label = new();
+        label.Text = "Console";
+        buttons.AddChild(label);
+
+        Button clearButton = new();
+        clearButton.Text = "Clear";
+        clearButton.Pressed += OnClearPressed;
+        buttons.AddChild(clearButton);
+
+        Button collapseButton = new();
+        collapseButton.Text = "Collapse All";
+        collapseButton.Pressed += OnCollapsePressed;
+        buttons.AddChild(collapseButton);
 
         /*Label title = new();
         title.Text = "Console";
@@ -133,5 +93,22 @@ public partial class Console : MarginContainer
         line.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         LineContainer.AddChild(line);
         Lines.Add(line);
+    }
+
+    private void OnClearPressed()
+    {
+        foreach (ConsoleLine line in Lines)
+        {
+            LineContainer.RemoveChild(line);
+        }
+        Lines.Clear();
+    }
+
+    private void OnCollapsePressed()
+    {
+        foreach (ConsoleLine line in Lines)
+        {
+            line.Collapse();
+        }
     }
 }
