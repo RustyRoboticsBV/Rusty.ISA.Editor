@@ -118,7 +118,6 @@ public partial class ProgramEditor : MarginContainer
 
         // Create syntax tree.
         SyntaxTree syntaxTree = new(InstructionSet, code);
-        GD.Print(syntaxTree);
 
         // Clear graph.
         Ledger.Clear();

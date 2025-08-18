@@ -17,71 +17,20 @@ public class SyntaxTree : Compiler
     /* Constructors. */
     public SyntaxTree(Ledger ledger)
     {
+        InstructionSet = ledger.Set;
         Root = ProgramCompiler.Compile(ledger);
     }
 
     public SyntaxTree(InstructionSet set, string code)
     {
         InstructionSet = set;
-
-        code = code.Replace("\r\n", "\n");
-        code = code.Replace("\r", "\n");
-
-        try
-        {
-            // Read CSV table.
-            CsvTable csv = new("code", code);
-
-            // Decompile instruction instances.
-            InstructionInstance[] instances = new InstructionInstance[csv.Height];
-            for (int i = 0; i < csv.Height; i++)
-            {
-                InstructionDefinition definition = set[csv[0, i]];
-                instances[i] = new(definition);
-                for (int j = 0; j < definition.Parameters.Length; j++)
-                {
-                    instances[i].Arguments[j] = csv[j + 1, i];
-                }
-            }
-
-            // Create syntax tree.
-            int current = 0;
-            SubNode root = Decompile(set, instances, ref current);
-            Root = root.ToRoot();
-            Root.StealChildren(root);
-
-            // Evaluate checksum.
-            SubNode checksum = Root?.GetChildWith(BuiltIn.MetadataOpcode)?.GetChildWith(BuiltIn.ChecksumOpcode);
-            if (checksum != null)
-            {
-                string checksumOld = checksum.GetArgument(BuiltIn.ChecksumValue);
-                string checksumNew = Root?.CalculateChecksum();
-                if (checksumNew != checksumOld)
-                {
-                    PrintWrn("Loaded program had a bad checksum! This means the data was either externally modified or "
-                        + "corrupted, or that the instruction set was changed since last time that the program was last "
-                        + "modified!"
-                        + "\n- Old checksum: " + checksumOld
-                        + "\n- New checksum: " + checksumNew);
-                }
-                else if (OS.HasFeature("editor"))
-                    PrintMsg("Checksum result: the data was valid.");
-            }
-            else
-                PrintWrn("The loaded program had no checksum. No data validation could be done.");
-        }
-        catch (Exception exception)
-        {
-            PrintErr("The following program could not be loaded due to a syntax error:\n" + code);
-            if (OS.HasFeature("editor"))
-                throw new FormatException("", exception);
-        }
+        Root = Parser.Parse(set, code);
     }
 
     /* Public methods. */
     public override string ToString()
     {
-        return Root.ToString();
+        return Root != null ? Root.ToString() : "";
     }
 
     /// <summary>
@@ -328,6 +277,12 @@ public class SyntaxTree : Compiler
         // Spawn node.
         int.TryParse(root.GetArgument(BuiltIn.NodeX), out int nodeX);
         int.TryParse(root.GetArgument(BuiltIn.NodeY), out int nodeY);
+        if (ledger == null)
+            Godot.GD.Print("SHIT LEDGER IS NULL");
+        if (InstructionSet == null)
+            Godot.GD.Print("SHIT SET IS NULL");
+        if (instruction == null)
+            Godot.GD.Print("SHIT INSTRUCTION IS NULL");
         LedgerNode item = ledger.CreateElement(InstructionSet[instruction.Opcode], new(nodeX, nodeY)) as LedgerNode;
 
         // Copy start point.
