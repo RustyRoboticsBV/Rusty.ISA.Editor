@@ -52,8 +52,11 @@ public partial class Foldout : LabeledElement
             if (GetGlobalRect().HasPoint(mouse.GlobalPosition))
             {
                 base.LabelColor = new(LabelColor.R, LabelColor.G, LabelColor.B, 0.5f);
-                if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed)
+                if (@event is InputEventMouseButton mouseButton && mouseButton.ButtonIndex == MouseButton.Left
+                    && mouseButton.Pressed)
+                {
                     IsOpen = !IsOpen;
+                }
             }
             else
                 base.LabelColor = LabelColor;

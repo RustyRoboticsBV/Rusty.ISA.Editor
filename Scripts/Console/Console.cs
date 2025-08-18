@@ -100,10 +100,10 @@ public partial class Console : MarginContainer
         LineContainer.AddThemeConstantOverride("separation", 0);
         hbox.AddChild(LineContainer);
 
-        MarginContainer margin = new();
+        /*MarginContainer margin = new();
         margin.AddThemeConstantOverride("margin_left", 4);
         margin.AddThemeConstantOverride("margin_right", 4);
-        hbox.AddChild(margin);
+        hbox.AddChild(margin);*/
     }
 
     /* Public methods. */
