@@ -1,5 +1,4 @@
-﻿using Rusty.Graphs;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
 

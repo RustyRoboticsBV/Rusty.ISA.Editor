@@ -1,4 +1,3 @@
-using Godot;
 using System.Collections.Generic;
 using System.IO;
 
@@ -28,7 +27,7 @@ public static class InstructionSetBuilder
         if (!Directory.Exists(absolutePath))
         {
             Directory.CreateDirectory(absolutePath);
-            GD.Print($"Created definitions folder at '{absolutePath}'.");
+            Log.Message($"Created definitions folder at '{absolutePath}'.");
         }
 
         // Copy over built-in instructions.

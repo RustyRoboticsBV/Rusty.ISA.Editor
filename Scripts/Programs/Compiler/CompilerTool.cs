@@ -1,9 +1,9 @@
 ﻿namespace Rusty.ISA.Editor;
 
 /// <summary>
-/// A base class for compilers.
+/// A base class for syntax tree compilers and decompilers.
 /// </summary>
-public abstract class Compiler
+public abstract class CompilerTool
 {
     /* Protected methods. */
     /// <summary>

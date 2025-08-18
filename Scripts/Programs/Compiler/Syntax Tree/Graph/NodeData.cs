@@ -1,6 +1,6 @@
 ﻿using Godot;
-using System.Security.Cryptography;
 using System.Text;
+using System.Security.Cryptography;
 
 namespace Rusty.ISA.Editor;
 

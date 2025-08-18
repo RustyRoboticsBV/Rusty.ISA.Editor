@@ -3,7 +3,7 @@
 /// <summary>
 /// A node element compiler.
 /// </summary>
-public abstract class NodeCompiler : Compiler
+public abstract class NodeCompiler : CompilerTool
 {
     /* Public methods. */
     public static RootNode Compile(InstructionSet set, GraphNode element, NodeInspector inspector)

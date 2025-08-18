@@ -1,7 +1,4 @@
 ﻿using Godot;
-using Rusty.Graphs;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 
 namespace Rusty.ISA.Editor;
 
@@ -94,7 +91,7 @@ public partial class ProgramEditor : MarginContainer
     {
         // Create syntax tree.
         SyntaxTree syntaxTree = new(Ledger);
-        GD.Print("Compilation syntax tree:\n" + syntaxTree);
+        Log.Message("Compilation syntax tree:", syntaxTree);
 
         // Serialize to code.
         string code = syntaxTree.Compile();
@@ -123,7 +120,7 @@ public partial class ProgramEditor : MarginContainer
         Ledger.Clear();
 
         // Decompile syntax tree.
-        GD.Print("Decompilation syntax tree:\n" + syntaxTree);
+        Log.Message("Decompilation syntax tree:", syntaxTree);
         syntaxTree.Decompile(Ledger);
     }
 

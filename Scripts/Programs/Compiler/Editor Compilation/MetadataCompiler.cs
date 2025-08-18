@@ -5,7 +5,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A metadata compiler.
 /// </summary>
-public abstract class MetadataCompiler : Compiler
+public abstract class MetadataCompiler : CompilerTool
 {
     /* Public methods. */
     /// <summary>

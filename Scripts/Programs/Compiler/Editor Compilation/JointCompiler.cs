@@ -3,7 +3,7 @@
 /// <summary>
 /// A joint element compiler.
 /// </summary>
-public abstract class JointCompiler : Compiler
+public abstract class JointCompiler : CompilerTool
 {
     /* Public methods. */
     public static RootNode Compile(InstructionSet set, GraphJoint element, JointInspector inspector)

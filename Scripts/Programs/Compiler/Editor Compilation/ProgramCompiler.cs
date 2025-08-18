@@ -3,7 +3,7 @@
 /// <summary>
 /// A compiler for programs.
 /// </summary>
-public abstract class ProgramCompiler : Compiler
+public abstract class ProgramCompiler : CompilerTool
 {
     /* Constructors. */
     public static RootNode Compile(Ledger ledger)

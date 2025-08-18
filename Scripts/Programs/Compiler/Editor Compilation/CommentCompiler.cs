@@ -3,7 +3,7 @@
 /// <summary>
 /// A comment element compiler.
 /// </summary>
-public abstract class CommentCompiler : Compiler
+public abstract class CommentCompiler : CompilerTool
 {
     /* Public methods. */
     public static RootNode Compile(InstructionSet set, GraphComment element, CommentInspector inspector)

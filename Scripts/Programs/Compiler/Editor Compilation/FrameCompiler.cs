@@ -3,7 +3,7 @@
 /// <summary>
 /// A frame element compiler.
 /// </summary>
-public abstract class FrameCompiler : Compiler
+public abstract class FrameCompiler : CompilerTool
 {
     /* Public methods. */
     public static RootNode Compile(InstructionSet set, GraphFrame element, FrameInspector inspector)

@@ -1,23 +1,17 @@
 ﻿using Godot;
 using System;
-using System.Collections.Generic;
 using Rusty.Csv;
-using Rusty.Graphs;
 
 namespace Rusty.ISA.Editor;
 
 /// <summary>
 /// A program file to syntax tree decompiler.
 /// </summary>
-public abstract class Parser : Compiler
+public abstract class Parser : CompilerTool
 {
     /* Public methods. */
     public static RootNode Parse(InstructionSet set, string code)
     {
-        // Convert to UNIX-style line-breaks.
-        code = code.Replace("\r\n", "\n");
-        code = code.Replace("\r", "\n");
-
         try
         {
             // Read CSV table.
@@ -49,26 +43,30 @@ public abstract class Parser : Compiler
                 string checksumNew = result?.CalculateChecksum();
                 if (checksumNew != checksumOld)
                 {
-                    PrintWrn("Loaded result had a bad checksum! This means the data was either externally modified or "
+                    Log.Warning("Loaded result had a bad checksum! This means the data was either externally modified or "
                         + "corrupted, or that the instruction set was changed since last time that the result was last "
                         + "modified!"
                         + "\n- Old checksum: " + checksumOld
                         + "\n- New checksum: " + checksumNew);
                 }
                 else if (OS.HasFeature("editor"))
-                    PrintMsg("Checksum result: the data was valid.");
+                    Log.Message("Checksum result: the data was valid.");
             }
             else
-                PrintWrn("The loaded result had no checksum. No data validation could be done.");
+                Log.Warning("The loaded result had no checksum. No data validation could be done.");
 
             // Return finished tree's root node.
             return result;
         }
         catch (Exception exception)
         {
-            PrintErr("The following result could not be loaded due to a syntax error:\n" + code);
+            code = code.Replace("\r\n", "\n");
+            code = code.Replace("\r", "\n");
+            Log.Error("The following result could not be loaded due to a syntax error:\n" + code);
+
             if (OS.HasFeature("editor"))
                 throw new FormatException("", exception);
+
             return null;
         }
     }
@@ -124,21 +122,5 @@ public abstract class Parser : Compiler
         }
 
         return node;
-    }
-
-    // Logging.
-    private static void PrintMsg(string text)
-    {
-        GD.Print(text);
-    }
-
-    private static void PrintErr(string text)
-    {
-        GD.PrintErr(text);
-    }
-
-    private static void PrintWrn(string text)
-    {
-        GD.PrintRich($"[color=#ffde66]\u25CF {text.Replace("\n", "\n  ")}[/color]");
     }
 }

@@ -5,7 +5,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A joint element compiler.
 /// </summary>
-public abstract class GraphCompiler : Compiler
+public abstract class GraphCompiler : CompilerTool
 {
     /* Public methods. */
     /// <summary>

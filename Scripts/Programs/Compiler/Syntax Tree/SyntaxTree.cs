@@ -1,7 +1,4 @@
-﻿using Godot;
-using System;
-using System.Collections.Generic;
-using Rusty.Csv;
+﻿using System.Collections.Generic;
 using Rusty.Graphs;
 
 namespace Rusty.ISA.Editor;
@@ -9,7 +6,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A program syntax tree.
 /// </summary>
-public class SyntaxTree : Compiler
+public class SyntaxTree
 {
     public RootNode Root { get; private set; }
     public InstructionSet InstructionSet { get; private set; }
@@ -205,58 +202,6 @@ public class SyntaxTree : Compiler
     }
 
     // Decompilation.
-    /// <summary>
-    /// Decompile a subset of a list of instruction instances.
-    /// </summary>
-    private SubNode Decompile(InstructionSet set, InstructionInstance[] instances, ref int current)
-    {
-        // Create node for current instruction.
-        InstructionInstance instance = instances[current];
-
-        SubNode node = MakeSub(set, instance.Opcode);
-        node.Data.Instance = instance;
-
-        // Determine how to proceed.
-        current++;
-        switch (instance.Opcode)
-        {
-            // Groups.
-            case BuiltIn.ProgramOpcode:
-            case BuiltIn.MetadataOpcode:
-            case BuiltIn.InstructionSetOpcode:
-            case BuiltIn.DefinitionOpcode:
-            case BuiltIn.CompileRuleOpcode:
-            case BuiltIn.GraphOpcode:
-            case BuiltIn.CommentOpcode:
-            case BuiltIn.FrameOpcode:
-            case BuiltIn.JointOpcode:
-            case BuiltIn.NodeOpcode:
-            case BuiltIn.InspectorOpcode:
-            case BuiltIn.PreInstructionOpcode:
-            case BuiltIn.PostInstructionOpcode:
-            case BuiltIn.OptionRuleOpcode:
-            case BuiltIn.ChoiceRuleOpcode:
-            case BuiltIn.TupleRuleOpcode:
-            case BuiltIn.ListRuleOpcode:
-            case BuiltIn.GotoGroupOpcode:
-            case BuiltIn.EndGroupOpcode:
-                while (current < instances.Length)
-                {
-                    SubNode child = Decompile(set, instances, ref current);
-                    node.AddChild(child);
-                    if (child.Opcode == BuiltIn.EndOfGroupOpcode)
-                        break;
-                }
-                break;
-
-            // Non-groups.
-            default:
-                break;
-        }
-
-        return node;
-    }
-
     private LedgerItem SpawnNode(Ledger ledger, RootNode root)
     {
         // Find inspector instruction.
@@ -277,12 +222,6 @@ public class SyntaxTree : Compiler
         // Spawn node.
         int.TryParse(root.GetArgument(BuiltIn.NodeX), out int nodeX);
         int.TryParse(root.GetArgument(BuiltIn.NodeY), out int nodeY);
-        if (ledger == null)
-            Godot.GD.Print("SHIT LEDGER IS NULL");
-        if (InstructionSet == null)
-            Godot.GD.Print("SHIT SET IS NULL");
-        if (instruction == null)
-            Godot.GD.Print("SHIT INSTRUCTION IS NULL");
         LedgerNode item = ledger.CreateElement(InstructionSet[instruction.Opcode], new(nodeX, nodeY)) as LedgerNode;
 
         // Copy start point.
@@ -491,21 +430,5 @@ public class SyntaxTree : Compiler
     private string GetLabel(RootNode node)
     {
         return node.GetChildWith(BuiltIn.LabelOpcode).Data.GetArgument(BuiltIn.LabelName);
-    }
-
-    // Logging.
-    private static void PrintMsg(string text)
-    {
-        GD.Print(text);
-    }
-
-    private static void PrintErr(string text)
-    {
-        GD.PrintErr(text);
-    }
-
-    private static void PrintWrn(string text)
-    {
-        GD.PrintRich($"[color=#ffde66]\u25CF {text.Replace("\n", "\n  ")}[/color]");
     }
 }
