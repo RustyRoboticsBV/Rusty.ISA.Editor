@@ -3,13 +3,13 @@
 /// <summary>
 /// A frame element compiler.
 /// </summary>
-public static class FrameCompiler
+public abstract class FrameCompiler : Compiler
 {
     /* Public methods. */
     public static RootNode Compile(InstructionSet set, GraphFrame element, FrameInspector inspector)
     {
         // Compiler frame header.
-        RootNode frame = CompilerNodeMaker.MakeRoot(set, BuiltIn.FrameOpcode);
+        RootNode frame = MakeRoot(set, BuiltIn.FrameOpcode);
         frame.SetArgument(BuiltIn.FrameID, element.ID);
         frame.SetArgument(BuiltIn.FrameX, (int)element.PositionOffset.X);
         frame.SetArgument(BuiltIn.FrameY, (int)element.PositionOffset.Y);
@@ -21,13 +21,13 @@ public static class FrameCompiler
         // Compile frame member.
         if (element.Frame != null)
         {
-            SubNode frameMember = CompilerNodeMaker.MakeSub(set, BuiltIn.FrameMemberOpcode);
+            SubNode frameMember = MakeSub(set, BuiltIn.FrameMemberOpcode);
             frameMember.SetArgument(BuiltIn.FrameMemberID, element.Frame.ID);
             frame.AddChild(frameMember);
         }
 
         // Compile end-of-group.
-        frame.AddChild(CompilerNodeMaker.MakeSub(set, BuiltIn.EndOfGroupOpcode));
+        frame.AddChild(MakeSub(set, BuiltIn.EndOfGroupOpcode));
 
         return frame;
     }

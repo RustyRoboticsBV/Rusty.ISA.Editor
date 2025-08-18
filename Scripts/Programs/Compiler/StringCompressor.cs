@@ -7,7 +7,7 @@ namespace Rusty.ISA.Editor;
 
 public class StringCompressor
 {
-    public static string CompressString(string text)
+    public static string Compress(string text)
     {
         if (string.IsNullOrEmpty(text))
             return "";
@@ -25,12 +25,15 @@ public class StringCompressor
         }
     }
 
-    public static string DecompressString(string compressedText)
+    /// <summary>
+    /// Decompress a string.
+    /// </summary>
+    public static string Decompress(string text)
     {
-        if (string.IsNullOrEmpty(compressedText))
+        if (string.IsNullOrEmpty(text))
             return "";
 
-        byte[] bytes = Convert.FromBase64String(compressedText);
+        byte[] bytes = Convert.FromBase64String(text);
 
         using (var msi = new MemoryStream(bytes))
         using (var mso = new MemoryStream())
@@ -41,5 +44,13 @@ public class StringCompressor
             }
             return Encoding.UTF8.GetString(mso.ToArray());
         }
+    }
+
+    /// <summary>
+    /// Check if a string represents a compressed or not.
+    /// </summary>
+    public static bool IsCompressed(string text)
+    {
+        return text.StartsWith("H4s");
     }
 }

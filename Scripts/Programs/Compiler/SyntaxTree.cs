@@ -1,6 +1,6 @@
 ﻿using Godot;
+using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Rusty.Csv;
 using Rusty.Graphs;
 
@@ -9,7 +9,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A program syntax tree.
 /// </summary>
-public class SyntaxTree
+public class SyntaxTree : Compiler
 {
     public RootNode Root { get; private set; }
     public InstructionSet InstructionSet { get; private set; }
@@ -17,148 +17,65 @@ public class SyntaxTree
     /* Constructors. */
     public SyntaxTree(Ledger ledger)
     {
-        InstructionSet = ledger.Set;
-
-        // Create metadata.
-        RootNode metadata = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.MetadataOpcode);
-
-        SubNode checksum = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.ChecksumOpcode);
-        metadata.AddChild(checksum);
-
-        SubNode isa = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.InstructionSetOpcode);
-        for (int i = 0; i < InstructionSet.Count; i++)
-        {
-            isa.AddChild(ProcessDefinition(InstructionSet[i]));
-        }
-        isa.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
-        metadata.AddChild(isa);
-
-        metadata.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
-
-        // Compile graph.
-        Graph graph = new();
-        BiDict<IGraphElement, RootNode> nodes = new();
-
-        // Compile each program unit into a root node.
-        foreach (LedgerItem item in ledger.Items)
-        {
-            // Compile ledger item.
-            RootNode root = null;
-            switch (item)
-            {
-                case LedgerNode node:
-                    root = NodeCompiler.Compile(ledger.Set, node.Element, node.Inspector);
-                    break;
-                case LedgerJoint joint:
-                    root = JointCompiler.Compile(ledger.Set, joint.Element, joint.Inspector);
-                    break;
-                case LedgerComment comment:
-                    root = CommentCompiler.Compile(ledger.Set, comment.Element, comment.Inspector);
-                    break;
-                case LedgerFrame frame:
-                    root = FrameCompiler.Compile(ledger.Set, frame.Element, frame.Inspector);
-                    break;
-            }
-            graph.AddNode(root);
-            nodes.Add(item.Element, root);
-
-            // Find output data.
-            CreateOutputs(root);
-        }
-
-        // Connect the compiler nodes according to the graph edit's connections.
-        foreach (ElementEdges element in ledger.GraphEdit.Edges)
-        {
-            foreach (KeyValuePair<int, Edge> edge in element.Edges)
-            {
-                try
-                {
-                    RootNode from2 = nodes[edge.Value.FromElement];
-                }
-                catch {
-                    GD.Print("OH FUCK " + edge.Value.FromElement.Name + " WAS NOT FOUND");
-                }
-                RootNode from = nodes[edge.Value.FromElement];
-                int fromPortIndex = edge.Value.FromPortIndex;
-                RootNode to = nodes[edge.Value.ToElement];
-                from.ConnectTo(fromPortIndex, to, to.InputCount);
-            }
-        }
-
-        // Find start nodes.
-        int[] startNodes = graph.FindStartNodes();
-
-        // Figure out execution order.
-        // Also add labels, insert gotos and ends, and set output arguments.
-        BiDict<int, RootNode> executionOrder = new();
-        int nextLabel = 0;
-        for (int i = 0; i < startNodes.Length; i++)
-        {
-            RootNode node = graph.GetNodeAt(startNodes[i]);
-            ProcessSubGraph(graph, node, executionOrder, ref nextLabel);
-        }
-
-        GD.Print(graph);
-
-        // Wrap in a program node.
-        RootNode program = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.GraphOpcode);
-        foreach ((int, RootNode) root in executionOrder)
-        {
-            program.AddChild(root.Item2);
-        }
-        program.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
-
-        // Wrap in file node.
-        RootNode file = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.ProgramOpcode);
-        file.AddChild(metadata);
-        file.AddChild(program);
-        file.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
-
-        // Compute checksum.
-        checksum.SetArgument(BuiltIn.ChecksumValue, file.GetChecksum());
-
-        Root = file;
-        GD.Print(this);
-        GD.Print(Compile());
+        Root = ProgramCompiler.Compile(ledger);
     }
 
     public SyntaxTree(InstructionSet set, string code)
     {
         InstructionSet = set;
 
-        // Read CSV table.
-        CsvTable csv = new("code", code);
+        code = code.Replace("\r\n", "\n");
+        code = code.Replace("\r", "\n");
 
-        // Decompile instruction instances.
-        InstructionInstance[] instances = new InstructionInstance[csv.Height];
-        for (int i = 0; i < csv.Height; i++)
+        try
         {
-            InstructionDefinition definition = set[csv[0, i]];
-            instances[i] = new(definition);
-            for (int j = 0; j < definition.Parameters.Length; j++)
+            // Read CSV table.
+            CsvTable csv = new("code", code);
+
+            // Decompile instruction instances.
+            InstructionInstance[] instances = new InstructionInstance[csv.Height];
+            for (int i = 0; i < csv.Height; i++)
             {
-                instances[i].Arguments[j] = csv[j + 1, i];
+                InstructionDefinition definition = set[csv[0, i]];
+                instances[i] = new(definition);
+                for (int j = 0; j < definition.Parameters.Length; j++)
+                {
+                    instances[i].Arguments[j] = csv[j + 1, i];
+                }
             }
+
+            // Create syntax tree.
+            int current = 0;
+            SubNode root = Decompile(set, instances, ref current);
+            Root = root.ToRoot();
+            Root.StealChildren(root);
+
+            // Evaluate checksum.
+            SubNode checksum = Root?.GetChildWith(BuiltIn.MetadataOpcode)?.GetChildWith(BuiltIn.ChecksumOpcode);
+            if (checksum != null)
+            {
+                string checksumOld = checksum.GetArgument(BuiltIn.ChecksumValue);
+                string checksumNew = Root?.CalculateChecksum();
+                if (checksumNew != checksumOld)
+                {
+                    PrintWrn("Loaded program had a bad checksum! This means the data was either externally modified or "
+                        + "corrupted, or that the instruction set was changed since last time that the program was last "
+                        + "modified!"
+                        + "\n- Old checksum: " + checksumOld
+                        + "\n- New checksum: " + checksumNew);
+                }
+                else if (OS.HasFeature("editor"))
+                    PrintMsg("Checksum result: the data was valid.");
+            }
+            else
+                PrintWrn("The loaded program had no checksum. No data validation could be done.");
         }
-
-        // Create syntax tree.
-        int current = 0;
-        SubNode root = Decompile(set, instances, ref current);
-        Root = root.ToRoot();
-        Root.StealChildren(root);
-
-        // Evaluate checksum.
-        string checksum = Root?.GetChildWith(BuiltIn.MetadataOpcode)?.GetChildWith(BuiltIn.ChecksumOpcode)
-            .GetArgument(BuiltIn.ChecksumValue);
-        string checksumNew = Root?.GetChecksum();
-        if (checksumNew != checksum)
+        catch (Exception exception)
         {
-            GD.PrintErr("Loaded program had a wrong checksum! This means the data was either modified or corrupted!");
-            GD.PrintErr("File checksum: " + checksum);
-            GD.PrintErr("Recalculated checksum: " + checksumNew);
+            PrintErr("The following program could not be loaded due to a syntax error:\n" + code);
+            if (OS.HasFeature("editor"))
+                throw new FormatException("", exception);
         }
-        else
-            GD.Print("Checksum result: the data was valid.");
     }
 
     /* Public methods. */
@@ -253,8 +170,6 @@ public class SyntaxTree
                 node.Dissolve();
         }
 
-        GD.Print(graph);
-
         // Spawn objects.
         ledger.Clear();
         Dictionary<RootNode, LedgerItem> items = new();
@@ -295,311 +210,6 @@ public class SyntaxTree
     }
 
     /* Private methods. */
-    // Graph.
-    /// <summary>
-    /// Process a sub-graph. This does a number of things:<br/>
-    /// - Figuring out the execution order.<br/>
-    /// - Adding labels.<br/>
-    /// - Adding end instructions.<br/>
-    /// - Inserting goto instructions.<br/>
-    /// - Setting output arguments.
-    /// </summary>
-    private void ProcessSubGraph(Graph graph, RootNode node, BiDict<int, RootNode> executionOrder, ref int nextLabel)
-    {
-        // Do nothing if the node was already in the execution order.
-        if (executionOrder.ContainsRight(node))
-            return;
-
-        // Add to execution order.
-        executionOrder.Add(executionOrder.Count, node);
-
-        // Add label if necessary.
-        if (NeedsLabel(node))
-        {
-            SetLabel(node, nextLabel.ToString());
-            nextLabel++;
-        }
-
-        // Continue with output nodes.
-        for (int i = 0; i < node.OutputCount; i++)
-        {
-            OutputPort from = node.GetOutputAt(i);
-
-            // If the output was not connected...
-            if (from.To == null || from.To.Node == null)
-            {
-                // Create end group.
-                RootNode endGroup = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.EndGroupOpcode);
-                endGroup.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOpcode));
-                endGroup.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
-                graph.AddNode(endGroup);
-
-                // Connect it.
-                from.ConnectTo(endGroup.CreateInput());
-
-                // Add label if necessary.
-                if (NeedsLabel(endGroup))
-                {
-                    SetLabel(endGroup, nextLabel.ToString());
-                    nextLabel++;
-                }
-
-                // Add to execution order.
-                executionOrder.Add(executionOrder.Count, endGroup);
-            }
-
-            // If the target was already in the execution order...
-            else if (executionOrder.ContainsRight(from.To.Node))
-            {
-                // Create goto group.
-                RootNode gotoGroup = CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.GotoGroupOpcode);
-                gotoGroup.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.GotoOpcode));
-                gotoGroup.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
-                graph.AddNode(gotoGroup);
-
-                // Insert it in-between the current connection.
-                InputPort to = from.To;
-                from.ConnectTo(gotoGroup.CreateInput());
-                gotoGroup.CreateOutput().ConnectTo(to);
-
-                // Find output data.
-                CreateOutputs(gotoGroup);
-
-                // Add label if necessary.
-                if (NeedsLabel(gotoGroup))
-                {
-                    SetLabel(gotoGroup, nextLabel.ToString());
-                    nextLabel++;
-                }
-
-                // Add to execution order.
-                executionOrder.Add(executionOrder.Count, gotoGroup);
-
-                // Set output argument.
-                SetOutputArguments(gotoGroup, ref nextLabel);
-            }
-
-            // Else, continue with sub-graph.
-            else
-                ProcessSubGraph(graph, from.To.Node, executionOrder, ref nextLabel);
-        }
-
-        // Set output arguments.
-        SetOutputArguments(node, ref nextLabel);
-    }
-
-    /// <summary>
-    /// Find all output arguments of a root node and save the node and ID of each in the associated output port.
-    /// </summary>
-    private void CreateOutputs(RootNode node)
-    {
-        // Collect output data.
-        OutputArguments outputs = new(node);
-
-        // Ensure the correct number of outputs.
-        while (node.OutputCount < outputs.TotalOutputNumber)
-        {
-            node.CreateOutput();
-        }
-
-        // Store references to the output arguments inside of the output ports.
-        for (int i = 0; i < outputs.Arguments.Count; i++)
-        {
-            int portIndex = outputs.UsesDefaultOutput ? i + 1 : i;
-
-            OutputPort output = node.GetOutputAt(portIndex);
-            output.OutputParameterNode = outputs.Arguments[portIndex].Node;
-            output.OutputParameterID = outputs.Arguments[portIndex].ParameterID;
-            output = node.GetOutputAt(portIndex);
-        }
-    }
-
-    /// <summary>
-    /// Set all output arguments of a node hierarchy, depending on the node its root is connected to.
-    /// </summary>
-    private void SetOutputArguments(RootNode node, ref int nextLabel)
-    {
-        for (int i = 0; i < node.OutputCount; i++)
-        {
-            OutputPort output = node.GetOutputAt(i);
-            if (!output.IsDefaultOutput)
-            {
-                switch (output.OutputParameterNode)
-                {
-                    case RootNode root:
-                        root.SetArgument(output.OutputParameterID, GetLabel(output.To.Node));
-                        break;
-                    case SubNode sub:
-                        sub.SetArgument(output.OutputParameterID, GetLabel(output.To.Node));
-                        break;
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Check if a root node needs a label:<br/>
-    /// - If it has more than one inputs.<br/>
-    /// - If it connects to an output port associated with an output parameter.<br/>
-    /// - If it connects to a goto.
-    /// </summary>
-    private bool NeedsLabel(RootNode node)
-    {
-        if (node.InputCount > 1)
-            return true;
-
-        if (node.InputCount == 1)
-        {
-            OutputPort from = node.GetInputAt(0).From;
-            if (!from.IsDefaultOutput)
-                return true;
-            if (from.Node.Opcode == BuiltIn.GotoGroupOpcode)
-                return true;
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Get whether or not a node has a label.
-    /// </summary>
-    private bool HasLabel(RootNode node)
-    {
-        return node.GetChildWith(BuiltIn.LabelOpcode) != null;
-    }
-
-    /// <summary>
-    /// Get the label of a node.
-    /// </summary>
-    private string GetLabel(RootNode node)
-    {
-        return node.GetChildWith(BuiltIn.LabelOpcode).Data.GetArgument(BuiltIn.LabelName);
-    }
-
-    /// <summary>
-    /// Set the label of a node.
-    /// </summary>
-    private void SetLabel(RootNode node, string value)
-    {
-        // Find label sub-node.
-        SubNode label = node.GetChildWith(BuiltIn.LabelOpcode);
-
-        // Or create it if it wasn't found.
-        if (label == null)
-        {
-            label = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.LabelOpcode);
-            node.InsertChild(0, label);
-        }
-
-        // Set label name argument.
-        label.SetArgument(BuiltIn.LabelName, value);
-    }
-
-    // Metadata.
-    /// <summary>
-    /// Generate a sub-node hierarchy for an instruction definition.
-    /// </summary>
-    private SubNode ProcessDefinition(InstructionDefinition instruction)
-    {
-        // Instruction definition header.
-        SubNode definition = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.DefinitionOpcode);
-        definition.SetArgument(BuiltIn.DefinitionOpcodeParameter, instruction.Opcode);
-        definition.SetArgument(BuiltIn.DefinitionEditorOnly, instruction.Implementation == null);
-
-        // Parameters.
-        for (int i = 0; i < instruction.Parameters.Length; i++)
-        {
-            definition.AddChild(ProcessParameter(instruction.Parameters[i]));
-        }
-
-        // Pre-instructions.
-        if (instruction.PreInstructions.Length > 0)
-        {
-            SubNode pre = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.PreInstructionOpcode);
-            foreach (CompileRule rule in instruction.PreInstructions)
-            {
-                pre.AddChild(ProcessRule(rule));
-            }
-            pre.AddChild(CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.EndOfGroupOpcode));
-            definition.AddChild(pre);
-        }
-
-        // Post-instructions.
-        if (instruction.PostInstructions.Length > 0)
-        {
-            SubNode post = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.PostInstructionOpcode);
-            foreach (CompileRule rule in instruction.PostInstructions)
-            {
-                post.AddChild(ProcessRule(rule));
-            }
-            post.AddChild(CompilerNodeMaker.MakeRoot(InstructionSet, BuiltIn.EndOfGroupOpcode));
-            definition.AddChild(post);
-        }
-
-        // End-of-group.
-        definition.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
-
-        return definition;
-    }
-
-    /// <summary>
-    /// Generate a sub-node for a parameter.
-    /// </summary>
-    private SubNode ProcessParameter(Parameter parameter)
-    {
-        SubNode definition = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.ParameterOpcode);
-        definition.SetArgument(BuiltIn.ParameterType, parameter.GetType().GetCustomAttribute<XmlClassAttribute>().XmlKeyword);
-        definition.SetArgument(BuiltIn.ParameterID, parameter.ID);
-        return definition;
-    }
-
-    /// <summary>
-    /// Generate a sub-node / sub-node hierarchy for a compile rule.
-    /// </summary>
-    private SubNode ProcessRule(CompileRule rule)
-    {
-        if (rule is InstructionRule instruction)
-        {
-            SubNode reference = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.ReferenceOpcode);
-            reference.SetArgument(BuiltIn.ReferenceID, rule.ID);
-            reference.SetArgument(BuiltIn.ReferenceOpcodeParameter, instruction.Opcode);
-            return reference;
-        }
-        else
-        {
-            SubNode definition = CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.CompileRuleOpcode);
-            definition.SetArgument(BuiltIn.CompileRuleType, rule.GetType().GetCustomAttribute<XmlClassAttribute>().XmlKeyword);
-            definition.SetArgument(BuiltIn.CompileRuleID, rule.ID);
-            switch (rule)
-            {
-                case OptionRule option:
-                    if (option.Type != null)
-                        definition.AddChild(ProcessRule(option.Type));
-                    break;
-                case ChoiceRule choice:
-                    foreach (CompileRule type in choice.Types)
-                    {
-                        if (type != null)
-                            definition.AddChild(ProcessRule(type));
-                    }
-                    break;
-                case TupleRule tuple:
-                    foreach (CompileRule type in tuple.Types)
-                    {
-                        if (type != null)
-                            definition.AddChild(ProcessRule(type));
-                    }
-                    break;
-                case ListRule list:
-                    if (list.Type != null)
-                        definition.AddChild(ProcessRule(list.Type));
-                    break;
-            }
-            definition.AddChild(CompilerNodeMaker.MakeSub(InstructionSet, BuiltIn.EndOfGroupOpcode));
-            return definition;
-        }
-    }
-
     // Compilation.
     /// <summary>
     /// Compile a node.
@@ -654,7 +264,7 @@ public class SyntaxTree
         // Create node for current instruction.
         InstructionInstance instance = instances[current];
 
-        SubNode node = CompilerNodeMaker.MakeSub(set, instance.Opcode);
+        SubNode node = MakeSub(set, instance.Opcode);
         node.Data.Instance = instance;
 
         // Determine how to proceed.
@@ -884,5 +494,63 @@ public class SyntaxTree
         int.TryParse(root.GetArgument(BuiltIn.FrameX), out int frameX);
         int.TryParse(root.GetArgument(BuiltIn.FrameY), out int frameY);
         return ledger.CreateElement(InstructionSet[root.Opcode], new(frameX, frameY));
+    }
+
+    /// <summary>
+    /// Find all output arguments of a root node and save the node and ID of each in the associated output port.
+    /// </summary>
+    private void CreateOutputs(RootNode node)
+    {
+        // Collect output data.
+        OutputArguments outputs = new(node);
+
+        // Ensure the correct number of outputs.
+        while (node.OutputCount < outputs.TotalOutputNumber)
+        {
+            node.CreateOutput();
+        }
+
+        // Store references to the output arguments inside of the output ports.
+        for (int i = 0; i < outputs.Arguments.Count; i++)
+        {
+            int portIndex = outputs.UsesDefaultOutput ? i + 1 : i;
+
+            OutputPort output = node.GetOutputAt(portIndex);
+            output.OutputParameterNode = outputs.Arguments[portIndex].Node;
+            output.OutputParameterID = outputs.Arguments[portIndex].ParameterID;
+            output = node.GetOutputAt(portIndex);
+        }
+    }
+
+    /// <summary>
+    /// Get whether or not a node has a label.
+    /// </summary>
+    private bool HasLabel(RootNode node)
+    {
+        return node.GetChildWith(BuiltIn.LabelOpcode) != null;
+    }
+
+    /// <summary>
+    /// Get the label of a node.
+    /// </summary>
+    private string GetLabel(RootNode node)
+    {
+        return node.GetChildWith(BuiltIn.LabelOpcode).Data.GetArgument(BuiltIn.LabelName);
+    }
+
+    // Logging.
+    private static void PrintMsg(string text)
+    {
+        GD.Print(text);
+    }
+
+    private static void PrintErr(string text)
+    {
+        GD.PrintErr(text);
+    }
+
+    private static void PrintWrn(string text)
+    {
+        GD.PrintRich($"[color=#ffde66]\u25CF {text.Replace("\n", "\n  ")}[/color]");
     }
 }

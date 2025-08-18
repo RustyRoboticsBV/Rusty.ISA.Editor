@@ -94,13 +94,14 @@ public partial class ProgramEditor : MarginContainer
     {
         // Create syntax tree.
         SyntaxTree syntaxTree = new(Ledger);
+        GD.Print("Compilation syntax tree:\n" + syntaxTree);
 
         // Serialize to code.
         string code = syntaxTree.Compile();
 
         // Compress code if enabled.
         if (CompressCode)
-            code = StringCompressor.CompressString(code);
+            code = StringCompressor.Compress(code);
 
         // Write to clipboard.
         DisplayServer.ClipboardSet(code);
@@ -112,8 +113,8 @@ public partial class ProgramEditor : MarginContainer
         string code = DisplayServer.ClipboardGet();
 
         // Decompress if necessary.
-        if (!code.StartsWith($"{BuiltIn.ProgramOpcode}\n") && !code.StartsWith($"{BuiltIn.ProgramOpcode}\r"))
-            code = StringCompressor.CompressString(code);
+        if (StringCompressor.IsCompressed(code))
+            code = StringCompressor.Decompress(code);
 
         // Create syntax tree.
         SyntaxTree syntaxTree = new(InstructionSet, code);
@@ -123,6 +124,7 @@ public partial class ProgramEditor : MarginContainer
         Ledger.Clear();
 
         // Decompile syntax tree.
+        GD.Print("Decompilation syntax tree:\n" + syntaxTree);
         syntaxTree.Decompile(Ledger);
     }
 

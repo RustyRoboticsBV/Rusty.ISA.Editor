@@ -110,7 +110,6 @@ public class Preview
             code += WrapFunction;
 
         // Generate evaluation class.
-        GD.Print(code);
         Script = new();
         Script.SourceCode = code;
         Script.Reload();
