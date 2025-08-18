@@ -245,7 +245,7 @@ public class SyntaxTree
         SubNode main = null;
         SubNode pre = null;
         SubNode post = null;
-        for (int i = 0; i < node.ChildCount; i++)
+        for (int i = 0; i < node.ChildCount - 1; i++)
         {
             SubNode child = node.GetChildAt(i);
             if (child.Opcode == BuiltIn.PreInstructionOpcode)
