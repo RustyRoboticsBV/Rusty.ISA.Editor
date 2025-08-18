@@ -51,30 +51,25 @@ public partial class ProgramEditor : MarginContainer
         PasteButton.Pressed += OnPressedPaste;
         buttons.AddChild(PasteButton);
 
-        // Add inspector / resizer / graph hbox.
-        HBoxContainer hbox = new();
-        hbox.SizeFlagsVertical = SizeFlags.ExpandFill;
-        vbox.AddChild(hbox);
-
         // Create inspector window.
         InspectorWindow = new();
         InspectorWindow.SizeFlagsHorizontal = SizeFlags.Fill;
-        hbox.AddChild(InspectorWindow);
         InspectorWindow.Name = "Inspector";
-
-        // Create resizer.
-        Resizer resizer = new();
-        resizer.Target = InspectorWindow;
-        hbox.AddChild(resizer);
-        resizer.Name = "Resizer";
 
         // Create graph.
         GraphEdit = new();
         GraphEdit.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         GraphEdit.CustomMinimumSize = new(256f, 256f);
         GraphEdit.RightClicked += OnRightClickedGraph;
-        hbox.AddChild(GraphEdit);
         GraphEdit.Name = "GraphEdit";
+
+        // Create hbox.
+        HSplitContainer hbox = new(InspectorWindow, GraphEdit);
+        hbox.SizeFlagsVertical = SizeFlags.ExpandFill;
+        hbox.LeftMinSize = 128f;
+        hbox.RightMinSize = 256;
+        hbox.CurrentFactor = 0.3f;
+        vbox.AddChild(hbox);
 
         // Create context menu.
         ContextMenu = new();

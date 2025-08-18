@@ -3,63 +3,63 @@
 namespace Rusty.ISA.Editor;
 
 /// <summary>
-/// A vertical container that can display two elements and a divider. The divider can be dragged to resize the elements on
+/// A horizontal container that can display two elements and a divider. The divider can be dragged to resize the elements on
 /// the container.
 /// </summary>
-public partial class VSplitContainer : VBoxContainer
+public partial class HSplitContainer : HBoxContainer
 {
     /* Private constants. */
     private const int DragMargin = 4;
 
     /* Public properties. */
-    public Control Top => GetChild(0) as Control;
+    public Control Left => GetChild(0) as Control;
     public Control Divider => GetChild(1) as Control;
-    public Control Bottom => GetChild(2) as Control;
+    public Control Right => GetChild(2) as Control;
 
-    public float TopMinSize { get; set; }
-    public float BottomMinSize { get; set; }
+    public float LeftMinSize { get; set; }
+    public float RightMinSize { get; set; }
     public float CurrentFactor { get; set; } = 0.5f;
 
     /* Private properties. */
     private bool IsDragging { get; set; }
     private float DragStartPos { get; set; }
-    private float DragStartTopSize { get; set; }
-    private float TotalSize => GetRect().Size.Y - Divider.Size.Y;
+    private float DragStartLeftSize { get; set; }
+    private float TotalSize => GetRect().Size.X - Divider.Size.X;
 
     /* Constructors. */
-    public VSplitContainer(Control top, Control bottom)
+    public HSplitContainer(Control left, Control right)
     {
         AddThemeConstantOverride("separation", 0);
 
-        AddChild(top);
-        top.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        top.SizeFlagsVertical = SizeFlags.ShrinkBegin;
+        AddChild(left);
+        left.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        left.SizeFlagsVertical = SizeFlags.ExpandFill;
 
         AddChild(CreateDivider());
 
-        AddChild(bottom);
-        bottom.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        bottom.SizeFlagsVertical = SizeFlags.ExpandFill;
+        AddChild(right);
+        right.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        right.SizeFlagsVertical = SizeFlags.ExpandFill;
     }
 
     /* Godot overrides. */
     public override void _Process(double delta)
     {
         // Calculate total & top size.
-        float newTopSize = Mathf.Clamp(CurrentFactor, 0f, 1f) * TotalSize;
+        float newLeftSize = Mathf.Clamp(CurrentFactor, 0f, 1f) * TotalSize;
 
         // Apply new size.
-        Top.CustomMinimumSize = new(Top.CustomMinimumSize.X, newTopSize);
+        Left.CustomMinimumSize = new(newLeftSize, Left.CustomMinimumSize.Y);
     }
 
     /* Private methods. */
     private Control CreateDivider()
     {
         MarginContainer margin = new();
-        margin.AddThemeConstantOverride("margin_top", DragMargin);
-        margin.AddThemeConstantOverride("margin_bottom", DragMargin);
+        margin.AddThemeConstantOverride("margin_left", DragMargin);
+        margin.AddThemeConstantOverride("margin_right", DragMargin);
         margin.MouseFilter = MouseFilterEnum.Stop;
-        margin.MouseDefaultCursorShape = CursorShape.Vsize;
+        margin.MouseDefaultCursorShape = CursorShape.Hsize;
         margin.FocusMode = FocusModeEnum.Click;
         margin.GuiInput += OnDividerGuiInput;
 
@@ -80,8 +80,8 @@ public partial class VSplitContainer : VBoxContainer
             if (button.Pressed)
             {
                 IsDragging = true;
-                DragStartPos = GetGlobalMousePosition().Y;
-                DragStartTopSize = Top.Size.Y;
+                DragStartPos = GetGlobalMousePosition().X;
+                DragStartLeftSize = Left.Size.X;
                 Divider.GrabFocus();
             }
             else
@@ -92,8 +92,8 @@ public partial class VSplitContainer : VBoxContainer
         {
             // Figure out desired top element size.
             float from = DragStartPos;
-            float to = GetGlobalMousePosition().Y;
-            float newDragPos = DragStartTopSize + (to - from);
+            float to = GetGlobalMousePosition().X;
+            float newDragPos = DragStartLeftSize + (to - from);
 
             // Calculate factor.
             if (TotalSize > 0f)

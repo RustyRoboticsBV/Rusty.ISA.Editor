@@ -109,7 +109,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         BottomMargin = new();
         BottomMargin.CustomMinimumSize = new(0f, 5f);
         AddChild(BottomMargin);
-        BottomMargin.Name = "Bottom Margin";
+        BottomMargin.Name = "Right Margin";
 
         // Set default values.
         AddThemeColorOverride("font_color", Colors.White);
