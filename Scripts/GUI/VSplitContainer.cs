@@ -45,8 +45,11 @@ public partial class VSplitContainer : VBoxContainer
     /* Godot overrides. */
     public override void _Process(double delta)
     {
-        // Calculate total & top size.
+        // Calculate new top size.
         float newTopSize = Mathf.Clamp(CurrentFactor, 0f, 1f) * TotalSize;
+
+        // Respect minimum sizes.
+        newTopSize = Mathf.Clamp(newTopSize, TopMinSize, TotalSize - BottomMinSize);
 
         // Apply new size.
         Top.CustomMinimumSize = new(Top.CustomMinimumSize.X, newTopSize);
@@ -100,8 +103,6 @@ public partial class VSplitContainer : VBoxContainer
                 CurrentFactor = newDragPos / TotalSize;
             else
                 CurrentFactor = 0f;
-
-            GD.Print(CurrentFactor);
 
             AcceptEvent();
         }

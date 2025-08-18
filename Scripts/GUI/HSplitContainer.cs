@@ -48,6 +48,9 @@ public partial class HSplitContainer : HBoxContainer
         // Calculate total & top size.
         float newLeftSize = Mathf.Clamp(CurrentFactor, 0f, 1f) * TotalSize;
 
+        // Respect minimum sizes.
+        newLeftSize = Mathf.Clamp(newLeftSize, LeftMinSize, TotalSize - RightMinSize);
+
         // Apply new size.
         Left.CustomMinimumSize = new(newLeftSize, Left.CustomMinimumSize.Y);
     }
@@ -100,8 +103,6 @@ public partial class HSplitContainer : HBoxContainer
                 CurrentFactor = newDragPos / TotalSize;
             else
                 CurrentFactor = 0f;
-
-            GD.Print(CurrentFactor);
 
             AcceptEvent();
         }

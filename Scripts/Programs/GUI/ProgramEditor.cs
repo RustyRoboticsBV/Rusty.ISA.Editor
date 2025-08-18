@@ -66,9 +66,9 @@ public partial class ProgramEditor : MarginContainer
         // Create hbox.
         HSplitContainer hbox = new(InspectorWindow, GraphEdit);
         hbox.SizeFlagsVertical = SizeFlags.ExpandFill;
-        hbox.LeftMinSize = 128f;
+        hbox.LeftMinSize = 256f;
         hbox.RightMinSize = 256;
-        hbox.CurrentFactor = 0.3f;
+        hbox.CurrentFactor = 0.275f;
         vbox.AddChild(hbox);
 
         // Create context menu.
