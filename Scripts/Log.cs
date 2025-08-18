@@ -7,6 +7,8 @@ namespace Rusty.ISA.Editor
     /// </summary>
     public static class Log
     {
+        public static Console Console { get; set; }
+
         /* Public methods. */
         /// <summary>
         /// Print a message.
@@ -14,6 +16,7 @@ namespace Rusty.ISA.Editor
         public static void Message(string text)
         {
             GD.Print("\u25CF " + text);
+            Console?.PrintMessage(text);
         }
 
         /// <summary>
@@ -30,6 +33,7 @@ namespace Rusty.ISA.Editor
         public static void Warning(string text)
         {
             GD.PrintRich($"[color=#ffde66]\u25CF {text}[/color]");
+            Console?.PrintWarning(text);
         }
 
         /// <summary>
@@ -46,6 +50,7 @@ namespace Rusty.ISA.Editor
         public static void Error(string text)
         {
             GD.PrintErr(text);
+            Console?.PrintError(text);
         }
 
         /// <summary>

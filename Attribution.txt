@@ -1,2 +1,10 @@
 App Icon by Freepik: https://www.flaticon.com/free-icons/clapperboard
 File menu icons from Icon8: https://icons8.com
+
+-------------------------------------------------------------------------
+
+Ubuntu Mono Regular font:
+Copyright 2010,2011 Canonical Ltd.
+
+This Font Software is licensed under the Ubuntu Font Licence, Version
+1.0.  https://launchpad.net/ubuntu-font-licence

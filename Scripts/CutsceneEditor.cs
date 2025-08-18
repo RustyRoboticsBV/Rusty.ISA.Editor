@@ -11,6 +11,7 @@ public partial class CutsceneEditor : MarginContainer
     [Export(PropertyHint.MultilineText)] string Description { get; set; } = "";
     [Export] string Author { get; set; } = "";
     [Export] string Version { get; set; } = "1.0.0";
+    [Export] Font ConsoleFont { get; set; }
 
     /* Godot overrides. */
     public override void _Ready()
@@ -20,6 +21,21 @@ public partial class CutsceneEditor : MarginContainer
 
         // Create program editor.
         ProgramEditor programEditor = new(set);
-        AddChild(programEditor);
+
+        // Create console.
+        Console console = new();
+        console.Font = ConsoleFont;
+        Log.Console = console;
+        console.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
+        ScrollContainer consoleScroller = new();
+        consoleScroller.AddChild(console);
+
+        // Create vbox.
+        VSplitContainer vbox = new(programEditor, consoleScroller);
+        vbox.TopMinSize = 8;
+        vbox.BottomMinSize = 8f;
+        vbox.CurrentFactor = 0.8f;
+        AddChild(vbox);
     }
 }

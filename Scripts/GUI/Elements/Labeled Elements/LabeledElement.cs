@@ -24,6 +24,11 @@ public partial class LabeledElement : HBoxContainer, IGuiElement
         get => Label.GetThemeFontSize("font_size");
         set => Label.AddThemeFontSizeOverride("font_size", value);
     }
+    public Font LabelFont
+    {
+        get => Label.GetThemeFont("font");
+        set => Label.AddThemeFontOverride("font", value);
+    }
     public virtual new string TooltipText
     {
         get => base.TooltipText;
