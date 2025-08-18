@@ -21,8 +21,10 @@ public abstract class ProgramCompiler : CompilerTool
         program.AddChild(MakeSub(ledger.Set, BuiltIn.EndOfGroupOpcode));
 
         // Compute checksum.
-        string checksum = program.CalculateChecksum();
-        metadata.GetChildWith(BuiltIn.ChecksumOpcode)?.SetArgument(BuiltIn.ChecksumValue, checksum);
+        string checksum = program.ComputeChecksum();
+        program.GetChildWith(BuiltIn.MetadataOpcode)
+            .GetChildWith(BuiltIn.ChecksumOpcode)
+            .SetArgument(BuiltIn.ChecksumValue, checksum);
 
         return program;
     }

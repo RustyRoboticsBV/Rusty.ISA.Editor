@@ -88,7 +88,7 @@ public class RootNode : Graphs.RootNode
         return Data?.GetArgument(id);
     }
 
-    public string CalculateChecksum()
+    public string ComputeChecksum()
     {
         // Create checksum builder.
         MD5 md5 = MD5.Create();

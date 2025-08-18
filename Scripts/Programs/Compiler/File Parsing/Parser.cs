@@ -40,7 +40,7 @@ public abstract class Parser : CompilerTool
             if (checksum != null)
             {
                 string checksumOld = checksum.GetArgument(BuiltIn.ChecksumValue);
-                string checksumNew = result?.CalculateChecksum();
+                string checksumNew = result?.ComputeChecksum();
                 if (checksumNew != checksumOld)
                 {
                     Log.Warning("The loaded program had a bad checksum! This means the program was either externally modified "
