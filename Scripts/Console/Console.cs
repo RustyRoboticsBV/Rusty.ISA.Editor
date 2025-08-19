@@ -29,28 +29,31 @@ public partial class Console : MarginContainer
         AddChild(vbox);
 
         HBoxContainer buttons = new();
+        buttons.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         vbox.AddChild(buttons);
 
         Label label = new();
         label.Text = "Console";
+        label.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         buttons.AddChild(label);
 
-        Button clearButton = new();
-        clearButton.Text = "Clear";
-        clearButton.Pressed += OnClearPressed;
-        buttons.AddChild(clearButton);
+        Button expandButton = new();
+        expandButton.Text = "Expand All";
+        expandButton.SizeFlagsHorizontal = SizeFlags.ShrinkEnd;
+        expandButton.Pressed += OnExpandPressed;
+        buttons.AddChild(expandButton);
 
         Button collapseButton = new();
         collapseButton.Text = "Collapse All";
+        collapseButton.SizeFlagsHorizontal = SizeFlags.ShrinkEnd;
         collapseButton.Pressed += OnCollapsePressed;
         buttons.AddChild(collapseButton);
 
-        /*Label title = new();
-        title.Text = "Console";
-        vbox.AddChild(title);
-
-        HSeparator separator = new();
-        vbox.AddChild(separator);*/
+        Button clearButton = new();
+        clearButton.Text = "Clear";
+        clearButton.SizeFlagsHorizontal = SizeFlags.ShrinkEnd;
+        clearButton.Pressed += OnClearPressed;
+        buttons.AddChild(clearButton);
 
         HBoxContainer hbox = new();
         vbox.AddChild(hbox);
@@ -59,11 +62,6 @@ public partial class Console : MarginContainer
         LineContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         LineContainer.AddThemeConstantOverride("separation", 0);
         hbox.AddChild(LineContainer);
-
-        /*MarginContainer margin = new();
-        margin.AddThemeConstantOverride("margin_left", 4);
-        margin.AddThemeConstantOverride("margin_right", 4);
-        hbox.AddChild(margin);*/
     }
 
     /* Public methods. */
@@ -95,13 +93,12 @@ public partial class Console : MarginContainer
         Lines.Add(line);
     }
 
-    private void OnClearPressed()
+    private void OnExpandPressed()
     {
         foreach (ConsoleLine line in Lines)
         {
-            LineContainer.RemoveChild(line);
+            line.Expand();
         }
-        Lines.Clear();
     }
 
     private void OnCollapsePressed()
@@ -110,5 +107,14 @@ public partial class Console : MarginContainer
         {
             line.Collapse();
         }
+    }
+
+    private void OnClearPressed()
+    {
+        foreach (ConsoleLine line in Lines)
+        {
+            LineContainer.RemoveChild(line);
+        }
+        Lines.Clear();
     }
 }

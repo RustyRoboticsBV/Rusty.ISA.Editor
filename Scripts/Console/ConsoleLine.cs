@@ -46,6 +46,11 @@ public partial class ConsoleLine : MarginContainer
     }
 
     /* Public methods. */
+    public void Expand()
+    {
+        Foldout.IsOpen = true;
+    }
+
     public void Collapse()
     {
         Foldout.IsOpen = false;
