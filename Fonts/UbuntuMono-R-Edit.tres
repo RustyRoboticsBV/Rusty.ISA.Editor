@@ -1,0 +1,8 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://4o20x61wdxf6"]
+
+[ext_resource type="FontFile" uid="uid://ddpf2nysogsf3" path="res://Fonts/UbuntuMono-R.ttf" id="1_8oyj0"]
+
+[resource]
+base_font = ExtResource("1_8oyj0")
+spacing_top = -2
+spacing_bottom = -2

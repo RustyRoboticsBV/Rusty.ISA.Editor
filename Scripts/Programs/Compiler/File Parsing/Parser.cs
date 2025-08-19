@@ -49,8 +49,6 @@ public abstract class Parser : CompilerTool
                         + "\n- Old checksum: " + checksumOld
                         + "\n- New checksum: " + checksumNew);
                 }
-                else if (OS.HasFeature("editor"))
-                    Log.Message("Checksum result: the data was valid.");
             }
             else
                 Log.Warning("The loaded result had no checksum. No data validation could be done.");
