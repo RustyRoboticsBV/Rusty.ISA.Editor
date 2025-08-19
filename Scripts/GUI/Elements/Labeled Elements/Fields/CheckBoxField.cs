@@ -11,7 +11,11 @@ public partial class CheckBoxField : GenericField<bool, CheckBox>
     public override bool Value
     {
         get => Field.ButtonPressed;
-        set => Field.ButtonPressed = value;
+        set
+        {
+            Field.ButtonPressed = value;
+            InvokeChanged();
+        }
     }
 
     /* Contructors. */

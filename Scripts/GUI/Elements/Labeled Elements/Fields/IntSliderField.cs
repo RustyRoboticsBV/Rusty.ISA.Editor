@@ -9,17 +9,29 @@ public partial class IntSliderField : GenericSlider<int>
     public override int Value
     {
         get => (int)Slider.Value;
-        set => Slider.Value = value;
+        set
+        {
+            Slider.Value = value;
+            InvokeChanged();
+        }
     }
     public override int MinValue
     {
         get => (int)Slider.MinValue;
-        set => Slider.MinValue = value;
+        set
+        {
+            Slider.MinValue = value;
+            InvokeChanged();
+        }
     }
     public override int MaxValue
     {
         get => (int)Slider.MaxValue;
-        set => Slider.MaxValue = value;
+        set
+        {
+            Slider.MaxValue = value;
+            InvokeChanged();
+        }
     }
 
     /* Constructors. */

@@ -28,12 +28,17 @@ public partial class DropdownField : GenericChoice<OptionButton>
             {
                 Field.AddItem(option);
             }
+            InvokeChanged();
         }
     }
     public override int Selected
     {
         get => Field.Selected;
-        set => Field.Selected = value;
+        set
+        {
+            Field.Selected = value;
+            InvokeChanged();
+        }
     }
     public string SelectedText => Field.GetItemText(Field.Selected);
 

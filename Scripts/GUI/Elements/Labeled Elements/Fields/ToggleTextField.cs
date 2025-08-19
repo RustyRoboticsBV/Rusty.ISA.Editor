@@ -11,12 +11,20 @@ public partial class ToggleTextField : GenericField<string, LineEdit>
     public bool Checked
     {
         get => CheckBox.ButtonPressed;
-        set => CheckBox.ButtonPressed = value;
+        set
+        {
+            CheckBox.ButtonPressed = value;
+            InvokeChanged();
+        }
     }
     public string FieldText
     {
         get => Field.Text;
-        set => Field.Text = value;
+        set
+        {
+            Field.Text = value;
+            InvokeChanged();
+        }
     }
     public override string Value
     {
@@ -25,6 +33,7 @@ public partial class ToggleTextField : GenericField<string, LineEdit>
         {
             CheckBox.ButtonPressed = value != null;
             Field.Text = value != null ? value : "";
+            InvokeChanged();
         }
     }
     public override string TooltipText

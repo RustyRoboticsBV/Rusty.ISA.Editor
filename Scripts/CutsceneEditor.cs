@@ -28,11 +28,8 @@ public partial class CutsceneEditor : MarginContainer
         Log.Console = console;
         console.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
-        ScrollContainer consoleScroller = new();
-        consoleScroller.AddChild(console);
-
         // Create vbox.
-        VSplitContainer vbox = new(programEditor, consoleScroller);
+        VSplitContainer vbox = new(programEditor, console);
         vbox.TopMinSize = 8;
         vbox.BottomMinSize = 8f;
         vbox.CurrentFactor = 0.8f;

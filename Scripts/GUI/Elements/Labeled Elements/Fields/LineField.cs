@@ -9,7 +9,11 @@ public partial class LineField : LineEditField<string>
     public override string Value
     {
         get => Field.Text;
-        set => Field.Text = value;
+        set
+        {
+            Field.Text = value;
+            InvokeChanged();
+        }
     }
 
     /* Public methods. */

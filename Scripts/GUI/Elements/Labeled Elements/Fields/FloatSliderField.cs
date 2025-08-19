@@ -9,17 +9,29 @@ public partial class FloatSliderField : GenericSlider<float>
     public override float Value
     {
         get => (float)Slider.Value;
-        set => Slider.Value = value;
+        set
+        {
+            Slider.Value = value;
+            InvokeChanged();
+        }
     }
     public override float MinValue
     {
         get => (float)Slider.MinValue;
-        set => Slider.MinValue = value;
+        set
+        {
+            Slider.MinValue = value;
+            InvokeChanged();
+        }
     }
     public override float MaxValue
     {
         get => (float)Slider.MaxValue;
-        set => Slider.MaxValue = value;
+        set
+        {
+            Slider.MaxValue = value;
+            InvokeChanged();
+        }
     }
 
     /* Constructors. */

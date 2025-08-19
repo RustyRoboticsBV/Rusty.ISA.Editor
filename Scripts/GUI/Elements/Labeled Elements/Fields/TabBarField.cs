@@ -27,12 +27,17 @@ public partial class TabBarField : GenericChoice<TabBar>
             {
                 Field.AddTab(tab);
             }
+            InvokeChanged();
         }
     }
     public override int Selected
     {
         get => Field.CurrentTab;
-        set => Field.CurrentTab = value;
+        set
+        {
+            Field.CurrentTab = value;
+            InvokeChanged();
+        }
     }
     public string SelectedText => Field.GetTabTitle(Field.CurrentTab);
 

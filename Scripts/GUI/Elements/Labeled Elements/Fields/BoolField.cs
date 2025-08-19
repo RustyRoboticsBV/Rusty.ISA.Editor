@@ -11,7 +11,11 @@ public partial class BoolField : GenericField<bool, CheckButton>
     public override bool Value
     {
         get => Field.ButtonPressed;
-        set => Field.ButtonPressed = value;
+        set
+        {
+            Field.ButtonPressed = value;
+            InvokeChanged();
+        }
     }
 
     /* Contructors. */

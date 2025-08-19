@@ -1,5 +1,3 @@
-using Godot;
-
 namespace Rusty.ISA.Editor;
 
 /// <summary>
@@ -11,7 +9,11 @@ public partial class FloatField : SpinBoxField<float>
     public override float Value
     {
         get => (float)Field.Value;
-        set => Field.Value = value;
+        set
+        {
+            Field.Value = value;
+            InvokeChanged();
+        }
     }
 
     /* Constructors. */

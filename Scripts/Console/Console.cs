@@ -24,10 +24,13 @@ public partial class Console : MarginContainer
     {
         AddThemeConstantOverride("margin_left", 4);
         AddThemeConstantOverride("margin_right", 4);
+        AddThemeConstantOverride("margin_bottom", 4);
 
+        // Add vbox.
         VBoxContainer vbox = new();
         AddChild(vbox);
 
+        // Add buttons.
         HBoxContainer buttons = new();
         buttons.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         vbox.AddChild(buttons);
@@ -55,13 +58,19 @@ public partial class Console : MarginContainer
         clearButton.Pressed += OnClearPressed;
         buttons.AddChild(clearButton);
 
-        HBoxContainer hbox = new();
-        vbox.AddChild(hbox);
+        // Add scroll.
+        ScrollContainer scroll = new();
+        scroll.SizeFlagsVertical = SizeFlags.ExpandFill;
+        vbox.AddChild(scroll);
+
+        VBoxContainer vbox2 = new();
+        vbox2.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        scroll.AddChild(vbox2);
 
         LineContainer = new();
         LineContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         LineContainer.AddThemeConstantOverride("separation", 0);
-        hbox.AddChild(LineContainer);
+        vbox2.AddChild(LineContainer);
     }
 
     /* Public methods. */

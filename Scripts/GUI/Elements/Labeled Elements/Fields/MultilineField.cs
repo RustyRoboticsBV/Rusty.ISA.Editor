@@ -11,7 +11,11 @@ public partial class MultilineField : GenericField<string, TextEdit>
     public override string Value
     {
         get => Field.Text;
-        set => Field.Text = value;
+        set
+        {
+            Field.Text = value;
+            InvokeChanged();
+        }
     }
 
     /* Constructors. */

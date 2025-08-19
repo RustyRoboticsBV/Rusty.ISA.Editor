@@ -11,7 +11,11 @@ public partial class ColorField : GenericField<Color, ColorPickerButton>
     public override Color Value
     {
         get => Field.Color;
-        set => Field.Color = value;
+        set
+        {
+            Field.Color = value;
+            InvokeChanged();
+        }
     }
 
     /* Constructors. */
