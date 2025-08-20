@@ -3,7 +3,7 @@
 namespace Rusty.ISA.Editor;
 
 /// <summary>
-/// A parameter preview.
+/// An instance of a parameter preview.
 /// </summary>
 public partial class ParameterPreviewInstance : PreviewInstance
 {
@@ -21,11 +21,9 @@ public partial class ParameterPreviewInstance : PreviewInstance
         return copy;
     }
 
-    public void SetDisplayName(string value)
-    {
-        Input.SetValue(ParameterPreview.DisplayName, value);
-    }
-
+    /// <summary>
+    /// Set the parameter value.
+    /// </summary>
     public void SetValue(object value)
     {
         Input.SetValue(ParameterPreview.Value, StringUtility.Serialize(value));

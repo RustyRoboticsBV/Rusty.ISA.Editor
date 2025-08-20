@@ -6,7 +6,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// The input of a preview calculator.
 /// </summary>
-public sealed partial class PreviewInput : Resource
+public sealed partial class PreviewInput : Resource, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, Variant>>
 {
     /* Public properties. */
     /// <summary>
@@ -34,9 +34,9 @@ public sealed partial class PreviewInput : Resource
         foreach (var value in other.Values)
         {
             if (value.Value.AsGodotObject() is PreviewInstance preview)
-                AddValue(value.Key, preview.Copy());
+                SetValue(value.Key, preview.Copy());
             else
-                AddValue(value.Key, value.Value);
+                SetValue(value.Key, value.Value);
         }
     }
 
@@ -45,7 +45,7 @@ public sealed partial class PreviewInput : Resource
     /// </summary>
     public void AddValue(string key)
     {
-        AddValue(key, "");
+        Values.Add(key, "");
     }
 
     /// <summary>
@@ -72,5 +72,16 @@ public sealed partial class PreviewInput : Resource
         if (!Values.ContainsKey(key))
             AddValue(key);
         Values[key] = value;
+    }
+
+    /* Enumerating. */
+    public System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, Variant>> GetEnumerator()
+    {
+        return Values.GetEnumerator();
+    }
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

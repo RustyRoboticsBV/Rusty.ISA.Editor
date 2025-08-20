@@ -9,6 +9,9 @@ namespace Rusty.ISA.Editor;
 /// </summary>
 public abstract class Preview
 {
+    /* Public constants. */
+    public const string DisplayName = "name";
+
     /* Fields. */
     private const string SkeletonCode = "func eval(_input) -> String:\n    EVAL";
 
@@ -40,8 +43,8 @@ public abstract class Preview
         + "\n    "
         + "\n    return result;";
 
-    /* Protected properties. */
-    protected PreviewInput DefaultInput { get; private set; } = new();
+    /* Public properties. */
+    public PreviewInput DefaultInput { get; private set; } = new();
 
     /* Private properties. */
     private GDScript Script { get; set; }

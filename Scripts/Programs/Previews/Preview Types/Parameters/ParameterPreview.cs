@@ -1,6 +1,4 @@
-﻿using Godot;
-
-namespace Rusty.ISA.Editor;
+﻿namespace Rusty.ISA.Editor;
 
 /// <summary>
 /// A parameter preview.
@@ -8,7 +6,6 @@ namespace Rusty.ISA.Editor;
 public class ParameterPreview : Preview
 {
     /* Public constants. */
-    public const string DisplayName = "name";
     public const string Value = "value";
 
     /* Private constants. */
@@ -19,13 +16,17 @@ public class ParameterPreview : Preview
 
     public ParameterPreview(Parameter parameter) : this(parameter.Preview)
     {
+        // Display name.
         DefaultInput.SetValue(DisplayName, parameter.DisplayName);
-        DefaultInput.SetValue(Value, StringUtility.Serialize(ParameterUtility.GetDefaultValue(parameter)));
+
+        // Value.
+        string value = StringUtility.Serialize(ParameterUtility.GetDefaultValue(parameter));
+        DefaultInput.SetValue(Value, value);
     }
 
     /* Public methods. */
-    public override PreviewInstance CreateInstance()
+    public override ParameterPreviewInstance CreateInstance()
     {
-        return new ParameterPreviewInstance(this);
+        return new(this);
     }
 }

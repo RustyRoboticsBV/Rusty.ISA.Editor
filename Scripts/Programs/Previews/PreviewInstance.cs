@@ -18,6 +18,14 @@ public abstract partial class PreviewInstance : Resource
     public PreviewInstance(Preview preview)
     {
         Preview = preview;
+
+        foreach (var @default in preview.DefaultInput)
+        {
+            if (@default.Value.AsGodotObject() is PreviewInstance nested)
+                Input.Set(@default.Key, nested.Copy());
+            else
+                Input.Set(@default.Key, @default.Value);
+        }
     }
 
     /* Public methods. */
@@ -35,5 +43,13 @@ public abstract partial class PreviewInstance : Resource
             Instance = Preview.Emit();
 
         return (string)Instance.Call("eval", Input);
+    }
+
+    /// <summary>
+    /// Set the display name.
+    /// </summary>
+    public void SetDisplayName(string value)
+    {
+        Input.SetValue(Preview.DisplayName, value);
     }
 }

@@ -1,0 +1,25 @@
+﻿namespace Rusty.ISA.Editor;
+
+/// <summary>
+/// A option rule preview.
+/// </summary>
+public class OptionRulePreview : RulePreview
+{
+    /* Public constants. */
+    public const string Enabled = "enabled";
+
+    /* Constructors. */
+    public OptionRulePreview(string code) : base(code) { }
+
+    public OptionRulePreview(OptionRule parameter) : this(parameter.Preview)
+    {
+        DefaultInput.SetValue(Enabled, false);
+        DefaultInput.SetValue(Element, "");
+    }
+
+    /* Public methods. */
+    public override OptionRulePreviewInstance CreateInstance()
+    {
+        return new(this);
+    }
+}

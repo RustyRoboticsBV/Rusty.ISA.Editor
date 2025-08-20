@@ -42,4 +42,105 @@ public static class PreviewDict
     {
         Previews.Clear();
     }
+
+    /// <summary>
+    /// Get an instruction preview. Adds it if it didn't exist yet.
+    /// </summary>
+    public static InstructionPreview ForInstruction(InstructionDefinition definition)
+    {
+        if (!Has(definition))
+            Add(definition, new InstructionPreview(definition));
+        return Previews[definition] as InstructionPreview;
+    }
+
+    /// <summary>
+    /// Get an editor node info preview. Adds it if it didn't exist yet.
+    /// </summary>
+    public static EditorNodePreview ForEditorNode(InstructionDefinition definition)
+    {
+        if (!Has(definition.EditorNode))
+            Add(definition.EditorNode, new EditorNodePreview(definition));
+        return Previews[definition] as EditorNodePreview;
+    }
+
+    /// <summary>
+    /// Get an parameter preview. Adds it if it didn't exist yet.
+    /// </summary>
+    public static ParameterPreview ForParameter(Parameter parameter)
+    {
+        if (!Has(parameter))
+            Add(parameter, new ParameterPreview(parameter));
+        return Previews[parameter] as ParameterPreview;
+    }
+
+    /// <summary>
+    /// Get an output parameter preview. Adds it if it didn't exist yet.
+    /// </summary>
+    public static OutputPreview ForOutput(InstructionDefinition definition, string outputID)
+    {
+        OutputParameter output = definition.GetParameter(outputID) as OutputParameter;
+        if (!Has(output))
+            Add(output, new OutputPreview(definition, outputID));
+        return Previews[output] as OutputPreview;
+    }
+
+    /// <summary>
+    /// Get a compile rule preview. Adds it if it didn't exist yet.
+    /// </summary>
+    public static RulePreview ForRule(CompileRule rule)
+    {
+        switch (rule)
+        {
+            case OptionRule o:
+                return ForOptionRule(o);
+            case ChoiceRule c:
+                return ForChoiceRule(c);
+            case TupleRule t:
+                return ForTupleRule(t);
+            case ListRule l:
+                return ForListRule(l);
+            default:
+                return null;
+        }
+    }
+
+    /// <summary>
+    /// Get an option rule preview. Adds it if it didn't exist yet.
+    /// </summary>
+    public static OptionRulePreview ForOptionRule(OptionRule rule)
+    {
+        if (!Has(rule))
+            Add(rule, new OptionRulePreview(rule));
+        return Previews[rule] as OptionRulePreview;
+    }
+
+    /// <summary>
+    /// Get a choice rule preview. Adds it if it didn't exist yet.
+    /// </summary>
+    public static ChoiceRulePreview ForChoiceRule(ChoiceRule rule)
+    {
+        if (!Has(rule))
+            Add(rule, new ChoiceRulePreview(rule));
+        return Previews[rule] as ChoiceRulePreview;
+    }
+
+    /// <summary>
+    /// Get a tuple rule preview. Adds it if it didn't exist yet.
+    /// </summary>
+    public static TupleRulePreview ForTupleRule(TupleRule rule)
+    {
+        if (!Has(rule))
+            Add(rule, new TupleRulePreview(rule));
+        return Previews[rule] as TupleRulePreview;
+    }
+
+    /// <summary>
+    /// Get a list rule preview. Adds it if it didn't exist yet.
+    /// </summary>
+    public static ListRulePreview ForListRule(ListRule rule)
+    {
+        if (!Has(rule))
+            Add(rule, new ListRulePreview(rule));
+        return Previews[rule] as ListRulePreview;
+    }
 }
