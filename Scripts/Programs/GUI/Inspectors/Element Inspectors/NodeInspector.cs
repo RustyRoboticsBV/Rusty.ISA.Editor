@@ -30,7 +30,7 @@ public partial class NodeInspector : ElementInspector
         Add(Instruction, instruction);
 
         // Preview.
-        Preview = PreviewDict.ForEditorNode(set[opcode]).CreateInstance();
+        Preview = PreviewDict.ForEditorNode(set[opcode])?.CreateInstance();
         Changed += UpdatePreview;
     }
 
@@ -60,10 +60,10 @@ public partial class NodeInspector : ElementInspector
         // Copy preview input from the instruction inspector.
         foreach (var value in instructionInspector.Preview.Input)
         {
-            Preview.Input.SetValue(value.Key, value.Value);
+            Preview?.Input.SetValue(value.Key, value.Value);
         }
 
         // Add main preview.
-        Preview.SetMain(instructionInspector.Preview);
+        Preview?.SetMain(instructionInspector.Preview);
     }
 }

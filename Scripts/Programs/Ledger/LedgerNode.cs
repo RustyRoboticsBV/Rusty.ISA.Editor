@@ -37,6 +37,6 @@ public sealed class LedgerNode : LedgerItem
         }
 
         // Update preview.
-        Element.PreviewText = Inspector.Preview.Evaluate();
+        Element.PreviewText = Inspector.Preview?.Evaluate() ?? "";
     }
 }

@@ -37,7 +37,7 @@ public partial class ParameterInspector : Inspector
         }
 
         // Preview.
-        Preview = PreviewDict.ForParameter(parameter).CreateInstance();
+        Preview = PreviewDict.ForParameter(parameter)?.CreateInstance();
         Changed += UpdatePreview;
     }
 
@@ -88,9 +88,9 @@ public partial class ParameterInspector : Inspector
     protected virtual void UpdatePreview()
     {
         if (Field != null)
-            Preview.SetValue(Field.Value);
+            Preview?.SetValue(Field.Value);
         else
-            Preview.SetValue("");
+            Preview?.SetValue("");
     }
 
     /* Private methods. */

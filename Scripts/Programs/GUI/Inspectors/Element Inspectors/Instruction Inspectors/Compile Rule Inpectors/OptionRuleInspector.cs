@@ -53,7 +53,7 @@ public partial class OptionRuleInspector : RuleInspector
     /* Protected methods. */
     protected override void UpdatePreview()
     {
-        Preview.SetEnabled(GetEnabled());
-        Preview.SetElement(GetChildRule().Preview);
+        Preview?.SetEnabled(GetEnabled());
+        Preview?.SetElement(GetChildRule().Preview);
     }
 }

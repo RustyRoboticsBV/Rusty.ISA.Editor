@@ -67,8 +67,8 @@ public partial class ListRuleInspector : RuleInspector
         for (int i = 0; i < GetElementCount(); i++)
         {
             RuleInspector inspector = GetElementInspector(i);
-            Preview.SetElement(i, inspector.Preview);
+            Preview?.SetElement(i, inspector.Preview);
         }
-        Preview.SetCount(GetElementCount());
+        Preview?.SetCount(GetElementCount());
     }
 }

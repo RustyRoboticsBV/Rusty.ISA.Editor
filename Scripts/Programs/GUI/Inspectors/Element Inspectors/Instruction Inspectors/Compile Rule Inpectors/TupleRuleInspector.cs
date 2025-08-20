@@ -28,9 +28,9 @@ public partial class TupleRuleInspector : RuleInspector
         for (int i = 0; i < GetElementCount(); i++)
         {
             RuleInspector inspector = GetElementInspector(i);
-            Preview.SetElement(i, inspector.Rule.ID, inspector.Preview);
+            Preview?.SetElement(i, inspector.Rule.ID, inspector.Preview);
         }
-        Preview.SetCount(GetElementCount());
+        Preview?.SetCount(GetElementCount());
     }
 
     /* Public methods. */

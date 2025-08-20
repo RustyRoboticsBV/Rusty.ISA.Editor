@@ -28,14 +28,6 @@ public static class PreviewDict
     }
 
     /// <summary>
-    /// Create an instance of a resource's preview and return it.
-    /// </summary>
-    public static PreviewInstance CreateInstance(InstructionResource resource)
-    {
-        return Previews[resource].CreateInstance();
-    }
-
-    /// <summary>
     /// Delete all previews.
     /// </summary>
     public static void Clear()
@@ -48,6 +40,7 @@ public static class PreviewDict
     /// </summary>
     public static InstructionPreview ForInstruction(InstructionDefinition definition)
     {
+        return null;
         if (!Has(definition))
             Add(definition, new InstructionPreview(definition));
         return Previews[definition] as InstructionPreview;
@@ -58,6 +51,7 @@ public static class PreviewDict
     /// </summary>
     public static EditorNodePreview ForEditorNode(InstructionDefinition definition)
     {
+        return null;
         if (!Has(definition.EditorNode))
             Add(definition.EditorNode, new EditorNodePreview(definition));
         return Previews[definition] as EditorNodePreview;
@@ -68,6 +62,7 @@ public static class PreviewDict
     /// </summary>
     public static ParameterPreview ForParameter(Parameter parameter)
     {
+        return null;
         if (!Has(parameter))
             Add(parameter, new ParameterPreview(parameter));
         return Previews[parameter] as ParameterPreview;
@@ -78,6 +73,7 @@ public static class PreviewDict
     /// </summary>
     public static OutputPreview ForOutput(InstructionDefinition definition, string outputID)
     {
+        return null;
         OutputParameter output = definition.GetParameter(outputID) as OutputParameter;
         if (!Has(output))
             Add(output, new OutputPreview(definition, outputID));
@@ -89,6 +85,7 @@ public static class PreviewDict
     /// </summary>
     public static RulePreview ForRule(CompileRule rule)
     {
+        return null;
         switch (rule)
         {
             case InstructionRule i:
@@ -111,6 +108,7 @@ public static class PreviewDict
     /// </summary>
     public static InstructionRulePreview ForInstructionRule(InstructionRule rule)
     {
+        return null;
         if (!Has(rule))
             Add(rule, new InstructionRulePreview(rule));
         return Previews[rule] as InstructionRulePreview;
@@ -121,6 +119,7 @@ public static class PreviewDict
     /// </summary>
     public static OptionRulePreview ForOptionRule(OptionRule rule)
     {
+        return null;
         if (!Has(rule))
             Add(rule, new OptionRulePreview(rule));
         return Previews[rule] as OptionRulePreview;
@@ -131,6 +130,7 @@ public static class PreviewDict
     /// </summary>
     public static ChoiceRulePreview ForChoiceRule(ChoiceRule rule)
     {
+        return null;
         if (!Has(rule))
             Add(rule, new ChoiceRulePreview(rule));
         return Previews[rule] as ChoiceRulePreview;
@@ -141,6 +141,7 @@ public static class PreviewDict
     /// </summary>
     public static TupleRulePreview ForTupleRule(TupleRule rule)
     {
+        return null;
         if (!Has(rule))
             Add(rule, new TupleRulePreview(rule));
         return Previews[rule] as TupleRulePreview;
@@ -151,6 +152,7 @@ public static class PreviewDict
     /// </summary>
     public static ListRulePreview ForListRule(ListRule rule)
     {
+        return null;
         if (!Has(rule))
             Add(rule, new ListRulePreview(rule));
         return Previews[rule] as ListRulePreview;

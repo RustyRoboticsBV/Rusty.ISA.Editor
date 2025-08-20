@@ -21,8 +21,12 @@ public partial class InstructionRuleInspector : RuleInspector
     public InstructionRuleInspector(InstructionSet set, InstructionRule rule)
         : base(set, rule)
     {
+        // Create instruction inspector.
         InstructionInspector instruction = new(set, rule.Opcode);
         Add(Instruction, instruction);
+
+        // Set preview.
+        Preview?.SetElement(instruction.Preview);
     }
 
     /* Public methods. */

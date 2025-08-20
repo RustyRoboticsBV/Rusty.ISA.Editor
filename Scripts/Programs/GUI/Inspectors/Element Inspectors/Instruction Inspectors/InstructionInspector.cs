@@ -25,7 +25,7 @@ public partial class InstructionInspector : Inspector
         {
             RuleInspector element = RuleInspectorFactory.Create(set, rule);
             if (element != null)
-                AddRule(rule.ID, element);
+                AddPreInstruction(rule.ID, element);
         }
 
         // Add parameters.
@@ -42,10 +42,10 @@ public partial class InstructionInspector : Inspector
         {
             RuleInspector element = RuleInspectorFactory.Create(set, rule);
             if (element != null)
-                AddRule(rule.ID, element);
+                AddPreInstruction(rule.ID, element);
         }
 
-        Preview = PreviewDict.ForInstruction(Definition).CreateInstance();
+        Preview = PreviewDict.ForInstruction(Definition)?.CreateInstance();
         Changed += UpdateOutputPreviews;
     }
 
@@ -95,16 +95,23 @@ public partial class InstructionInspector : Inspector
     /* Private methods. */
     private void AddParameter(string key, ParameterInspector inspector)
     {
-        Add(key, inspector);
+        Add(Parameter + key, inspector);
 
-        Preview.SetParameter(key, inspector.Preview);
+        Preview?.SetParameter(key, inspector.Preview);
     }
 
-    private void AddRule(string key, RuleInspector inspector)
+    private void AddPreInstruction(string key, RuleInspector inspector)
     {
-        Add(key, inspector);
+        Add(PreInstruction + key, inspector);
 
-        Preview.SetRule(key, inspector.Preview);
+        Preview?.SetRule(key, inspector.Preview);
+    }
+
+    private void AddPostInstruction(string key, RuleInspector inspector)
+    {
+        Add(PostInstruction + key, inspector);
+
+        Preview?.SetRule(key, inspector.Preview);
     }
 
     private void UpdateOutputPreviews()
