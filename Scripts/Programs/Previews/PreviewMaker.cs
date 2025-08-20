@@ -9,17 +9,24 @@ public static class PreviewMaker
     private const string Element = "element";
     private const string Count = "count";
 
-    public static Preview Parameter(Parameter parameter, IField field)
+    public static PreviewInstance Parameter(Parameter parameter, IField field)
     {
         // Create input.
         PreviewInput input = new();
         input.AddValue(This, Stringify(field.Value));
 
+        // Get instance of preview if it was already created.
+        if (PreviewDict.Has(parameter))
+        {
+            preview = PreviewDict.CreateInstance(parameter);
+        }
         // Create preview.
         string code = parameter.Preview;
         if (code == "")
             code = $"return [[this]];";
-        return new Preview(parameter.ID, code, input);
+        Preview preview = GetPreview(code);
+
+        // Add preview to 
     }
 
     public static Preview Output(OutputParameter output, InstructionInspector inspector)
@@ -198,5 +205,10 @@ public static class PreviewMaker
             return '#' + color.ToHtml(color.A < 1f);
         else
             return value.ToString();
+    }
+
+    private static Preview GetPreview(string code)
+    {
+        if (PreviewDict.Has()PreviewDict.CreateInstance(code);
     }
 }

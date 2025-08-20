@@ -40,15 +40,9 @@ public class Preview
         + "\n    "
         + "\n    return result;";
 
-    /* Public properties. */
-    /// <summary>
-    /// The current input values for the preview evaluation method.
-    /// </summary>
-    public PreviewInput Input { get; set; } = new();
-
     /* Private properties. */
     private GDScript Script { get; set; }
-    private GodotObject Instance { get; set; }
+    private bool IsReloaded { get; set; }
 
     /* Constructors. */
     public Preview(string name) : this(name, "") { }
@@ -110,25 +104,25 @@ public class Preview
             code += WrapFunction;
 
         // Generate evaluation class.
+        // We don't reload the script yet to avoid unnecessary overhead for unused previews.
         Script = new();
         Script.SourceCode = code;
-        Script.Reload();
-
-        // Create instance.
-        Instance = (GodotObject)Script.New();
-    }
-
-    public Preview(string name, string code, PreviewInput input) : this(name, code)
-    {
-        Input = input;
     }
 
     /* Public methods. */
     /// <summary>
-    /// Evaluate the preview, using its current input.
+    /// Emit an instance of the generated preview script.
     /// </summary>
-    public string Evaluate()
+    public GodotObject Emit()
     {
-        return (string)Instance.Call("eval", Input);
+        // Reload the class if it wasn't done yet.
+        if (!IsReloaded)
+        {
+            Script.Reload();
+            IsReloaded = true;
+        }
+
+        // Create new instance of script.
+        return Script.New().AsGodotObject();
     }
 }
