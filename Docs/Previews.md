@@ -6,36 +6,42 @@ Each preview implementation should either be left empty, or return a string.
 ## Keywords
  Several special keywords are available when working with previews, which use the syntax `[[keyword]]`. The following are available:
 - Instruction Definitions:
-  - `[[name]]`, which gets replaced with the instruction's display name.
-  - `[[parameter_id]]`, which gets replaced with a parameter's preview string.
-  - `[[rule_id]]`, which gets replaced with a pre-instruction or post-instruction's preview string.
+  - `[[name]]`: gets replaced with the instruction's display name.
+  - `[[parameter_id]]`: gets replaced with a parameter's preview string.
+  - `[[rule_id]]`: gets replaced with a pre-instruction or post-instruction's preview string.
 - Editor Node Info:
-  - `[[instruction]]`, which gets replaced with the instruction definition's preview string.
-  - `[[name]]`, which gets replaced with the instruction's display name.
-  - `[[parameter_id]]`, which works the same as for instruction definitions.
-  - `[[rule_id]]`, which works the same as for instruction definitions.
+  - `[[main]]`: gets replaced with the instruction definition's preview string.
+  - `[[name]]`: gets replaced with the instruction's display name.
+  - `[[parameter_id]]`: works the same as for instruction definitions.
+  - `[[rule_id]]`: works the same as for instruction definitions.
 - Parameters:
-  - `[[name]]`, which gets replaced with the parameter's display name.
-  - `[[value]]`, which gets replaced with the parameter's value.
-  - Output Parameters: `[[parameter_id]]`, which get replaced with another parameter's value. Only non-output parameters are allowed!
+  - `[[name]]`: gets replaced with the parameter's display name.
+  - `[[value]]`: gets replaced with the parameter's value.
+  - Slider Parameters:
+	- `[[min]]`: gets replaced with the slider's minimum value.
+	- `[[max]]`: gets replaced with the slider's maximum value.
+  - Output Parameters:
+	- `[[parameter_id]]`: get replaced with another parameter's value. Only non-output parameters are allowed!
 - Compile Rules:
-  - `[[name]]`, which gets replaced with the rule's display name.
+  - `[[name]]`: gets replaced with the rule's display name.
   - Instruction Rule:
-    - `[[element]]`, which gets replaced with the instruction's preview string.
+	- `[[element]]`: gets replaced with the instruction's preview string.
   - Option Rule:
-    - `[[enabled]]`, which gets replaced with true if the option is enabled and false if it is disabled.
-    - `[[element]]`, which gets replaced with the child rule's preview string if the option is enabled, and the empty string if it is disabled.
+    - `[[enabled]]`: gets replaced with true if the option is enabled and false if it is disabled.
+	- `[[element]]`: gets replaced with the child rule's preview string if the option is enabled, and the empty string if it is disabled.
   - Choice Rule:
-    - `[[selected]]`, which gets replaced with the index of the selected child rule.
-    - `[[element]]`, which gets replaced with the selected child rule's preview string.
+	- `[[selected]]`: gets replaced with the index of the selected child rule.
+	- `[[element]]`: gets replaced with the selected child rule's preview string.
   - Tuple Rule:
-    - `[[chile_rule_id]]`, which gets replaced with the specified child rule's preview string.
-    - `[[element#]]`, which does the same as the above, but uses the tuple element index instead (for example, `[[element0]]` results in the first element's preview string).
-    - `[[count]]`, which gets replaced with the number of elements in the tuple.
+	- `[[chile_rule_id]]`: gets replaced with the specified child rule's preview string.
+	- `[[element#]]`: does the same as the above, but uses the tuple element index instead (for example, `[[element0]]` results in the first element's preview string).
+    - `[[count]]`: gets replaced with the number of elements in the tuple.
   - List Rule:
-    - `[[element#]]`, which gets replaced with the preview string of the list element at the specified index (for example, `[[element0]]` results in the first element's preview string).
-    - `[[count]]`, which gets replaced with the number of elements in the list.
-    
+	- `[[element#]]`: gets replaced with the preview string of the list element at the specified index (for example, `[[element0]]` results in the first element's preview string).
+	- `[[count]]`: gets replaced with the number of elements in the list.
+
+While you are generally discouraged from using resource IDs with the same name as any of these keywords, you can still reference the previews of these resources by using an `@` symbol prefix: `[[@name]]`, `[[@min]]`, `[[@max]]`, `[[@enabled]]`, `[[@selected]]`, `[[@count]]`, etc.
+
 The `[[element#]]` keywords of the tuple rule and list rule can also take a variable name. For example, you can do:
 ```
 var result : String = "";

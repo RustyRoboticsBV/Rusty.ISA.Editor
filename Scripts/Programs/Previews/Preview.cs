@@ -7,7 +7,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// A class that can evaluate an object preview.
 /// </summary>
-public class Preview
+public abstract class Preview
 {
     /* Fields. */
     private const string SkeletonCode = "func eval(_input) -> String:\n    EVAL";
@@ -40,14 +40,15 @@ public class Preview
         + "\n    "
         + "\n    return result;";
 
+    /* Protected properties. */
+    protected PreviewInput DefaultInput { get; private set; } = new();
+
     /* Private properties. */
     private GDScript Script { get; set; }
     private bool IsReloaded { get; set; }
 
     /* Constructors. */
-    public Preview(string name) : this(name, "") { }
-
-    public Preview(string name, string code)
+    public Preview(string code)
     {
         // Generate source.
         if (code == null)
@@ -95,8 +96,6 @@ public class Preview
             i += end + 1;
         }
 
-        code = $"# {name} preview.\n" + sb.ToString();
-
         // Add functions if they are used.
         if (code.Contains("limit("))
             code += LimitFunction;
@@ -111,9 +110,15 @@ public class Preview
 
     /* Public methods. */
     /// <summary>
+    /// Create an instance of this preview.
+    /// </summary>
+    public abstract PreviewInstance CreateInstance();
+
+    /* Internal methods. */
+    /// <summary>
     /// Emit an instance of the generated preview script.
     /// </summary>
-    public GodotObject Emit()
+    internal GodotObject Emit()
     {
         // Reload the class if it wasn't done yet.
         if (!IsReloaded)

@@ -4,198 +4,172 @@ namespace Rusty.ISA.Editor;
 
 public static class PreviewMaker
 {
-    private const string This = "this";
-    private const string Base = "base";
+    /* Private constants. */
+    private const string Name = "name";
+    private const string Value = "value";
+    private const string Main = "main";
     private const string Element = "element";
+    private const string Enabled = "enabled";
+    private const string Selected = "selected";
     private const string Count = "count";
 
-    public static PreviewInstance Parameter(Parameter parameter, IField field)
+    private const string DefaultInstruction = "";
+    private const string DefaultNode = $"[[{Main}]]";
+    private const string DefaultParameter = $"return [[{Value}]];";
+    private const string DefaultOutput = $"return \"[[{Name}]]\";";
+    private const string DefaultRule = $"[[{Element}]]";
+    private const string DefaultCollection =
+            $"var result : String = \"\";"
+            + $"\nfor i in [[{Count}]]:"
+                + $"\n\tif i > 0:"
+                    + $"\n\t\tresult += '\\n'"
+                + $"\n\tresult += [[{Element}i]];"
+            + $"\nreturn result;";
+
+    /* Public methods. */
+    public static PreviewInstance GraphNode(NodeInspector inspector)
     {
-        // Create input.
-        PreviewInput input = new();
-        input.AddValue(This, Stringify(field.Value));
+        InstructionInspector instructionInspector = inspector.GetInstructionInspector();
+        EditorNodeInfo editorNodeInfo = instructionInspector.Definition.EditorNode;
 
-        // Get instance of preview if it was already created.
-        if (PreviewDict.Has(parameter))
-        {
-            preview = PreviewDict.CreateInstance(parameter);
-        }
-        // Create preview.
-        string code = parameter.Preview;
-        if (code == "")
-            code = $"return [[this]];";
-        Preview preview = GetPreview(code);
+        // Get input.
+        PreviewInput input = GetInstructionInput(instructionInspector);
+        input.AddValue(Main, InstructionInspector(instructionInspector));
 
-        // Add preview to 
+        // Get instance of preview.
+        return GetPreview(editorNodeInfo, editorNodeInfo.Preview, DefaultNode);
     }
 
-    public static Preview Output(OutputParameter output, InstructionInspector inspector)
+    public static PreviewInstance InstructionInspector(InstructionInspector inspector)
+    {
+        InstructionDefinition definition = inspector.Definition;
+
+        // Create input.
+        PreviewInput input = GetInstructionInput(inspector);
+
+        // Get instance of preview.
+        return GetPreview(definition, definition.Preview, DefaultInstruction);
+    }
+
+    public static ParameterPreviewInstance FromParameter(Parameter parameter, IField field)
+    {
+        // Add to preview dict if necessary.
+        if (!PreviewDict.Has(parameter))
+            PreviewDict.Add(parameter, new ParameterPreview(parameter));
+
+        // Create instance.
+        var preview = PreviewDict.CreateInstance(parameter) as ParameterPreviewInstance;
+        preview.SetDisplayName(parameter.DisplayName);
+        preview.SetValue(field.Value);
+        return preview;
+    }
+
+    public static PreviewInstance FromOutputParameter(OutputParameter output, InstructionInspector inspector)
     {
         // Create input.
         PreviewInput input = new();
+        input.AddValue(Name, output.DisplayName);
         for (int i = 0; i < inspector.Definition.Parameters.Length; i++)
         {
             Parameter parameter = inspector.Definition.Parameters[i];
             if (parameter is not OutputParameter)
             {
-                IField field = inspector.GetParameterField(parameter.ID);
-                input.AddValue(parameter.ID, Parameter(parameter, field).Evaluate());
+                PreviewInstance preview = FromParameter(parameter, inspector.GetParameterField(parameter.ID));
+                input.AddValue(parameter.ID, preview);
             }
         }
 
-        // Create preview.
-        string code = output.Preview;
-        if (code == "")
-            code = $"return \"{output.DisplayName}\";";
-        return new Preview(output.ID, code, input);
+        // Get instance of preview.
+        return GetPreview(output, output.Preview, DefaultOutput);
     }
 
-    public static Preview InstructionInspector(InstructionInspector inspector)
-    {
-        InstructionDefinition definition = inspector.Definition;
-
-        // Create input.
-        PreviewInput input = new();
-        for (int i = 0; i < definition.Parameters.Length; i++)
-        {
-            Parameter parameter = definition.Parameters[i];
-            if (parameter is OutputParameter output)
-            {
-                input.AddValue(parameter.ID, Output(output, inspector).Evaluate());
-            }
-            else
-            {
-                IField field = inspector.GetParameterField(parameter.ID);
-                input.AddValue(parameter.ID, Parameter(parameter, field).Evaluate());
-            }
-        }
-        for (int i = 0; i < definition.PreInstructions.Length; i++)
-        {
-            CompileRule rule = definition.PreInstructions[i];
-            input.AddValue(rule.ID, RuleInspector(inspector.GetPreInstruction(rule.ID)).Evaluate());
-        }
-        for (int i = 0; i < definition.PostInstructions.Length; i++)
-        {
-            CompileRule rule = definition.PostInstructions[i];
-            input.AddValue(rule.ID, RuleInspector(inspector.GetPostInstruction(rule.ID)).Evaluate());
-        }
-
-        // Create preview.
-        return new Preview(definition.Opcode, definition.Preview, input);
-    }
-
-    public static Preview GraphNode(NodeInspector inspector)
-    {
-        InstructionInspector instructionInspector = inspector.GetInstructionInspector();
-
-        // Create input.
-        PreviewInput input = new();
-        input.AddValue(Base, InstructionInspector(instructionInspector).Evaluate());
-
-        // Create preview.
-        string name = "node " + instructionInspector.Definition.Opcode;
-        string code = instructionInspector.Definition.EditorNode?.Preview;
-        if (code == "")
-            code = $"return [[{Base}]];";
-        return new Preview(name, code, input);
-    }
-
-    public static Preview InstructionRuleInspector(InstructionRuleInspector inspector)
-    {
-        string code = inspector.Rule.Preview;
-        return InstructionInspector(inspector.GetInstructionInspector());
-    }
-
-    public static Preview RuleInspector(RuleInspector inspector)
+    public static PreviewInstance CompileRule(RuleInspector inspector)
     {
         switch (inspector)
         {
             case InstructionRuleInspector i:
-                return InstructionRuleInspector(i);
+                return InstructionRule(i);
             case OptionRuleInspector o:
-                return OptionRuleInspector(o);
+                return OptionRule(o);
             case ChoiceRuleInspector c:
-                return ChoiceRuleInspector(c);
+                return ChoiceRule(c);
             case TupleRuleInspector t:
-                return TupleRuleInspector(t);
+                return TupleRule(t);
             case ListRuleInspector l:
-                return ListRuleInspector(l);
+                return ListRule(l);
             default:
                 return null;
         }
     }
 
-    public static Preview OptionRuleInspector(OptionRuleInspector inspector)
+    public static PreviewInstance InstructionRule(InstructionRuleInspector inspector)
     {
-        CompileRule rule = inspector.Rule;
-
         // Create input.
         PreviewInput input = new();
-        if (inspector.GetEnabled())
-            input.AddValue(Element, RuleInspector(inspector.GetChildRule()).Evaluate());
+        input.AddValue(Name, inspector.Rule.DisplayName);
+        input.AddValue(Element, inspector.GetInstructionInspector());
 
-        // Create preview.
-        string code = rule.Preview;
-        if (code == "" && inspector.GetEnabled())
-            code = $"return [[{Element}]];";
-        return new Preview(rule.ID, code, input);
+        // Get instance of preview.
+        return GetPreview(inspector.Rule, inspector.Rule.Preview, DefaultRule);
     }
 
-    public static Preview ChoiceRuleInspector(ChoiceRuleInspector inspector)
+    public static PreviewInstance OptionRule(OptionRuleInspector inspector)
     {
         CompileRule rule = inspector.Rule;
 
         // Create input.
         PreviewInput input = new();
-        input.AddValue(Element, RuleInspector(inspector.GetSelectedElement()).Evaluate());
+        input.AddValue(Name, inspector.Rule.DisplayName);
+        input.AddValue(Enabled, inspector.GetEnabled());
+        input.AddValue(Element, CompileRule(inspector.GetChildRule()).Evaluate());
 
-        // Create preview.
-        string code = rule.Preview;
-        if (code == "")
-            code = $"return [[{Element}]];";
-        return new Preview(rule.ID, code, input);
+        // Get instance of preview.
+        return GetPreview(inspector.Rule, inspector.Rule.Preview, DefaultRule);
     }
 
-    public static Preview TupleRuleInspector(TupleRuleInspector inspector)
+    public static PreviewInstance ChoiceRule(ChoiceRuleInspector inspector)
     {
-        CompileRule rule = inspector.Rule;
-
         // Create input.
         PreviewInput input = new();
+        input.AddValue(Name, inspector.Rule.DisplayName);
+        input.AddValue(Selected, inspector.GetSelectedIndex());
+        input.AddValue(Element, CompileRule(inspector.GetSelectedElement()).Evaluate());
+
+        // Create preview.
+        return GetPreview(inspector.Rule, inspector.Rule.Preview, DefaultRule);
+    }
+
+    public static PreviewInstance TupleRule(TupleRuleInspector inspector)
+    {
+        // Create input.
+        PreviewInput input = new();
+        input.AddValue(Name, inspector.Rule.DisplayName);
         for (int i = 0; i < inspector.GetElementCount(); i++)
         {
             var childInspector = inspector.GetElementInspector(i);
-            string value = RuleInspector(childInspector).Evaluate();
-            input.AddValue(i.ToString(), value);
+            PreviewInstance value = CompileRule(childInspector);
+            input.AddValue("element" + i, value);
             input.AddValue(childInspector.Rule.ID, value);
         }
         input.AddValue(Count, inspector.GetElementCount().ToString());
 
         // Create preview.
-        string code = rule.Preview;
-        if (code == "")
-            code = $"var result : String = \"\";\nfor i in [[{Count}]]:\n\tresult += '\n' + [[{Element}i]];\nreturn result;";
-        return new Preview(rule.ID, code, input);
+        return GetPreview(inspector.Rule, inspector.Rule.Preview, DefaultCollection);
     }
 
-    public static Preview ListRuleInspector(ListRuleInspector inspector)
+    public static PreviewInstance ListRule(ListRuleInspector inspector)
     {
-        CompileRule rule = inspector.Rule;
-
         // Create input.
         PreviewInput input = new();
+        input.AddValue(Name, inspector.Rule.DisplayName);
         for (int i = 0; i < inspector.GetElementCount(); i++)
         {
-            string value = RuleInspector(inspector.GetElementInspector(i)).Evaluate();
-            input.AddValue(i.ToString(), value);
+            input.AddValue("element" + i, CompileRule(inspector.GetElementInspector(i)));
         }
         input.AddValue(Count, inspector.GetElementCount());
 
         // Create preview.
-        string code = rule.Preview;
-        if (code == "")
-            code = $"var result : String = \"\";\nfor i in [[{Count}]]:\n\tif i > 0:\n\t\tresult += '\\n'\n\tresult += [[{Element}i]];\nreturn result;";
-        return new Preview(rule.ID, code, input);
+        return GetPreview(inspector.Rule, inspector.Rule.Preview, DefaultCollection);
     }
 
     /* Private methods. */
@@ -206,9 +180,72 @@ public static class PreviewMaker
         else
             return value.ToString();
     }
-
-    private static Preview GetPreview(string code)
+    private string MakeIdSafe(string id)
     {
-        if (PreviewDict.Has()PreviewDict.CreateInstance(code);
+        switch (id)
+        {
+            case 
+        }
+    }
+
+    /// <summary>
+    /// Get a preview instance for some resource, which creates it if needed.
+    /// </summary>
+    private static PreviewInstance GetPreview(InstructionResource resource, string code, string @default)
+    {
+        // Create new preview if it wasn't added yet.
+        if (!PreviewDict.Has(resource))
+        {
+            Preview preview = null;
+            if (string.IsNullOrEmpty(code))
+                preview = new(resource.ResourceName, @default);
+            else
+                preview = new(resource.ResourceName, code);
+            PreviewDict.Add(resource, preview);
+        }
+
+        // Create instance of preview.
+        return PreviewDict.CreateInstance(resource);
+    }
+
+    /// <summary>
+    /// Get the input of an instruction.
+    /// </summary>
+    private static PreviewInput GetInstructionInput(InstructionInspector inspector)
+    {
+        PreviewInput input = new();
+        InstructionDefinition definition = inspector.Definition;
+
+        // Add display name value.
+        input.AddValue(Name, definition.DisplayName);
+
+        // Add parameter previews.
+        for (int i = 0; i < definition.Parameters.Length; i++)
+        {
+            Parameter parameter = definition.Parameters[i];
+            if (parameter is OutputParameter output)
+            {
+                input.AddValue(parameter.ID, FromOutputParameter(output, inspector));
+            }
+            else
+            {
+                IField field = inspector.GetParameterField(parameter.ID);
+                input.AddValue(parameter.ID, FromParameter(parameter, field));
+            }
+        }
+
+        // Add compile rule previews.
+        for (int i = 0; i < definition.PreInstructions.Length; i++)
+        {
+            CompileRule rule = definition.PreInstructions[i];
+            input.AddValue(rule.ID, CompileRule(inspector.GetPreInstruction(rule.ID)));
+        }
+        for (int i = 0; i < definition.PostInstructions.Length; i++)
+        {
+            CompileRule rule = definition.PostInstructions[i];
+            input.AddValue(rule.ID, CompileRule(inspector.GetPostInstruction(rule.ID)));
+        }
+
+        return input;
     }
 }

@@ -6,8 +6,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// The input of a preview calculator.
 /// </summary>
-[GlobalClass]
-public partial class PreviewInput : Resource
+public sealed partial class PreviewInput : Resource
 {
     /* Public properties. */
     /// <summary>
@@ -17,11 +16,36 @@ public partial class PreviewInput : Resource
 
     /* Public methods. */
     /// <summary>
+    /// Make a deep copy of this object.
+    /// </summary>
+    public PreviewInput Copy()
+    {
+        PreviewInput copy = new();
+        copy.CopyFrom(this);
+        return copy;
+    }
+
+    /// <summary>
+    /// Copy the values from another input object.
+    /// </summary>
+    public void CopyFrom(PreviewInput other)
+    {
+        Values.Clear();
+        foreach (var value in other.Values)
+        {
+            if (value.Value.AsGodotObject() is PreviewInstance preview)
+                AddValue(value.Key, preview.Copy());
+            else
+                AddValue(value.Key, value.Value);
+        }
+    }
+
+    /// <summary>
     /// Add a value to the preview input dictionary.
     /// </summary>
-    public void AddValue(string key, Variant value)
+    public void AddValue(string key)
     {
-        Values.Add(key, value);
+        AddValue(key, "");
     }
 
     /// <summary>
@@ -30,7 +54,23 @@ public partial class PreviewInput : Resource
     public Variant GetValue(string key)
     {
         if (Values.ContainsKey(key))
-            return Values[key];
+        {
+            Variant value = Values[key];
+            if (value.AsGodotObject() is PreviewInstance preview)
+                return preview.Evaluate();
+            else
+                return value;
+        }
         return "ERROR: MISSING VALUE " + key;
+    }
+
+    /// <summary>
+    /// Set a value on the preview input values. Adds the value if it wasn't added yet.
+    /// </summary>
+    public void SetValue(string key, Variant value)
+    {
+        if (!Values.ContainsKey(key))
+            AddValue(key);
+        Values[key] = value;
     }
 }

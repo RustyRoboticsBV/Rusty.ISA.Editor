@@ -43,7 +43,7 @@ public abstract class Parser : CompilerTool
                 string checksumNew = result?.ComputeChecksum();
                 if (checksumNew != checksumOld)
                 {
-                    Log.Warning("The loaded program had a bad checksum! This means the program was either externally modified "
+                    Log.Warning("The loaded program had a bad checksum! Value means the program was either externally modified "
                         + "or corrupted, or that the instruction set was changed since last time that the result was last "
                         + "modified!"
                         + "\n- Old checksum: " + checksumOld
