@@ -46,10 +46,7 @@ public class NodeData : Graphs.NodeData
     public void SetArgument(string id, object value)
     {
         int index = Definition.GetParameterIndex(id);
-        string str = value is Color color ? '#' + color.ToHtml(color.A != 1f) : value.ToString();
-        if (value is bool)
-            str = str.ToLower();
-        Instance.Arguments[index] = str;
+        Instance.Arguments[index] = StringUtility.Serialize(value);
     }
 
     /// <summary>

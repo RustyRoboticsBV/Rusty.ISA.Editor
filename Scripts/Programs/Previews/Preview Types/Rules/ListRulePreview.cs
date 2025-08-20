@@ -20,7 +20,7 @@ $"var result : String = \"\";"
     /* Constructors. */
     public ListRulePreview(string code) : base(code == "" ? DefaultCode : code) { }
 
-    public ListRulePreview(ListRule parameter) : this(parameter.Preview) { }
+    public ListRulePreview(ListRule rule) : this(rule.Preview) { }
 
     /* Public methods. */
     public override ListRulePreviewInstance CreateInstance()

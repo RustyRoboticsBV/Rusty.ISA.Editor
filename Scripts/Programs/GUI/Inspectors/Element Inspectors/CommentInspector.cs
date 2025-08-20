@@ -8,7 +8,7 @@ public partial class CommentInspector : ElementInspector
     public CommentInspector(InstructionSet set) : base(set, BuiltIn.CommentOpcode)
     {
         // Text field.
-        IGuiElement field = ParameterFieldFactory.Create(set[BuiltIn.CommentOpcode], BuiltIn.CommentText);
+        ParameterInspector field = new(set[BuiltIn.CommentOpcode].GetParameter(BuiltIn.CommentText));
         Add(BuiltIn.CommentText, field);
     }
 

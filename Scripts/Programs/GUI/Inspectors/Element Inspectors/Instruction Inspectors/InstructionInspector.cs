@@ -11,6 +11,7 @@ public partial class InstructionInspector : Inspector
 
     /* Public properties. */
     public InstructionDefinition Definition { get; private set; }
+    public InstructionPreviewInstance Preview { get; private set; }
 
     /* Constructors. */
     public InstructionInspector() : base() { }
@@ -22,26 +23,30 @@ public partial class InstructionInspector : Inspector
         // Add pre-instructions.
         foreach (CompileRule rule in Definition.PreInstructions)
         {
-            Inspector element = RuleInspectorFactory.Create(set, rule);
+            RuleInspector element = RuleInspectorFactory.Create(set, rule);
             if (element != null)
-                Add(PreInstruction + rule.ID, element);
+                AddRule(rule.ID, element);
         }
 
         // Add parameters.
         foreach (Parameter parameter in Definition.Parameters)
         {
-            IGuiElement element = ParameterFieldFactory.Create(parameter);
-            if (element != null)
-                Add(Parameter + parameter.ID, element);
+            if (parameter is OutputParameter output)
+                AddParameter(output.ID, new OutputInspector(this, output));
+            else
+                AddParameter(parameter.ID, new ParameterInspector(parameter));
         }
 
         // Add post-instructions.
         foreach (CompileRule rule in Definition.PostInstructions)
         {
-            Inspector element = RuleInspectorFactory.Create(set, rule);
+            RuleInspector element = RuleInspectorFactory.Create(set, rule);
             if (element != null)
-                Add(PostInstruction + rule.ID, element);
+                AddRule(rule.ID, element);
         }
+
+        Preview = PreviewDict.ForInstruction(Definition).CreateInstance();
+        Changed += UpdateOutputPreviews;
     }
 
     /* Public methods. */
@@ -68,53 +73,16 @@ public partial class InstructionInspector : Inspector
         return null;
     }
 
-    public IField GetParameterField(string id)
+    public ParameterInspector GetParameterInspector(string id)
     {
-        if (GetAt(Parameter + id) is IField field)
-            return field;
+        if (GetAt(Parameter + id) is ParameterInspector parameter)
+            return parameter;
         return null;
     }
 
     public void SetParameterField(string id, string value)
     {
-        IField field = GetParameterField(id);
-        try
-        {
-            switch (field)
-            {
-                case BoolField boolField:
-                    boolField.Value = bool.Parse(value);
-                    break;
-                case IntField intField:
-                    intField.Value = int.Parse(value);
-                    break;
-                case FloatField floatField:
-                    floatField.Value = float.Parse(value);
-                    break;
-                case IntSliderField intSlider:
-                    intSlider.Value = int.Parse(value);
-                    break;
-                case FloatSliderField floatSlider:
-                    floatSlider.Value = float.Parse(value);
-                    break;
-                case CharField charField:
-                    charField.Value = char.Parse(value);
-                    break;
-                case LineField lineField:
-                    lineField.Value = value;
-                    break;
-                case MultilineField multilineField:
-                    multilineField.Value = value;
-                    break;
-                case ColorField colorField:
-                    colorField.Value = Color.FromHtml(value);
-                    break;
-                case OutputField outputField:
-                    outputField.Value = value;
-                    break;
-            }
-        }
-        catch { }
+        GetParameterInspector(id).ParseValue(value);
     }
 
     public RuleInspector GetPostInstruction(string id)
@@ -122,5 +90,35 @@ public partial class InstructionInspector : Inspector
         if (GetAt(PostInstruction + id) is RuleInspector inspector)
             return inspector;
         return null;
+    }
+
+    /* Private methods. */
+    private void AddParameter(string key, ParameterInspector inspector)
+    {
+        Add(key, inspector);
+
+        Preview.SetParameter(key, inspector.Preview);
+    }
+
+    private void AddRule(string key, RuleInspector inspector)
+    {
+        Add(key, inspector);
+
+        Preview.SetRule(key, inspector.Preview);
+    }
+
+    private void UpdateOutputPreviews()
+    {
+        // Update output previews.
+        for (int i = 0; i < GetContentsCount(); i++)
+        {
+            switch (GetAt(i))
+            {
+                case ParameterInspector parameter:
+                    if (parameter is OutputInspector output)
+                        output.UpdatePreview(this);
+                    break;
+            }
+        }
     }
 }

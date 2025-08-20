@@ -5,6 +5,12 @@ public partial class TupleRuleInspector : RuleInspector
     /* Public properties. */
     public new TupleRule Rule => base.Rule as TupleRule;
 
+    public new TupleRulePreviewInstance Preview
+    {
+        get => base.Preview as TupleRulePreviewInstance;
+        protected set => base.Preview = value;
+    }
+
     /* Constructors. */
     public TupleRuleInspector() : base() { }
 
@@ -17,6 +23,14 @@ public partial class TupleRuleInspector : RuleInspector
             RuleInspector childInspector = RuleInspectorFactory.Create(set, type);
             Add(GetContentsCount().ToString(), childInspector);
         }
+
+        // Set preview.
+        for (int i = 0; i < GetElementCount(); i++)
+        {
+            RuleInspector inspector = GetElementInspector(i);
+            Preview.SetElement(i, inspector.Rule.ID, inspector.Preview);
+        }
+        Preview.SetCount(GetElementCount());
     }
 
     /* Public methods. */
@@ -36,4 +50,7 @@ public partial class TupleRuleInspector : RuleInspector
     {
         return GetAt(index) as RuleInspector;
     }
+
+    /* Protected methods. */
+    protected override void UpdatePreview() { }
 }

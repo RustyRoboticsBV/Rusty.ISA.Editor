@@ -70,7 +70,7 @@ public abstract class NodeCompiler : CompilerTool
         for (int i = 0; i < inspector.Definition.Parameters.Length; i++)
         {
             string id = inspector.Definition.Parameters[i].ID;
-            IField parameter = inspector.GetParameterField(id);
+            ParameterInspector parameter = inspector.GetParameterInspector(id);
             if (parameter != null)
                 contents.SetArgument(id, parameter.Value);
         }

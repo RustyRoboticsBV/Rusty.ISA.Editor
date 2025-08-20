@@ -5,6 +5,12 @@ public partial class ListRuleInspector : RuleInspector
     /* Public properties. */
     public new ListRule Rule => base.Rule as ListRule;
 
+    public new ListRulePreviewInstance Preview
+    {
+        get => base.Preview as ListRulePreviewInstance;
+        protected set => base.Preview = value;
+    }
+
     /* Constructors. */
     public ListRuleInspector() : base()
     {
@@ -53,5 +59,16 @@ public partial class ListRuleInspector : RuleInspector
     public RuleInspector GetElementInspector(int index)
     {
         return ContentsContainer.GetFromContents(index) as RuleInspector;
+    }
+
+    /* Protected methods. */
+    protected override void UpdatePreview()
+    {
+        for (int i = 0; i < GetElementCount(); i++)
+        {
+            RuleInspector inspector = GetElementInspector(i);
+            Preview.SetElement(i, inspector.Preview);
+        }
+        Preview.SetCount(GetElementCount());
     }
 }

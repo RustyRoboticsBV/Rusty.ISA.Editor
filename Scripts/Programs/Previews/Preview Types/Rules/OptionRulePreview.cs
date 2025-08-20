@@ -11,7 +11,7 @@ public class OptionRulePreview : RulePreview
     /* Constructors. */
     public OptionRulePreview(string code) : base(code) { }
 
-    public OptionRulePreview(OptionRule parameter) : this(parameter.Preview)
+    public OptionRulePreview(OptionRule rule) : this(rule.Preview)
     {
         DefaultInput.SetValue(Enabled, false);
         DefaultInput.SetValue(Element, "");

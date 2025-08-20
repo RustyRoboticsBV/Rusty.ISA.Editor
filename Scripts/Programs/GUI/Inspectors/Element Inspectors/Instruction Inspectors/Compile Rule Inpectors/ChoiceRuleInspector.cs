@@ -5,12 +5,21 @@ public partial class ChoiceRuleInspector : RuleInspector
     /* Public properties. */
     public new ChoiceRule Rule => base.Rule as ChoiceRule;
 
+    public new ChoiceRulePreviewInstance Preview
+    {
+        get => base.Preview as ChoiceRulePreviewInstance;
+        protected set => base.Preview = value;
+    }
+
     /* Constructors. */
     public ChoiceRuleInspector() : base()
     {
         // Create check-box.
         CheckBoxBorderContainer list = new();
         ReplaceContainer(list);
+
+        // Create preview.
+        Preview = PreviewDict.ForChoiceRule(Rule).CreateInstance();
     }
 
     public ChoiceRuleInspector(InstructionSet set, ChoiceRule rule)
@@ -50,5 +59,12 @@ public partial class ChoiceRuleInspector : RuleInspector
     public RuleInspector GetSelectedElement()
     {
         return GetAt(GetSelectedIndex()) as RuleInspector;
+    }
+
+    /* Protected methods. */
+    protected override void UpdatePreview()
+    {
+        Preview.SetSelected(GetSelectedIndex());
+        Preview.SetElement(GetSelectedElement().Preview);
     }
 }

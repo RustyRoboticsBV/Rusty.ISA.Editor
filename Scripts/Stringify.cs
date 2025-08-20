@@ -35,4 +35,59 @@ public static class StringUtility
                 return obj.ToString();
         }
     }
+
+    /// <summary>
+    /// Parse a string as an bool.
+    /// </summary>
+    public static bool ParseBool(string text)
+    {
+        if (bool.TryParse(text, out bool result))
+            return result;
+        return false;
+    }
+
+    /// <summary>
+    /// Parse a string as an integer.
+    /// </summary>
+    public static int ParseInt(string text)
+    {
+        if (int.TryParse(text, out int result))
+            return result;
+        return 0;
+    }
+
+    /// <summary>
+    /// Parse a string as an float.
+    /// </summary>
+    public static float ParseFloat(string text)
+    {
+        if (float.TryParse(text, out float result))
+            return result;
+        return 0f;
+    }
+
+    /// <summary>
+    /// Parse a string as an char.
+    /// </summary>
+    public static char ParseChar(string text)
+    {
+        if (char.TryParse(text, out char result))
+            return result;
+        return ' ';
+    }
+
+    /// <summary>
+    /// Parse a string as a color.
+    /// </summary>
+    public static Color ParseColor(string text)
+    {
+        try
+        {
+            return Color.FromHtml(text);
+        }
+        catch
+        {
+            return Colors.Transparent;
+        }
+    }
 }

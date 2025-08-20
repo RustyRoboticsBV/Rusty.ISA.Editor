@@ -91,6 +91,8 @@ public static class PreviewDict
     {
         switch (rule)
         {
+            case InstructionRule i:
+                return ForInstructionRule(i);
             case OptionRule o:
                 return ForOptionRule(o);
             case ChoiceRule c:
@@ -102,6 +104,16 @@ public static class PreviewDict
             default:
                 return null;
         }
+    }
+
+    /// <summary>
+    /// Get an instruction rule preview. Adds it if it didn't exist yet.
+    /// </summary>
+    public static InstructionRulePreview ForInstructionRule(InstructionRule rule)
+    {
+        if (!Has(rule))
+            Add(rule, new InstructionRulePreview(rule));
+        return Previews[rule] as InstructionRulePreview;
     }
 
     /// <summary>

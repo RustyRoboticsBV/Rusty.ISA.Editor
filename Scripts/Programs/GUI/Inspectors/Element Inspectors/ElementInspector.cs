@@ -5,6 +5,9 @@ public partial class ElementInspector : Inspector
     /* Constants. */
     private const string Title = "title+icon";
 
+    /* Public properties. */
+    public PreviewInstance Preview { get; protected set; }
+
     /* Constructors. */
     public ElementInspector() : base()
     {

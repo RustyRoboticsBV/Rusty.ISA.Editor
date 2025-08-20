@@ -5,6 +5,12 @@ public partial class InstructionRuleInspector : RuleInspector
     /* Constants. */
     private const string Instruction = "instruction";
 
+    public new InstructionRulePreviewInstance Preview
+    {
+        get => base.Preview as InstructionRulePreviewInstance;
+        protected set => base.Preview = value;
+    }
+
     /* Public properties. */
     public new InstructionRule Rule => base.Rule as InstructionRule;
     public InstructionDefinition Definition => GetInstructionInspector().Definition;
@@ -31,4 +37,7 @@ public partial class InstructionRuleInspector : RuleInspector
     {
         return GetAt(Instruction) as InstructionInspector;
     }
+
+    /* Protected methods. */
+    protected override void UpdatePreview() { }
 }

@@ -5,6 +5,12 @@ public partial class OptionRuleInspector : RuleInspector
     /* Public properties. */
     public new OptionRule Rule => base.Rule as OptionRule;
 
+    public new OptionRulePreviewInstance Preview
+    {
+        get => base.Preview as OptionRulePreviewInstance;
+        protected set => base.Preview = value;
+    }
+
     /* Constructors. */
     public OptionRuleInspector() : base()
     {
@@ -42,5 +48,12 @@ public partial class OptionRuleInspector : RuleInspector
     public RuleInspector GetChildRule()
     {
         return GetAt(0) as RuleInspector;
+    }
+
+    /* Protected methods. */
+    protected override void UpdatePreview()
+    {
+        Preview.SetEnabled(GetEnabled());
+        Preview.SetElement(GetChildRule().Preview);
     }
 }

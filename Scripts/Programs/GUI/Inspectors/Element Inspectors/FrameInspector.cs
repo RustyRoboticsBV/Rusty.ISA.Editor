@@ -10,11 +10,11 @@ public partial class FrameInspector : ElementInspector
         InstructionDefinition definition = set[BuiltIn.FrameOpcode];
 
         // Title field.
-        IGuiElement title = ParameterFieldFactory.Create(definition, BuiltIn.FrameTitle);
+        ParameterInspector title = new(definition.GetParameter(BuiltIn.FrameTitle));
         Add(BuiltIn.FrameTitle, title);
 
         // Color field.
-        IGuiElement color = ParameterFieldFactory.Create(definition, BuiltIn.FrameColor);
+        ParameterInspector color = new(definition.GetParameter(BuiltIn.FrameColor));
         Add(BuiltIn.FrameColor, color);
     }
 

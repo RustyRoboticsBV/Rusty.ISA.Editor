@@ -18,4 +18,7 @@ public abstract class RulePreview : Preview
     {
         DefaultInput.SetValue(DisplayName, rule.DisplayName);
     }
+
+    /* Public methods. */
+    public abstract override RulePreviewInstance CreateInstance();
 }
