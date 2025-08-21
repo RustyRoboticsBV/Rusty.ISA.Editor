@@ -12,8 +12,6 @@ public partial class TupleRuleInspector : RuleInspector
     }
 
     /* Constructors. */
-    public TupleRuleInspector() : base() { }
-
     public TupleRuleInspector(InstructionSet set, TupleRule rule)
         : base(set, rule)
     {
@@ -36,7 +34,7 @@ public partial class TupleRuleInspector : RuleInspector
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        TupleRuleInspector copy = new();
+        TupleRuleInspector copy = new(InstructionSet, Rule);
         copy.CopyFrom(this);
         return copy;
     }

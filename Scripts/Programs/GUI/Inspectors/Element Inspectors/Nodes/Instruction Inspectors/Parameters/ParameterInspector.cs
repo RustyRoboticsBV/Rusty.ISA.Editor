@@ -3,7 +3,7 @@
 /// <summary>
 /// A parameter inspector.
 /// </summary>
-public partial class ParameterInspector : Inspector
+public partial class ParameterInspector : ResourceInspector
 {
     /* Public properties. */
     public Parameter Parameter { get; private set; }
@@ -18,13 +18,17 @@ public partial class ParameterInspector : Inspector
         }
     }
 
-    public ParameterPreviewInstance Preview { get; private set; }
+    public new ParameterPreviewInstance Preview
+    {
+        get => base.Preview as ParameterPreviewInstance;
+        private set => base.Preview = value;
+    }
 
     /* Private properties. */
-    private IField Field => GetAt(0) as IField;
+    private IField Field => GetContentsCount() > 0 ?  GetAt(0) as IField : null;
 
     /* Constructors. */
-    public ParameterInspector(Parameter parameter)
+    public ParameterInspector(InstructionSet set, Parameter parameter) : base(set)
     {
         Parameter = parameter;
 
@@ -42,6 +46,13 @@ public partial class ParameterInspector : Inspector
     }
 
     /* Public methods. */
+    public override IGuiElement Copy()
+    {
+        ParameterInspector copy = new(InstructionSet, Parameter);
+        copy.CopyFrom(this);
+        return copy;
+    }
+
     public override void CopyFrom(IGuiElement other)
     {
         base.CopyFrom(other);
@@ -91,7 +102,6 @@ public partial class ParameterInspector : Inspector
             Preview?.SetValue(Field.Value);
         else
             Preview?.SetValue("");
-        Godot.GD.Print(Parameter.ID + " " + Preview);
     }
 
     /* Private methods. */

@@ -15,12 +15,19 @@ public partial class OutputInspector : ParameterInspector
     }
 
     /* Constructors. */
-    public OutputInspector(InstructionInspector parent, OutputParameter output) : base(output)
+    public OutputInspector(InstructionSet set, OutputParameter output) : base(set, output)
     {
         Visible = false;
     }
 
     /* Public methods. */
+    public override IGuiElement Copy()
+    {
+        OutputInspector copy = new(InstructionSet, Parameter);
+        copy.CopyFrom(this);
+        return copy;
+    }
+
     /// <summary>
     /// Update parameter previews.
     /// </summary>
@@ -29,7 +36,7 @@ public partial class OutputInspector : ParameterInspector
         for (int i = 0; i < instructionInspector.GetContentsCount(); i++)
         {
             if (instructionInspector.GetAt(i) is ParameterInspector parameter && parameter is not OutputInspector)
-                Preview.SetValue(parameter.Value);
+                Preview?.SetValue(parameter.Value);
         }
     }
 }

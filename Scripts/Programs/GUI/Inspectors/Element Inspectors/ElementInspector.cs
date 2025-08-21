@@ -1,15 +1,12 @@
 ﻿namespace Rusty.ISA.Editor;
 
-public partial class ElementInspector : Inspector
+public abstract partial class ElementInspector : ResourceInspector
 {
     /* Constants. */
     private const string Title = "title+icon";
 
-    /* Public properties. */
-    public PreviewInstance Preview { get; protected set; }
-
     /* Constructors. */
-    public ElementInspector() : base()
+    public ElementInspector(InstructionSet set) : base(set)
     {
         // Change contents container.
         FoldoutBorderContainer foldout = new();
@@ -21,16 +18,8 @@ public partial class ElementInspector : Inspector
         Add(Title, title);
     }
 
-    public ElementInspector(InstructionSet set, string opcode) : this()
+    public ElementInspector(InstructionSet set, string opcode) : this(set)
     {
         (ContentsContainer as FoldoutBorderContainer).FoldoutText = set[opcode].DisplayName;
-    }
-
-    /* Public methods. */
-    public override IGuiElement Copy()
-    {
-        ElementInspector copy = new();
-        copy.CopyFrom(this);
-        return copy;
     }
 }

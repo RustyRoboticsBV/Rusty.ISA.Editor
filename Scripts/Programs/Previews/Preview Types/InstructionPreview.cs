@@ -5,11 +5,8 @@
 /// </summary>
 public class InstructionPreview : Preview
 {
-    /* Public constants. */
-    public const string Value = "value";
-
     /* Private constants. */
-    private const string DefaultCode = $"return [[{Value}]];";
+    private const string DefaultCode = $"return \"\";";
 
     /* Constructors. */
     public InstructionPreview(string code) : base(code == "" ? DefaultCode : code) { }

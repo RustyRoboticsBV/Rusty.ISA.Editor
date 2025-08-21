@@ -1,6 +1,4 @@
-﻿using Godot;
-
-namespace Rusty.ISA.Editor;
+﻿namespace Rusty.ISA.Editor;
 
 public partial class NodeInspector : ElementInspector
 {
@@ -9,6 +7,8 @@ public partial class NodeInspector : ElementInspector
     private const string Instruction = "instruction";
 
     /* Public properties. */
+    public InstructionDefinition InstructionDefinition => GetInstructionInspector().Definition;
+
     public new EditorNodePreviewInstance Preview
     {
         get => base.Preview as EditorNodePreviewInstance;
@@ -16,8 +16,6 @@ public partial class NodeInspector : ElementInspector
     }
 
     /* Constructors. */
-    public NodeInspector() : base() { }
-
     public NodeInspector(InstructionSet set, string opcode) : base(set, opcode)
     {
         // Add start point checkbox.
@@ -33,16 +31,14 @@ public partial class NodeInspector : ElementInspector
 
         // Preview.
         Preview = PreviewDict.ForEditorNode(set, set[opcode])?.CreateInstance();
-        Godot.GD.Print(Preview.Preview);
-
-        Changed += UpdatePreview;
         UpdatePreview();
+        Changed += UpdatePreview;
     }
 
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        NodeInspector copy = new();
+        NodeInspector copy = new(InstructionSet, InstructionDefinition.Opcode);
         copy.CopyFrom(this);
         return copy;
     }
@@ -70,6 +66,5 @@ public partial class NodeInspector : ElementInspector
 
         // Add main preview.
         Preview?.SetMain(instructionInspector.Preview);
-        Godot.GD.Print($"Node ({instructionInspector.Definition.Opcode}) " + Preview);
     }
 }

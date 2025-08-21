@@ -12,13 +12,6 @@ public partial class ListRuleInspector : RuleInspector
     }
 
     /* Constructors. */
-    public ListRuleInspector() : base()
-    {
-        // Create list.
-        ListBorderContainer list = new();
-        ReplaceContainer(list);
-    }
-
     public ListRuleInspector(InstructionSet set, ListRule rule)
         : base(set, rule)
     {
@@ -45,7 +38,7 @@ public partial class ListRuleInspector : RuleInspector
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        ListRuleInspector copy = new();
+        ListRuleInspector copy = new(InstructionSet, Rule);
         copy.CopyFrom(this);
         return copy;
     }

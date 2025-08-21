@@ -12,13 +12,6 @@ public partial class OptionRuleInspector : RuleInspector
     }
 
     /* Constructors. */
-    public OptionRuleInspector() : base()
-    {
-        // Create check-box.
-        CheckBoxBorderContainer list = new();
-        ReplaceContainer(list);
-    }
-
     public OptionRuleInspector(InstructionSet set, OptionRule rule)
         : base(set, rule)
     {
@@ -35,7 +28,7 @@ public partial class OptionRuleInspector : RuleInspector
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        OptionRuleInspector copy = new();
+        OptionRuleInspector copy = new(InstructionSet, Rule);
         copy.CopyFrom(this);
         return copy;
     }

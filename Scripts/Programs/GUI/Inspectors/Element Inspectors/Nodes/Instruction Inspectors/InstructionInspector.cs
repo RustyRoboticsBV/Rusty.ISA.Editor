@@ -1,6 +1,6 @@
 ﻿namespace Rusty.ISA.Editor;
 
-public partial class InstructionInspector : Inspector
+public partial class InstructionInspector : ResourceInspector
 {
     /* Constants. */
     public const string Parameter = "par_";
@@ -9,12 +9,14 @@ public partial class InstructionInspector : Inspector
 
     /* Public properties. */
     public InstructionDefinition Definition { get; private set; }
-    public InstructionPreviewInstance Preview { get; private set; }
+    public new InstructionPreviewInstance Preview
+    {
+        get => base.Preview as InstructionPreviewInstance;
+        private set => base.Preview = value;
+    }
 
     /* Constructors. */
-    public InstructionInspector() : base() { }
-
-    public InstructionInspector(InstructionSet set, string opcode) : base()
+    public InstructionInspector(InstructionSet set, string opcode) : base(set)
     {
         Definition = set[opcode];
 
@@ -33,9 +35,9 @@ public partial class InstructionInspector : Inspector
         foreach (Parameter parameter in Definition.Parameters)
         {
             if (parameter is OutputParameter output)
-                AddParameter(output.ID, new OutputInspector(this, output));
+                AddParameter(output.ID, new OutputInspector(InstructionSet, output));
             else
-                AddParameter(parameter.ID, new ParameterInspector(parameter));
+                AddParameter(parameter.ID, new ParameterInspector(InstructionSet, parameter));
         }
 
         // Add post-instructions.
@@ -52,7 +54,7 @@ public partial class InstructionInspector : Inspector
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        InstructionInspector copy = new();
+        InstructionInspector copy = new(InstructionSet, Definition.Opcode);
         copy.CopyFrom(this);
         return copy;
     }
@@ -82,7 +84,7 @@ public partial class InstructionInspector : Inspector
 
     public void SetParameterField(string id, string value)
     {
-        GetParameterInspector(id).ParseValue(value);
+        GetParameterInspector(id)?.ParseValue(value);
     }
 
     public RuleInspector GetPostInstruction(string id)
@@ -127,6 +129,5 @@ public partial class InstructionInspector : Inspector
                     break;
             }
         }
-        Godot.GD.Print(Definition.Opcode + " " + Preview);
     }
 }

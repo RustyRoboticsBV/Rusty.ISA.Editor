@@ -1,16 +1,18 @@
 ﻿namespace Rusty.ISA.Editor;
 
-public abstract partial class RuleInspector : Inspector
+public abstract partial class RuleInspector : ResourceInspector
 {
     /* Public properties. */
     public CompileRule Rule { get; private set; }
 
-    public RulePreviewInstance Preview { get; protected set; }
+    public new RulePreviewInstance Preview
+    {
+        get => base.Preview as RulePreviewInstance;
+        protected set => base.Preview = value;
+    }
 
     /* Constructors. */
-    public RuleInspector() : base() { }
-
-    public RuleInspector(InstructionSet set, CompileRule rule) : base()
+    public RuleInspector(InstructionSet set, CompileRule rule) : base(set)
     {
         Rule = rule;
 

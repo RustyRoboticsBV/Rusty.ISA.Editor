@@ -16,8 +16,6 @@ public partial class InstructionRuleInspector : RuleInspector
     public InstructionDefinition Definition => GetInstructionInspector().Definition;
 
     /* Constructors. */
-    public InstructionRuleInspector() : base() { }
-
     public InstructionRuleInspector(InstructionSet set, InstructionRule rule)
         : base(set, rule)
     {
@@ -32,7 +30,7 @@ public partial class InstructionRuleInspector : RuleInspector
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        InstructionRuleInspector copy = new();
+        InstructionRuleInspector copy = new(InstructionSet, Rule);
         copy.CopyFrom(this);
         return copy;
     }

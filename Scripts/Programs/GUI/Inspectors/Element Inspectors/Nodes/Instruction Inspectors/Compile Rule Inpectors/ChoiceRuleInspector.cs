@@ -12,16 +12,13 @@ public partial class ChoiceRuleInspector : RuleInspector
     }
 
     /* Constructors. */
-    public ChoiceRuleInspector() : base()
+    public ChoiceRuleInspector(InstructionSet set, ChoiceRule rule)
+        : base(set, rule)
     {
         // Create check-box.
         CheckBoxBorderContainer list = new();
         ReplaceContainer(list);
-    }
 
-    public ChoiceRuleInspector(InstructionSet set, ChoiceRule rule)
-        : base(set, rule)
-    {
         // Create dropdown border.
         DropdownBorderContainer dropdown = new();
         dropdown.DropdownText = rule.DisplayName;
@@ -41,7 +38,7 @@ public partial class ChoiceRuleInspector : RuleInspector
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        ChoiceRuleInspector copy = new();
+        ChoiceRuleInspector copy = new(InstructionSet, Rule);
         copy.CopyFrom(this);
         return copy;
     }
