@@ -17,9 +17,6 @@ public partial class ChoiceRuleInspector : RuleInspector
         // Create check-box.
         CheckBoxBorderContainer list = new();
         ReplaceContainer(list);
-
-        // Create preview.
-        Preview = PreviewDict.ForChoiceRule(Rule).CreateInstance();
     }
 
     public ChoiceRuleInspector(InstructionSet set, ChoiceRule rule)
@@ -36,6 +33,9 @@ public partial class ChoiceRuleInspector : RuleInspector
             RuleInspector childInspector = RuleInspectorFactory.Create(set, type);
             Add(GetContentsCount().ToString(), childInspector);
         }
+
+        // Create preview.
+        Preview = PreviewDict.ForChoiceRule(set, Rule)?.CreateInstance();
     }
 
     /* Public methods. */

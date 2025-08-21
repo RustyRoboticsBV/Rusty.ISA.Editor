@@ -8,9 +8,10 @@ public class InstructionRulePreview : RulePreview
     /* Constructors. */
     public InstructionRulePreview(string code) : base(code) { }
 
-    public InstructionRulePreview(InstructionRule rule) : this(rule.Preview)
+    public InstructionRulePreview(InstructionSet set, InstructionRule rule) : this(rule.Preview)
     {
-        DefaultInput.SetValue(Element, PreviewDict.ForInstructionRule(rule).CreateInstance());
+        InstructionDefinition definition = set[rule.Opcode];
+        DefaultInput.SetValue(Element, PreviewDict.ForInstruction(set, definition)?.CreateInstance());
     }
 
     /* Public methods. */

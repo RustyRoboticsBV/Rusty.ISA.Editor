@@ -45,7 +45,7 @@ public partial class InstructionInspector : Inspector
                 AddPreInstruction(rule.ID, element);
         }
 
-        Preview = PreviewDict.ForInstruction(Definition)?.CreateInstance();
+        Preview = PreviewDict.ForInstruction(set, Definition)?.CreateInstance();
         Changed += UpdateOutputPreviews;
     }
 
@@ -127,5 +127,7 @@ public partial class InstructionInspector : Inspector
                     break;
             }
         }
+
+        GD.Print(Preview);
     }
 }

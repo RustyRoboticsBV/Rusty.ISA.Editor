@@ -28,7 +28,7 @@ public class OutputPreview : Preview
             if (definition.Parameters[i] is not OutputParameter)
             {
                 Parameter parameter = definition.Parameters[i];
-                DefaultInput.SetValue(parameter.ID, PreviewDict.ForParameter(parameter).CreateInstance());
+                DefaultInput.SetValue(parameter.ID, PreviewDict.ForParameter(parameter)?.CreateInstance());
             }
         }
     }

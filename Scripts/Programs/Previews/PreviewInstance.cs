@@ -29,6 +29,11 @@ public abstract partial class PreviewInstance : Resource
     }
 
     /* Public methods. */
+    public override string ToString()
+    {
+        return Input.ToString() + "\n" + Preview.DefaultInput;
+    }
+
     /// <summary>
     /// Make a deep copy of this preview instance.
     /// </summary>

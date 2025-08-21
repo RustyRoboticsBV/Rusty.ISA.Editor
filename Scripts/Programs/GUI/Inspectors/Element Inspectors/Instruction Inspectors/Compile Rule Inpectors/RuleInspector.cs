@@ -14,7 +14,7 @@ public abstract partial class RuleInspector : Inspector
     {
         Rule = rule;
 
-        Preview = PreviewDict.ForRule(rule)?.CreateInstance();
+        Preview = PreviewDict.ForRule(set, rule)?.CreateInstance();
         Changed += UpdatePreview;
     }
 

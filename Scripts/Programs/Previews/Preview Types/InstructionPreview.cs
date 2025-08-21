@@ -14,7 +14,7 @@ public class InstructionPreview : Preview
     /* Constructors. */
     public InstructionPreview(string code) : base(code == "" ? DefaultCode : code) { }
 
-    public InstructionPreview(InstructionDefinition instruction) : this(instruction.Preview)
+    public InstructionPreview(InstructionSet set, InstructionDefinition instruction) : this(instruction.Preview)
     {
         // Display name.
         DefaultInput.SetValue(DisplayName, instruction.DisplayName);
@@ -24,21 +24,21 @@ public class InstructionPreview : Preview
         {
             Parameter parameter = instruction.Parameters[i];
             if (parameter is OutputParameter)
-                DefaultInput.SetValue(parameter.ID, PreviewDict.ForOutput(instruction, parameter.ID).CreateInstance());
+                DefaultInput.SetValue(parameter.ID, PreviewDict.ForOutput(instruction, parameter.ID)?.CreateInstance());
             else
-                DefaultInput.SetValue(parameter.ID, PreviewDict.ForParameter(instruction.Parameters[i]).CreateInstance());
+                DefaultInput.SetValue(parameter.ID, PreviewDict.ForParameter(instruction.Parameters[i])?.CreateInstance());
         }
 
         // Compile rules.
         for (int i = 0; i < instruction.PreInstructions.Length; i++)
         {
             CompileRule rule = instruction.PreInstructions[i];
-            DefaultInput.SetValue(rule.ID, PreviewDict.ForRule(rule).CreateInstance());
+            DefaultInput.SetValue(rule.ID, PreviewDict.ForRule(set, rule)?.CreateInstance());
         }
         for (int i = 0; i < instruction.PostInstructions.Length; i++)
         {
             CompileRule rule = instruction.PostInstructions[i];
-            DefaultInput.SetValue(rule.ID, PreviewDict.ForRule(rule).CreateInstance());
+            DefaultInput.SetValue(rule.ID, PreviewDict.ForRule(set, rule)?.CreateInstance());
         }
     }
 

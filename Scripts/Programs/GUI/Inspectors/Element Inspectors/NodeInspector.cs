@@ -30,7 +30,7 @@ public partial class NodeInspector : ElementInspector
         Add(Instruction, instruction);
 
         // Preview.
-        Preview = PreviewDict.ForEditorNode(set[opcode])?.CreateInstance();
+        Preview = PreviewDict.ForEditorNode(set, set[opcode])?.CreateInstance();
         Changed += UpdatePreview;
     }
 

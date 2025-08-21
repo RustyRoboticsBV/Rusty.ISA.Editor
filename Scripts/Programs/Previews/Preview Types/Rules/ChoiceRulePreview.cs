@@ -11,7 +11,7 @@ public class ChoiceRulePreview : RulePreview
     /* Constructors. */
     public ChoiceRulePreview(string code) : base(code) { }
 
-    public ChoiceRulePreview(ChoiceRule rule) : this(rule.Preview)
+    public ChoiceRulePreview(InstructionSet set, ChoiceRule rule) : this(rule.Preview)
     {
         DefaultInput.SetValue(Selected, -1);
         DefaultInput.SetValue(Element, "");

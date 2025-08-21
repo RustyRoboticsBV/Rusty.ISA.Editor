@@ -38,22 +38,20 @@ public static class PreviewDict
     /// <summary>
     /// Get an instruction preview. Adds it if it didn't exist yet.
     /// </summary>
-    public static InstructionPreview ForInstruction(InstructionDefinition definition)
+    public static InstructionPreview ForInstruction(InstructionSet set, InstructionDefinition definition)
     {
-        return null;
         if (!Has(definition))
-            Add(definition, new InstructionPreview(definition));
+            Add(definition, new InstructionPreview(set, definition));
         return Previews[definition] as InstructionPreview;
     }
 
     /// <summary>
     /// Get an editor node info preview. Adds it if it didn't exist yet.
     /// </summary>
-    public static EditorNodePreview ForEditorNode(InstructionDefinition definition)
+    public static EditorNodePreview ForEditorNode(InstructionSet set, InstructionDefinition definition)
     {
-        return null;
         if (!Has(definition.EditorNode))
-            Add(definition.EditorNode, new EditorNodePreview(definition));
+            Add(definition.EditorNode, new EditorNodePreview(set, definition));
         return Previews[definition] as EditorNodePreview;
     }
 
@@ -62,7 +60,6 @@ public static class PreviewDict
     /// </summary>
     public static ParameterPreview ForParameter(Parameter parameter)
     {
-        return null;
         if (!Has(parameter))
             Add(parameter, new ParameterPreview(parameter));
         return Previews[parameter] as ParameterPreview;
@@ -73,7 +70,6 @@ public static class PreviewDict
     /// </summary>
     public static OutputPreview ForOutput(InstructionDefinition definition, string outputID)
     {
-        return null;
         OutputParameter output = definition.GetParameter(outputID) as OutputParameter;
         if (!Has(output))
             Add(output, new OutputPreview(definition, outputID));
@@ -83,21 +79,20 @@ public static class PreviewDict
     /// <summary>
     /// Get a compile rule preview. Adds it if it didn't exist yet.
     /// </summary>
-    public static RulePreview ForRule(CompileRule rule)
+    public static RulePreview ForRule(InstructionSet set, CompileRule rule)
     {
-        return null;
         switch (rule)
         {
             case InstructionRule i:
-                return ForInstructionRule(i);
+                return ForInstructionRule(set, i);
             case OptionRule o:
-                return ForOptionRule(o);
+                return ForOptionRule(set, o);
             case ChoiceRule c:
-                return ForChoiceRule(c);
+                return ForChoiceRule(set, c);
             case TupleRule t:
-                return ForTupleRule(t);
+                return ForTupleRule(set, t);
             case ListRule l:
-                return ForListRule(l);
+                return ForListRule(set, l);
             default:
                 return null;
         }
@@ -106,55 +101,50 @@ public static class PreviewDict
     /// <summary>
     /// Get an instruction rule preview. Adds it if it didn't exist yet.
     /// </summary>
-    public static InstructionRulePreview ForInstructionRule(InstructionRule rule)
+    public static InstructionRulePreview ForInstructionRule(InstructionSet set, InstructionRule rule)
     {
-        return null;
         if (!Has(rule))
-            Add(rule, new InstructionRulePreview(rule));
+            Add(rule, new InstructionRulePreview(set, rule));
         return Previews[rule] as InstructionRulePreview;
     }
 
     /// <summary>
     /// Get an option rule preview. Adds it if it didn't exist yet.
     /// </summary>
-    public static OptionRulePreview ForOptionRule(OptionRule rule)
+    public static OptionRulePreview ForOptionRule(InstructionSet set, OptionRule rule)
     {
-        return null;
         if (!Has(rule))
-            Add(rule, new OptionRulePreview(rule));
+            Add(rule, new OptionRulePreview(set, rule));
         return Previews[rule] as OptionRulePreview;
     }
 
     /// <summary>
     /// Get a choice rule preview. Adds it if it didn't exist yet.
     /// </summary>
-    public static ChoiceRulePreview ForChoiceRule(ChoiceRule rule)
+    public static ChoiceRulePreview ForChoiceRule(InstructionSet set, ChoiceRule rule)
     {
-        return null;
         if (!Has(rule))
-            Add(rule, new ChoiceRulePreview(rule));
+            Add(rule, new ChoiceRulePreview(set, rule));
         return Previews[rule] as ChoiceRulePreview;
     }
 
     /// <summary>
     /// Get a tuple rule preview. Adds it if it didn't exist yet.
     /// </summary>
-    public static TupleRulePreview ForTupleRule(TupleRule rule)
+    public static TupleRulePreview ForTupleRule(InstructionSet set, TupleRule rule)
     {
-        return null;
         if (!Has(rule))
-            Add(rule, new TupleRulePreview(rule));
+            Add(rule, new TupleRulePreview(set, rule));
         return Previews[rule] as TupleRulePreview;
     }
 
     /// <summary>
     /// Get a list rule preview. Adds it if it didn't exist yet.
     /// </summary>
-    public static ListRulePreview ForListRule(ListRule rule)
+    public static ListRulePreview ForListRule(InstructionSet set, ListRule rule)
     {
-        return null;
         if (!Has(rule))
-            Add(rule, new ListRulePreview(rule));
+            Add(rule, new ListRulePreview(set, rule));
         return Previews[rule] as ListRulePreview;
     }
 }

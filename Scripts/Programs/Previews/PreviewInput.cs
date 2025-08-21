@@ -15,6 +15,20 @@ public sealed partial class PreviewInput : Resource, System.Collections.Generic.
     [Export] public Dictionary<string, Variant> Values { get; private set; } = new();
 
     /* Public methods. */
+    public override string ToString()
+    {
+        string str = "";
+        foreach (var value in Values)
+        {
+            if (str != "")
+                str += "\n";
+            string valueStr = value.Value.ToString();
+            if (valueStr.Contains('\n'))
+                valueStr = "\n " + valueStr.Replace("\n", "\n ");
+            str += "- " + value.Key + " = " + valueStr;
+        }
+        return str;
+    }
     /// <summary>
     /// Make a deep copy of this object.
     /// </summary>

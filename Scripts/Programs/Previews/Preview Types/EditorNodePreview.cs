@@ -14,10 +14,10 @@ public class EditorNodePreview : Preview
     /* Constructors. */
     public EditorNodePreview(string code) : base(code == "" ? DefaultCode : code) { }
 
-    public EditorNodePreview(InstructionDefinition instruction) : this(instruction.Preview)
+    public EditorNodePreview(InstructionSet set, InstructionDefinition instruction) : this(instruction.Preview)
     {
         // Create instruction preview.
-        Preview main = PreviewDict.ForInstruction(instruction);
+        Preview main = PreviewDict.ForInstruction(set, instruction);
 
         // Copy its data.
         DefaultInput.CopyFrom(main.DefaultInput);

@@ -20,7 +20,7 @@ $"var result : String = \"\";"
     /* Constructors. */
     public TupleRulePreview(string code) : base(code == "" ? DefaultCode : code) { }
 
-    public TupleRulePreview(TupleRule rule) : this(rule.Preview) { }
+    public TupleRulePreview(InstructionSet set, TupleRule rule) : this(rule.Preview) { }
 
     /* Public methods. */
     public override TupleRulePreviewInstance CreateInstance()
