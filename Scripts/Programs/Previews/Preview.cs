@@ -15,10 +15,10 @@ public abstract class Preview
     /* Fields. */
     private const string SkeletonCode = "func eval(_input) -> String:\n    EVAL";
 
-    private const string LimitFunction = "\n\nfunc limit(string : String, length : int) -> String:"
+    private const string LimitFunction = "\n\nfunc limit(string : String, length : int, truncate_suffix : String) -> String:"
         + "\n    if string.length() <= length:"
         + "\n        return string;"
-        + "\n    return string.substr(0, length);";
+        + "\n    return string.substr(0, length) + truncate_suffix;";
 
     private const string WrapFunction = "\n\nfunc wordwrap(text : String, max_width : int) -> String:"
         + "\n    var result = \"\";"

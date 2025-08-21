@@ -57,7 +57,6 @@ public static class OutputDataGetter
 
     private static void CollectOutput(ref OutputData outputs, OutputInspector inspector)
     {
-        Godot.GD.Print($"OUTPUT{inspector.Parameter.ID}:" + inspector.Preview.Evaluate());
         outputs.AddOutput(inspector.Preview.Evaluate(), inspector.Parameter.RemoveDefaultOutput);
     }
 
