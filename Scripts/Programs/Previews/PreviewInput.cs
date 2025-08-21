@@ -89,6 +89,15 @@ public sealed partial class PreviewInput : Resource, System.Collections.Generic.
         Values[key] = value;
     }
 
+    /// <summary>
+    /// Remove a value from the input values.
+    /// </summary>
+    public void RemoveValue(string key)
+    {
+        if (Values.ContainsKey(key))
+            Values.Remove(key);
+    }
+
     /* Enumerating. */
     public System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, Variant>> GetEnumerator()
     {

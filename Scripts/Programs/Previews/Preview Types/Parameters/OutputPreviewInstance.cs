@@ -5,7 +5,7 @@ namespace Rusty.ISA.Editor;
 /// <summary>
 /// An instance of an output parameter preview.
 /// </summary>
-public partial class OutputPreviewInstance : PreviewInstance
+public partial class OutputPreviewInstance : ParameterPreviewInstance
 {
     /* Public properties. */
     public new OutputPreview Preview => base.Preview as OutputPreview;

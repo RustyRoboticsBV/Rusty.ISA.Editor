@@ -1,4 +1,6 @@
-﻿namespace Rusty.ISA.Editor;
+﻿using Godot;
+
+namespace Rusty.ISA.Editor;
 
 /// <summary>
 /// An output dummy inspector.
@@ -8,6 +10,12 @@ public partial class OutputInspector : ParameterInspector
     /* Public properties. */
     public new OutputParameter Parameter => base.Parameter as OutputParameter;
 
+    public new OutputPreviewInstance Preview
+    {
+        get => base.Preview as OutputPreviewInstance;
+        set => base.Preview = value;
+    }
+
     public override object Value
     {
         get => "";
@@ -15,15 +23,18 @@ public partial class OutputInspector : ParameterInspector
     }
 
     /* Constructors. */
-    public OutputInspector(InstructionSet set, OutputParameter output) : base(set, output)
+    public OutputInspector(InstructionSet set, string opcode, string outputID)
+        : base(set, opcode, outputID)
     {
         Visible = false;
+
+        Preview = PreviewDict.ForOutput(set[opcode], outputID)?.CreateInstance();
     }
 
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        OutputInspector copy = new(InstructionSet, Parameter);
+        OutputInspector copy = new(InstructionSet, InstructionDefinition.Opcode, Parameter.ID);
         copy.CopyFrom(this);
         return copy;
     }
@@ -36,7 +47,7 @@ public partial class OutputInspector : ParameterInspector
         for (int i = 0; i < instructionInspector.GetContentsCount(); i++)
         {
             if (instructionInspector.GetAt(i) is ParameterInspector parameter && parameter is not OutputInspector)
-                Preview?.SetValue(parameter.Value);
+                Preview?.SetParameter(parameter.Parameter.ID, parameter.Preview);
         }
     }
 }

@@ -58,8 +58,13 @@ public static class PreviewDict
     /// <summary>
     /// Get an parameter preview. Adds it if it didn't exist yet.
     /// </summary>
-    public static ParameterPreview ForParameter(Parameter parameter)
+    public static ParameterPreview ForParameter(InstructionDefinition definition, string parameterID)
     {
+        Parameter parameter = definition.GetParameter(parameterID);
+
+        if (parameter is OutputParameter)
+            return ForOutput(definition, parameterID);
+
         if (!Has(parameter))
             Add(parameter, new ParameterPreview(parameter));
         return Previews[parameter] as ParameterPreview;

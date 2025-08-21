@@ -6,6 +6,7 @@
 public partial class ParameterInspector : ResourceInspector
 {
     /* Public properties. */
+    public InstructionDefinition InstructionDefinition { get; private set; }
     public Parameter Parameter { get; private set; }
 
     public virtual object Value
@@ -21,19 +22,20 @@ public partial class ParameterInspector : ResourceInspector
     public new ParameterPreviewInstance Preview
     {
         get => base.Preview as ParameterPreviewInstance;
-        private set => base.Preview = value;
+        set => base.Preview = value;
     }
 
     /* Private properties. */
     private IField Field => GetContentsCount() > 0 ?  GetAt(0) as IField : null;
 
     /* Constructors. */
-    public ParameterInspector(InstructionSet set, Parameter parameter) : base(set)
+    public ParameterInspector(InstructionSet set, string opcode, string parameterID) : base(set)
     {
-        Parameter = parameter;
+        InstructionDefinition = set[opcode];
+        Parameter = InstructionDefinition.GetParameter(parameterID);
 
         // Create field.
-        IField field = CreateField(parameter);
+        IField field = CreateField(Parameter);
         if (field != null)
         {
             Add("field", field);
@@ -41,14 +43,14 @@ public partial class ParameterInspector : ResourceInspector
         }
 
         // Preview.
-        Preview = PreviewDict.ForParameter(parameter)?.CreateInstance();
+        Preview = PreviewDict.ForParameter(InstructionDefinition, parameterID)?.CreateInstance();
         Changed += UpdatePreview;
     }
 
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        ParameterInspector copy = new(InstructionSet, Parameter);
+        ParameterInspector copy = new(InstructionSet, InstructionDefinition.Opcode, Parameter.ID);
         copy.CopyFrom(this);
         return copy;
     }

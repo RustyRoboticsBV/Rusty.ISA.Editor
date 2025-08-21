@@ -6,7 +6,7 @@ public partial class CommentInspector : ElementInspector
     public CommentInspector(InstructionSet set) : base(set, BuiltIn.CommentOpcode)
     {
         // Text field.
-        ParameterInspector field = new(set, set[BuiltIn.CommentOpcode].GetParameter(BuiltIn.CommentText));
+        ParameterInspector field = new(set, BuiltIn.CommentOpcode, BuiltIn.CommentText);
         Add(BuiltIn.CommentText, field);
     }
 

@@ -35,9 +35,9 @@ public partial class InstructionInspector : ResourceInspector
         foreach (Parameter parameter in Definition.Parameters)
         {
             if (parameter is OutputParameter output)
-                AddParameter(output.ID, new OutputInspector(InstructionSet, output));
+                AddParameter(output.ID, new OutputInspector(InstructionSet, Definition.Opcode, output.ID));
             else
-                AddParameter(parameter.ID, new ParameterInspector(InstructionSet, parameter));
+                AddParameter(parameter.ID, new ParameterInspector(InstructionSet, Definition.Opcode, parameter.ID));
         }
 
         // Add post-instructions.
@@ -125,7 +125,10 @@ public partial class InstructionInspector : ResourceInspector
             {
                 case ParameterInspector parameter:
                     if (parameter is OutputInspector output)
+                    {
                         output.UpdatePreview(this);
+                        Preview.SetParameter(output.Parameter.ID, output.Preview);
+                    }
                     break;
             }
         }

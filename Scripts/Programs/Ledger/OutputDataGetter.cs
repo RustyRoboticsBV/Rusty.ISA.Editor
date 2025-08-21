@@ -43,10 +43,9 @@ public static class OutputDataGetter
 
         for (int i = 0; i < inspector.Definition.Parameters.Length; i++)
         {
+            string id = inspector.Definition.Parameters[i].ID;
             if (inspector.Definition.Parameters[i] is OutputParameter output)
-            {
-                outputs.AddOutput(output.DisplayName, output.RemoveDefaultOutput);
-            }
+                CollectOutput(ref outputs, inspector.GetParameterInspector(id) as OutputInspector);
         }
 
         for (int i = 0; i < inspector.Definition.PostInstructions.Length; i++)
@@ -54,6 +53,12 @@ public static class OutputDataGetter
             string id = inspector.Definition.PostInstructions[i].ID;
             CollectOutputs(ref outputs, inspector.GetPostInstruction(id));
         }
+    }
+
+    private static void CollectOutput(ref OutputData outputs, OutputInspector inspector)
+    {
+        Godot.GD.Print($"OUTPUT{inspector.Parameter.ID}:" + inspector.Preview.Evaluate());
+        outputs.AddOutput(inspector.Preview.Evaluate(), inspector.Parameter.RemoveDefaultOutput);
     }
 
     private static void CollectOutputs(ref OutputData outputs, RuleInspector inspector)

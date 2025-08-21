@@ -3,13 +3,10 @@
 /// <summary>
 /// A output preview.
 /// </summary>
-public class OutputPreview : Preview
+public class OutputPreview : ParameterPreview
 {
-    /* Public constants. */
-    public const string Value = "value";
-
     /* Private constants. */
-    private const string DefaultCode = $"return [[{Value}]];";
+    private const string DefaultCode = $"return [[{DisplayName}]];";
 
     /* Constructors. */
     public OutputPreview(string code) : base(code == "" ? DefaultCode : code) { }
@@ -17,18 +14,18 @@ public class OutputPreview : Preview
     public OutputPreview(InstructionDefinition definition, string outputID)
         : this(definition.GetParameter(outputID).Preview)
     {
-        OutputParameter output = definition.GetParameter(outputID) as OutputParameter;
+        Parameter output = definition.GetParameter(outputID);
 
         // Display name.
         DefaultInput.SetValue(DisplayName, output.DisplayName);
 
-        // Parameters.
+        // Non-output parameters values.
         for (int i = 0; i < definition.Parameters.Length; i++)
         {
             if (definition.Parameters[i] is not OutputParameter)
             {
                 Parameter parameter = definition.Parameters[i];
-                DefaultInput.SetValue(parameter.ID, PreviewDict.ForParameter(parameter)?.CreateInstance());
+                DefaultInput.SetValue(parameter.ID, PreviewDict.ForParameter(definition, parameter.ID)?.CreateInstance());
             }
         }
     }

@@ -5,14 +5,12 @@ public partial class FrameInspector : ElementInspector
     /* Constructors. */
     public FrameInspector(InstructionSet set) : base(set, BuiltIn.FrameOpcode)
     {
-        InstructionDefinition definition = set[BuiltIn.FrameOpcode];
-
         // Title field.
-        ParameterInspector title = new(set, definition.GetParameter(BuiltIn.FrameTitle));
+        ParameterInspector title = new(set, BuiltIn.FrameOpcode, BuiltIn.FrameTitle);
         Add(BuiltIn.FrameTitle, title);
 
         // Color field.
-        ParameterInspector color = new(set, definition.GetParameter(BuiltIn.FrameColor));
+        ParameterInspector color = new(set, BuiltIn.FrameOpcode, BuiltIn.FrameColor);
         Add(BuiltIn.FrameColor, color);
     }
 

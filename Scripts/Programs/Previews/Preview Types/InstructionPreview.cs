@@ -23,7 +23,7 @@ public class InstructionPreview : Preview
             if (parameter is OutputParameter)
                 DefaultInput.SetValue(parameter.ID, PreviewDict.ForOutput(instruction, parameter.ID)?.CreateInstance());
             else
-                DefaultInput.SetValue(parameter.ID, PreviewDict.ForParameter(instruction.Parameters[i])?.CreateInstance());
+                DefaultInput.SetValue(parameter.ID, PreviewDict.ForParameter(instruction, parameter.ID)?.CreateInstance());
         }
 
         // Compile rules.
