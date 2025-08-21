@@ -1,6 +1,4 @@
-﻿using Godot;
-
-namespace Rusty.ISA.Editor;
+﻿namespace Rusty.ISA.Editor;
 
 public partial class InstructionInspector : Inspector
 {
@@ -19,6 +17,9 @@ public partial class InstructionInspector : Inspector
     public InstructionInspector(InstructionSet set, string opcode) : base()
     {
         Definition = set[opcode];
+
+        // Create preview.
+        Preview = PreviewDict.ForInstruction(set, Definition)?.CreateInstance();
 
         // Add pre-instructions.
         foreach (CompileRule rule in Definition.PreInstructions)
@@ -45,7 +46,6 @@ public partial class InstructionInspector : Inspector
                 AddPreInstruction(rule.ID, element);
         }
 
-        Preview = PreviewDict.ForInstruction(set, Definition)?.CreateInstance();
         Changed += UpdateOutputPreviews;
     }
 
@@ -127,7 +127,6 @@ public partial class InstructionInspector : Inspector
                     break;
             }
         }
-
-        GD.Print(Preview);
+        Godot.GD.Print(Definition.Opcode + " " + Preview);
     }
 }

@@ -17,20 +17,21 @@ public sealed partial class PreviewInput : Resource, System.Collections.Generic.
     /* Public methods. */
     public override string ToString()
     {
-        string str = "";
+        string str = "{";
         foreach (var value in Values)
         {
-            if (str != "")
-                str += "\n";
             string valueStr = value.Value.ToString();
-            if (valueStr.Contains('\n'))
-                valueStr = "\n " + valueStr.Replace("\n", "\n ");
-            str += "- " + value.Key + " = " + valueStr;
+            if (!(valueStr.StartsWith('{') && valueStr.EndsWith('}')))
+                valueStr = $"\"{valueStr}\"";
+
+            str += "\n " + value.Key + " = " + valueStr.Replace("\n", "\n ");
         }
-        return str;
+        str += "\n}";
+        return str.Replace("{\n}", "{ }");
     }
+
     /// <summary>
-    /// Make a deep copy of this object.
+    /// Make a deep copy of this object. This recursively copies nested preview instances.
     /// </summary>
     public PreviewInput Copy()
     {
@@ -40,7 +41,7 @@ public sealed partial class PreviewInput : Resource, System.Collections.Generic.
     }
 
     /// <summary>
-    /// Copy the values from another input object.
+    /// Copy the values from another input object. This recursively copies nested preview instances.
     /// </summary>
     public void CopyFrom(PreviewInput other)
     {

@@ -1,4 +1,6 @@
-﻿namespace Rusty.ISA.Editor;
+﻿using Godot;
+
+namespace Rusty.ISA.Editor;
 
 public partial class NodeInspector : ElementInspector
 {
@@ -31,7 +33,10 @@ public partial class NodeInspector : ElementInspector
 
         // Preview.
         Preview = PreviewDict.ForEditorNode(set, set[opcode])?.CreateInstance();
+        Godot.GD.Print(Preview.Preview);
+
         Changed += UpdatePreview;
+        UpdatePreview();
     }
 
     /* Public methods. */
@@ -65,5 +70,6 @@ public partial class NodeInspector : ElementInspector
 
         // Add main preview.
         Preview?.SetMain(instructionInspector.Preview);
+        Godot.GD.Print($"Node ({instructionInspector.Definition.Opcode}) " + Preview);
     }
 }

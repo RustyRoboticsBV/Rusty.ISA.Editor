@@ -9,7 +9,7 @@ public abstract partial class PreviewInstance : Resource
 {
     /* Public properties. */
     public Preview Preview { get; private set; }
-    public PreviewInput Input { get; private set; } = new();
+    public PreviewInput Input { get; private set; }
 
     /* Private properties. */
     private GodotObject Instance { get; set; }
@@ -19,19 +19,18 @@ public abstract partial class PreviewInstance : Resource
     {
         Preview = preview;
 
-        foreach (var @default in preview.DefaultInput)
-        {
-            if (@default.Value.AsGodotObject() is PreviewInstance nested)
-                Input.Set(@default.Key, nested.Copy());
-            else
-                Input.Set(@default.Key, @default.Value);
-        }
+        // Copy defaults.
+        Input = Preview.DefaultInput.Copy();
     }
 
     /* Public methods. */
     public override string ToString()
     {
-        return Input.ToString() + "\n" + Preview.DefaultInput;
+        return Input.ToString();
+        return "{"
+            + $"\n My input = {Input.ToString().Replace("\n", "\n ")}"
+            + $"\n Default = {Preview.DefaultInput.ToString().Replace("\n", "\n ")}"
+            + "\n}";
     }
 
     /// <summary>

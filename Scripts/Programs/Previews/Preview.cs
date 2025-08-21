@@ -98,20 +98,26 @@ public abstract class Preview
 
             i += end + 1;
         }
+        source = sb.ToString();
 
         // Add functions if they are used.
-        if (code.Contains("limit("))
-            code += LimitFunction;
-        if (code.Contains("wrap("))
-            code += WrapFunction;
+        if (source.Contains("limit("))
+            source += LimitFunction;
+        if (source.Contains("wrap("))
+            source += WrapFunction;
 
         // Generate evaluation class.
         // We don't reload the script yet to avoid unnecessary overhead for unused previews.
         Script = new();
-        Script.SourceCode = code;
+        Script.SourceCode = source;
     }
 
     /* Public methods. */
+    public override string ToString()
+    {
+        return Script.SourceCode;
+    }
+
     /// <summary>
     /// Create an instance of this preview.
     /// </summary>
@@ -126,7 +132,7 @@ public abstract class Preview
         // Reload the class if it wasn't done yet.
         if (!IsReloaded)
         {
-            Script.Reload();
+            Error error = Script.Reload();
             IsReloaded = true;
         }
 

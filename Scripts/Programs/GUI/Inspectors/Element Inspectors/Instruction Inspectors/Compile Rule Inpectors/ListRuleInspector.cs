@@ -36,6 +36,10 @@ public partial class ListRuleInspector : RuleInspector
         list.Template = template;
         list.Template.Name = "Template";
         ReplaceContainer(list);
+
+        // Preview.
+        Preview = PreviewDict.ForListRule(set, rule).CreateInstance();
+        UpdatePreview();
     }
 
     /* Public methods. */

@@ -52,7 +52,7 @@ public static class PreviewDict
     {
         if (!Has(definition.EditorNode))
             Add(definition.EditorNode, new EditorNodePreview(set, definition));
-        return Previews[definition] as EditorNodePreview;
+        return Previews[definition.EditorNode] as EditorNodePreview;
     }
 
     /// <summary>

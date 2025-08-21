@@ -91,6 +91,7 @@ public partial class ParameterInspector : Inspector
             Preview?.SetValue(Field.Value);
         else
             Preview?.SetValue("");
+        Godot.GD.Print(Parameter.ID + " " + Preview);
     }
 
     /* Private methods. */
