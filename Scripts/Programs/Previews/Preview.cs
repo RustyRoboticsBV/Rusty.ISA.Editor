@@ -54,6 +54,50 @@ public abstract class Preview
     /* Constructors. */
     public Preview(string code)
     {
+        Script = GenerateScript(code);
+    }
+
+    /* Public methods. */
+    public override string ToString()
+    {
+        return Script.SourceCode;
+    }
+
+    /// <summary>
+    /// Create an instance of this preview.
+    /// </summary>
+    public abstract PreviewInstance CreateInstance();
+
+    /* Internal methods. */
+    /// <summary>
+    /// Emit an instance of the generated preview script.
+    /// </summary>
+    internal GodotObject Emit()
+    {
+        // Reload the class if it wasn't done yet.
+        if (!IsReloaded)
+        {
+            // Reload the script.
+            Error error = Script.Reload();
+
+            // If there was an error, replace the script with an error code script.
+            if (error != Error.Ok)
+            {
+                Script = GenerateScript($"return \"ERROR: SYNTAX ERROR {error}\";");
+                Script.Reload();
+            }
+
+            // Change state to "reloaded and ready".
+            IsReloaded = true;
+        }
+
+        // Create new instance of script.
+        return Script.New().AsGodotObject();
+    }
+
+    /* Private methods. */
+    private static GDScript GenerateScript(string code)
+    {
         // Generate source.
         if (code == null)
             code = "";
@@ -115,35 +159,8 @@ public abstract class Preview
 
         // Generate evaluation class.
         // We don't reload the script yet to avoid unnecessary overhead for unused previews.
-        Script = new();
-        Script.SourceCode = source;
-    }
-
-    /* Public methods. */
-    public override string ToString()
-    {
-        return Script.SourceCode;
-    }
-
-    /// <summary>
-    /// Create an instance of this preview.
-    /// </summary>
-    public abstract PreviewInstance CreateInstance();
-
-    /* Internal methods. */
-    /// <summary>
-    /// Emit an instance of the generated preview script.
-    /// </summary>
-    internal GodotObject Emit()
-    {
-        // Reload the class if it wasn't done yet.
-        if (!IsReloaded)
-        {
-            Error error = Script.Reload();
-            IsReloaded = true;
-        }
-
-        // Create new instance of script.
-        return Script.New().AsGodotObject();
+        GDScript script = new();
+        script.SourceCode = source;
+        return script;
     }
 }
