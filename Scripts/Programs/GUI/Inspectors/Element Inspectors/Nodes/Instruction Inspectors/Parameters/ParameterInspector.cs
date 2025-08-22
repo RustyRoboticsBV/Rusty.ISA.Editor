@@ -6,7 +6,7 @@
 public partial class ParameterInspector : ResourceInspector
 {
     /* Public properties. */
-    public InstructionDefinition InstructionDefinition { get; private set; }
+    public InstructionDefinition Definition { get; private set; }
     public Parameter Parameter { get; private set; }
 
     public virtual object Value
@@ -31,8 +31,9 @@ public partial class ParameterInspector : ResourceInspector
     /* Constructors. */
     public ParameterInspector(InstructionSet set, string opcode, string parameterID) : base(set)
     {
-        InstructionDefinition = set[opcode];
-        Parameter = InstructionDefinition.GetParameter(parameterID);
+        // Store data.
+        Definition = set[opcode];
+        Parameter = Definition.GetParameter(parameterID);
 
         // Create field.
         IField field = CreateField(Parameter);
@@ -42,25 +43,30 @@ public partial class ParameterInspector : ResourceInspector
             field.Name = "Field";
         }
 
-        // Preview.
-        Preview = PreviewDict.ForParameter(InstructionDefinition, parameterID)?.CreateInstance();
-        Changed += UpdatePreview;
+        // Enable preview.
+        EnablePreview();
     }
 
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        ParameterInspector copy = new(InstructionSet, InstructionDefinition.Opcode, Parameter.ID);
+        ParameterInspector copy = new(InstructionSet, Definition.Opcode, Parameter.ID);
         copy.CopyFrom(this);
         return copy;
     }
 
     public override void CopyFrom(IGuiElement other)
     {
+        DisablePreview();
+
+        // Base resource inspector copy.
         base.CopyFrom(other);
 
+        // Copy parameter.
         if (other is ParameterInspector inspector)
             Parameter = inspector.Parameter;
+
+        EnablePreview();
     }
 
     public void ParseValue(string value)
@@ -98,12 +104,15 @@ public partial class ParameterInspector : ResourceInspector
     }
 
     /* Protected methods. */
-    protected virtual void UpdatePreview()
+    protected override void UpdatePreview()
     {
-        if (Field != null)
-            Preview?.SetValue(Field.Value);
-        else
-            Preview?.SetValue("");
+        // Init.
+        if (Preview == null)
+            Preview = PreviewDict.ForParameter(InstructionSet[Definition.Opcode], Parameter.ID).CreateInstance();
+
+        // Update.
+        if (Preview != null && Field != null)
+            Preview.SetValue(Field.Value);
     }
 
     /* Private methods. */

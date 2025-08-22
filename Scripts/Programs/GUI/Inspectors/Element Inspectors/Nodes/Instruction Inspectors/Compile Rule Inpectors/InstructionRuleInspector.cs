@@ -23,8 +23,8 @@ public partial class InstructionRuleInspector : RuleInspector
         InstructionInspector instruction = new(set, rule.Opcode);
         Add(Instruction, instruction);
 
-        // Set preview.
-        Preview?.SetElement(instruction.Preview);
+        // Enable preview.
+        EnablePreview();
     }
 
     /* Public methods. */
@@ -41,5 +41,13 @@ public partial class InstructionRuleInspector : RuleInspector
     }
 
     /* Protected methods. */
-    protected override void UpdatePreview() { }
+    protected override void UpdatePreview()
+    {
+        // Init.
+        base.UpdatePreview();
+
+        // Update.
+        if (Preview != null)
+            Preview.SetElement(GetInstructionInspector().Preview);
+    }
 }

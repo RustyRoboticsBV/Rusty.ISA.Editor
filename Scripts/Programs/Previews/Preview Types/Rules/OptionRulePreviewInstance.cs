@@ -26,8 +26,11 @@ public partial class OptionRulePreviewInstance : RulePreviewInstance
         Input.SetValue(OptionRulePreview.Enabled, value);
     }
 
-    public void SetElement(PreviewInstance value)
+    public void SetElement(bool enabled, PreviewInstance value)
     {
-        Input.SetValue(RulePreview.Element, value);
+        if (enabled)
+            Input.SetValue(RulePreview.Element, value);
+        else
+            Input.SetValue(RulePreview.Element, "");
     }
 }

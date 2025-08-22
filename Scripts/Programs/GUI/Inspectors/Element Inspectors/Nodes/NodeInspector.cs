@@ -7,7 +7,7 @@ public partial class NodeInspector : ElementInspector
     private const string Instruction = "instruction";
 
     /* Public properties. */
-    public InstructionDefinition InstructionDefinition => GetInstructionInspector().Definition;
+    public InstructionDefinition Definition => GetInstructionInspector().Definition;
 
     public new EditorNodePreviewInstance Preview
     {
@@ -29,16 +29,14 @@ public partial class NodeInspector : ElementInspector
         InstructionInspector instruction = new(set, opcode);
         Add(Instruction, instruction);
 
-        // Preview.
-        Preview = PreviewDict.ForEditorNode(set, set[opcode])?.CreateInstance();
-        UpdatePreview();
-        Changed += UpdatePreview;
+        // Enable preview.
+        EnablePreview();
     }
 
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        NodeInspector copy = new(InstructionSet, InstructionDefinition.Opcode);
+        NodeInspector copy = new(InstructionSet, Definition.Opcode);
         copy.CopyFrom(this);
         return copy;
     }
@@ -54,17 +52,27 @@ public partial class NodeInspector : ElementInspector
     }
 
     /* Private methods. */
-    private void UpdatePreview()
+    protected override void UpdatePreview()
     {
-        var instructionInspector = GetInstructionInspector();
+        // Init.
+        if (Preview == null)
+            Preview = PreviewDict.ForEditorNode(InstructionSet, Definition).CreateInstance();
 
-        // Copy preview input from the instruction inspector.
-        foreach (var value in instructionInspector.Preview.Input)
+        // Update.
+        if (Preview != null)
         {
-            Preview?.Input.SetValue(value.Key, value.Value);
+            var instructionInspector = GetInstructionInspector();
+
+            // Parameters, rules & display name.
+            foreach (var value in instructionInspector.Preview.Input)
+            {
+                Preview.Input.SetValue(value.Key, value.Value);
+            }
+
+            // Main.
+            Preview.SetMain(instructionInspector.Preview);
         }
 
-        // Add main preview.
-        Preview?.SetMain(instructionInspector.Preview);
+        Godot.GD.Print(Preview);
     }
 }

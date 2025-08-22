@@ -1,6 +1,4 @@
-﻿using Godot;
-
-namespace Rusty.ISA.Editor;
+﻿namespace Rusty.ISA.Editor;
 
 /// <summary>
 /// An output dummy inspector.
@@ -27,22 +25,20 @@ public partial class OutputInspector : ParameterInspector
         : base(set, opcode, outputID)
     {
         Visible = false;
-
-        Preview = PreviewDict.ForOutput(set[opcode], outputID)?.CreateInstance();
     }
 
     /* Public methods. */
     public override IGuiElement Copy()
     {
-        OutputInspector copy = new(InstructionSet, InstructionDefinition.Opcode, Parameter.ID);
+        OutputInspector copy = new(InstructionSet, Definition.Opcode, Parameter.ID);
         copy.CopyFrom(this);
         return copy;
     }
 
     /// <summary>
-    /// Update parameter previews.
+    /// Update parameter preview values.
     /// </summary>
-    public void UpdatePreview(InstructionInspector instructionInspector)
+    public void UpdatePreviewParameterValues(InstructionInspector instructionInspector)
     {
         for (int i = 0; i < instructionInspector.GetContentsCount(); i++)
         {

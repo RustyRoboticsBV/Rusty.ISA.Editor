@@ -18,10 +18,8 @@ public partial class InstructionInspector : ResourceInspector
     /* Constructors. */
     public InstructionInspector(InstructionSet set, string opcode) : base(set)
     {
+        // Store data.
         Definition = set[opcode];
-
-        // Create preview.
-        Preview = PreviewDict.ForInstruction(set, Definition)?.CreateInstance();
 
         // Add pre-instructions.
         foreach (CompileRule rule in Definition.PreInstructions)
@@ -48,7 +46,8 @@ public partial class InstructionInspector : ResourceInspector
                 AddPreInstruction(rule.ID, element);
         }
 
-        Changed += UpdateOutputPreviews;
+        // Enable preview.
+        EnablePreview();
     }
 
     /* Public methods. */
@@ -61,11 +60,16 @@ public partial class InstructionInspector : ResourceInspector
 
     public override void CopyFrom(IGuiElement other)
     {
+        DisablePreview();
+
+        // Base resource inspector copy.
         base.CopyFrom(other);
+
+        // Copy definition.
         if (other is InstructionInspector inspector)
-        {
             Definition = inspector.Definition;
-        }
+
+        EnablePreview();
     }
 
     public RuleInspector GetPreInstruction(string id)
@@ -94,6 +98,36 @@ public partial class InstructionInspector : ResourceInspector
         return null;
     }
 
+    /* Protected methods. */
+    protected override void UpdatePreview()
+    {
+        // Init preview.
+        if (Preview == null)
+            Preview = PreviewDict.ForInstruction(InstructionSet, Definition)?.CreateInstance();
+
+        // Update preview.
+        if (Preview != null)
+        {
+            Preview.SetDisplayName(Definition.DisplayName);
+
+            for (int i = 0; i < GetContentsCount(); i++)
+            {
+                switch (GetAt(i))
+                {
+                    case ParameterInspector parameter:
+                        if (parameter is OutputInspector output)
+                            output.UpdatePreviewParameterValues(this);
+                        Preview.SetParameter(parameter.Parameter.ID, parameter.Preview);
+                        break;
+
+                    case RuleInspector rule:
+                        Preview.SetRule(rule.Rule.ID, rule.Preview);
+                        break;
+                }
+            }
+        }
+    }
+
     /* Private methods. */
     private void AddParameter(string key, ParameterInspector inspector)
     {
@@ -114,23 +148,5 @@ public partial class InstructionInspector : ResourceInspector
         Add(PostInstruction + key, inspector);
 
         Preview?.SetRule(key, inspector.Preview);
-    }
-
-    private void UpdateOutputPreviews()
-    {
-        // Update output previews.
-        for (int i = 0; i < GetContentsCount(); i++)
-        {
-            switch (GetAt(i))
-            {
-                case ParameterInspector parameter:
-                    if (parameter is OutputInspector output)
-                    {
-                        output.UpdatePreview(this);
-                        Preview.SetParameter(output.Parameter.ID, output.Preview);
-                    }
-                    break;
-            }
-        }
     }
 }

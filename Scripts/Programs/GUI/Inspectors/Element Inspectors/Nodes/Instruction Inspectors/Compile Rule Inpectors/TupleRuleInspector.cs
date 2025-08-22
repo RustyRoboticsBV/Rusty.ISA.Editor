@@ -22,13 +22,8 @@ public partial class TupleRuleInspector : RuleInspector
             Add(GetContentsCount().ToString(), childInspector);
         }
 
-        // Set preview.
-        for (int i = 0; i < GetElementCount(); i++)
-        {
-            RuleInspector inspector = GetElementInspector(i);
-            Preview?.SetElement(i, inspector.Rule.ID, inspector.Preview);
-        }
-        Preview?.SetCount(GetElementCount());
+        // Enable preview.
+        EnablePreview();
     }
 
     /* Public methods. */
@@ -50,5 +45,23 @@ public partial class TupleRuleInspector : RuleInspector
     }
 
     /* Protected methods. */
-    protected override void UpdatePreview() { }
+    protected override void UpdatePreview()
+    {
+        // Init.
+        base.UpdatePreview();
+
+        // Update.
+        if (Preview != null)
+        {
+            // Elements.
+            for (int i = 0; i < GetElementCount(); i++)
+            {
+                RuleInspector inspector = GetElementInspector(i);
+                Preview.SetElement(i, inspector.Rule.ID, inspector.Preview);
+            }
+
+            // Count.
+            Preview.SetCount(GetElementCount());
+        }
+    }
 }

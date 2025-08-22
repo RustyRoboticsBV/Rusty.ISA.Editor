@@ -1,4 +1,6 @@
-﻿namespace Rusty.ISA.Editor;
+﻿using System.Data;
+
+namespace Rusty.ISA.Editor;
 
 public partial class ListRuleInspector : RuleInspector
 {
@@ -17,6 +19,7 @@ public partial class ListRuleInspector : RuleInspector
     {
         // Create element template.
         RuleInspector template = RuleInspectorFactory.Create(set, rule.Type);
+        template.DisablePreview();
         FoldoutBorderContainer templateFoldout = new();
         templateFoldout.FoldoutText = rule.Type.DisplayName;
         templateFoldout.IsOpen = true;
@@ -30,9 +33,8 @@ public partial class ListRuleInspector : RuleInspector
         list.Template.Name = "Template";
         ReplaceContainer(list);
 
-        // Preview.
-        Preview = PreviewDict.ForListRule(set, rule).CreateInstance();
-        UpdatePreview();
+        // Enable preview.
+        EnablePreview();
     }
 
     /* Public methods. */
@@ -61,11 +63,21 @@ public partial class ListRuleInspector : RuleInspector
     /* Protected methods. */
     protected override void UpdatePreview()
     {
-        for (int i = 0; i < GetElementCount(); i++)
+        // Init.
+        base.UpdatePreview();
+
+        // Update.
+        if (Preview != null)
         {
-            RuleInspector inspector = GetElementInspector(i);
-            Preview?.SetElement(i, inspector.Preview);
+            // Elements.
+            for (int i = 0; i < GetElementCount(); i++)
+            {
+                RuleInspector inspector = GetElementInspector(i);
+                Preview.SetElement(i, inspector.Preview);
+            }
+
+            // Count.
+            Preview.SetCount(GetElementCount());
         }
-        Preview?.SetCount(GetElementCount());
     }
 }

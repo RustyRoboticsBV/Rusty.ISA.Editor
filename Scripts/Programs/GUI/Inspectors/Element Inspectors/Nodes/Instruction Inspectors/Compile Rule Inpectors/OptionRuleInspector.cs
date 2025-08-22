@@ -23,6 +23,9 @@ public partial class OptionRuleInspector : RuleInspector
         // Create child rule inspector.
         RuleInspector childInspector = RuleInspectorFactory.Create(set, rule.Type);
         Add("target", childInspector);
+
+        // Enable preview.
+        EnablePreview();
     }
 
     /* Public methods. */
@@ -46,7 +49,17 @@ public partial class OptionRuleInspector : RuleInspector
     /* Protected methods. */
     protected override void UpdatePreview()
     {
-        Preview?.SetEnabled(GetEnabled());
-        Preview?.SetElement(GetChildRule().Preview);
+        // Init.
+        base.UpdatePreview();
+
+        // Update.
+        if (Preview != null)
+        {
+            // Enabled.
+            Preview.SetEnabled(GetEnabled());
+
+            // Element.
+            Preview.SetElement(GetEnabled(), GetChildRule().Preview);
+        }
     }
 }

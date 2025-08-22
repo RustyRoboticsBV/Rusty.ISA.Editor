@@ -71,7 +71,9 @@ public sealed partial class PreviewInput : Resource, System.Collections.Generic.
         if (Values.ContainsKey(key))
         {
             Variant value = Values[key];
-            if (value.AsGodotObject() is PreviewInstance preview)
+            if (value.VariantType == Variant.Type.Nil)
+                return "ERROR: NULL VALUE " + key;
+            else if (value.AsGodotObject() is PreviewInstance preview)
                 return preview.Evaluate();
             else
                 return value;

@@ -96,11 +96,7 @@ public abstract class Preview
                 if (int.TryParse(elementIndex, out int index))
                     key = $"\"{key}\"";
                 else
-                {
-                    GD.Print(key);
                     key = $"\"{Element}\" + str({elementIndex})";
-                    GD.Print(key);
-                }
             }
             else
                 key = $"\"{key}\"";

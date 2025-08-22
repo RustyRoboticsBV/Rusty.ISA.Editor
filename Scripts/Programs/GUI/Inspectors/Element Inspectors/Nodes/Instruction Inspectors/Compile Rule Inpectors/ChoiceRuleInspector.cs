@@ -31,8 +31,8 @@ public partial class ChoiceRuleInspector : RuleInspector
             Add(GetContentsCount().ToString(), childInspector);
         }
 
-        // Create preview.
-        Preview = PreviewDict.ForChoiceRule(set, Rule)?.CreateInstance();
+        // Enable preview.
+        EnablePreview();
     }
 
     /* Public methods. */
@@ -61,7 +61,17 @@ public partial class ChoiceRuleInspector : RuleInspector
     /* Protected methods. */
     protected override void UpdatePreview()
     {
-        Preview.SetSelected(GetSelectedIndex());
-        Preview.SetElement(GetSelectedElement().Preview);
+        // Init.
+        base.UpdatePreview();
+
+        // Update.
+        if (Preview != null)
+        {
+            // Selected element index.
+            Preview.SetSelected(GetSelectedIndex());
+
+            // Selected element preview.
+            Preview.SetElement(GetSelectedElement().Preview);
+        }
     }
 }
