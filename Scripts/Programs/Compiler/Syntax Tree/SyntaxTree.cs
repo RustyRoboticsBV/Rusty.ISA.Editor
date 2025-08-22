@@ -119,6 +119,7 @@ public class SyntaxTree
         // Spawn objects.
         ledger.Clear();
         Dictionary<RootNode, LedgerItem> items = new();
+        Dictionary<string, LedgerFrame> frames = new();
         for (int i = 0; i < graph.NodeCount; i++)
         {
             RootNode node = graph.GetNodeAt(i);
@@ -134,20 +135,39 @@ public class SyntaxTree
                     items.Add(node, SpawnComment(ledger, node));
                     break;
                 case BuiltIn.FrameOpcode:
-                    items.Add(node, SpawnFrame(ledger, node));
+                    var frame = SpawnFrame(ledger, node) as LedgerFrame;
+                    items.Add(node, frame);
+                    frames.Add(node.GetArgument(BuiltIn.FrameID), frame);
                     break;
             }
         }
 
-        // Copy connections to graph edit.
+        // Copy connections to graph edit and add to frames.
+        Godot.GD.Print("FUCK");
         foreach (var item in items)
         {
+            // Connections.
             for (int i = 0; i < item.Key.OutputCount; i++)
             {
                 RootNode fromNode = item.Key;
                 RootNode toNode = fromNode.GetOutputAt(i).To?.Node;
                 if (toNode != null)
                     ledger.ConnectElements(items[fromNode], i, items[toNode]);
+            }
+
+            // Add to frame.
+            SubNode member = item.Key.GetChildWith(BuiltIn.FrameMemberOpcode);
+            if (member != null)
+            {
+                string frameID = member.GetArgument(BuiltIn.FrameMemberID);
+                try
+                {
+                    frames[frameID].Element.AddElement(item.Value.Element);
+                }
+                catch
+                {
+                    Log.Error($"Cannot find frame with id '{frameID}'.");
+                }
             }
         }
 
@@ -375,9 +395,15 @@ public class SyntaxTree
     /// </summary>
     private LedgerItem SpawnComment(Ledger ledger, RootNode root)
     {
+        // Spawn comment at (x, y).
         int.TryParse(root.GetArgument(BuiltIn.CommentX), out int commentX);
         int.TryParse(root.GetArgument(BuiltIn.CommentY), out int commentY);
-        return ledger.CreateElement(InstructionSet[root.Opcode], new(commentX, commentY));
+        var comment = ledger.CreateElement(InstructionSet[root.Opcode], new(commentX, commentY)) as LedgerComment;
+
+        // Set text.
+        comment.Inspector.GetTextField().Value = root.GetArgument(BuiltIn.CommentText);
+
+        return comment;
     }
 
     /// <summary>
@@ -385,9 +411,16 @@ public class SyntaxTree
     /// </summary>
     private LedgerItem SpawnFrame(Ledger ledger, RootNode root)
     {
+        // Spawn frame at (x, y).
         int.TryParse(root.GetArgument(BuiltIn.FrameX), out int frameX);
         int.TryParse(root.GetArgument(BuiltIn.FrameY), out int frameY);
-        return ledger.CreateElement(InstructionSet[root.Opcode], new(frameX, frameY));
+        var frame = ledger.CreateElement(InstructionSet[root.Opcode], new(frameX, frameY)) as LedgerFrame;
+
+        // Set title & color.
+        frame.Inspector.GetTitleField().Value = root.GetArgument(BuiltIn.FrameTitle);
+        frame.Inspector.GetColorField().Value = StringUtility.ParseColor(root.GetArgument(BuiltIn.FrameColor));
+
+        return frame;
     }
 
     /// <summary>

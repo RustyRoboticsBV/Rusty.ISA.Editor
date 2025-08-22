@@ -72,7 +72,5 @@ public partial class NodeInspector : ElementInspector
             // Main.
             Preview.SetMain(instructionInspector.Preview);
         }
-
-        Godot.GD.Print(Preview);
     }
 }
