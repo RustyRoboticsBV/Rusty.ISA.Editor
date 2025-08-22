@@ -18,8 +18,8 @@ public partial class CommentInspector : ElementInspector
         return copy;
     }
 
-    public IField GetTextField()
+    public ParameterInspector GetTextField()
     {
-        return GetAt(BuiltIn.CommentText) as IField;
+        return GetAt(BuiltIn.CommentText) as ParameterInspector;
     }
 }

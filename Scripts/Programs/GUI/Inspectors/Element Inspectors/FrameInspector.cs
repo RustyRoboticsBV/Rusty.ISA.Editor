@@ -22,13 +22,13 @@ public partial class FrameInspector : ElementInspector
         return copy;
     }
 
-    public IField GetTitleField()
+    public ParameterInspector GetTitleField()
     {
-        return GetAt(BuiltIn.FrameTitle) as IField;
+        return GetAt(BuiltIn.FrameTitle) as ParameterInspector;
     }
 
-    public IField GetColorField()
+    public ParameterInspector GetColorField()
     {
-        return GetAt(BuiltIn.FrameColor) as IField;
+        return GetAt(BuiltIn.FrameColor) as ParameterInspector;
     }
 }
