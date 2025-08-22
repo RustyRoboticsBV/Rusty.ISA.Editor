@@ -11,6 +11,7 @@ public abstract class Preview
 {
     /* Public constants. */
     public const string DisplayName = "name";
+    public const string Element = "element";
 
     /* Fields. */
     private const string SkeletonCode = "func eval(_input) -> String:\n    EVAL";
@@ -89,8 +90,18 @@ public abstract class Preview
 
             // Extract the key and replace it.
             string key = span.Slice(i, end).ToString();
-            if (key.StartsWith("element"))
-                key = key.Substring(7);
+            if (key != Element && key.StartsWith(Element))
+            {
+                string elementIndex = key.Substring(Element.Length);
+                if (int.TryParse(elementIndex, out int index))
+                    key = $"\"{key}\"";
+                else
+                {
+                    GD.Print(key);
+                    key = $"\"{Element}\" + str({elementIndex})";
+                    GD.Print(key);
+                }
+            }
             else
                 key = $"\"{key}\"";
             string replacement = $"_input.GetValue({key})";

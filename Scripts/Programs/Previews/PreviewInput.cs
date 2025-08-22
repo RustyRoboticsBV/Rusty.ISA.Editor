@@ -64,7 +64,7 @@ public sealed partial class PreviewInput : Resource, System.Collections.Generic.
     }
 
     /// <summary>
-    /// Get a value from the preview input values. Returns the empty string if the key did not exist.
+    /// Get a value from the preview input values. Returns an error code if the value did not exist.
     /// </summary>
     public Variant GetValue(string key)
     {
@@ -90,7 +90,7 @@ public sealed partial class PreviewInput : Resource, System.Collections.Generic.
     }
 
     /// <summary>
-    /// Remove a value from the input values.
+    /// Remove a value from the input values. Does nothing if the value did not exist.
     /// </summary>
     public void RemoveValue(string key)
     {
