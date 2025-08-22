@@ -18,6 +18,15 @@ public partial class SlotLabels : HBoxContainer
         get => Right.Text;
         set => Right.Text = value;
     }
+    public int FontSize
+    {
+        get => GetThemeFontSize("font_size");
+        set
+        {
+            Left.AddThemeFontSizeOverride("font_size", value);
+            Right.AddThemeFontSizeOverride("font_size", value);
+        }
+    }
 
     /* Private properties. */
     private Label Left { get; set; }

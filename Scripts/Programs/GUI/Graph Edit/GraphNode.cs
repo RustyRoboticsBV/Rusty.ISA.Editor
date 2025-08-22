@@ -49,6 +49,8 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     private Label Preview { get; set; }
     private Control BottomMargin { get; set; }
 
+    private static int FontSize => 13;
+
     /* Public events. */
     public new event Action<IGraphElement> NodeSelected;
     public new event Action<IGraphElement> NodeDeselected;
@@ -86,6 +88,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         // Add top margin.
         Control marginTop = new();
         marginTop.CustomMinimumSize = new(0f, 5f);
+        marginTop.MouseFilter = MouseFilterEnum.Ignore;
         AddChild(marginTop);
 
         // Add default ports.
@@ -102,12 +105,13 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         PreviewContainer.Hide();
 
         Preview = new();
-        Preview.AddThemeFontSizeOverride("font_size", 13);
+        Preview.AddThemeFontSizeOverride("font_size", FontSize + 1);
         PreviewContainer.AddChild(Preview);
 
         // Add bottom margin.
         BottomMargin = new();
         BottomMargin.CustomMinimumSize = new(0f, 5f);
+        BottomMargin.MouseFilter = MouseFilterEnum.Ignore;
         AddChild(BottomMargin);
         BottomMargin.Name = "Right Margin";
 
@@ -223,6 +227,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
             SlotLabels labels = new();
             labels.CustomMinimumSize = new(0f, 25f);
             labels.MouseFilter = MouseFilterEnum.Ignore;
+            labels.FontSize = FontSize;
             SlotLabels.Add(labels);
             AddChild(labels);
         }
