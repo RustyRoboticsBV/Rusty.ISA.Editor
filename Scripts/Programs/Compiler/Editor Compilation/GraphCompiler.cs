@@ -255,14 +255,7 @@ public abstract class GraphCompiler : CompilerTool
     /// </summary>
     private static string GetLabel(RootNode node)
     {
-        try
-        {
-            return node.GetChildWith(BuiltIn.LabelOpcode).Data.GetArgument(BuiltIn.LabelName);
-        }
-        catch
-        {
-            return "MISSING_LABEL_ERROR";
-        }
+        return node.GetChildWith(BuiltIn.LabelOpcode).Data.GetArgument(BuiltIn.LabelName);
     }
 
     /// <summary>

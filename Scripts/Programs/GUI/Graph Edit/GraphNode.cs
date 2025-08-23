@@ -36,8 +36,12 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         get => Preview.Text;
         set
         {
-            Preview.Text = value;
-            PreviewContainer.Visible = Preview.Text != "";
+            if (Preview.Text != value)
+            {
+                Preview.Text = value;
+                PreviewContainer.Visible = Preview.Text != "";
+                ScheduledFrameUpdate = true;
+            }
         }
     }
 
@@ -48,6 +52,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     private MarginContainer PreviewContainer { get; set; }
     private Label Preview { get; set; }
     private Control BottomMargin { get; set; }
+    private bool ScheduledFrameUpdate { get; set; }
 
     private static int FontSize => 13;
 
@@ -203,6 +208,13 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
                 totalRect = totalRect.Merge(new Rect2(control.Position, control.Size));
         }
         Size = new(0, totalRect.Size.Y);
+
+        // Update frame if necessary.
+        if (ScheduledFrameUpdate)
+        {
+            ScheduledFrameUpdate = false;
+            Frame?.UpdateSizeAndPosition();
+        }
     }
 
     /* Private methods. */

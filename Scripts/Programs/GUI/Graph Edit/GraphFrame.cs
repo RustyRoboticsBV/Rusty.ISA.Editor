@@ -92,7 +92,7 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         element.DeleteRequest += OnElementDeleted;
 
         // Alter position & size.
-        UpdateSizePosition();
+        UpdateSizeAndPosition();
     }
 
     /// <summary>
@@ -106,37 +106,13 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         element.Dragged -= OnElementDragged;
 
         // Alter position & size.
-        UpdateSizePosition();
+        UpdateSizeAndPosition();
     }
 
-    /* Godot overrides. */
-    public override void _Process(double delta)
-    {
-        // Update alpha.
-        float alpha = Selected ? 0.75f : 0.5f;
-        TintColor = new(TintColor.R, TintColor.G, TintColor.B, alpha);
-
-        // If we move the frame, also move members with it.
-        if (LastOffset != PositionOffset)
-        {
-            for (int i = 0; i < Elements.Count; i++)
-            {
-                Elements[i].PositionOffset = PositionOffset + ElementOffsets[i];
-            }
-            LastOffset = PositionOffset;
-        }
-
-        // Update drag margin.
-        // We use the smallest of the size axes' divided by two, because otherwise Godot will spam the 
-        // console with internal error logs if the drag margin exceeds the half-size on one of the two
-        // axes.
-        // TODO: Refactor if this ever gets fixed, because this means that our drag area won't encompass
-        // the entire frame if it's not perfectly square.
-        DragMargin = Mathf.FloorToInt(Mathf.Min(Size.X, Size.Y) / 2f);
-    }
-
-    /* Private methods. */
-    private void UpdateSizePosition()
+    /// <summary>
+    /// Update the frame's size and position.
+    /// </summary>
+    public void UpdateSizeAndPosition()
     {
         if (Elements.Count == 0)
         {
@@ -186,10 +162,36 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
 
         // Also update parent frame.
         if (Frame != null)
-            Frame.UpdateSizePosition();
+            Frame.UpdateSizeAndPosition();
     }
 
+    /* Godot overrides. */
+    public override void _Process(double delta)
+    {
+        // Update alpha.
+        float alpha = Selected ? 0.75f : 0.5f;
+        TintColor = new(TintColor.R, TintColor.G, TintColor.B, alpha);
 
+        // If we move the frame, also move members with it.
+        if (LastOffset != PositionOffset)
+        {
+            for (int i = 0; i < Elements.Count; i++)
+            {
+                Elements[i].PositionOffset = PositionOffset + ElementOffsets[i];
+            }
+            LastOffset = PositionOffset;
+        }
+
+        // Update drag margin.
+        // We use the smallest of the size axes' divided by two, because otherwise Godot will spam the 
+        // console with internal error logs if the drag margin exceeds the half-size on one of the two
+        // axes.
+        // TODO: Refactor if this ever gets fixed, because this means that our drag area won't encompass
+        // the entire frame if it's not perfectly square.
+        DragMargin = Mathf.FloorToInt(Mathf.Min(Size.X, Size.Y) / 2f);
+    }
+
+    /* Private methods. */
     private void OnNodeSelected()
     {
         NodeSelected?.Invoke(this);
@@ -214,7 +216,7 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     private void OnElementDragged(IGraphElement element)
     {
         if (!Selected)
-            UpdateSizePosition();
+            UpdateSizeAndPosition();
     }
 
     private void OnElementDeleted(IGraphElement element)
