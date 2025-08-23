@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
 
@@ -66,10 +67,8 @@ public abstract class GraphCompiler : CompilerTool
         for (int i = 0; i < startNodes.Length; i++)
         {
             RootNode node = graph.GetNodeAt(startNodes[i]);
-            ProcessSubGraph(ledger.Set, graph, node, executionOrder, ref nextLabel);
+            ProcessSubGraph(ledger.Set, graph, startNodes, node, executionOrder, ref nextLabel);
         }
-
-        //Godot.GD.Print(graph);
 
         // Wrap in a graph root block.
         RootNode graphNode = MakeRoot(ledger.Set, BuiltIn.GraphOpcode);
@@ -91,7 +90,7 @@ public abstract class GraphCompiler : CompilerTool
     /// - Inserting goto instructions.<br/>
     /// - Setting output arguments.
     /// </summary>
-    private static void ProcessSubGraph(InstructionSet instructionSet, Graph graph, RootNode node, BiDict<int, RootNode> executionOrder, ref int nextLabel)
+    private static void ProcessSubGraph(InstructionSet instructionSet, Graph graph, int[] startNodes, RootNode node, BiDict<int, RootNode> executionOrder, ref int nextLabel)
     {
         // Do nothing if the node was already in the execution order.
         if (executionOrder.ContainsRight(node))
@@ -101,7 +100,7 @@ public abstract class GraphCompiler : CompilerTool
         executionOrder.Add(executionOrder.Count, node);
 
         // Add label if necessary.
-        if (NeedsLabel(node))
+        if (NeedsLabel(node, IsStartNode(graph, startNodes, node)))
         {
             SetLabel(instructionSet, node, nextLabel.ToString());
             nextLabel++;
@@ -125,7 +124,7 @@ public abstract class GraphCompiler : CompilerTool
                 from.ConnectTo(endGroup.CreateInput());
 
                 // Add label if necessary.
-                if (NeedsLabel(endGroup))
+                if (NeedsLabel(endGroup, false))
                 {
                     SetLabel(instructionSet, endGroup, nextLabel.ToString());
                     nextLabel++;
@@ -152,8 +151,8 @@ public abstract class GraphCompiler : CompilerTool
                 // Find output data.
                 CreateOutputs(gotoGroup);
 
-                // Add label if necessary.
-                if (NeedsLabel(gotoGroup))
+                // Add labels if necessary.
+                if (NeedsLabel(gotoGroup, false))
                 {
                     SetLabel(instructionSet, gotoGroup, nextLabel.ToString());
                     nextLabel++;
@@ -168,7 +167,7 @@ public abstract class GraphCompiler : CompilerTool
 
             // Else, continue with sub-graph.
             else
-                ProcessSubGraph(instructionSet, graph, from.To.Node, executionOrder, ref nextLabel);
+                ProcessSubGraph(instructionSet, graph, startNodes, from.To.Node, executionOrder, ref nextLabel);
         }
 
         // Set output arguments.
@@ -227,16 +226,19 @@ public abstract class GraphCompiler : CompilerTool
     /// <summary>
     /// Check if a root node needs a label:<br/>
     /// - If it has more than one inputs.<br/>
+    /// - It is a start node and has one or more inputs.<br/>
     /// - If it connects to an output port associated with an output parameter.<br/>
     /// - If it connects to a goto.
     /// </summary>
-    private static bool NeedsLabel(RootNode node)
+    private static bool NeedsLabel(RootNode node, bool isStartNode)
     {
         if (node.InputCount > 1)
             return true;
 
         if (node.InputCount == 1)
         {
+            if (isStartNode)
+                return true;
             OutputPort from = node.GetInputAt(0).From;
             if (!from.IsDefaultOutput)
                 return true;
@@ -253,7 +255,14 @@ public abstract class GraphCompiler : CompilerTool
     /// </summary>
     private static string GetLabel(RootNode node)
     {
-        return node.GetChildWith(BuiltIn.LabelOpcode).Data.GetArgument(BuiltIn.LabelName);
+        try
+        {
+            return node.GetChildWith(BuiltIn.LabelOpcode).Data.GetArgument(BuiltIn.LabelName);
+        }
+        catch
+        {
+            return "MISSING_LABEL_ERROR";
+        }
     }
 
     /// <summary>
@@ -273,5 +282,14 @@ public abstract class GraphCompiler : CompilerTool
 
         // Set label name argument.
         label.SetArgument(BuiltIn.LabelName, value);
+    }
+
+    /// <summary>
+    /// Check if a node is a start node.
+    /// </summary>
+    private static bool IsStartNode(Graph graph, int[] startNodes, RootNode node)
+    {
+        int indexInGraph = graph.IndexOfNode(node);
+        return Array.IndexOf(startNodes, indexInGraph) != -1;
     }
 }
