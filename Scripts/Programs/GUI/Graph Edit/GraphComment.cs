@@ -22,7 +22,18 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
     }
     public GraphFrame Frame { get; set; }
 
-    public string CommentText { get; set; } = "New comment.";
+    public string CommentText
+    {
+        get => Label.Text;
+        set
+        {
+            if (Label.Text != value)
+            {
+                Label.Text = value;
+                ScheduledFrameUpdate = true;
+            }
+        }
+    }
     public Color BgColor { get; set; } = new Color(0.13f, 0.13f, 0.13f, 0.75f);
     public Color TextColor { get; set; } = new Color(0f, 1f, 0f, 1f);
 
@@ -36,6 +47,8 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
     private MarginContainer LabelMargin { get; set; }
     private RichTextLabel Label { get; set; }
 
+    private bool ScheduledFrameUpdate { get; set; }
+
     /* Constructors. */
     public GraphComment()
     {
@@ -43,23 +56,23 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         CustomMinimumSize = new(200f, 40f);
 
         // Add contents.
+        LabelMargin = new();
+        LabelMargin.AddThemeConstantOverride("margin_left", 16);
+        LabelMargin.AddThemeConstantOverride("margin_right", 16);
+        LabelMargin.AddThemeConstantOverride("margin_bottom", 8);
+        LabelMargin.AddThemeConstantOverride("margin_top", 8);
+        AddChild(LabelMargin);
+
         Label = new()
         {
-            Name = "Text",
+            Name = "New comment.",
             SizeFlagsHorizontal = SizeFlags.ShrinkBegin,
             SizeFlagsVertical = SizeFlags.ExpandFill,
             FitContent = true,
             AutowrapMode = TextServer.AutowrapMode.Off,
             MouseFilter = MouseFilterEnum.Pass
         };
-
-        LabelMargin = new();
-        LabelMargin.AddThemeConstantOverride("margin_left", 16);
-        LabelMargin.AddThemeConstantOverride("margin_right", 16);
-        LabelMargin.AddThemeConstantOverride("margin_bottom", 8);
-        LabelMargin.AddThemeConstantOverride("margin_top", 8);
         LabelMargin.AddChild(Label);
-        AddChild(LabelMargin);
 
         // Add style overrides.
         AddThemeStyleboxOverride("panel_selected", new StyleBoxFlat()
@@ -104,12 +117,18 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         if (Label != null)
         {
             Label.Size = Vector2.Zero;
-            Label.Text = CommentText + " ";
             Label.AddThemeColorOverride("default_color", Selected ? EditorNodeInfo.SelectedTextColor : TextColor);
         }
 
         // Shrink to minimum size.
         Size = Vector2.Zero;
+
+        // Update frame.
+        if (ScheduledFrameUpdate)
+        {
+            ScheduledFrameUpdate = false;
+            Frame?.UpdateSizeAndPosition();
+        }
     }
 
     /* Public methods. */
