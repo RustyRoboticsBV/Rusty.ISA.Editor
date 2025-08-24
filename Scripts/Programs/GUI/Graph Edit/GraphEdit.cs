@@ -16,10 +16,6 @@ public partial class GraphEdit : Godot.GraphEdit
     public GraphEdges Edges { get; } = new();
 
     /* Public events. */
-    public event Action<IGraphElement> AddedElement;
-    public event Action<IGraphElement> SelectedElement;
-    public event Action<IGraphElement> DeselectedElement;
-    public event Action<IGraphElement> DeletedElement;
     public event Action RightClicked;
 
     /* Constructors. */
@@ -98,9 +94,6 @@ public partial class GraphEdit : Godot.GraphEdit
         element.NodeDeselected += OnElementDeselected;
         element.Dragged += OnElementDragged;
         element.DeleteRequest += OnElementDeleteRequest;
-
-        // Invoke event.
-        AddedElement?.Invoke(element);
     }
 
     public void RemoveElement(IGraphElement element)
@@ -168,12 +161,10 @@ public partial class GraphEdit : Godot.GraphEdit
 
     private void OnElementSelected(IGraphElement element)
     {
-        SelectedElement?.Invoke(element);
     }
 
     private void OnElementDeselected(IGraphElement element)
     {
-        DeselectedElement?.Invoke(element);
     }
 
     private void OnElementDragged(IGraphElement element)
@@ -241,9 +232,6 @@ public partial class GraphEdit : Godot.GraphEdit
                 Frames.Remove(frame);
                 break;
         }
-
-        // Invoke deleted event.
-        DeletedElement?.Invoke(element);
     }
 
     private void OnConnectionRequest(StringName fromNode, long fromPort, StringName toNode, long toPort)

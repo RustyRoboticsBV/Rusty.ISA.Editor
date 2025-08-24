@@ -27,9 +27,12 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     private List<Vector2> ElementOffsets { get; } = new();
 
     /* Public events. */
+    // TODO: Remove
     public new event Action<IGraphElement> NodeSelected;
     public new event Action<IGraphElement> NodeDeselected;
     public new event Action<IGraphElement> Dragged;
+    // END TODO
+
     public new event Action<IGraphElement> DeleteRequest;
 
     /* Constructors. */
@@ -194,6 +197,29 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         // TODO: Refactor if this ever gets fixed, because this means that our drag area won't encompass
         // the entire frame if it's not perfectly square.
         DragMargin = Mathf.FloorToInt(Mathf.Min(Size.X, Size.Y) / 2f);
+    }
+
+    public override void _GuiInput(InputEvent @event)
+    {
+        // Suppress built-in drag & selection.
+        if (@event is InputEventMouseButton mouseButton)
+        {
+            if (mouseButton.Pressed &&
+                (mouseButton.ButtonIndex == MouseButton.Left ||
+                 mouseButton.ButtonIndex == MouseButton.Right))
+            {
+                AcceptEvent();
+                return;
+            }
+        }
+        else if (@event is InputEventMouseMotion)
+        {
+            AcceptEvent();
+            return;
+        }
+
+        // Otherwise, let normal controls still work.
+        base._GuiInput(@event);
     }
 
     /* Private methods. */

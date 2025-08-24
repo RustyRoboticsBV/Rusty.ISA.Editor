@@ -38,9 +38,12 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
     public Color TextColor { get; set; } = new Color(0f, 1f, 0f, 1f);
 
     /* Public events. */
+    // TODO: remove
     public new event Action<IGraphElement> NodeSelected;
     public new event Action<IGraphElement> NodeDeselected;
     public new event Action<IGraphElement> Dragged;
+    // END TODO
+
     public new event Action<IGraphElement> DeleteRequest;
 
     /* Private properties. */
@@ -92,12 +95,6 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
                 titleContainer.RemoveChild(titleContainer.GetChild(0, true));
             }
         }
-
-        // Subscribe to events.
-        base.NodeSelected += OnNodeSelected;
-        base.NodeDeselected += OnNodeDeselected;
-        base.Dragged += OnDragged;
-        base.DeleteRequest += OnDeleteRequest;
     }
 
     /* Public methods. */
@@ -147,24 +144,26 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         }
     }
 
-    /* Private methods. */
-    private void OnNodeSelected()
+    public override void _GuiInput(InputEvent @event)
     {
-        NodeSelected?.Invoke(this);
-    }
+        // Suppress built-in drag & selection.
+        if (@event is InputEventMouseButton mouseButton)
+        {
+            if (mouseButton.Pressed &&
+                (mouseButton.ButtonIndex == MouseButton.Left ||
+                 mouseButton.ButtonIndex == MouseButton.Right))
+            {
+                AcceptEvent();
+                return;
+            }
+        }
+        else if (@event is InputEventMouseMotion)
+        {
+            AcceptEvent();
+            return;
+        }
 
-    private void OnNodeDeselected()
-    {
-        NodeDeselected?.Invoke(this);
-    }
-
-    private void OnDeleteRequest()
-    {
-        RequestDelete();
-    }
-
-    private void OnDragged(Vector2 from, Vector2 to)
-    {
-        Dragged?.Invoke(this);
+        // Otherwise, let normal controls still work.
+        base._GuiInput(@event);
     }
 }

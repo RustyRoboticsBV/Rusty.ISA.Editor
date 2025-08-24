@@ -26,15 +26,15 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
 
     /* Private propertise. */
     private Label Slots { get; set; }
-    private bool Dragging { get; set; }
-    private Vector2 DragStartPositionOffset { get; set; }
-    private Vector2 DragStartMousePosition { get; set; }
 
     /* Public events. */
+    public new event Action<IGraphElement> DeleteRequest;
+
+    // TODO: remove
     public new event Action<IGraphElement> NodeSelected;
     public new event Action<IGraphElement> NodeDeselected;
     public new event Action<IGraphElement> Dragged;
-    public new event Action<IGraphElement> DeleteRequest;
+    // END TODO
 
     /* Private properties. */
     private RichTextLabel Label { get; set; }
@@ -67,20 +67,14 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
         // Add slots.
         Slots = new();
         Slots.MouseFilter = MouseFilterEnum.Stop;
-        Slots.GuiInput += OnLabelGuiInput;
         Slots.CustomMinimumSize = CustomMinimumSize - new Vector2(16f, 0f);
         Slots.SizeFlagsHorizontal = SizeFlags.ShrinkCenter;
+        Slots.SizeFlagsVertical = SizeFlags.ShrinkCenter;
         Slots.HorizontalAlignment = HorizontalAlignment.Center;
         Slots.VerticalAlignment = VerticalAlignment.Center;
         AddChild(Slots);
         SetSlotEnabledLeft(0, true);
         SetSlotEnabledRight(0, true);
-
-        // Subscribe to events.
-        base.NodeSelected += OnNodeSelected;
-        base.NodeDeselected += OnNodeDeselected;
-        base.Dragged += OnDragged;
-        base.DeleteRequest += OnDeleteRequest;
     }
 
     /* Public methods. */
@@ -114,61 +108,5 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
 
         // Shrink to minimum size.
         Size = Vector2.Zero;
-    }
-
-    public void OnLabelGuiInput(InputEvent @event)
-    {
-        if (@event is InputEventMouseButton mouseButton && mouseButton.ButtonIndex == MouseButton.Left)
-        {
-            if (mouseButton.Pressed)
-            {
-                Selected = true;
-                Dragging = true;
-                DragStartPositionOffset = PositionOffset;
-                DragStartMousePosition = mouseButton.GlobalPosition;
-                NodeSelected?.Invoke(this);
-            }
-            else
-                Dragging = false;
-        }
-        else if (@event is InputEventMouseMotion mouseMotion && Selected && Dragging)
-        {
-            Vector2 unsnapped = mouseMotion.GlobalPosition + (DragStartPositionOffset - DragStartMousePosition);
-            PositionOffset = SnapToGrid(unsnapped, GraphEdit);
-            Dragged?.Invoke(this);
-        }
-    }
-
-    /* Private methods. */
-    private void OnNodeSelected()
-    {
-        NodeSelected?.Invoke(this);
-    }
-
-    private void OnNodeDeselected()
-    {
-        NodeDeselected?.Invoke(this);
-    }
-
-    private void OnDeleteRequest()
-    {
-        RequestDelete();
-    }
-
-    private void OnDragged(Vector2 from, Vector2 to)
-    {
-        Dragged?.Invoke(this);
-    }
-
-    private static Vector2 SnapToGrid(Vector2 positionOffset, GraphEdit graph)
-    {
-        if (graph == null || !graph.SnappingEnabled)
-            return positionOffset;
-
-        var step = graph.SnapDistance;
-        return new Vector2(
-            Mathf.Round(positionOffset.X / step) * step,
-            Mathf.Round(positionOffset.Y / step) * step
-        );
     }
 }
