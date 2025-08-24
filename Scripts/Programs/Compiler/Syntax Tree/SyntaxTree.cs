@@ -143,7 +143,6 @@ public class SyntaxTree
         }
 
         // Copy connections to graph edit and add to frames.
-        Godot.GD.Print("FUCK");
         foreach (var item in items)
         {
             // Connections.
