@@ -83,7 +83,7 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     /// </summary>
     public void AddElement(IGraphElement element)
     {
-        if (element == this)
+        if (element == this || element == Frame)
             return;
 
         // Remove element from old frame.
@@ -96,7 +96,7 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         element.Dragged += OnElementDragged;
         element.DeleteRequest += OnElementDeleted;
 
-        // Alter position & size.
+        // Recalculate and apply new position & size.
         UpdateSizeAndPosition();
     }
 

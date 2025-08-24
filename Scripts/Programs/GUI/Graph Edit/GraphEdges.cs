@@ -26,7 +26,7 @@ public class Edge
     /* Public methods. */
     public override string ToString()
     {
-        return FromElement.Name + "/" + FromPortIndex + " --> " + ToElement.Name + "/" + ToPortIndex;
+        return $"{FromElement.Name} ({FromPortIndex}) => {ToElement.Name} ({ToPortIndex})";
     }
 }
 
