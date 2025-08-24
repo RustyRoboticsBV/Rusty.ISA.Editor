@@ -83,6 +83,22 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
         base.DeleteRequest += OnDeleteRequest;
     }
 
+    /* Public methods. */
+    public override string ToString()
+    {
+        return $"Joint (element index {GetIndex()})";
+    }
+
+    public bool IsNestedIn(GraphFrame frame)
+    {
+        return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
+    }
+
+    public void RequestDelete()
+    {
+        DeleteRequest?.Invoke(this);
+    }
+
     /* Godot overrides. */
     public override void _Process(double delta)
     {
@@ -121,17 +137,6 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
             PositionOffset = SnapToGrid(unsnapped, GraphEdit);
             Dragged?.Invoke(this);
         }
-    }
-
-    /* Public methods. */
-    public bool IsNestedIn(GraphFrame frame)
-    {
-        return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
-    }
-
-    public void RequestDelete()
-    {
-        DeleteRequest?.Invoke(this);
     }
 
     /* Private methods. */

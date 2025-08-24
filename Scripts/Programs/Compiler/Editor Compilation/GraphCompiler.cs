@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Rusty.ISA.Editor;
 
@@ -225,10 +224,11 @@ public abstract class GraphCompiler : CompilerTool
 
     /// <summary>
     /// Check if a root node needs a label:<br/>
-    /// - If it has more than one inputs.<br/>
-    /// - If it connects to an output port associated with an output parameter.<br/>
-    /// - If it connects to a goto.<br/>
-    /// - If it connects to a node that isn't in the execution order yet.
+    /// - If it has more than one input.<br/>
+    /// - If one of its inputs:<br/>
+    /// -  - Connects to a node that isn't in the execution order yet.<br/>
+    /// -  - Connects to a goto.<br/>
+    /// -  - Connects to an output port associated with an output parameter.
     /// </summary>
     private static bool NeedsLabel(RootNode node, BiDict<int, RootNode> executionOrder)
     {

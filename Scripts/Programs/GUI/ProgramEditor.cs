@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System;
 
 namespace Rusty.ISA.Editor;
 
@@ -84,19 +85,28 @@ public partial class ProgramEditor : MarginContainer
     /* Private methods. */
     private void OnPressedCopy()
     {
-        // Create syntax tree.
-        SyntaxTree syntaxTree = new(Ledger);
-        Log.Message("Compilation syntax tree:", syntaxTree);
+        try
+        {
+            // Create syntax tree.
+            SyntaxTree syntaxTree = new(Ledger);
+            Log.Message("Compilation syntax tree:", syntaxTree);
 
-        // Serialize to code.
-        string code = syntaxTree.Compile();
+            // Serialize to code.
+            string code = syntaxTree.Compile();
 
-        // Compress code if enabled.
-        if (CompressCode)
-            code = StringCompressor.Compress(code);
+            // Compress code if enabled.
+            if (CompressCode)
+                code = StringCompressor.Compress(code);
 
-        // Write to clipboard.
-        DisplayServer.ClipboardSet(code);
+            // Write to clipboard.
+            DisplayServer.ClipboardSet(code);
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"An exception occurred during compilation. This should not happen. Please open an issue on the git repository, and include the text below:\n\n{exception}");
+            if (OS.HasFeature("editor"))
+                throw;
+        }
     }
 
     private void OnPressedPaste()

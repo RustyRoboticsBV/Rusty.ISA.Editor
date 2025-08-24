@@ -56,14 +56,14 @@ public abstract class Parser : CompilerTool
             // Return finished tree's root node.
             return result;
         }
-        catch (Exception exception)
+        catch
         {
             code = code.Replace("\r\n", "\n");
             code = code.Replace("\r", "\n");
             Log.Error("The following result could not be loaded due to a syntax error:\n" + code);
 
             if (OS.HasFeature("editor"))
-                throw new FormatException("", exception);
+                throw;
 
             return null;
         }

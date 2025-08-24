@@ -100,6 +100,22 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         base.DeleteRequest += OnDeleteRequest;
     }
 
+    /* Public methods. */
+    public override string ToString()
+    {
+        return $"Comment (element index {GetIndex()}): \"{CommentText}\"";
+    }
+
+    public bool IsNestedIn(GraphFrame frame)
+    {
+        return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
+    }
+
+    public void RequestDelete()
+    {
+        DeleteRequest?.Invoke(this);
+    }
+
     /* Godot overrides. */
     public override void _Process(double delta)
     {
@@ -129,17 +145,6 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
             ScheduledFrameUpdate = false;
             Frame?.UpdateSizeAndPosition();
         }
-    }
-
-    /* Public methods. */
-    public bool IsNestedIn(GraphFrame frame)
-    {
-        return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
-    }
-
-    public void RequestDelete()
-    {
-        DeleteRequest?.Invoke(this);
     }
 
     /* Private methods. */

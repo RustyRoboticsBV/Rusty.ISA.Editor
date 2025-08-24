@@ -65,6 +65,15 @@ public class ElementEdges : IEnumerable<Edge>
         return null;
     }
 
+    public void RemoveTarget(IGraphElement element)
+    {
+        foreach (var edge in Edges)
+        {
+            if (edge.Value.ToElement == element)
+                Edges.Remove(edge.Key);
+        }
+    }
+
     /* Enumerating. */
     public IEnumerator<Edge> GetEnumerator()
     {
@@ -103,6 +112,10 @@ public class GraphEdges : IEnumerable<ElementEdges>
     {
         if (Elements.ContainsKey(element))
             Elements.Remove(element);
+        foreach (var elementEdges in Elements)
+        {
+            elementEdges.Value.RemoveTarget(element);
+        }
     }
 
     public Edge GetEdge(IGraphElement fromElement, int fromPortIndex)

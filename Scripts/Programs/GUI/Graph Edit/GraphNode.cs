@@ -137,6 +137,11 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     }
 
     /* Public methods. */
+    public override string ToString()
+    {
+        return $"Node (element index {GetIndex()}): \"{TitleText}\"";
+    }
+
     public bool IsNestedIn(GraphFrame frame)
     {
         return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
