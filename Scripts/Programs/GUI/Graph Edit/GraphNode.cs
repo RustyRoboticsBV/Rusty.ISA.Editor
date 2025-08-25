@@ -56,14 +56,12 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
 
     private static int FontSize => 13;
 
-    /* Public events. */
-    // TODO: Remove
-    public new event Action<IGraphElement> NodeSelected;
-    public new event Action<IGraphElement> NodeDeselected;
-    public new event Action<IGraphElement> Dragged;
-    // END TODO
+    private bool IsClicked { get; set; }
 
-    public new event Action<IGraphElement> DeleteRequest;
+    /* Public events. */
+    public event Action<IGraphElement> MouseClicked;
+    public event Action<IGraphElement> MouseDragged;
+    public event Action<IGraphElement> MouseReleased;
 
     /* Constructors. */
     public GraphNode()
@@ -129,12 +127,6 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         AddThemeStyleboxOverride("panel_selected", new StyleBoxFlat() { BgColor = new Color(0.13f, 0.13f, 0.13f) });
         AddThemeStyleboxOverride("titlebar_selected", new StyleBoxFlat() { BgColor = Colors.White });
 
-        // Subscribe to events.
-        base.NodeSelected += OnNodeSelected;
-        base.NodeDeselected += OnNodeDeselected;
-        base.Dragged += OnDragged;
-        base.DeleteRequest += OnDeleteRequest;
-
         // Force one update.
         _Process(0);
     }
@@ -148,11 +140,6 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     public bool IsNestedIn(GraphFrame frame)
     {
         return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
-    }
-
-    public void RequestDelete()
-    {
-        DeleteRequest?.Invoke(this);
     }
 
     /// <summary>
@@ -230,16 +217,24 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         // Suppress built-in drag & selection.
         if (@event is InputEventMouseButton mouseButton)
         {
-            if (mouseButton.Pressed &&
-                (mouseButton.ButtonIndex == MouseButton.Left ||
-                 mouseButton.ButtonIndex == MouseButton.Right))
+            if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
             {
+                IsClicked = true;
+                MouseClicked?.Invoke(this);
+                AcceptEvent();
+                return;
+            }
+            else if (!mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left && IsClicked)
+            {
+                IsClicked = false;
+                MouseReleased?.Invoke(this);
                 AcceptEvent();
                 return;
             }
         }
-        else if (@event is InputEventMouseMotion)
+        else if (@event is InputEventMouseMotion && IsClicked)
         {
+            MouseDragged?.Invoke(this);
             AcceptEvent();
             return;
         }
@@ -281,25 +276,5 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
             AddChild(PreviewContainer);
             AddChild(BottomMargin);
         }
-    }
-
-    private void OnNodeSelected()
-    {
-        NodeSelected?.Invoke(this);
-    }
-
-    private void OnNodeDeselected()
-    {
-        NodeDeselected?.Invoke(this);
-    }
-
-    private void OnDeleteRequest()
-    {
-        RequestDelete();
-    }
-
-    private void OnDragged(Vector2 from, Vector2 to)
-    {
-        Dragged?.Invoke(this);
     }
 }

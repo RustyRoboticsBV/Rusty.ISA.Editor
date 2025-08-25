@@ -23,7 +23,7 @@ public interface IGraphElement
     /// <summary>
     /// Whether or not this element is selected.
     /// </summary>
-    public bool Selected { get; }
+    public bool Selected { get; set; }
 
     /// <summary>
     /// The graph edit that this element is contained on.
@@ -35,19 +35,22 @@ public interface IGraphElement
     public GraphFrame Frame { get; set; }
 
     /* Public events. */
-    public event Action<IGraphElement> NodeSelected;
-    public event Action<IGraphElement> NodeDeselected;
-    public event Action<IGraphElement> Dragged;
-    public event Action<IGraphElement> DeleteRequest;
+    /// <summary>
+    /// Invoked if a graph element is clicked with the mouse.
+    /// </summary>
+    public event Action<IGraphElement> MouseClicked;
+    /// <summary>
+    /// Invoked if a graph element is released by the mouse.
+    /// </summary>
+    public event Action<IGraphElement> MouseReleased;
+    /// <summary>
+    /// Invoked if a graph element is dragged by the mouse.
+    /// </summary>
+    public event Action<IGraphElement> MouseDragged;
 
     /* Public methods. */
     /// <summary>
     /// Check whether or not this element is contained within a specific frame.
     /// </summary>
     public bool IsNestedIn(GraphFrame frame);
-
-    /// <summary>
-    /// Delete this element from its parent graph edit.
-    /// </summary>
-    public void RequestDelete();
 }

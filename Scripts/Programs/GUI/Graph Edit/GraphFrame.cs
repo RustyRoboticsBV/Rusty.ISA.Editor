@@ -27,13 +27,12 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     private List<Vector2> ElementOffsets { get; } = new();
 
     /* Public events. */
-    // TODO: Remove
-    public new event Action<IGraphElement> NodeSelected;
-    public new event Action<IGraphElement> NodeDeselected;
-    public new event Action<IGraphElement> Dragged;
-    // END TODO
+    public event Action<IGraphElement> MouseClicked;
+    public event Action<IGraphElement> MouseDragged;
+    public event Action<IGraphElement> MouseReleased;
 
-    public new event Action<IGraphElement> DeleteRequest;
+    /* Private properties. */
+    private bool IsClicked { get; set; }
 
     /* Constructors. */
     public GraphFrame()
@@ -48,12 +47,6 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         // Set defaults.
         Title = "New Frame";
         TintColor = new(0.123f, 0.123f, 0.123f);
-
-        // Subscribe to events.
-        base.NodeSelected += OnNodeSelected;
-        base.NodeDeselected += OnNodeDeselected;
-        base.Dragged += OnDragged;
-        base.DeleteRequest += OnDeleteRequest;
     }
 
     /* Public methods. */
@@ -65,20 +58,6 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     public bool IsNestedIn(GraphFrame frame)
     {
         return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
-    }
-
-    public void RequestDelete()
-    {
-        // Move all elements to the parent frame (if there is one).
-        for (int i = 0; i < Elements.Count; i++)
-        {
-            Elements[i].Frame = null;
-            if (Frame != null)
-                Frame.AddElement(Elements[i]);
-        }
-
-        // Call delete event.
-        DeleteRequest?.Invoke(this);
     }
 
     /// <summary>
@@ -96,8 +75,6 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         // Add element to new frame.
         Elements.Add(element);
         element.Frame = this;
-        element.Dragged += OnElementDragged;
-        element.DeleteRequest += OnElementDeleted;
 
         // Recalculate and apply new position & size.
         UpdateSizeAndPosition();
@@ -111,7 +88,6 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         // Remove.
         Elements.Remove(element);
         element.Frame = null;
-        element.Dragged -= OnElementDragged;
 
         // Alter position & size.
         UpdateSizeAndPosition();
@@ -204,54 +180,29 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         // Suppress built-in drag & selection.
         if (@event is InputEventMouseButton mouseButton)
         {
-            if (mouseButton.Pressed &&
-                (mouseButton.ButtonIndex == MouseButton.Left ||
-                 mouseButton.ButtonIndex == MouseButton.Right))
+            if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
             {
+                IsClicked = true;
+                MouseClicked?.Invoke(this);
+                AcceptEvent();
+                return;
+            }
+            else if (!mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left && IsClicked)
+            {
+                IsClicked = false;
+                MouseReleased?.Invoke(this);
                 AcceptEvent();
                 return;
             }
         }
-        else if (@event is InputEventMouseMotion)
+        else if (@event is InputEventMouseMotion && IsClicked)
         {
+            MouseDragged?.Invoke(this);
             AcceptEvent();
             return;
         }
 
         // Otherwise, let normal controls still work.
         base._GuiInput(@event);
-    }
-
-    /* Private methods. */
-    private void OnNodeSelected()
-    {
-        NodeSelected?.Invoke(this);
-    }
-
-    private void OnNodeDeselected()
-    {
-        NodeDeselected?.Invoke(this);
-    }
-
-    private void OnDragged(Vector2 from, Vector2 to)
-    {
-        Dragged?.Invoke(this);
-        LastOffset = to;
-    }
-
-    private void OnDeleteRequest()
-    {
-        RequestDelete();
-    }
-
-    private void OnElementDragged(IGraphElement element)
-    {
-        if (!Selected)
-            UpdateSizeAndPosition();
-    }
-
-    private void OnElementDeleted(IGraphElement element)
-    {
-        RemoveElement(element);
     }
 }

@@ -24,9 +24,9 @@ public abstract class LedgerItem
         Element = element;
         Inspector = inspector;
 
-        element.NodeSelected += OnElementSelected;
-        element.NodeDeselected += OnElementDeselected;
-        element.DeleteRequest += OnElementDeleted;
+        //element.NodeSelected += OnElementSelected;
+        //element.NodeDeselected += OnElementDeselected;
+        //element.DeleteRequest += OnElementDeleted;
         inspector.Changed += OnInspectorChanged;
     }
 

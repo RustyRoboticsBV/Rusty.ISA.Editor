@@ -8,12 +8,23 @@ namespace Rusty.ISA.Editor;
 public partial class GraphEdit : Godot.GraphEdit
 {
     /* Public methods. */
+    public List<IGraphElement> Elements { get; } = new();
+    public HashSet<IGraphElement> Selected { get; } = new();
     public List<GraphNode> Nodes { get; } = new();
     public List<GraphJoint> Joints { get; } = new();
     public List<GraphComment> Comments { get; } = new();
     public List<GraphFrame> Frames { get; } = new();
 
     public GraphEdges Edges { get; } = new();
+
+    /* Private properties. */
+    private bool CanSelectRect => GetChild(GetChildCount(true) - 2, true).GetChild<Line2D>(0, true).Points.Length == 0;
+    private bool IsRectSelecting { get; set; }
+    private Rect2 SelectRect { get; set; }
+    private Rect2 SelectRectVisual { get; set; }
+
+    private bool IsDragging { get; set; }
+    private Vector2 LastDragPosition { get; set; }
 
     /* Public events. */
     public event Action RightClicked;
@@ -35,6 +46,9 @@ public partial class GraphEdit : Godot.GraphEdit
     }
 
     /* Public methods. */
+    /// <summary>
+    /// Spawn a node.
+    /// </summary>
     public GraphNode SpawnNode(int x, int y)
     {
         GraphNode node = new();
@@ -43,6 +57,9 @@ public partial class GraphEdit : Godot.GraphEdit
         return node;
     }
 
+    /// <summary>
+    /// Spawn a joint.
+    /// </summary>
     public GraphJoint SpawnJoint(int x, int y)
     {
         GraphJoint joint = new();
@@ -51,6 +68,9 @@ public partial class GraphEdit : Godot.GraphEdit
         return joint;
     }
 
+    /// <summary>
+    /// Spawn a comment.
+    /// </summary>
     public GraphComment SpawnComment(int x, int y)
     {
         GraphComment comment = new();
@@ -59,6 +79,9 @@ public partial class GraphEdit : Godot.GraphEdit
         return comment;
     }
 
+    /// <summary>
+    /// Spawn a frame.
+    /// </summary>
     public GraphFrame SpawnFrame(int x, int y)
     {
         GraphFrame frame = new();
@@ -67,9 +90,13 @@ public partial class GraphEdit : Godot.GraphEdit
         return frame;
     }
 
+    /// <summary>
+    /// Add an element to the graph.
+    /// </summary>
     public void AddElement(IGraphElement element)
     {
         // Add to typed array.
+        Elements.Add(element);
         switch (element)
         {
             case GraphNode node:
@@ -90,15 +117,18 @@ public partial class GraphEdit : Godot.GraphEdit
         AddChild(element as Node);
 
         // Subscribe to events.
-        element.NodeSelected += OnElementSelected;
-        element.NodeDeselected += OnElementDeselected;
-        element.Dragged += OnElementDragged;
-        element.DeleteRequest += OnElementDeleteRequest;
+        element.MouseClicked += OnElementClicked;
+        element.MouseDragged += OnElementDragged;
+        element.MouseReleased += OnElementReleased;
     }
 
+    /// <summary>
+    /// Remove an element from the graph.
+    /// </summary>
     public void RemoveElement(IGraphElement element)
     {
         // Remove from typed array.
+        Elements.Remove(element);
         switch (element)
         {
             case GraphNode node:
@@ -118,20 +148,59 @@ public partial class GraphEdit : Godot.GraphEdit
         // Add as child node.
         RemoveChild(element as Node);
 
-        // Subscribe to events.
-        element.NodeSelected -= OnElementSelected;
-        element.NodeDeselected -= OnElementDeselected;
-        element.Dragged -= OnElementDragged;
-        element.DeleteRequest -= OnElementDeleteRequest;
-
         // Remove all tracked edges.
         Edges.RemoveElement(element);
     }
 
+    /// <summary>
+    /// Connect two elements on the graph.
+    /// </summary>
     public void ConnectElements(IGraphElement fromElement, int fromPort, IGraphElement toElement)
     {
         ConnectNode(fromElement.Name, fromPort, toElement.Name, 0);
         Edges.Connect(fromElement, fromPort, toElement, 0);
+    }
+
+    /// <summary>
+    /// Select an element.
+    /// </summary>
+    public void SelectElement(IGraphElement element)
+    {
+        element.Selected = true;
+        if (!Selected.Contains(element))
+            Selected.Add(element);
+    }
+
+    /// <summary>
+    /// Deselect an element.
+    /// </summary>
+    public void DeselectElement(IGraphElement element)
+    {
+        element.Selected = false;
+        if (Selected.Contains(element))
+            Selected.Remove(element);
+    }
+
+    /// <summary>
+    /// Select all elements.
+    /// </summary>
+    public void SelectAllElements()
+    {
+        foreach (IGraphElement element in Elements)
+        {
+            SelectElement(element);
+        }
+    }
+
+    /// <summary>
+    /// Deselect all elements.
+    /// </summary>
+    public void DeselectAllElements()
+    {
+        foreach (IGraphElement element in Elements)
+        {
+            DeselectElement(element);
+        }
     }
 
     /// <summary>
@@ -142,11 +211,63 @@ public partial class GraphEdit : Godot.GraphEdit
         return (globalPosition - GlobalPosition + ScrollOffset) / Zoom;
     }
 
+    /// <summary>
+    /// Get the current global mouse position and convert it to a position offset.
+    /// </summary>
+    public Vector2 GetMouseOffset()
+    {
+        return GetPositionOffsetFromGlobalPosition(GetGlobalMousePosition());
+    }
+
     /* Godot overrides. */
     public override void _GuiInput(InputEvent @event)
     {
-        if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Right)
-            RightClicked?.Invoke();
+        if (@event is InputEventMouseButton mouseButton)
+        {
+            if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
+            {
+                IsRectSelecting = true;
+                SelectRect = new(GetGlobalMousePosition(), Vector2.Zero);
+                SelectRectVisual = new(GetLocalMousePosition(), Vector2.Zero);
+                DeselectAllElements();
+            }
+            else if (!mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
+            {
+                if (IsRectSelecting)
+                {
+                    IsRectSelecting = false;
+                    QueueRedraw();
+                }
+                if (IsDragging)
+                {
+                    IsDragging = false;
+                }
+            }
+            else if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Right)
+                RightClicked?.Invoke();
+        }
+        else if (@event is InputEventMouseMotion mouseMotion && IsRectSelecting)
+        {
+            if (!CanSelectRect)
+                IsRectSelecting = false;
+            else
+            {
+                SelectRect = new(SelectRect.Position, GetGlobalMousePosition() - SelectRect.Position);
+                SelectRectVisual = new(SelectRectVisual.Position, GetLocalMousePosition() - SelectRectVisual.Position);
+                ApplySelectionRect(SelectRect);
+            }
+            QueueRedraw();
+        }
+        AcceptEvent();
+    }
+
+    public override void _Draw()
+    {
+        if (IsRectSelecting)
+        {
+            DrawRect(SelectRectVisual.Abs(), new Color(0.3f, 0.6f, 1f, 0.2f), true);
+            DrawRect(SelectRectVisual.Abs(), new Color(0.3f, 0.6f, 1f), false, 2f);
+        }
     }
 
     /* Private methods. */
@@ -154,83 +275,7 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         foreach (StringName name in elements)
         {
-            IGraphElement element = GetElement(name);
-            element?.RequestDelete();
-        }
-    }
-
-    private void OnElementSelected(IGraphElement element)
-    {
-    }
-
-    private void OnElementDeselected(IGraphElement element)
-    {
-    }
-
-    private void OnElementDragged(IGraphElement element)
-    {
-        GraphFrame frame = null;
-
-        // Check if we've just dragged the element into a frame.
-        for (int i = 0; i < Frames.Count; i++)
-        {
-            if (element == Frames[i])
-                continue;
-
-            float x1 = Frames[i].PositionOffset.X;
-            float y1 = Frames[i].PositionOffset.Y;
-            float x2 = x1 + Frames[i].Size.X;
-            float y2 = y1 + Frames[i].Size.Y;
-
-            Vector2 globalMousePosition = GetGlobalMousePosition();
-            Vector2 mousePosition = GetPositionOffsetFromGlobalPosition(globalMousePosition);
-
-            if (mousePosition.X > x1 && mousePosition.X < x2 && mousePosition.Y > y1 && mousePosition.Y < y2
-                && (frame == null || Frames[i].IsNestedIn(frame)))
-            {
-                frame = Frames[i];
-            }
-        }
-
-        // If the new frame is different from the old one...
-        if (element.Frame != frame)
-        {
-            // Remove from old frame.
-            if (element.Frame != null)
-                element.Frame.RemoveElement(element);
-
-            // Add to new frame.
-            if (frame != null)
-            {
-                for (int i = 0; i < GetChildCount(); i++)
-                {
-                    if (GetChild(i) is IGraphElement selected && selected.Selected)
-                    {
-                        frame.AddElement(selected);
-                    }
-                }
-            }
-        }
-    }
-
-    private void OnElementDeleteRequest(IGraphElement element)
-    {
-        // Remove element from graph.
-        RemoveChild(element as Node);
-        Edges.RemoveElement(element);
-
-        // Remove it from the typed element array.
-        switch (element)
-        {
-            case GraphNode node:
-                Nodes.Remove(node);
-                break;
-            case GraphComment comment:
-                Comments.Remove(comment);
-                break;
-            case GraphFrame frame:
-                Frames.Remove(frame);
-                break;
+            RemoveElement(GetElement(name));
         }
     }
 
@@ -239,8 +284,7 @@ public partial class GraphEdit : Godot.GraphEdit
         // Disconnect from port if it was already connected.
         foreach (var connection in Connections)
         {
-            if ((StringName)connection["from_node"] == fromNode
-                && (long)connection["from_port"] == fromPort)
+            if ((StringName)connection["from_node"] == fromNode && (long)connection["from_port"] == fromPort)
             {
                 StringName toNodeOld = (StringName)connection["to_node"];
                 int toPortOld = (int)connection["to_port"];
@@ -260,6 +304,34 @@ public partial class GraphEdit : Godot.GraphEdit
         Edges.Disconnect(GetElement(fromNode), (int)fromPort);
     }
 
+    private void OnElementClicked(IGraphElement element)
+    {
+        IsDragging = true;
+        LastDragPosition = GetMouseOffset();
+        if (!element.Selected)
+        {
+            DeselectAllElements();
+            SelectElement(element);
+        }
+    }
+
+    private void OnElementDragged(IGraphElement element)
+    {
+        Vector2 newDragPosition = GetMouseOffset();
+        Vector2 dragDelta = newDragPosition - LastDragPosition;
+        foreach (IGraphElement element2 in Elements)
+        {
+            if (element2.Selected)
+                element2.PositionOffset = GridSnap(element2.PositionOffset + dragDelta);
+        }
+        LastDragPosition = newDragPosition;
+    }
+
+    private void OnElementReleased(IGraphElement element)
+    {
+        IsDragging = false;
+    }
+
     /// <summary>
     /// Retrieve an element on the graph, using its name.
     /// </summary>
@@ -271,5 +343,48 @@ public partial class GraphEdit : Godot.GraphEdit
                 return element;
         }
         return null;
+    }
+
+    /// <summary>
+    /// Snap a position to the grid (if grid snapping has been enabled).
+    /// </summary>
+    private Vector2 GridSnap(Vector2 position)
+    {
+        if (SnappingEnabled)
+        {
+            if (SnappingDistance == 0)
+                return position;
+
+            return new Vector2(
+                Mathf.Round(position.X / SnappingDistance) * SnappingDistance,
+                Mathf.Round(position.Y / SnappingDistance) * SnappingDistance
+            );
+        }
+        return position;
+    }
+
+    /// <summary>
+    /// Apply selection rect.
+    /// </summary>
+    private void ApplySelectionRect(Rect2 selectionRect)
+    {
+        selectionRect = selectionRect.Abs();
+
+        foreach (IGraphElement element in Elements)
+        {
+            Rect2 elementRect = (element as GraphElement).GetGlobalRect();
+
+            elementRect = new(
+                elementRect.Position.X,
+                elementRect.Position.Y,
+                elementRect.Size.X,
+                elementRect.Size.Y
+            );
+
+            if (selectionRect.Intersects(elementRect, true))
+                SelectElement(element);
+            else
+                DeselectElement(element);
+        }
     }
 }

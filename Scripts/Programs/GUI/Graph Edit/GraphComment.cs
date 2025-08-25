@@ -38,19 +38,17 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
     public Color TextColor { get; set; } = new Color(0f, 1f, 0f, 1f);
 
     /* Public events. */
-    // TODO: remove
-    public new event Action<IGraphElement> NodeSelected;
-    public new event Action<IGraphElement> NodeDeselected;
-    public new event Action<IGraphElement> Dragged;
-    // END TODO
-
-    public new event Action<IGraphElement> DeleteRequest;
+    public event Action<IGraphElement> MouseClicked;
+    public event Action<IGraphElement> MouseDragged;
+    public event Action<IGraphElement> MouseReleased;
 
     /* Private properties. */
     private MarginContainer LabelMargin { get; set; }
     private RichTextLabel Label { get; set; }
 
     private bool ScheduledFrameUpdate { get; set; }
+
+    private bool IsClicked { get; set; }
 
     /* Constructors. */
     public GraphComment()
@@ -108,11 +106,6 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
     }
 
-    public void RequestDelete()
-    {
-        DeleteRequest?.Invoke(this);
-    }
-
     /* Godot overrides. */
     public override void _Process(double delta)
     {
@@ -149,16 +142,24 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         // Suppress built-in drag & selection.
         if (@event is InputEventMouseButton mouseButton)
         {
-            if (mouseButton.Pressed &&
-                (mouseButton.ButtonIndex == MouseButton.Left ||
-                 mouseButton.ButtonIndex == MouseButton.Right))
+            if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
             {
+                IsClicked = true;
+                MouseClicked?.Invoke(this);
+                AcceptEvent();
+                return;
+            }
+            else if (!mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left && IsClicked)
+            {
+                IsClicked = false;
+                MouseReleased?.Invoke(this);
                 AcceptEvent();
                 return;
             }
         }
-        else if (@event is InputEventMouseMotion)
+        else if (@event is InputEventMouseMotion && IsClicked)
         {
+            MouseDragged?.Invoke(this);
             AcceptEvent();
             return;
         }
