@@ -19,6 +19,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         }
     }
     public GraphFrame Frame { get; set; }
+    public Vector2 UnsnappedPosition { get; set; }
 
     public Color TitleColor { get; set; } = new Color(0.5f, 0.5f, 0.5f);
     public string TitleText
@@ -66,8 +67,9 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     /* Constructors. */
     public GraphNode()
     {
-        // Set default minimum size.
+        // Set default minimum size and position.
         CustomMinimumSize = new Vector2(160, 80);
+        UnsnappedPosition = PositionOffset;
 
         // Replace title elements.
         HBoxContainer titleContainer = GetChild(0, true) as HBoxContainer;
@@ -135,6 +137,12 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
     public override string ToString()
     {
         return $"Node (element index {GetIndex()}): \"{TitleText}\"";
+    }
+
+    public void MoveTo(Vector2 position)
+    {
+        UnsnappedPosition = position;
+        Snapper.SnapToGrid(this);
     }
 
     public bool IsNestedIn(GraphFrame frame)
@@ -210,6 +218,9 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
             ScheduledFrameUpdate = false;
             Frame?.UpdateSizeAndPosition();
         }
+
+        // Snap to grid.
+        Snapper.SnapToGrid(this);
     }
 
     public override void _GuiInput(InputEvent @event)

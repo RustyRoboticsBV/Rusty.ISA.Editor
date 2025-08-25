@@ -21,6 +21,7 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
         }
     }
     public GraphFrame Frame { get; set; }
+    public Vector2 UnsnappedPosition { get; set; }
 
     public Color BgColor { get; set; } = new Color(0.13f, 0.13f, 0.13f);
 
@@ -40,8 +41,9 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
     /* Constructors. */
     public GraphJoint()
     {
-        // Set default minimum size.
+        // Set default minimum size and posi.
         CustomMinimumSize = new(40f, 40f);
+        UnsnappedPosition = PositionOffset;
 
         // Add style overrides.
         AddThemeStyleboxOverride("panel_selected", new StyleBoxFlat()
@@ -82,6 +84,12 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
         return $"Joint (element index {GetIndex()})";
     }
 
+    public void MoveTo(Vector2 position)
+    {
+        UnsnappedPosition = position;
+        Snapper.SnapToGrid(this);
+    }
+
     public bool IsNestedIn(GraphFrame frame)
     {
         return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
@@ -102,6 +110,9 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
 
         // Shrink to minimum size.
         Size = Vector2.Zero;
+
+        // Snap to grid.
+        Snapper.SnapToGrid(this);
     }
 
     /* Private methods. */

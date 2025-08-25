@@ -19,17 +19,21 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         }
     }
     public GraphFrame Frame { get; set; }
+    public Vector2 UnsnappedPosition { get; set; }
+    public Vector2 UnsnappedSize { get; set; }
     public int ID { get; set; } = -1;
 
     /* Private properties. */
     private List<IGraphElement> Elements { get; } = new();
     private Vector2 LastOffset { get; set; }
     private List<Vector2> ElementOffsets { get; } = new();
+    private Control SelectionControl { get; set; }
 
     /* Public events. */
     public event Action<IGraphElement> MouseClicked;
     public event Action<IGraphElement> MouseDragged;
     public event Action<IGraphElement> MouseReleased;
+    public event Action<GraphFrame> DraggedInto;
 
     /* Private properties. */
     private bool IsClicked { get; set; }
@@ -37,8 +41,10 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     /* Constructors. */
     public GraphFrame()
     {
-        // Set default minimum size.
+        // Set default minimum size and position.
         CustomMinimumSize = new Vector2(160, 160);
+        UnsnappedSize = CustomMinimumSize;
+        UnsnappedPosition = PositionOffset;
 
         // Enable/disable frame features.
         AutoshrinkEnabled = false;
@@ -47,12 +53,33 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         // Set defaults.
         Title = "New Frame";
         TintColor = new(0.123f, 0.123f, 0.123f);
+
+        // Add selection control.
+        SelectionControl = new();
+        AddChild(SelectionControl);
+        SelectionControl.GuiInput += OnSelectionControlGuiInput;
     }
 
     /* Public methods. */
     public override string ToString()
     {
         return $"Frame (element index {GetIndex()}): \"{Title}\"";
+    }
+
+    public void MoveTo(Vector2 position)
+    {
+        Vector2 oldPosition = PositionOffset;
+
+        // Move.
+        UnsnappedPosition = position;
+        Snapper.SnapToGrid(this);
+
+        // Also move contained elements.
+        Vector2 visualDelta = PositionOffset - oldPosition;
+        foreach (IGraphElement element in Elements)
+        {
+            element.MoveTo(element.UnsnappedPosition + visualDelta);
+        }
     }
 
     public bool IsNestedIn(GraphFrame frame)
@@ -94,12 +121,29 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     }
 
     /// <summary>
+    /// Remove elements from this frame.
+    /// </summary>
+    public void RemoveElements(List<IGraphElement> elements)
+    {
+        // Remove.
+        foreach (IGraphElement element in elements)
+        {
+            Elements.Remove(element);
+            element.Frame = null;
+        }
+
+        // Alter position & size.
+        UpdateSizeAndPosition();
+    }
+
+    /// <summary>
     /// Update the frame's size and position.
     /// </summary>
     public void UpdateSizeAndPosition()
     {
         if (Elements.Count == 0)
         {
+            UnsnappedSize = Vector2.Zero;
             Size = Vector2.Zero;
             return;
         }
@@ -134,8 +178,9 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         maxY += AutoshrinkMargin;
 
         // Apply new bounds.
-        PositionOffset = new(minX, minY);
-        Size = new(maxX - minX, maxY - minY);
+        UnsnappedPosition = new(minX, minY);
+        UnsnappedSize = new(maxX - minX, maxY - minY);
+        Snapper.SnapToGrid(this);
 
         // Store member offsets.
         ElementOffsets.Clear();
@@ -166,16 +211,16 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
             LastOffset = PositionOffset;
         }
 
-        // Update drag margin.
-        // We use the smallest of the size axes' divided by two, because otherwise Godot will spam the 
-        // console with internal error logs if the drag margin exceeds the half-size on one of the two
-        // axes.
-        // TODO: Refactor if this ever gets fixed, because this means that our drag area won't encompass
-        // the entire frame if it's not perfectly square.
-        DragMargin = Mathf.FloorToInt(Mathf.Min(Size.X, Size.Y) / 2f);
+        // Make sure the selection control covers the whole frame.
+        SelectionControl.GlobalPosition = GlobalPosition;
+        SelectionControl.Size = Size;
+
+        // Snap to grid.
+        Snapper.SnapToGrid(this);
     }
 
-    public override void _GuiInput(InputEvent @event)
+    /* Private methods. */
+    private void OnSelectionControlGuiInput(InputEvent @event)
     {
         // Suppress built-in drag & selection.
         if (@event is InputEventMouseButton mouseButton)
@@ -195,11 +240,14 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
                 return;
             }
         }
-        else if (@event is InputEventMouseMotion && IsClicked)
+        else if (@event is InputEventMouseMotion)
         {
-            MouseDragged?.Invoke(this);
-            AcceptEvent();
-            return;
+            if (IsClicked)
+            {
+                MouseDragged?.Invoke(this);
+                AcceptEvent();
+                return;
+            }
         }
 
         // Otherwise, let normal controls still work.

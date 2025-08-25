@@ -13,7 +13,11 @@ public interface IGraphElement
     public string TooltipText { get; set; }
 
     /// <summary>
-    /// The position on the graph of this element.
+    /// The unsnapped position of this element on the graph.
+    /// </summary>
+    public Vector2 UnsnappedPosition { get; set; }
+    /// <summary>
+    /// The position of this element on the graph, with grid snapping taken into account.
     /// </summary>
     public Vector2 PositionOffset { get; set; }
     /// <summary>
@@ -49,6 +53,10 @@ public interface IGraphElement
     public event Action<IGraphElement> MouseDragged;
 
     /* Public methods. */
+    /// <summary>
+    /// Move the element to a new position.
+    /// </summary>
+    public void MoveTo(Vector2 position);
     /// <summary>
     /// Check whether or not this element is contained within a specific frame.
     /// </summary>

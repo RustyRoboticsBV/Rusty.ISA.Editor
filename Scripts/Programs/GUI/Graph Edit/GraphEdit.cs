@@ -1,7 +1,7 @@
 ﻿using Godot;
-using Godot.Collections;
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Rusty.ISA.Editor;
 
@@ -26,6 +26,10 @@ public partial class GraphEdit : Godot.GraphEdit
     private bool IsDragging { get; set; }
     private Vector2 LastDragPosition { get; set; }
 
+    private bool ShiftHeld { get; set; }
+
+    private HashSet<IGraphElement> RectSelected { get; set; } = new();
+
     /* Public events. */
     public event Action RightClicked;
 
@@ -40,7 +44,6 @@ public partial class GraphEdit : Godot.GraphEdit
         RightDisconnects = true;
 
         // Subscribe to events.
-        DeleteNodesRequest += OnDeleteNodesRequest;
         ConnectionRequest += OnConnectionRequest;
         DisconnectionRequest += OnDisconnectionRequest;
     }
@@ -53,7 +56,7 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         GraphNode node = new();
         AddElement(node);
-        node.PositionOffset = new(x, y);
+        node.UnsnappedPosition = new(x, y);
         return node;
     }
 
@@ -64,7 +67,7 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         GraphJoint joint = new();
         AddElement(joint);
-        joint.PositionOffset = new(x, y);
+        joint.UnsnappedPosition = new(x, y);
         return joint;
     }
 
@@ -75,7 +78,7 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         GraphComment comment = new();
         AddElement(comment);
-        comment.PositionOffset = new(x, y);
+        comment.UnsnappedPosition = new(x, y);
         return comment;
     }
 
@@ -86,7 +89,7 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         GraphFrame frame = new();
         AddElement(frame);
-        frame.PositionOffset = new(x, y);
+        frame.UnsnappedPosition = new(x, y);
         return frame;
     }
 
@@ -110,6 +113,7 @@ public partial class GraphEdit : Godot.GraphEdit
                 break;
             case GraphFrame frame:
                 Frames.Add(frame);
+                frame.DraggedInto += DragIntoFrame;
                 break;
         }
 
@@ -150,6 +154,13 @@ public partial class GraphEdit : Godot.GraphEdit
 
         // Remove all tracked edges.
         Edges.RemoveElement(element);
+
+        // Remove from selection set.
+        if (Selected.Contains(element))
+        {
+            Selected.Remove(element);
+            element.Selected = false;
+        }
     }
 
     /// <summary>
@@ -222,30 +233,48 @@ public partial class GraphEdit : Godot.GraphEdit
     /* Godot overrides. */
     public override void _GuiInput(InputEvent @event)
     {
+        // Mouse buttons.
         if (@event is InputEventMouseButton mouseButton)
         {
+            // Left mouse pressed.
             if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
             {
+                // Start rect selecting.
                 IsRectSelecting = true;
                 SelectRect = new(GetGlobalMousePosition(), Vector2.Zero);
                 SelectRectVisual = new(GetLocalMousePosition(), Vector2.Zero);
-                DeselectAllElements();
+
+                // Deselect if shift is not held.
+                if (!ShiftHeld)
+                    DeselectAllElements();
             }
+
+            // Left mouse released.
             else if (!mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
             {
+                // Stop rect selection.
                 if (IsRectSelecting)
                 {
                     IsRectSelecting = false;
+                    foreach (IGraphElement element in RectSelected)
+                    {
+                        SelectElement(element);
+                    }
+                    RectSelected.Clear();
                     QueueRedraw();
                 }
+
+                // Stop dragging.
                 if (IsDragging)
-                {
-                    IsDragging = false;
-                }
+                    EndDragging();
             }
+
+            // Right mouse pressed.
             else if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Right)
                 RightClicked?.Invoke();
         }
+
+        // Mouse motion.
         else if (@event is InputEventMouseMotion mouseMotion && IsRectSelecting)
         {
             if (!CanSelectRect)
@@ -258,6 +287,24 @@ public partial class GraphEdit : Godot.GraphEdit
             }
             QueueRedraw();
         }
+
+        // Keyboard key pressed.
+        else if (@event is InputEventKey key)
+        {
+            // Delete.
+            if (key.Keycode == Key.Delete && key.Pressed)
+            {
+                foreach (IGraphElement selected in Selected)
+                {
+                    RemoveElement(selected);
+                }
+            }
+
+            // Shift.
+            else if (key.Keycode == Key.Shift)
+                ShiftHeld = key.Pressed;
+        }
+
         AcceptEvent();
     }
 
@@ -271,14 +318,6 @@ public partial class GraphEdit : Godot.GraphEdit
     }
 
     /* Private methods. */
-    private void OnDeleteNodesRequest(Array<StringName> elements)
-    {
-        foreach (StringName name in elements)
-        {
-            RemoveElement(GetElement(name));
-        }
-    }
-
     private void OnConnectionRequest(StringName fromNode, long fromPort, StringName toNode, long toPort)
     {
         // Disconnect from port if it was already connected.
@@ -310,7 +349,8 @@ public partial class GraphEdit : Godot.GraphEdit
         LastDragPosition = GetMouseOffset();
         if (!element.Selected)
         {
-            DeselectAllElements();
+            if (!ShiftHeld)
+                DeselectAllElements();
             SelectElement(element);
         }
     }
@@ -319,17 +359,59 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         Vector2 newDragPosition = GetMouseOffset();
         Vector2 dragDelta = newDragPosition - LastDragPosition;
-        foreach (IGraphElement element2 in Elements)
+        foreach (IGraphElement selected in Selected)
         {
-            if (element2.Selected)
-                element2.PositionOffset = GridSnap(element2.PositionOffset + dragDelta);
+            selected.MoveTo(selected.UnsnappedPosition + dragDelta);
         }
         LastDragPosition = newDragPosition;
     }
 
     private void OnElementReleased(IGraphElement element)
     {
+        EndDragging();
+    }
+
+
+    private void EndDragging()
+    {
         IsDragging = false;
+
+        foreach (IGraphElement selected in Selected)
+        {
+            Snapper.SnapToGrid(selected);
+            selected.UnsnappedPosition = selected.PositionOffset;
+        }
+
+        foreach (GraphFrame frame in Frames)
+        {
+            if (Selected.Contains(frame))
+                continue;
+
+            else if (frame.GetGlobalRect().HasPoint(GetGlobalMousePosition()))
+                DragIntoFrame(frame);
+            else
+                DragOutOfFrame(frame);
+        }
+    }
+
+    private void DragIntoFrame(GraphFrame frame)
+    {
+        foreach (IGraphElement selected in Selected)
+        {
+            if (selected.Frame != frame)
+                frame.AddElement(selected);
+        }
+    }
+
+    private void DragOutOfFrame(GraphFrame frame)
+    {
+        List<IGraphElement> mustRemove = new();
+        foreach (IGraphElement selected in Selected)
+        {
+            if (selected.Frame == frame)
+                mustRemove.Add(selected);
+        }
+        frame.RemoveElements(mustRemove);
     }
 
     /// <summary>
@@ -346,30 +428,12 @@ public partial class GraphEdit : Godot.GraphEdit
     }
 
     /// <summary>
-    /// Snap a position to the grid (if grid snapping has been enabled).
-    /// </summary>
-    private Vector2 GridSnap(Vector2 position)
-    {
-        if (SnappingEnabled)
-        {
-            if (SnappingDistance == 0)
-                return position;
-
-            return new Vector2(
-                Mathf.Round(position.X / SnappingDistance) * SnappingDistance,
-                Mathf.Round(position.Y / SnappingDistance) * SnappingDistance
-            );
-        }
-        return position;
-    }
-
-    /// <summary>
     /// Apply selection rect.
     /// </summary>
     private void ApplySelectionRect(Rect2 selectionRect)
     {
         selectionRect = selectionRect.Abs();
-
+        RectSelected.Clear();
         foreach (IGraphElement element in Elements)
         {
             Rect2 elementRect = (element as GraphElement).GetGlobalRect();
@@ -381,10 +445,26 @@ public partial class GraphEdit : Godot.GraphEdit
                 elementRect.Size.Y
             );
 
-            if (selectionRect.Intersects(elementRect, true))
-                SelectElement(element);
-            else
-                DeselectElement(element);
+            if (!Selected.Contains(element))
+            {
+                if (selectionRect.Intersects(elementRect, true))
+                {
+                    RectSelected.Add(element);
+                    element.Selected = true;
+                }
+                else
+                    element.Selected = false;
+            }
         }
+    }
+
+    /// <summary>
+    /// Align an element's unsnapped position to the grid.
+    /// </summary>
+    private void AlignToGrid(IGraphElement element)
+    {
+        Snapper.SnapToGrid(element);
+        element.UnsnappedPosition = element.PositionOffset;
+        element.Frame?.UpdateSizeAndPosition();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Godot;
 using System;
+using System.Xml.Linq;
 
 namespace Rusty.ISA.Editor;
 
@@ -21,6 +22,7 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         }
     }
     public GraphFrame Frame { get; set; }
+    public Vector2 UnsnappedPosition { get; set; }
 
     public string CommentText
     {
@@ -55,6 +57,7 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
     {
         // Set default minimum size.
         CustomMinimumSize = new(200f, 40f);
+        UnsnappedPosition = PositionOffset;
 
         // Add contents.
         LabelMargin = new();
@@ -101,6 +104,12 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
         return $"Comment (element index {GetIndex()}): \"{CommentText}\"";
     }
 
+    public void MoveTo(Vector2 position)
+    {
+        UnsnappedPosition = position;
+        Snapper.SnapToGrid(this);
+    }
+
     public bool IsNestedIn(GraphFrame frame)
     {
         return Frame == frame || Frame != null && Frame.IsNestedIn(frame);
@@ -135,6 +144,9 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
             ScheduledFrameUpdate = false;
             Frame?.UpdateSizeAndPosition();
         }
+
+        // Snap to grid.
+        Snapper.SnapToGrid(this);
     }
 
     public override void _GuiInput(InputEvent @event)
