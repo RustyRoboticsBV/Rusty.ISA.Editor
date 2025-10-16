@@ -95,6 +95,10 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         if (element == this || element == Frame)
             return;
 
+        // Ignore redundant additions.
+        if (element.Frame == this)
+            return;
+
         if (element.Frame != null)
         {
             throw new Exception($"Tried to add element '{element}' to frame '{this}', but the element was already on frame "
@@ -103,6 +107,7 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
 
         // Add element to new frame.
         Elements.Add(element);
+        ElementOffsets.Add(element.PositionOffset - PositionOffset);
         element.Frame = this;
     }
 
@@ -111,7 +116,15 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     /// </summary>
     public void RemoveElement(IGraphElement element)
     {
-        Elements.Remove(element);
+        int index = Elements.IndexOf(element);
+        if (index == -1)
+        {
+            throw new ArgumentException($"The element '{element}' was not on frame '{this}' and could not be removed.",
+                nameof(element));
+        }
+
+        ElementOffsets.RemoveAt(index);
+        Elements.RemoveAt(index);
         element.Frame = null;
     }
 

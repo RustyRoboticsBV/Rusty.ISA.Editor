@@ -394,14 +394,19 @@ public partial class GraphEdit : Godot.GraphEdit
             }
         }
 
-        // Add the elements from the new frame.
+        // Add the elements to the new frame.
         if (targetFrame != null)
         {
             foreach (IGraphElement selected in Selected)
             {
+                if (selected.Frame != null)
+                    selected.Frame.RemoveElement(selected);
                 targetFrame.AddElement(selected);
             }
+            targetFrame.FitAroundElements();
         }
+
+        // Remove elements from frames.
         else
         {
             HashSet<GraphFrame> changedFrames = new();
