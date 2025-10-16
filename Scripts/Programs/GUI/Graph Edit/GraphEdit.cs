@@ -1,7 +1,6 @@
 ﻿using Godot;
 using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace Rusty.ISA.Editor;
 
@@ -56,7 +55,7 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         GraphNode node = new();
         AddElement(node);
-        node.UnsnappedPosition = new(x, y);
+        node.MoveTo(new(x, y));
         return node;
     }
 
@@ -67,7 +66,7 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         GraphJoint joint = new();
         AddElement(joint);
-        joint.UnsnappedPosition = new(x, y);
+        joint.MoveTo(new(x, y));
         return joint;
     }
 
@@ -78,7 +77,7 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         GraphComment comment = new();
         AddElement(comment);
-        comment.UnsnappedPosition = new(x, y);
+        comment.MoveTo(new(x, y));
         return comment;
     }
 
@@ -89,7 +88,7 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         GraphFrame frame = new();
         AddElement(frame);
-        frame.UnsnappedPosition = new(x, y);
+        frame.MoveTo(new(x, y));
         return frame;
     }
 
@@ -378,8 +377,13 @@ public partial class GraphEdit : Godot.GraphEdit
         // Snap to grid.
         foreach (IGraphElement selected in Selected)
         {
-            Snapper.SnapToGrid(selected);
-            selected.UnsnappedPosition = selected.PositionOffset;
+            if (SnappingEnabled)
+            {
+                Snapper.SnapToGrid(selected);
+                selected.UnsnappedPosition = selected.PositionOffset;
+            }
+            else
+                selected.UnsnappedPosition = selected.PositionOffset;
         }
 
         // Check if we must add the elements to a frame.
@@ -496,15 +500,5 @@ public partial class GraphEdit : Godot.GraphEdit
                     element.Selected = false;
             }
         }
-    }
-
-    /// <summary>
-    /// Align an element's unsnapped position to the grid.
-    /// </summary>
-    private void AlignToGrid(IGraphElement element)
-    {
-        Snapper.SnapToGrid(element);
-        element.UnsnappedPosition = element.PositionOffset;
-        element.Frame?.FitAroundElements();
     }
 }

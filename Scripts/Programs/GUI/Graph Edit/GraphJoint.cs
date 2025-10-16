@@ -110,9 +110,6 @@ public partial class GraphJoint : Godot.GraphNode, IGraphElement
 
         // Shrink to minimum size.
         Size = Vector2.Zero;
-
-        // Snap to grid.
-        Snapper.SnapToGrid(this);
     }
 
     /* Private methods. */

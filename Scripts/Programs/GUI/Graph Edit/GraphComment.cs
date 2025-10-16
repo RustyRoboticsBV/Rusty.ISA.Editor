@@ -1,6 +1,5 @@
 ﻿using Godot;
 using System;
-using System.Xml.Linq;
 
 namespace Rusty.ISA.Editor;
 
@@ -144,9 +143,6 @@ public partial class GraphComment : Godot.GraphNode, IGraphElement
             ScheduledFrameUpdate = false;
             Frame?.FitAroundElements();
         }
-
-        // Snap to grid.
-        Snapper.SnapToGrid(this);
     }
 
     public override void _GuiInput(InputEvent @event)

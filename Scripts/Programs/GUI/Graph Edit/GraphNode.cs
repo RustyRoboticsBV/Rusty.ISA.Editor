@@ -218,9 +218,6 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
             ScheduledFrameUpdate = false;
             Frame?.FitAroundElements();
         }
-
-        // Snap to grid.
-        Snapper.SnapToGrid(this);
     }
 
     public override void _GuiInput(InputEvent @event)

@@ -24,6 +24,8 @@ public static class Snapper
                     frame.Size = Snap(frame.UnsnappedSize, snappingDistance);
             }
         }
+        else
+            element.PositionOffset = element.UnsnappedPosition;
     }
 
     /* Private methods. */

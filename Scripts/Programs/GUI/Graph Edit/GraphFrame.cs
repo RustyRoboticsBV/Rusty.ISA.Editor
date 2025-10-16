@@ -213,9 +213,6 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         {
             GetParent().MoveChild(this, Frame.GetIndex() + 1);
         }
-
-        // Snap to grid.
-        Snapper.SnapToGrid(this);
     }
 
     /* Private methods. */
