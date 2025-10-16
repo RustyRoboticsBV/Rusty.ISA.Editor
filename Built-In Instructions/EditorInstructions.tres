@@ -42,7 +42,6 @@ Icon = ExtResource("9_n23mp")
 DisplayName = "Program"
 Description = "A root container for editor-generated programs."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 metadata/_custom_type_script = "uid://nj3anaafielp"
@@ -55,7 +54,6 @@ Parameters = []
 DisplayName = "Metadata"
 Description = "A metadata group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 metadata/_custom_type_script = "uid://nj3anaafielp"
@@ -66,8 +64,6 @@ script = ExtResource("4_513eb")
 ID = "value"
 DisplayName = "Value"
 Description = "The calculated checksum value."
-DefaultValue = ""
-Preview = ""
 metadata/_custom_type_script = "uid://d02yl7f7rgu3u"
 
 [sub_resource type="Resource" id="Resource_6o02d"]
@@ -79,7 +75,6 @@ Icon = ExtResource("2_owem4")
 DisplayName = "Checksum"
 Description = "A checksum marker. Used for data validation."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 metadata/_custom_type_script = "uid://nj3anaafielp"
@@ -93,7 +88,6 @@ Icon = ExtResource("1_xv6kh")
 DisplayName = "Instruction Set Definition"
 Description = "An instruction set metadata group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -103,8 +97,6 @@ script = ExtResource("4_513eb")
 ID = "opcode"
 DisplayName = "Opcode"
 Description = "The opcode of the instruction definition."
-DefaultValue = ""
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_ybfo7"]
 resource_name = "editor_only (bool)"
@@ -112,8 +104,6 @@ script = ExtResource("7_w7twv")
 ID = "editor_only"
 DisplayName = "Editor Only?"
 Description = "Whether or not the described instruction is an editor-only instruction (an instruction without implementation). Such instructions can be stripped on import as they have no in-game meaning."
-DefaultValue = false
-Preview = ""
 metadata/_custom_type_script = "uid://07v43p0qn0qo"
 
 [sub_resource type="Resource" id="Resource_wldw7"]
@@ -125,7 +115,6 @@ Icon = ExtResource("3_m1uhb")
 DisplayName = "Instruction Definition"
 Description = "An instruction definition metadata group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -135,8 +124,6 @@ script = ExtResource("4_513eb")
 ID = "type"
 DisplayName = "Type"
 Description = "The type of the parameter."
-DefaultValue = ""
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_2jvhx"]
 resource_name = "id (text)"
@@ -144,8 +131,6 @@ script = ExtResource("4_513eb")
 ID = "id"
 DisplayName = "ID"
 Description = "The identifier of the parameter."
-DefaultValue = ""
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_n3emi"]
 resource_name = "PAR"
@@ -156,7 +141,6 @@ Icon = ExtResource("5_owem4")
 DisplayName = "Parameter"
 Description = "A parameter metadata group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -166,8 +150,6 @@ script = ExtResource("4_513eb")
 ID = "type"
 DisplayName = "Type"
 Description = "The type of the compile rule. Should be one of the following: \"option\", \"choice\", \"tuple\", or \"list\"."
-DefaultValue = ""
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_bdv4d"]
 resource_name = "id (text)"
@@ -175,8 +157,6 @@ script = ExtResource("4_513eb")
 ID = "id"
 DisplayName = "ID"
 Description = "The identifier of the compile rule."
-DefaultValue = ""
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_hr6rg"]
 resource_name = "RUL"
@@ -187,7 +167,6 @@ Icon = ExtResource("6_n23mp")
 DisplayName = "Compile Rule"
 Description = "A compile rule metadata group. Used for option, choice, tuple and list rules (but NOT instruction rules)."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -197,8 +176,6 @@ script = ExtResource("4_513eb")
 ID = "id"
 DisplayName = "ID"
 Description = "The identifier of the compile rule."
-DefaultValue = ""
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_svoja"]
 resource_name = "opcode (text)"
@@ -206,8 +183,6 @@ script = ExtResource("4_513eb")
 ID = "opcode"
 DisplayName = "Opcode"
 Description = "The opcode of the referenced instruction."
-DefaultValue = ""
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_d6p30"]
 resource_name = "REF"
@@ -218,7 +193,6 @@ Icon = ExtResource("7_rqbqj")
 DisplayName = "Reference"
 Description = "An instruction rule metadata block."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -231,7 +205,6 @@ Icon = ExtResource("10_n23mp")
 DisplayName = "Graph"
 Description = "A graph group. Contains all nodes, joints, comments and frames."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 metadata/_custom_type_script = "uid://nj3anaafielp"
@@ -242,17 +215,10 @@ Priority = -1
 MinWidth = 3
 MinHeight = 2
 MainColor = Color(0.13, 0.13, 0.13, 1)
-TextColor = Color(1, 1, 1, 1)
-Preview = ""
-EnableWordWrap = false
 metadata/_custom_type_script = "uid://btht0mxxam3r7"
 
 [sub_resource type="Resource" id="Resource_rqbqj"]
 script = ExtResource("10_m1uhb")
-Dependencies = []
-Members = ""
-Initialize = ""
-Execute = ""
 metadata/_custom_type_script = "uid://yv1p0xvly16v"
 
 [sub_resource type="Resource" id="Resource_513eb"]
@@ -261,8 +227,6 @@ script = ExtResource("10_2detx")
 ID = "x"
 DisplayName = "X"
 Description = "The horizontal position of the joint."
-DefaultValue = 0
-Preview = ""
 metadata/_custom_type_script = "uid://dtxuwjx75byap"
 
 [sub_resource type="Resource" id="Resource_owem4"]
@@ -271,8 +235,6 @@ script = ExtResource("10_2detx")
 ID = "y"
 DisplayName = "Y"
 Description = "The vertical position of the joint."
-DefaultValue = 0
-Preview = ""
 metadata/_custom_type_script = "uid://dtxuwjx75byap"
 
 [sub_resource type="Resource" id="Resource_n23mp"]
@@ -286,7 +248,6 @@ DisplayName = "Joint"
 Description = "An editor joint. Allows more control over edges in the editor graph. Has no in-game meaning."
 Category = "Editor"
 EditorNode = SubResource("Resource_m1uhb")
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 metadata/_custom_type_script = "uid://nj3anaafielp"
@@ -294,11 +255,8 @@ metadata/_custom_type_script = "uid://nj3anaafielp"
 [sub_resource type="Resource" id="Resource_mff5v"]
 script = ExtResource("8_w7twv")
 Priority = -1
-MinWidth = 128
-MinHeight = 32
 MainColor = Color(0.13, 0.13, 0.13, 1)
 TextColor = Color(0.21249999, 0.85, 0.21249999, 1)
-Preview = ""
 EnableWordWrap = true
 
 [sub_resource type="Resource" id="Resource_imjdl"]
@@ -307,8 +265,6 @@ script = ExtResource("10_2detx")
 ID = "x"
 DisplayName = "X"
 Description = "The horizontal position of the comment."
-DefaultValue = 0
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_bhdtu"]
 resource_name = "y (int)"
@@ -316,8 +272,6 @@ script = ExtResource("10_2detx")
 ID = "y"
 DisplayName = "Y"
 Description = "The vertical position of the comment."
-DefaultValue = 0
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_53br1"]
 resource_name = "text (multiline)"
@@ -326,7 +280,6 @@ ID = "text"
 DisplayName = "Text"
 Description = "The text of the comment."
 DefaultValue = "Comment text."
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_t3exr"]
 resource_name = "CMT"
@@ -338,18 +291,13 @@ DisplayName = "Comment"
 Description = "An editor comment. It allows you to annotate and document your graphs. Has no in-game meaning."
 Category = "Editor"
 EditorNode = SubResource("Resource_mff5v")
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_latm4"]
 script = ExtResource("8_w7twv")
 Priority = -1
-MinWidth = 128
-MinHeight = 32
 MainColor = Color(0.13, 0.13, 0.13, 1)
-TextColor = Color(1, 1, 1, 1)
-Preview = ""
 EnableWordWrap = true
 
 [sub_resource type="Resource" id="Resource_imkvv"]
@@ -358,8 +306,6 @@ script = ExtResource("4_513eb")
 ID = "id"
 DisplayName = "ID"
 Description = "The id of the frame."
-DefaultValue = ""
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_g4ly1"]
 resource_name = "x (int)"
@@ -367,8 +313,6 @@ script = ExtResource("10_2detx")
 ID = "x"
 DisplayName = "X"
 Description = "The horizontal position of the frame."
-DefaultValue = 0
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_kkrrb"]
 resource_name = "y (int)"
@@ -376,8 +320,6 @@ script = ExtResource("10_2detx")
 ID = "y"
 DisplayName = "Y"
 Description = "The vertical position of the frame."
-DefaultValue = 0
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_vx1sj"]
 resource_name = "width (int)"
@@ -385,8 +327,6 @@ script = ExtResource("10_2detx")
 ID = "width"
 DisplayName = "Width"
 Description = "The width of the frame."
-DefaultValue = 0
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_ujlnt"]
 resource_name = "height (int)"
@@ -394,8 +334,6 @@ script = ExtResource("10_2detx")
 ID = "height"
 DisplayName = "Hidth"
 Description = "The height of the frame."
-DefaultValue = 0
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_qhjbc"]
 resource_name = "title (text)"
@@ -404,7 +342,6 @@ ID = "title"
 DisplayName = "Title"
 Description = "The title text of the frame."
 DefaultValue = "New Frame"
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_qimco"]
 resource_name = "color (Color)"
@@ -413,7 +350,6 @@ ID = "color_tint"
 DisplayName = "Color Tint"
 Description = "The color of the frame."
 DefaultValue = Color(0.13, 0.13, 0.13, 1)
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_7hiv8"]
 resource_name = "FRM"
@@ -425,7 +361,6 @@ DisplayName = "Frame"
 Description = "An editor frame. It allows you to visually group graph elements. Has no in-game meaning."
 Category = "Editor"
 EditorNode = SubResource("Resource_latm4")
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -435,8 +370,6 @@ script = ExtResource("4_513eb")
 ID = "frame_id"
 DisplayName = "Frame ID"
 Description = "The id of the frame that this node is contained in."
-DefaultValue = ""
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_cn6to"]
 resource_name = "MBR"
@@ -447,7 +380,6 @@ Icon = ExtResource("14_h8koe")
 DisplayName = "Frame Member"
 Description = "Designates a graph element as being a member of a frame with some ID."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -457,8 +389,6 @@ script = ExtResource("10_2detx")
 ID = "x"
 DisplayName = "X"
 Description = "The x-position of the editor node."
-DefaultValue = 0
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_1ekkv"]
 resource_name = "y (int)"
@@ -466,8 +396,6 @@ script = ExtResource("10_2detx")
 ID = "y"
 DisplayName = "Y"
 Description = "The y-position of the editor node."
-DefaultValue = 0
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_btai4"]
 resource_name = "NOD"
@@ -478,7 +406,6 @@ Icon = ExtResource("15_iw3te")
 DisplayName = "Editor Node"
 Description = "An editor node. It should contain an inspector instruction, and optionally a label and/or start point instruction."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -491,7 +418,6 @@ Icon = ExtResource("16_yfual")
 DisplayName = "Instruction Inspector"
 Description = "An instruction inspector group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -504,7 +430,6 @@ Icon = ExtResource("17_2qpao")
 DisplayName = "Pre-Instructions"
 Description = "A pre-instruction group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -517,7 +442,6 @@ Icon = ExtResource("18_ctg55")
 DisplayName = "Post-Instructions"
 Description = "A post-instruction group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -530,7 +454,6 @@ Icon = ExtResource("19_0ip1a")
 DisplayName = "Option Inspector"
 Description = "An option inspector group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -540,8 +463,6 @@ script = ExtResource("10_2detx")
 ID = "selected"
 DisplayName = "Selected"
 Description = "The selected choice."
-DefaultValue = 0
-Preview = ""
 
 [sub_resource type="Resource" id="Resource_k3g4f"]
 resource_name = "CHO"
@@ -552,7 +473,6 @@ Icon = ExtResource("20_6grd4")
 DisplayName = "Choice Inspector"
 Description = "A choice inspector group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -565,7 +485,6 @@ Icon = ExtResource("21_vqniu")
 DisplayName = "Tuple Inspector"
 Description = "A tuple inspector group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -578,7 +497,6 @@ Icon = ExtResource("22_8lt0d")
 DisplayName = "List Inspector"
 Description = "A list inspector group."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -591,7 +509,6 @@ Icon = ExtResource("27_rqbqj")
 DisplayName = "Goto Group"
 Description = "A goto group, used to group a label and goto instruction."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -604,7 +521,6 @@ Icon = ExtResource("28_w7twv")
 DisplayName = "End Group"
 Description = "An end group, used to group a label and end instruction."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -617,7 +533,6 @@ Icon = ExtResource("25_4egf8")
 DisplayName = "End of Block"
 Description = "Denotes the end of a group instruction."
 Category = "Editor"
-Preview = ""
 PreInstructions = []
 PostInstructions = []
 
@@ -626,6 +541,4 @@ script = ExtResource("26_b6f58")
 Name = "Editor"
 Description = "The instructions that are needed for the editor to function. Most are compiler flags that preserve program editability."
 Author = "Rusty Robotics B.V."
-Version = "1.0.0"
 Local = [SubResource("Resource_w7twv"), SubResource("Resource_2ke5f"), SubResource("Resource_6o02d"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_leabi"), SubResource("Resource_n23mp"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_a4bdl"), SubResource("Resource_leu7q"), SubResource("Resource_itw8j")]
-Modules = []

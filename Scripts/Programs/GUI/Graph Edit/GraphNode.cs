@@ -216,7 +216,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         if (ScheduledFrameUpdate)
         {
             ScheduledFrameUpdate = false;
-            Frame?.UpdateSizeAndPosition();
+            Frame?.FitAroundElements();
         }
 
         // Snap to grid.

@@ -22,9 +22,9 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     public Vector2 UnsnappedPosition { get; set; }
     public Vector2 UnsnappedSize { get; set; }
     public int ID { get; set; } = -1;
+    public List<IGraphElement> Elements { get; } = new();
 
     /* Private properties. */
-    private List<IGraphElement> Elements { get; } = new();
     private Vector2 LastOffset { get; set; }
     private List<Vector2> ElementOffsets { get; } = new();
     private Control SelectionControl { get; set; }
@@ -33,7 +33,6 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     public event Action<IGraphElement> MouseClicked;
     public event Action<IGraphElement> MouseDragged;
     public event Action<IGraphElement> MouseReleased;
-    public event Action<GraphFrame> DraggedInto;
 
     /* Private properties. */
     private bool IsClicked { get; set; }
@@ -92,19 +91,19 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     /// </summary>
     public void AddElement(IGraphElement element)
     {
+        // We cannot add ourselves or our direct parent.
         if (element == this || element == Frame)
             return;
 
-        // Remove element from old frame.
         if (element.Frame != null)
-            element.Frame.RemoveElement(element);
+        {
+            throw new Exception($"Tried to add element '{element}' to frame '{this}', but the element was already on frame "
+                + $"'{element.Frame}'. Make sure to first remove it!");
+        }
 
         // Add element to new frame.
         Elements.Add(element);
         element.Frame = this;
-
-        // Recalculate and apply new position & size.
-        UpdateSizeAndPosition();
     }
 
     /// <summary>
@@ -112,34 +111,14 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
     /// </summary>
     public void RemoveElement(IGraphElement element)
     {
-        // Remove.
         Elements.Remove(element);
         element.Frame = null;
-
-        // Alter position & size.
-        UpdateSizeAndPosition();
     }
 
     /// <summary>
-    /// Remove elements from this frame.
+    /// Update the frame's size and position to have the smallest fit around its elements.
     /// </summary>
-    public void RemoveElements(List<IGraphElement> elements)
-    {
-        // Remove.
-        foreach (IGraphElement element in elements)
-        {
-            Elements.Remove(element);
-            element.Frame = null;
-        }
-
-        // Alter position & size.
-        UpdateSizeAndPosition();
-    }
-
-    /// <summary>
-    /// Update the frame's size and position.
-    /// </summary>
-    public void UpdateSizeAndPosition()
+    public void FitAroundElements()
     {
         if (Elements.Count == 0)
         {
@@ -155,11 +134,11 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         float maxY = float.MinValue;
         for (int i = 0; i < Elements.Count; i++)
         {
-            float elementMinX = Elements[i].PositionOffset.X;
+            float elementMinX = Elements[i].UnsnappedPosition.X;
             if (elementMinX < minX)
                 minX = elementMinX;
 
-            float elementMinY = Elements[i].PositionOffset.Y;
+            float elementMinY = Elements[i].UnsnappedPosition.Y;
             if (elementMinY < minY)
                 minY = elementMinY;
 
@@ -191,7 +170,7 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
 
         // Also update parent frame.
         if (Frame != null)
-            Frame.UpdateSizeAndPosition();
+            Frame.FitAroundElements();
     }
 
     /* Godot overrides. */
@@ -215,6 +194,13 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         SelectionControl.GlobalPosition = GlobalPosition;
         SelectionControl.Size = Size;
 
+        // Make sure we're always after our parent frame in the node order (otherwise the we will
+        // draw behind our parent frame).
+        if (Frame != null && GetIndex() < Frame.GetIndex())
+        {
+            GetParent().MoveChild(this, Frame.GetIndex() + 1);
+        }
+
         // Snap to grid.
         Snapper.SnapToGrid(this);
     }
@@ -227,10 +213,8 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
         {
             if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
             {
-                IsClicked = true;
-                MouseClicked?.Invoke(this);
+                TryRedirectClick(mouseButton.GlobalPosition);
                 AcceptEvent();
-                return;
             }
             else if (!mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left && IsClicked)
             {
@@ -252,5 +236,25 @@ public partial class GraphFrame : Godot.GraphFrame, IGraphElement
 
         // Otherwise, let normal controls still work.
         base._GuiInput(@event);
+    }
+
+    private bool TryRedirectClick(Vector2 clickPosition)
+    {
+        if (GetGlobalRect().HasPoint(clickPosition))
+        {
+            // Try to redirect to child frames.
+            foreach (IGraphElement element in Elements)
+            {
+                if (element is GraphFrame frame && frame.TryRedirectClick(clickPosition))
+                    return true;
+            }
+
+            // If we could not, click ourselves.
+            IsClicked = true;
+            MouseClicked?.Invoke(this);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -165,7 +165,7 @@ public class SyntaxTree
                 }
                 catch
                 {
-                    Log.Error($"Cannot find frame with id '{frameID}'.");
+                    Log.Error($"Cannot find frame with ID '{frameID}'.");
                 }
             }
         }

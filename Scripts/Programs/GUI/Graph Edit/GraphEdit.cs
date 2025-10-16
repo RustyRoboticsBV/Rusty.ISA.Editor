@@ -113,7 +113,6 @@ public partial class GraphEdit : Godot.GraphEdit
                 break;
             case GraphFrame frame:
                 Frames.Add(frame);
-                frame.DraggedInto += DragIntoFrame;
                 break;
         }
 
@@ -376,42 +375,78 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         IsDragging = false;
 
+        // Snap to grid.
         foreach (IGraphElement selected in Selected)
         {
             Snapper.SnapToGrid(selected);
             selected.UnsnappedPosition = selected.PositionOffset;
         }
 
+        // Check if we must add the elements to a frame.
+        GraphFrame targetFrame = null;
         foreach (GraphFrame frame in Frames)
         {
-            if (Selected.Contains(frame))
-                continue;
+            if (frame.Frame == null)
+            {
+                targetFrame = MustNestIn(frame, GetGlobalMousePosition());
+                if (targetFrame != null)
+                    break;
+            }
+        }
 
-            else if (frame.GetGlobalRect().HasPoint(GetGlobalMousePosition()))
-                DragIntoFrame(frame);
-            else
-                DragOutOfFrame(frame);
+        // Add the elements from the new frame.
+        if (targetFrame != null)
+        {
+            foreach (IGraphElement selected in Selected)
+            {
+                targetFrame.AddElement(selected);
+            }
+        }
+        else
+        {
+            HashSet<GraphFrame> changedFrames = new();
+            foreach (IGraphElement selected in Selected)
+            {
+                if (selected.Frame != null)
+                {
+                    changedFrames.Add(selected.Frame);
+                    selected.Frame.RemoveElement(selected);
+                }
+            }
+            foreach (GraphFrame changedFrame in changedFrames)
+            {
+                changedFrame.FitAroundElements();
+            }
         }
     }
 
-    private void DragIntoFrame(GraphFrame frame)
+    /// <summary>
+    /// Check if a global point will cause a nesting event in some frame if an element is dragged to it. It returns null if no
+    /// nesting will happen, and a reference to a frame if it must nest in the frame or one of it child frames.
+    /// </summary>
+    private GraphFrame MustNestIn(GraphFrame frame, Vector2 globalPosition)
     {
-        foreach (IGraphElement selected in Selected)
-        {
-            if (selected.Frame != frame)
-                frame.AddElement(selected);
-        }
-    }
+        // We cannot nest in selected frames or frames with selected parent frames.
+        if (Selected.Contains(frame))
+            return null;
 
-    private void DragOutOfFrame(GraphFrame frame)
-    {
-        List<IGraphElement> mustRemove = new();
-        foreach (IGraphElement selected in Selected)
+        // Check if we must nest in a child frame.
+        foreach (IGraphElement element in frame.Elements)
         {
-            if (selected.Frame == frame)
-                mustRemove.Add(selected);
+            if (element is GraphFrame child)
+            {
+                GraphFrame result = MustNestIn(child, globalPosition);
+                if (result != null)
+                    return result;
+            }
         }
-        frame.RemoveElements(mustRemove);
+
+        // Check if we must nest in this frame.
+        if (!Selected.Contains(frame) && frame.GetGlobalRect().HasPoint(globalPosition))
+            return frame;
+
+        // No nesting needed.
+        return null;
     }
 
     /// <summary>
@@ -465,6 +500,6 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         Snapper.SnapToGrid(element);
         element.UnsnappedPosition = element.PositionOffset;
-        element.Frame?.UpdateSizeAndPosition();
+        element.Frame?.FitAroundElements();
     }
 }
