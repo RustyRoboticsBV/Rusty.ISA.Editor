@@ -27,7 +27,6 @@ public class Ledger
         GraphEdit.ElementSelected += OnElementSelected;
         GraphEdit.ElementDeselected += OnElementDeselected;
         GraphEdit.ElementDeleted += OnElementDeleted;
-
     }
 
     /* Public methods. */
@@ -83,17 +82,12 @@ public class Ledger
     /// </summary>
     public void Clear()
     {
-        NextFrameID = 0;
-
-        foreach (LedgerItem item in Items)
-        {
-            GraphEdit.RemoveElement(item.Element);
-            item.Inspector.GetParent()?.RemoveChild(item.Inspector);
-        }
+        GraphEdit.ClearElements();
         Items.Clear();
+
+        NextFrameID = 0;
         ElementsLookup.Clear();
         InspectorsLookup.Clear();
-        GraphEdit.Edges.Clear();
     }
 
     /* Private methods. */

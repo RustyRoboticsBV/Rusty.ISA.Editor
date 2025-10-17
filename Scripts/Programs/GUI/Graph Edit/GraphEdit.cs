@@ -224,6 +224,25 @@ public partial class GraphEdit : Godot.GraphEdit
     }
 
     /// <summary>
+    /// Delete all elements from the graph.
+    /// </summary>
+    public void ClearElements()
+    {
+        foreach (IGraphElement element in Elements)
+        {
+            RemoveChild(element as Node);
+            ElementDeleted?.Invoke(element);
+        }
+        Elements.Clear();
+        Selected.Clear();
+        Nodes.Clear();
+        Joints.Clear();
+        Comments.Clear();
+        Frames.Clear();
+        Edges.Clear();
+    }
+
+    /// <summary>
     /// Convert a global position to a local position offset.
     /// </summary>
     public Vector2 GetPositionOffsetFromGlobalPosition(Vector2 globalPosition)
