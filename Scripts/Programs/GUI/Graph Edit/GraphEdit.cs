@@ -291,10 +291,6 @@ public partial class GraphEdit : Godot.GraphEdit
                     RectSelected.Clear();
                     QueueRedraw();
                 }
-
-                // Stop dragging.
-                if (IsDragging)
-                    EndDragging();
             }
 
             // Right mouse pressed.
@@ -389,6 +385,8 @@ public partial class GraphEdit : Godot.GraphEdit
         Vector2 dragDelta = newDragPosition - LastDragPosition;
         foreach (IGraphElement selected in Selected)
         {
+            if (Selected.Contains(selected.Frame))
+                continue;
             selected.MoveTo(selected.UnsnappedPosition + dragDelta);
         }
         LastDragPosition = newDragPosition;
@@ -396,13 +394,13 @@ public partial class GraphEdit : Godot.GraphEdit
 
     private void OnElementReleased(IGraphElement element)
     {
-        EndDragging();
+        EndDragging(element);
     }
 
     /// <summary>
     /// An end-drag event handler.
     /// </summary>
-    private void EndDragging()
+    private void EndDragging(IGraphElement element)
     {
         IsDragging = false;
 
@@ -442,13 +440,13 @@ public partial class GraphEdit : Godot.GraphEdit
             targetFrame.FitAroundElements();
         }
 
-        // Remove elements from frames.
+        // Remove elements from parent frames that are not selected.
         else
         {
             HashSet<GraphFrame> changedFrames = new();
             foreach (IGraphElement selected in Selected)
             {
-                if (selected.Frame != null)
+                if (selected.Frame != null && !Selected.Contains(selected.Frame))
                 {
                     changedFrames.Add(selected.Frame);
                     selected.Frame.RemoveElement(selected);
