@@ -42,11 +42,13 @@ public partial class ProgramEditor : MarginContainer
 
         CopyButton = new();
         CopyButton.Text = "Copy";
+        CopyButton.FocusMode = FocusModeEnum.None;
         CopyButton.Pressed += OnPressedCopy;
         buttons.AddChild(CopyButton);
 
         PasteButton = new();
         PasteButton.Text = "Paste";
+        PasteButton.FocusMode = FocusModeEnum.None;
         PasteButton.Pressed += OnPressedPaste;
         buttons.AddChild(PasteButton);
 
