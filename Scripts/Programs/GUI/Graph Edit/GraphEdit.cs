@@ -26,6 +26,7 @@ public partial class GraphEdit : Godot.GraphEdit
     private Vector2 LastDragPosition { get; set; }
 
     private bool ShiftHeld { get; set; }
+    private bool CtrlHeld { get; set; }
 
     private HashSet<IGraphElement> RectSelected { get; set; } = new();
 
@@ -324,9 +325,17 @@ public partial class GraphEdit : Godot.GraphEdit
                 }
             }
 
+            // A.
+            if (key.Keycode == Key.A && key.Pressed)
+                SelectAllElements();
+
             // Shift.
             else if (key.Keycode == Key.Shift)
                 ShiftHeld = key.Pressed;
+
+            // Ctrl.
+            else if (key.Keycode == Key.Ctrl)
+                CtrlHeld = key.Pressed;
         }
 
         AcceptEvent();
