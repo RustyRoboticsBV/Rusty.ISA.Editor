@@ -22,6 +22,12 @@ public class Ledger
         Set = set;
         GraphEdit = graphEdit;
         InspectorWindow = inspectorWindow;
+
+        // Subscribe event handlers.
+        GraphEdit.ElementSelected += OnElementSelected;
+        GraphEdit.ElementDeselected += OnElementDeselected;
+        GraphEdit.ElementDeleted += OnElementDeleted;
+
     }
 
     /* Public methods. */
@@ -57,11 +63,6 @@ public class Ledger
                 break;
         }
 
-        // Subscribe event handlers.
-        item.ElementSelected += OnElementSelected;
-        item.ElementDeselected += OnElementDeselected;
-        item.ElementDeleted += OnElementDeleted;
-
         // Add to the list and lookups.
         Items.Add(item);
         ElementsLookup.Add(item.Element, item);
@@ -96,20 +97,23 @@ public class Ledger
     }
 
     /* Private methods. */
-    private void OnElementSelected(LedgerItem item)
+    private void OnElementSelected(IGraphElement element)
     {
+        LedgerItem item = ElementsLookup[element];
         if (item is not LedgerJoint)
             InspectorWindow.Add(item.Inspector);
     }
 
-    private void OnElementDeselected(LedgerItem item)
+    private void OnElementDeselected(IGraphElement element)
     {
+        LedgerItem item = ElementsLookup[element];
         if (item is not LedgerJoint)
             InspectorWindow.Remove(item.Inspector);
     }
 
-    private void OnElementDeleted(LedgerItem item)
+    private void OnElementDeleted(IGraphElement element)
     {
+        LedgerItem item = ElementsLookup[element];
         if (InspectorWindow.Contains(item.Inspector))
             InspectorWindow.Remove(item.Inspector);
 

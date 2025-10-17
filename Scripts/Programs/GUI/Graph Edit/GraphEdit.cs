@@ -30,6 +30,9 @@ public partial class GraphEdit : Godot.GraphEdit
     private HashSet<IGraphElement> RectSelected { get; set; } = new();
 
     /* Public events. */
+    public event Action<IGraphElement> ElementSelected;
+    public event Action<IGraphElement> ElementDeselected;
+    public event Action<IGraphElement> ElementDeleted;
     public event Action RightClicked;
 
     /* Constructors. */
@@ -159,6 +162,8 @@ public partial class GraphEdit : Godot.GraphEdit
             Selected.Remove(element);
             element.Selected = false;
         }
+
+        ElementDeleted?.Invoke(element);
     }
 
     /// <summary>
@@ -177,7 +182,10 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         element.Selected = true;
         if (!Selected.Contains(element))
+        {
             Selected.Add(element);
+            ElementSelected?.Invoke(element);
+        }
     }
 
     /// <summary>
@@ -187,7 +195,10 @@ public partial class GraphEdit : Godot.GraphEdit
     {
         element.Selected = false;
         if (Selected.Contains(element))
+        {
             Selected.Remove(element);
+            ElementDeselected?.Invoke(element);
+        }
     }
 
     /// <summary>
@@ -369,7 +380,9 @@ public partial class GraphEdit : Godot.GraphEdit
         EndDragging();
     }
 
-
+    /// <summary>
+    /// An end-drag event handler.
+    /// </summary>
     private void EndDragging()
     {
         IsDragging = false;

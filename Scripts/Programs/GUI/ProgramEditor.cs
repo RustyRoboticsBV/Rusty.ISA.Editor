@@ -6,8 +6,6 @@ namespace Rusty.ISA.Editor;
 [GlobalClass]
 public partial class ProgramEditor : MarginContainer
 {
-    /* Public properties. */
-
     /* Private properties. */
     private InstructionSet InstructionSet { get; set; }
 
@@ -128,6 +126,7 @@ public partial class ProgramEditor : MarginContainer
         Log.Message("Decompilation syntax tree:", syntaxTree);
         syntaxTree.Decompile(Ledger);
     }
+
 
     private void OnRightClickedGraph()
     {
