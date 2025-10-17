@@ -49,6 +49,8 @@ public class ElementEdges : IEnumerable<Edge>
     public void Connect(IGraphElement fromElement, int fromPortIndex, IGraphElement toElement, int toPortIndex)
     {
         Edge edge = new(fromElement, fromPortIndex, toElement, toPortIndex);
+        if (Edges.ContainsKey(edge.FromPortIndex))
+            Disconnect(edge.FromPortIndex);
         Edges.Add(edge.FromPortIndex, edge);
     }
 
