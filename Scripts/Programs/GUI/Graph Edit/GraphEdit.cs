@@ -24,9 +24,11 @@ public partial class GraphEdit : Godot.GraphEdit
 
     private bool IsDragging { get; set; }
     private Vector2 LastDragPosition { get; set; }
+    private Vector2 LastPanPosition { get; set; }
 
     private bool ShiftHeld { get; set; }
     private bool CtrlHeld { get; set; }
+    private bool MiddleMouseHeld { get; set; }
 
     private HashSet<IGraphElement> RectSelected { get; set; } = new();
 
@@ -297,20 +299,40 @@ public partial class GraphEdit : Godot.GraphEdit
             // Right mouse pressed.
             else if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Right)
                 RightClicked?.Invoke();
+
+            // Scroll wheel.
+            else if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.WheelUp)
+                Zoom += ZoomStep / 15f;
+            else if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.WheelDown)
+                Zoom -= ZoomStep / 15f;
+            else if (mouseButton.ButtonIndex == MouseButton.Middle)
+            {
+                MiddleMouseHeld = mouseButton.Pressed;
+                LastPanPosition = mouseButton.Position;
+            }
         }
 
         // Mouse motion.
-        else if (@event is InputEventMouseMotion mouseMotion && IsRectSelecting)
+        else if (@event is InputEventMouseMotion mouseMotion)
         {
-            if (!CanSelectRect)
-                IsRectSelecting = false;
-            else
+            if (MiddleMouseHeld)
             {
-                SelectRect = new(SelectRect.Position, GetGlobalMousePosition() - SelectRect.Position);
-                SelectRectVisual = new(SelectRectVisual.Position, GetLocalMousePosition() - SelectRectVisual.Position);
-                ApplySelectionRect(SelectRect);
+                Vector2 mouseDelta = mouseMotion.Position - LastPanPosition;
+                LastPanPosition = mouseMotion.Position;
+                ScrollOffset -= mouseDelta;
             }
-            QueueRedraw();
+            else if (IsRectSelecting)
+            {
+                if (!CanSelectRect)
+                    IsRectSelecting = false;
+                else
+                {
+                    SelectRect = new(SelectRect.Position, GetGlobalMousePosition() - SelectRect.Position);
+                    SelectRectVisual = new(SelectRectVisual.Position, GetLocalMousePosition() - SelectRectVisual.Position);
+                    ApplySelectionRect(SelectRect);
+                }
+                QueueRedraw();
+            }
         }
 
         // Keyboard key pressed.
