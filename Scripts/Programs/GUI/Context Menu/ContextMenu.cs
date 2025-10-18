@@ -107,6 +107,7 @@ public partial class ContextMenu : PopupMenu
     private void AddDefinition(InstructionDefinition definition)
     {
         AddIconItem(definition.Icon, definition.DisplayName, Definitions.Count);
+        SetItemIconMaxWidth(ItemCount - 1, 32);
         SetItemTooltip(Definitions.Count + 1, definition.Description);
         Definitions.Add(definition);
     }

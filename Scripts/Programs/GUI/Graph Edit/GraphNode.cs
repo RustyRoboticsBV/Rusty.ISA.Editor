@@ -86,7 +86,11 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         titleMargin.AddChild(titleSpacer);
 
         TitleTextureRect = new();
+        TitleTextureRect.ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize;
+        TitleTextureRect.StretchMode = TextureRect.StretchModeEnum.Scale;
+        TitleTextureRect.SizeFlagsHorizontal = SizeFlags.ShrinkCenter;
         TitleTextureRect.SizeFlagsVertical = SizeFlags.ShrinkCenter;
+        TitleTextureRect.CustomMinimumSize = Vector2.One * 32;
         titleSpacer.AddChild(TitleTextureRect);
 
         TitleLabel = new();
