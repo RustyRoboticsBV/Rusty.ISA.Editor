@@ -88,6 +88,7 @@ public partial class GraphNode : Godot.GraphNode, IGraphElement
         TitleTextureRect = new();
         TitleTextureRect.ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize;
         TitleTextureRect.StretchMode = TextureRect.StretchModeEnum.Scale;
+        TitleTextureRect.TextureFilter = TextureFilterEnum.LinearWithMipmaps;
         TitleTextureRect.SizeFlagsHorizontal = SizeFlags.ShrinkCenter;
         TitleTextureRect.SizeFlagsVertical = SizeFlags.ShrinkCenter;
         TitleTextureRect.CustomMinimumSize = Vector2.One * 32;
