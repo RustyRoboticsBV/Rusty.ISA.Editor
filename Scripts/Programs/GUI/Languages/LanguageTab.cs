@@ -35,9 +35,13 @@ public sealed partial class LanguageTab : DockWindow<Control>
     {
         LanguageField field = new();
         field.ID = id;
+        field.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        field.Deleted += OnFieldDeleted;
         Add(field);
+
         Remove(AddButton);
         Add(AddButton);
+
         FixLabels();
     }
 
@@ -70,20 +74,13 @@ public sealed partial class LanguageTab : DockWindow<Control>
 
     private void OnAddButtonPressed()
     {
-        LanguageField field = new();
-        field.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        field.Deleted += OnFieldDeleted;
-        Add(field);
-
-        Remove(AddButton);
-        Add(AddButton);
-
-        FixLabels();
+        AddLanguage("language" + (ContentsCount + 1));
     }
 
     private void OnFieldDeleted(LanguageField field)
     {
         Remove(field);
+        GD.Print("Deleting " + field);
 
         FixLabels();
     }
