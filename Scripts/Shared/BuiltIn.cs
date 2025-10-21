@@ -10,9 +10,12 @@ public static class BuiltIn
     public const string BeginOpcode = "BEG";
     public const string LabelOpcode = "LAB";
     public const string GotoOpcode = "GTO";
+    public const string MessageOpcode = "LOG";
     public const string WarningOpcode = "WRN";
     public const string ErrorOpcode = "ERR";
     public const string EndOpcode = "END";
+    public const string LanguageOpcode = "LAN";
+    public const string LocalizeOpcode = "LOC";
 
     public const string ProgramOpcode = "PRO";
 
@@ -23,6 +26,7 @@ public static class BuiltIn
     public const string ParameterOpcode = "PAR";
     public const string CompileRuleOpcode = "RUL";
     public const string ReferenceOpcode = "REF";
+    public const string LanguageSetOpcode = "LNS";
 
     public const string GraphOpcode = "GRA";
     public const string JointOpcode = "JNT";
@@ -46,6 +50,8 @@ public static class BuiltIn
     public const string LabelName = "name";
     public const string GotoTargetLabel = "target_label";
     public const string ErrorMessage = "message";
+    public const string LanguageID = "id";
+    public const string LanguageIsDialectOf = "is_dialect_of";
 
     public const string JointX = "x";
     public const string JointY = "y";

@@ -53,7 +53,7 @@ public partial class Console : MarginContainer
         buttons.AddChild(collapseButton);
 
         Button clearButton = new();
-        clearButton.Text = "Clear";
+        clearButton.Text = "ClearGraph";
         clearButton.SizeFlagsHorizontal = SizeFlags.ShrinkEnd;
         clearButton.Pressed += OnClearPressed;
         buttons.AddChild(clearButton);

@@ -32,6 +32,19 @@ public abstract class MetadataCompiler : CompilerTool
         isa.AddChild(MakeSub(instructionSet, BuiltIn.EndOfGroupOpcode));
         metadata.AddChild(isa);
 
+        // Create language block.
+        string[] languages = ledger.LanguageTab.GetAllLanguages();
+        if (languages.Length > 0)
+        {
+            SubNode languageSet = MakeSub(instructionSet, BuiltIn.LanguageSetOpcode);
+            for (int i = 0; i < languages.Length; i++)
+            {
+                languageSet.AddChild(ProcessLanguage(instructionSet, languages[i]));
+            }
+            languageSet.AddChild(MakeSub(instructionSet, BuiltIn.EndOfGroupOpcode));
+            metadata.AddChild(languageSet);
+        }
+
         // Add end-of-group.
         metadata.AddChild(MakeSub(instructionSet, BuiltIn.EndOfGroupOpcode));
 
@@ -143,5 +156,15 @@ public abstract class MetadataCompiler : CompilerTool
             definition.AddChild(MakeSub(set, BuiltIn.EndOfGroupOpcode));
             return definition;
         }
+    }
+
+    /// <summary>
+    /// Generate a sub-node for a language.
+    /// </summary>
+    private static SubNode ProcessLanguage(InstructionSet set, string language)
+    {
+        SubNode languageNode = MakeSub(set, BuiltIn.LanguageOpcode);
+        languageNode.SetArgument(BuiltIn.LanguageID, language);
+        return languageNode;
     }
 }

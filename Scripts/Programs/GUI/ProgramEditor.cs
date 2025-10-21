@@ -11,7 +11,10 @@ public partial class ProgramEditor : MarginContainer
 
     private Button CopyButton { get; set; }
     private Button PasteButton { get; set; }
+
+    private TabBar Tabs { get; set; }
     private InspectorWindow InspectorWindow { get; set; }
+    private LanguageTab LanguageWindow { get; set; }
     private GraphEdit GraphEdit { get; set; }
     private ContextMenu ContextMenu { get; set; }
 
@@ -29,7 +32,7 @@ public partial class ProgramEditor : MarginContainer
 
         // Add background.
         ColorRect background = new();
-        background.Color = new(0.5f, 0.5f, 0.5f);
+        background.Color = EditorColors.Background;
         AddChild(background);
 
         // Add vertical box.
@@ -52,10 +55,28 @@ public partial class ProgramEditor : MarginContainer
         PasteButton.Pressed += OnPressedPaste;
         buttons.AddChild(PasteButton);
 
+        // Create inspector dock.
+        VBoxContainer leftDock = new();
+
+        // Create tabs.
+        Tabs = new();
+        Tabs.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        Tabs.AddTab("Inspector");
+        Tabs.AddTab("Languages");
+        leftDock.AddChild(Tabs);
+
         // Create inspector window.
         InspectorWindow = new();
         InspectorWindow.SizeFlagsHorizontal = SizeFlags.Fill;
+        InspectorWindow.SizeFlagsVertical = SizeFlags.ExpandFill;
         InspectorWindow.Name = "Inspector";
+        leftDock.AddChild(InspectorWindow);
+
+        // Create language tab.
+        LanguageWindow = new();
+        LanguageWindow.SizeFlagsHorizontal = SizeFlags.Fill;
+        LanguageWindow.SizeFlagsVertical = SizeFlags.ExpandFill;
+        leftDock.AddChild(LanguageWindow);
 
         // Create graph.
         GraphEdit = new();
@@ -65,7 +86,7 @@ public partial class ProgramEditor : MarginContainer
         GraphEdit.Name = "GraphEdit";
 
         // Create hbox.
-        HSplitContainer hbox = new(InspectorWindow, GraphEdit);
+        HSplitContainer hbox = new(leftDock, GraphEdit);
         hbox.SizeFlagsVertical = SizeFlags.ExpandFill;
         hbox.LeftMinSize = 256f;
         hbox.RightMinSize = 256;
@@ -79,7 +100,14 @@ public partial class ProgramEditor : MarginContainer
         AddChild(ContextMenu);
 
         // Create program units container.
-        Ledger = new(set, GraphEdit, InspectorWindow);
+        Ledger = new(set, GraphEdit, InspectorWindow, LanguageWindow);
+    }
+
+    /* Godot overrides. */
+    public override void _Process(double delta)
+    {
+        InspectorWindow.Visible = Tabs.CurrentTab == 0;
+        LanguageWindow.Visible = Tabs.CurrentTab == 1;
     }
 
     /* Private methods. */
@@ -122,7 +150,7 @@ public partial class ProgramEditor : MarginContainer
         SyntaxTree syntaxTree = new(InstructionSet, code);
 
         // Clear graph.
-        Ledger.Clear();
+        Ledger.ClearGraph();
 
         // Decompile syntax tree.
         Log.Message("Decompilation syntax tree:", syntaxTree);

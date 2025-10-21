@@ -9,6 +9,7 @@ public class Ledger
     public InstructionSet Set { get; private set; }
     public GraphEdit GraphEdit { get; private set; }
     public InspectorWindow InspectorWindow { get; private set; }
+    public LanguageTab LanguageTab { get; private set; }
     public List<LedgerItem> Items { get; private set; } = new();
 
     /* Private properties. */
@@ -17,11 +18,12 @@ public class Ledger
     private BiDict<Inspector, LedgerItem> InspectorsLookup { get; set; } = new();
 
     /* Constructors. */
-    public Ledger(InstructionSet set, GraphEdit graphEdit, InspectorWindow inspectorWindow)
+    public Ledger(InstructionSet set, GraphEdit graphEdit, InspectorWindow inspectorWindow, LanguageTab languageTab)
     {
         Set = set;
         GraphEdit = graphEdit;
         InspectorWindow = inspectorWindow;
+        LanguageTab = languageTab;
 
         // Subscribe event handlers.
         GraphEdit.ElementSelected += OnElementSelected;
@@ -80,7 +82,7 @@ public class Ledger
     /// <summary>
     /// Delete all graph elements and inspectors.
     /// </summary>
-    public void Clear()
+    public void ClearGraph()
     {
         GraphEdit.ClearElements();
         Items.Clear();
@@ -88,6 +90,14 @@ public class Ledger
         NextFrameID = 0;
         ElementsLookup.Clear();
         InspectorsLookup.Clear();
+    }
+
+    /// <summary>
+    /// Delete all languages.
+    /// </summary>
+    public void ClearLanguages()
+    {
+        LanguageTab.Clear();
     }
 
     /* Private methods. */

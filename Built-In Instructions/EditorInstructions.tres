@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=86 format=3 uid="uid://d308mnoeq7xa"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=88 format=3 uid="uid://d308mnoeq7xa"]
 
 [ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconISA.bmp" id="1_xv6kh"]
 [ext_resource type="Texture2D" uid="uid://dirnyk1o5ojkj" path="res://Built-In Instructions/IconMD5.bmp" id="2_owem4"]
@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://yv1p0xvly16v" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="10_m1uhb"]
 [ext_resource type="Texture2D" uid="uid://bcbcaqtumydtb" path="res://Built-In Instructions/IconGRA.bmp" id="10_n23mp"]
 [ext_resource type="Script" uid="uid://beorwwi6t13op" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="11_6o02d"]
+[ext_resource type="Texture2D" uid="uid://ifrevg8wnyvw" path="res://Built-In Instructions/IconLNS.bmp" id="11_w7twv"]
 [ext_resource type="Texture2D" uid="uid://dfl3rdmo5gdiy" path="res://Built-In Instructions/IconFRM.bmp" id="12_ybfo7"]
 [ext_resource type="Script" uid="uid://b55qdbpegdq00" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="13_leabi"]
 [ext_resource type="Texture2D" uid="uid://b3v1nu6sd00l" path="res://Built-In Instructions/IconMBR.bmp" id="14_h8koe"]
@@ -195,6 +196,19 @@ Description = "An instruction rule metadata block."
 Category = "Editor"
 PreInstructions = []
 PostInstructions = []
+
+[sub_resource type="Resource" id="Resource_h8koe"]
+resource_name = "LNS"
+script = ExtResource("2_xvlxa")
+Opcode = "LNS"
+Parameters = []
+Icon = ExtResource("11_w7twv")
+DisplayName = "Language Set"
+Description = "A language set metadata group."
+Category = "Editor"
+PreInstructions = []
+PostInstructions = []
+metadata/_custom_type_script = "uid://nj3anaafielp"
 
 [sub_resource type="Resource" id="Resource_leabi"]
 resource_name = "GRA"
@@ -541,4 +555,4 @@ script = ExtResource("26_b6f58")
 Name = "Editor"
 Description = "The instructions that are needed for the editor to function. Most are compiler flags that preserve program editability."
 Author = "Rusty Robotics B.V."
-Local = [SubResource("Resource_w7twv"), SubResource("Resource_2ke5f"), SubResource("Resource_6o02d"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_leabi"), SubResource("Resource_n23mp"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_a4bdl"), SubResource("Resource_leu7q"), SubResource("Resource_itw8j")]
+Local = [SubResource("Resource_w7twv"), SubResource("Resource_2ke5f"), SubResource("Resource_6o02d"), SubResource("Resource_cimir"), SubResource("Resource_wldw7"), SubResource("Resource_n3emi"), SubResource("Resource_hr6rg"), SubResource("Resource_d6p30"), SubResource("Resource_h8koe"), SubResource("Resource_leabi"), SubResource("Resource_n23mp"), SubResource("Resource_t3exr"), SubResource("Resource_7hiv8"), SubResource("Resource_cn6to"), SubResource("Resource_btai4"), SubResource("Resource_qej85"), SubResource("Resource_adnbf"), SubResource("Resource_13ejn"), SubResource("Resource_hn7y1"), SubResource("Resource_k3g4f"), SubResource("Resource_lgia3"), SubResource("Resource_ascot"), SubResource("Resource_a4bdl"), SubResource("Resource_leu7q"), SubResource("Resource_itw8j")]

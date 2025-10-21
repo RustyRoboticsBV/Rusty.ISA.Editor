@@ -170,7 +170,7 @@ public partial class Header : HBoxContainer, IGuiElement
         Background.MouseFilter = MouseFilterEnum.Ignore;
         Background.Color = Colors.Transparent;
         ContentsMargin.AddChild(Background);
-        Background.Name = "Background";
+        Background.Name = "Dock";
 
         Contents = new();
         Contents.SizeFlagsHorizontal = SizeFlags.ExpandFill;

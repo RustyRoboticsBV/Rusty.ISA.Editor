@@ -9,6 +9,4 @@ script = ExtResource("1_1x08l")
 Name = "BuiltIn"
 Description = "A module that contains all built-in instructions that needed by the core ISA module and editor app."
 Author = "Rusty Robotics B.V."
-Version = "1.0.0"
-Local = []
 Modules = [ExtResource("26_4o8d3"), ExtResource("2_e4ajj")]

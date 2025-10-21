@@ -27,10 +27,6 @@ public abstract partial class PreviewInstance : Resource
     public override string ToString()
     {
         return Input.ToString();
-        return "{"
-            + $"\n My input = {Input.ToString().Replace("\n", "\n ")}"
-            + $"\n Default = {Preview.DefaultInput.ToString().Replace("\n", "\n ")}"
-            + "\n}";
     }
 
     /// <summary>

@@ -207,7 +207,7 @@ public partial class BorderContainer : MarginContainer, IContainer
         Background.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         Background.SizeFlagsVertical = SizeFlags.ExpandFill;
         Background.Color = Colors.Transparent;
-        Background.Name = "Background";
+        Background.Name = "Dock";
 
         // Create left edge.
         Left = new();

@@ -67,7 +67,7 @@ public sealed partial class PopupButton : LabeledElement
         // Add fake button for a background.
         FakeButton = new();
         container.AddChild(FakeButton);
-        FakeButton.Name = "Background";
+        FakeButton.Name = "Dock";
 
         // Add real button.
         MenuButton = new();

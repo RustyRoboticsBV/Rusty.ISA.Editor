@@ -91,6 +91,7 @@ public abstract class Parser : CompilerTool
             case BuiltIn.InstructionSetOpcode:
             case BuiltIn.DefinitionOpcode:
             case BuiltIn.CompileRuleOpcode:
+            case BuiltIn.LanguageSetOpcode:
             case BuiltIn.GraphOpcode:
             case BuiltIn.CommentOpcode:
             case BuiltIn.FrameOpcode:

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Godot;
 using Rusty.Graphs;
 
 namespace Rusty.ISA.Editor;
@@ -44,15 +45,27 @@ public class SyntaxTree
     /// </summary>
     public void Decompile(Ledger ledger)
     {
-        SubNode programNode = Root?.GetChildWith(BuiltIn.GraphOpcode);
+        // Load languages.
+        SubNode metadataNode = Root?.GetChildWith(BuiltIn.MetadataOpcode);
+        SubNode languageSetNode = metadataNode?.GetChildWith(BuiltIn.LanguageSetOpcode);
+        ledger.ClearLanguages();
+        if (languageSetNode != null)
+        {
+            for (int i = 0; i < languageSetNode.ChildCount - 1; i++)
+            {
+                SubNode language = languageSetNode.GetChildAt(i);
+                ledger.LanguageTab.AddLanguage(language.GetArgument(BuiltIn.LanguageID));
+            }
+        }
 
         // Create graph.
+        SubNode graphNode = Root?.GetChildWith(BuiltIn.GraphOpcode);
         Graph graph = new();
         Dictionary<string, RootNode> labeledNodes = new();
-        for (int i = 0; i < programNode.ChildCount; i++)
+        for (int i = 0; i < graphNode.ChildCount; i++)
         {
             // Find element node.
-            SubNode child = programNode.GetChildAt(i);
+            SubNode child = graphNode.GetChildAt(i);
 
             // Ignore the end-of-group.
             if (child.Opcode == BuiltIn.EndOfGroupOpcode)
@@ -117,7 +130,7 @@ public class SyntaxTree
         }
 
         // Spawn objects.
-        ledger.Clear();
+        ledger.ClearGraph();
         Dictionary<RootNode, LedgerItem> items = new();
         Dictionary<string, LedgerFrame> frames = new();
         for (int i = 0; i < graph.NodeCount; i++)
@@ -165,7 +178,7 @@ public class SyntaxTree
                 }
                 catch
                 {
-                    Log.Error($"Cannot find frame with ID '{frameID}'.");
+                    Log.Error($"Cannot find frame with IDField '{frameID}'.");
                 }
             }
         }
