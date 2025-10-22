@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="InstructionSet" load_steps=88 format=3 uid="uid://d308mnoeq7xa"]
 
 [ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconISA.bmp" id="1_xv6kh"]
-[ext_resource type="Texture2D" uid="uid://dirnyk1o5ojkj" path="res://Built-In Instructions/IconMD5.bmp" id="2_owem4"]
 [ext_resource type="Script" uid="uid://nj3anaafielp" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_xvlxa"]
 [ext_resource type="Texture2D" uid="uid://bn1xqf4r0frab" path="res://Built-In Instructions/IconDEF.bmp" id="3_m1uhb"]
+[ext_resource type="Texture2D" uid="uid://boxtao8gyvaoq" path="res://Built-In Instructions/IconMD5.svg" id="3_w7twv"]
 [ext_resource type="Script" uid="uid://d02yl7f7rgu3u" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/TextlineParameter.cs" id="4_513eb"]
 [ext_resource type="Texture2D" uid="uid://bxhyuh5kvcdht" path="res://Built-In Instructions/IconPAR.bmp" id="5_owem4"]
 [ext_resource type="Texture2D" uid="uid://bnxu4r33ccaum" path="res://Built-In Instructions/IconRUL.bmp" id="6_n23mp"]
@@ -17,7 +17,6 @@
 [ext_resource type="Script" uid="uid://beorwwi6t13op" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="11_6o02d"]
 [ext_resource type="Texture2D" uid="uid://ifrevg8wnyvw" path="res://Built-In Instructions/IconLNS.bmp" id="11_w7twv"]
 [ext_resource type="Script" uid="uid://b55qdbpegdq00" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="13_leabi"]
-[ext_resource type="Texture2D" uid="uid://b3v1nu6sd00l" path="res://Built-In Instructions/IconMBR.bmp" id="14_h8koe"]
 [ext_resource type="Texture2D" uid="uid://cjemdotpuc4en" path="res://Built-In Instructions/IconJNT.svg" id="14_w7twv"]
 [ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="15_iw3te"]
 [ext_resource type="Texture2D" uid="uid://nyag7iauyi0f" path="res://Built-In Instructions/IconINS.bmp" id="16_yfual"]
@@ -28,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://bsyv7nqrs5wpj" path="res://Built-In Instructions/IconFRM.svg" id="19_2detx"]
 [ext_resource type="Texture2D" uid="uid://csuae1j5ge1uj" path="res://Built-In Instructions/IconCHO.bmp" id="20_6grd4"]
 [ext_resource type="Texture2D" uid="uid://hebpbqr6ffha" path="res://Built-In Instructions/IconTPL.bmp" id="21_vqniu"]
+[ext_resource type="Texture2D" uid="uid://p6gm5um2j1jr" path="res://Built-In Instructions/IconMBR.svg" id="21_w7twv"]
 [ext_resource type="Texture2D" uid="uid://cw6aeeeuk5i85" path="res://Built-In Instructions/IconLST.bmp" id="22_8lt0d"]
 [ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOG.bmp" id="25_4egf8"]
 [ext_resource type="Script" uid="uid://cecyq1lx2acho" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="26_b6f58"]
@@ -72,7 +72,7 @@ resource_name = "MD5"
 script = ExtResource("2_xvlxa")
 Opcode = "MD5"
 Parameters = [SubResource("Resource_2detx")]
-Icon = ExtResource("2_owem4")
+Icon = ExtResource("3_w7twv")
 DisplayName = "Checksum"
 Description = "A checksum marker. Used for data validation."
 Category = "Editor"
@@ -390,7 +390,7 @@ resource_name = "MBR"
 script = ExtResource("2_xvlxa")
 Opcode = "MBR"
 Parameters = [SubResource("Resource_em22h")]
-Icon = ExtResource("14_h8koe")
+Icon = ExtResource("21_w7twv")
 DisplayName = "Frame Member"
 Description = "Designates a graph element as being a member of a frame with some ID."
 Category = "Editor"
