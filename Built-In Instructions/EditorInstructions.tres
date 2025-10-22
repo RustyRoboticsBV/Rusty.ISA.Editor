@@ -10,22 +10,22 @@
 [ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="7_rqbqj"]
 [ext_resource type="Script" uid="uid://07v43p0qn0qo" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/BoolParameter.cs" id="7_w7twv"]
 [ext_resource type="Script" uid="uid://btht0mxxam3r7" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="8_w7twv"]
-[ext_resource type="Texture2D" uid="uid://bdrkrwn8lh415" path="res://Built-In Instructions/IconCMT.bmp" id="9_2ke5f"]
 [ext_resource type="Texture2D" uid="uid://bfcm1dlgmi5cu" path="res://Built-In Instructions/IconPRO.bmp" id="9_n23mp"]
-[ext_resource type="Texture2D" uid="uid://bd3m0r4tfpjfy" path="res://Built-In Instructions/IconJNT.bmp" id="9_xvlxa"]
 [ext_resource type="Script" uid="uid://dtxuwjx75byap" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="10_2detx"]
 [ext_resource type="Script" uid="uid://yv1p0xvly16v" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="10_m1uhb"]
 [ext_resource type="Texture2D" uid="uid://bcbcaqtumydtb" path="res://Built-In Instructions/IconGRA.bmp" id="10_n23mp"]
 [ext_resource type="Script" uid="uid://beorwwi6t13op" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="11_6o02d"]
 [ext_resource type="Texture2D" uid="uid://ifrevg8wnyvw" path="res://Built-In Instructions/IconLNS.bmp" id="11_w7twv"]
-[ext_resource type="Texture2D" uid="uid://dfl3rdmo5gdiy" path="res://Built-In Instructions/IconFRM.bmp" id="12_ybfo7"]
 [ext_resource type="Script" uid="uid://b55qdbpegdq00" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="13_leabi"]
 [ext_resource type="Texture2D" uid="uid://b3v1nu6sd00l" path="res://Built-In Instructions/IconMBR.bmp" id="14_h8koe"]
+[ext_resource type="Texture2D" uid="uid://cjemdotpuc4en" path="res://Built-In Instructions/IconJNT.svg" id="14_w7twv"]
 [ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="15_iw3te"]
 [ext_resource type="Texture2D" uid="uid://nyag7iauyi0f" path="res://Built-In Instructions/IconINS.bmp" id="16_yfual"]
+[ext_resource type="Texture2D" uid="uid://cklrd8kjkxet7" path="res://Built-In Instructions/IconCMT.svg" id="17_2ke5f"]
 [ext_resource type="Texture2D" uid="uid://cg1l63y6ngo4a" path="res://Built-In Instructions/IconPRE.bmp" id="17_2qpao"]
 [ext_resource type="Texture2D" uid="uid://chwtisxfc6sgf" path="res://Built-In Instructions/IconPST.bmp" id="18_ctg55"]
 [ext_resource type="Texture2D" uid="uid://d06v0b1l2xkth" path="res://Built-In Instructions/IconOPT.bmp" id="19_0ip1a"]
+[ext_resource type="Texture2D" uid="uid://bsyv7nqrs5wpj" path="res://Built-In Instructions/IconFRM.svg" id="19_2detx"]
 [ext_resource type="Texture2D" uid="uid://csuae1j5ge1uj" path="res://Built-In Instructions/IconCHO.bmp" id="20_6grd4"]
 [ext_resource type="Texture2D" uid="uid://hebpbqr6ffha" path="res://Built-In Instructions/IconTPL.bmp" id="21_vqniu"]
 [ext_resource type="Texture2D" uid="uid://cw6aeeeuk5i85" path="res://Built-In Instructions/IconLST.bmp" id="22_8lt0d"]
@@ -257,7 +257,7 @@ script = ExtResource("2_xvlxa")
 Opcode = "JNT"
 Parameters = [SubResource("Resource_513eb"), SubResource("Resource_owem4")]
 Implementation = SubResource("Resource_rqbqj")
-Icon = ExtResource("9_xvlxa")
+Icon = ExtResource("14_w7twv")
 DisplayName = "Joint"
 Description = "An editor joint. Allows more control over edges in the editor graph. Has no in-game meaning."
 Category = "Editor"
@@ -300,7 +300,7 @@ resource_name = "CMT"
 script = ExtResource("2_xvlxa")
 Opcode = "CMT"
 Parameters = [SubResource("Resource_imjdl"), SubResource("Resource_bhdtu"), SubResource("Resource_53br1")]
-Icon = ExtResource("9_2ke5f")
+Icon = ExtResource("17_2ke5f")
 DisplayName = "Comment"
 Description = "An editor comment. It allows you to annotate and document your graphs. Has no in-game meaning."
 Category = "Editor"
@@ -370,7 +370,7 @@ resource_name = "FRM"
 script = ExtResource("2_xvlxa")
 Opcode = "FRM"
 Parameters = [SubResource("Resource_imkvv"), SubResource("Resource_g4ly1"), SubResource("Resource_kkrrb"), SubResource("Resource_vx1sj"), SubResource("Resource_ujlnt"), SubResource("Resource_qhjbc"), SubResource("Resource_qimco")]
-Icon = ExtResource("12_ybfo7")
+Icon = ExtResource("19_2detx")
 DisplayName = "Frame"
 Description = "An editor frame. It allows you to visually group graph elements. Has no in-game meaning."
 Category = "Editor"

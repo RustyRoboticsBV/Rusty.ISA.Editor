@@ -9,7 +9,7 @@ namespace Rusty.ISA.Editor;
 public partial class ContextMenu : PopupMenu
 {
     /* Public properties. */
-    public string MenuName { get; set; } = "Connect Node";
+    public string MenuName { get; set; } = "Create Node";
     public List<InstructionDefinition> Definitions { get; private set; } = new();
     public List<PopupMenu> Submenus { get; set; } = new();
 
@@ -97,6 +97,17 @@ public partial class ContextMenu : PopupMenu
         }
     }
 
+    /// <summary>
+    /// Remove all elements.
+    /// </summary>
+    public new void Clear()
+    {
+        while (ItemCount > 1)
+        {
+            RemoveItem(1);
+        }
+    }
+
     /* Godot overrides. */
     public override void _Process(double delta)
     {
@@ -114,6 +125,7 @@ public partial class ContextMenu : PopupMenu
 
     private ContextMenu AddCategory(string name, List<InstructionDefinition> definitions)
     {
+        GD.Print("category " + name);
         // Create submenu.
         ContextMenu submenu = new();
         submenu.MenuName = name;
