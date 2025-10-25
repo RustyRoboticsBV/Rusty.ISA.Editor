@@ -125,7 +125,6 @@ public partial class ContextMenu : PopupMenu
 
     private ContextMenu AddCategory(string name, List<InstructionDefinition> definitions)
     {
-        GD.Print("category " + name);
         // Create submenu.
         ContextMenu submenu = new();
         submenu.MenuName = name;
