@@ -1,45 +1,46 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=88 format=3 uid="uid://d308mnoeq7xa"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=89 format=3 uid="uid://d308mnoeq7xa"]
 
-[ext_resource type="Texture2D" uid="uid://cy1imr5qon8a6" path="res://Built-In Instructions/IconISA.bmp" id="1_xv6kh"]
+[ext_resource type="Texture2D" uid="uid://dijxuu7itriy1" path="res://Built-In Instructions/IconPRO.svg" id="1_2ke5f"]
 [ext_resource type="Script" uid="uid://nj3anaafielp" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_xvlxa"]
-[ext_resource type="Texture2D" uid="uid://bn1xqf4r0frab" path="res://Built-In Instructions/IconDEF.bmp" id="3_m1uhb"]
+[ext_resource type="Texture2D" uid="uid://b0oluke8rldmx" path="res://Built-In Instructions/IconMTA.svg" id="3_2ke5f"]
 [ext_resource type="Texture2D" uid="uid://boxtao8gyvaoq" path="res://Built-In Instructions/IconMD5.svg" id="3_w7twv"]
 [ext_resource type="Script" uid="uid://d02yl7f7rgu3u" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/TextlineParameter.cs" id="4_513eb"]
-[ext_resource type="Texture2D" uid="uid://bxhyuh5kvcdht" path="res://Built-In Instructions/IconPAR.bmp" id="5_owem4"]
-[ext_resource type="Texture2D" uid="uid://bnxu4r33ccaum" path="res://Built-In Instructions/IconRUL.bmp" id="6_n23mp"]
-[ext_resource type="Texture2D" uid="uid://dykddsssgvdwi" path="res://Built-In Instructions/IconREF.bmp" id="7_rqbqj"]
+[ext_resource type="Texture2D" uid="uid://dnm7nltmy64pq" path="res://Built-In Instructions/IconISA.svg" id="6_2ke5f"]
+[ext_resource type="Texture2D" uid="uid://jfwdeqcgt6cr" path="res://Built-In Instructions/IconDEF.svg" id="6_w7twv"]
 [ext_resource type="Script" uid="uid://07v43p0qn0qo" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/BoolParameter.cs" id="7_w7twv"]
+[ext_resource type="Texture2D" uid="uid://b5vktaynfbhtp" path="res://Built-In Instructions/IconPAR.svg" id="8_2ke5f"]
 [ext_resource type="Script" uid="uid://btht0mxxam3r7" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="8_w7twv"]
-[ext_resource type="Texture2D" uid="uid://bfcm1dlgmi5cu" path="res://Built-In Instructions/IconPRO.bmp" id="9_n23mp"]
+[ext_resource type="Texture2D" uid="uid://clyyxyb38ycg5" path="res://Built-In Instructions/IconRUL.svg" id="9_w7twv"]
 [ext_resource type="Script" uid="uid://dtxuwjx75byap" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="10_2detx"]
 [ext_resource type="Script" uid="uid://yv1p0xvly16v" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="10_m1uhb"]
-[ext_resource type="Texture2D" uid="uid://bcbcaqtumydtb" path="res://Built-In Instructions/IconGRA.bmp" id="10_n23mp"]
+[ext_resource type="Texture2D" uid="uid://4lcax2atay1q" path="res://Built-In Instructions/IconREF.svg" id="10_w7twv"]
 [ext_resource type="Script" uid="uid://beorwwi6t13op" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="11_6o02d"]
-[ext_resource type="Texture2D" uid="uid://ifrevg8wnyvw" path="res://Built-In Instructions/IconLNS.bmp" id="11_w7twv"]
+[ext_resource type="Texture2D" uid="uid://dp3v82uvtxrtq" path="res://Built-In Instructions/IconLNS.svg" id="12_2ke5f"]
+[ext_resource type="Texture2D" uid="uid://dmrdutdpu7sra" path="res://Built-In Instructions/IconGRA.svg" id="13_2detx"]
 [ext_resource type="Script" uid="uid://b55qdbpegdq00" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="13_leabi"]
 [ext_resource type="Texture2D" uid="uid://cjemdotpuc4en" path="res://Built-In Instructions/IconJNT.svg" id="14_w7twv"]
-[ext_resource type="Texture2D" uid="uid://jtdi0mww0hmq" path="res://Built-In Instructions/IconNOD.bmp" id="15_iw3te"]
-[ext_resource type="Texture2D" uid="uid://nyag7iauyi0f" path="res://Built-In Instructions/IconINS.bmp" id="16_yfual"]
 [ext_resource type="Texture2D" uid="uid://cklrd8kjkxet7" path="res://Built-In Instructions/IconCMT.svg" id="17_2ke5f"]
-[ext_resource type="Texture2D" uid="uid://cg1l63y6ngo4a" path="res://Built-In Instructions/IconPRE.bmp" id="17_2qpao"]
-[ext_resource type="Texture2D" uid="uid://chwtisxfc6sgf" path="res://Built-In Instructions/IconPST.bmp" id="18_ctg55"]
-[ext_resource type="Texture2D" uid="uid://d06v0b1l2xkth" path="res://Built-In Instructions/IconOPT.bmp" id="19_0ip1a"]
 [ext_resource type="Texture2D" uid="uid://bsyv7nqrs5wpj" path="res://Built-In Instructions/IconFRM.svg" id="19_2detx"]
-[ext_resource type="Texture2D" uid="uid://csuae1j5ge1uj" path="res://Built-In Instructions/IconCHO.bmp" id="20_6grd4"]
-[ext_resource type="Texture2D" uid="uid://hebpbqr6ffha" path="res://Built-In Instructions/IconTPL.bmp" id="21_vqniu"]
 [ext_resource type="Texture2D" uid="uid://p6gm5um2j1jr" path="res://Built-In Instructions/IconMBR.svg" id="21_w7twv"]
-[ext_resource type="Texture2D" uid="uid://cw6aeeeuk5i85" path="res://Built-In Instructions/IconLST.bmp" id="22_8lt0d"]
-[ext_resource type="Texture2D" uid="uid://di7yjijriotls" path="res://Built-In Instructions/IconEOG.bmp" id="25_4egf8"]
+[ext_resource type="Texture2D" uid="uid://bd1ol2o0tt07i" path="res://Built-In Instructions/IconNOD.svg" id="23_2ke5f"]
+[ext_resource type="Texture2D" uid="uid://fj23eeiotma2" path="res://Built-In Instructions/IconINS.svg" id="23_w7twv"]
+[ext_resource type="Texture2D" uid="uid://dxuv78ugb88ab" path="res://Built-In Instructions/IconPRE.svg" id="25_2ke5f"]
+[ext_resource type="Texture2D" uid="uid://cj50avfvj5hii" path="res://Built-In Instructions/IconPST.svg" id="26_2detx"]
+[ext_resource type="Texture2D" uid="uid://cu8b2m75yrdov" path="res://Built-In Instructions/IconOPT.svg" id="26_2ke5f"]
 [ext_resource type="Script" uid="uid://cecyq1lx2acho" path="res://Submodules/ISA/Scripts/Resources/Instruction Set/InstructionSet.cs" id="26_b6f58"]
-[ext_resource type="Texture2D" uid="uid://b5e8fbehuo4u6" path="res://Built-In Instructions/IconGTG.bmp" id="27_rqbqj"]
-[ext_resource type="Texture2D" uid="uid://u8wdpdq0vkps" path="res://Built-In Instructions/IconENG.bmp" id="28_w7twv"]
+[ext_resource type="Texture2D" uid="uid://bbtx34sjkn7f8" path="res://Built-In Instructions/IconCHO.svg" id="27_2detx"]
+[ext_resource type="Texture2D" uid="uid://8j4h7fc8dw7r" path="res://Built-In Instructions/IconTPL.svg" id="28_6o02d"]
+[ext_resource type="Texture2D" uid="uid://db5mmi1d4x0q7" path="res://Built-In Instructions/IconLST.svg" id="29_ybfo7"]
+[ext_resource type="Texture2D" uid="uid://dncirkjlhkx25" path="res://Built-In Instructions/IconGTG.svg" id="31_2ke5f"]
+[ext_resource type="Texture2D" uid="uid://bx43ofinefdgv" path="res://Built-In Instructions/IconENG.svg" id="32_2ke5f"]
+[ext_resource type="Texture2D" uid="uid://dp7b6r5vh3bjg" path="res://Built-In Instructions/IconEOG.svg" id="32_leabi"]
 
 [sub_resource type="Resource" id="Resource_w7twv"]
 resource_name = "PRO"
 script = ExtResource("2_xvlxa")
 Opcode = "PRO"
 Parameters = []
-Icon = ExtResource("9_n23mp")
+Icon = ExtResource("1_2ke5f")
 DisplayName = "Program"
 Description = "A root container for editor-generated programs."
 Category = "Editor"
@@ -52,6 +53,7 @@ resource_name = "MTA"
 script = ExtResource("2_xvlxa")
 Opcode = "MTA"
 Parameters = []
+Icon = ExtResource("3_2ke5f")
 DisplayName = "Metadata"
 Description = "A metadata group."
 Category = "Editor"
@@ -85,7 +87,7 @@ resource_name = "ISA"
 script = ExtResource("2_xvlxa")
 Opcode = "ISA"
 Parameters = []
-Icon = ExtResource("1_xv6kh")
+Icon = ExtResource("6_2ke5f")
 DisplayName = "Instruction Set Definition"
 Description = "An instruction set metadata group."
 Category = "Editor"
@@ -112,7 +114,7 @@ resource_name = "DEF"
 script = ExtResource("2_xvlxa")
 Opcode = "DEF"
 Parameters = [SubResource("Resource_avnf8"), SubResource("Resource_ybfo7")]
-Icon = ExtResource("3_m1uhb")
+Icon = ExtResource("6_w7twv")
 DisplayName = "Instruction Definition"
 Description = "An instruction definition metadata group."
 Category = "Editor"
@@ -138,7 +140,7 @@ resource_name = "PAR"
 script = ExtResource("2_xvlxa")
 Opcode = "PAR"
 Parameters = [SubResource("Resource_shaub"), SubResource("Resource_2jvhx")]
-Icon = ExtResource("5_owem4")
+Icon = ExtResource("8_2ke5f")
 DisplayName = "Parameter"
 Description = "A parameter metadata group."
 Category = "Editor"
@@ -164,7 +166,7 @@ resource_name = "RUL"
 script = ExtResource("2_xvlxa")
 Opcode = "RUL"
 Parameters = [SubResource("Resource_4i0kw"), SubResource("Resource_bdv4d")]
-Icon = ExtResource("6_n23mp")
+Icon = ExtResource("9_w7twv")
 DisplayName = "Compile Rule"
 Description = "A compile rule metadata group. Used for option, choice, tuple and list rules (but NOT instruction rules)."
 Category = "Editor"
@@ -190,7 +192,7 @@ resource_name = "REF"
 script = ExtResource("2_xvlxa")
 Opcode = "REF"
 Parameters = [SubResource("Resource_jdrw3"), SubResource("Resource_svoja")]
-Icon = ExtResource("7_rqbqj")
+Icon = ExtResource("10_w7twv")
 DisplayName = "Reference"
 Description = "An instruction rule metadata block."
 Category = "Editor"
@@ -202,7 +204,7 @@ resource_name = "LNS"
 script = ExtResource("2_xvlxa")
 Opcode = "LNS"
 Parameters = []
-Icon = ExtResource("11_w7twv")
+Icon = ExtResource("12_2ke5f")
 DisplayName = "Language Set"
 Description = "A language set metadata group."
 Category = "Editor"
@@ -215,7 +217,7 @@ resource_name = "GRA"
 script = ExtResource("2_xvlxa")
 Opcode = "GRA"
 Parameters = []
-Icon = ExtResource("10_n23mp")
+Icon = ExtResource("13_2detx")
 DisplayName = "Graph"
 Description = "A graph group. Contains all nodes, joints, comments and frames."
 Category = "Editor"
@@ -416,7 +418,7 @@ resource_name = "NOD"
 script = ExtResource("2_xvlxa")
 Opcode = "NOD"
 Parameters = [SubResource("Resource_g65gn"), SubResource("Resource_1ekkv")]
-Icon = ExtResource("15_iw3te")
+Icon = ExtResource("23_2ke5f")
 DisplayName = "Editor Node"
 Description = "An editor node. It should contain an inspector instruction, and optionally a label and/or start point instruction."
 Category = "Editor"
@@ -428,7 +430,7 @@ resource_name = "INS"
 script = ExtResource("2_xvlxa")
 Opcode = "INS"
 Parameters = []
-Icon = ExtResource("16_yfual")
+Icon = ExtResource("23_w7twv")
 DisplayName = "Instruction Inspector"
 Description = "An instruction inspector group."
 Category = "Editor"
@@ -440,7 +442,7 @@ resource_name = "PRE"
 script = ExtResource("2_xvlxa")
 Opcode = "PRE"
 Parameters = []
-Icon = ExtResource("17_2qpao")
+Icon = ExtResource("25_2ke5f")
 DisplayName = "Pre-Instructions"
 Description = "A pre-instruction group."
 Category = "Editor"
@@ -452,7 +454,7 @@ resource_name = "PST"
 script = ExtResource("2_xvlxa")
 Opcode = "PST"
 Parameters = []
-Icon = ExtResource("18_ctg55")
+Icon = ExtResource("26_2detx")
 DisplayName = "Post-Instructions"
 Description = "A post-instruction group."
 Category = "Editor"
@@ -464,7 +466,7 @@ resource_name = "OPT"
 script = ExtResource("2_xvlxa")
 Opcode = "OPT"
 Parameters = []
-Icon = ExtResource("19_0ip1a")
+Icon = ExtResource("26_2ke5f")
 DisplayName = "Option Inspector"
 Description = "An option inspector group."
 Category = "Editor"
@@ -483,7 +485,7 @@ resource_name = "CHO"
 script = ExtResource("2_xvlxa")
 Opcode = "CHO"
 Parameters = [SubResource("Resource_yjpwf")]
-Icon = ExtResource("20_6grd4")
+Icon = ExtResource("27_2detx")
 DisplayName = "Choice Inspector"
 Description = "A choice inspector group."
 Category = "Editor"
@@ -495,7 +497,7 @@ resource_name = "TPL"
 script = ExtResource("2_xvlxa")
 Opcode = "TPL"
 Parameters = []
-Icon = ExtResource("21_vqniu")
+Icon = ExtResource("28_6o02d")
 DisplayName = "Tuple Inspector"
 Description = "A tuple inspector group."
 Category = "Editor"
@@ -507,7 +509,7 @@ resource_name = "LST"
 script = ExtResource("2_xvlxa")
 Opcode = "LST"
 Parameters = []
-Icon = ExtResource("22_8lt0d")
+Icon = ExtResource("29_ybfo7")
 DisplayName = "List Inspector"
 Description = "A list inspector group."
 Category = "Editor"
@@ -519,7 +521,7 @@ resource_name = "GTG"
 script = ExtResource("2_xvlxa")
 Opcode = "GTG"
 Parameters = []
-Icon = ExtResource("27_rqbqj")
+Icon = ExtResource("31_2ke5f")
 DisplayName = "Goto Group"
 Description = "A goto group, used to group a label and goto instruction."
 Category = "Editor"
@@ -531,7 +533,7 @@ resource_name = "ENG"
 script = ExtResource("2_xvlxa")
 Opcode = "ENG"
 Parameters = []
-Icon = ExtResource("28_w7twv")
+Icon = ExtResource("32_2ke5f")
 DisplayName = "End Group"
 Description = "An end group, used to group a label and end instruction."
 Category = "Editor"
@@ -543,7 +545,7 @@ resource_name = "EOG"
 script = ExtResource("2_xvlxa")
 Opcode = "EOG"
 Parameters = []
-Icon = ExtResource("25_4egf8")
+Icon = ExtResource("32_leabi")
 DisplayName = "End of Block"
 Description = "Denotes the end of a group instruction."
 Category = "Editor"

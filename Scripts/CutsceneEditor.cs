@@ -34,5 +34,7 @@ public partial class CutsceneEditor : MarginContainer
         vbox.BottomMinSize = 8f;
         vbox.CurrentFactor = 0.8f;
         AddChild(vbox);
+
+        IconAtlasser.ToFile(set, "res://icons.png");
     }
 }
