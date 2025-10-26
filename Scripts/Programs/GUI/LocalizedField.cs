@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Godot;
 
-namespace ISA.Editor.Scripts.Programs.GUI
+namespace Rusty.ISA.Editor;
+
+public partial class LocalizedField : VBoxContainer
 {
-    internal class LocalizedField
+    public IField Field { get; private set; }
+
+    public LocalizedField(IField field)
     {
+        Field = field;
     }
+
+
 }

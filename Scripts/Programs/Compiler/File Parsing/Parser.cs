@@ -12,6 +12,8 @@ public abstract class Parser : CompilerTool
     /* Public methods. */
     public static RootNode Parse(InstructionSet set, string code)
     {
+        int currentIndex = 0;
+
         try
         {
             // Read CSV table.
@@ -21,16 +23,23 @@ public abstract class Parser : CompilerTool
             InstructionInstance[] instances = new InstructionInstance[csv.Height];
             for (int i = 0; i < csv.Height; i++)
             {
-                InstructionDefinition definition = set[csv[0, i]];
-                instances[i] = new(definition);
-                for (int j = 0; j < definition.Parameters.Length; j++)
+                try
                 {
-                    instances[i].Arguments[j] = csv[j + 1, i];
+                    InstructionDefinition definition = set[csv[0, i]];
+                    instances[i] = new(definition);
+                    for (int j = 0; j < definition.Parameters.Length; j++)
+                    {
+                        instances[i].Arguments[j] = csv[j + 1, i];
+                    }
+                }
+                catch
+                {
+                    currentIndex = i;
+                    throw;
                 }
             }
 
             // Create node tree.
-            int currentIndex = 0;
             SubNode program = Decompile(set, instances, ref currentIndex);
             RootNode result = program.ToRoot();
             result.StealChildren(program);
@@ -43,9 +52,8 @@ public abstract class Parser : CompilerTool
                 string checksumNew = result?.ComputeChecksum();
                 if (checksumNew != checksumOld)
                 {
-                    Log.Warning("The loaded program had a bad checksum! Value means the program was either externally modified "
-                        + "or corrupted, or that the instruction set was changed since last time that the result was last "
-                        + "modified!"
+                    Log.Warning("The loaded program had a bad checksum! This means the program was either externally modified "
+                        + "or corrupted, or that the instruction set was changed since last time that the program was modified!"
                         + "\n- Old checksum: " + checksumOld
                         + "\n- New checksum: " + checksumNew);
                 }
@@ -56,11 +64,11 @@ public abstract class Parser : CompilerTool
             // Return finished tree's root node.
             return result;
         }
-        catch
+        catch (Exception ex)
         {
             code = code.Replace("\r\n", "\n");
             code = code.Replace("\r", "\n");
-            Log.Error("The following result could not be loaded due to a syntax error:\n" + code);
+            Log.Error($"At line {currentIndex}: {ex.Message} The program could not be loaded.\n{code}");
 
             if (OS.HasFeature("editor"))
                 throw;
