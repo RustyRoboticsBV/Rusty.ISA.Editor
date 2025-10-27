@@ -15,7 +15,7 @@
 [ext_resource type="Script" uid="uid://yv1p0xvly16v" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="10_m1uhb"]
 [ext_resource type="Texture2D" uid="uid://4lcax2atay1q" path="res://Built-In Instructions/IconREF.svg" id="10_w7twv"]
 [ext_resource type="Script" uid="uid://beorwwi6t13op" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="11_6o02d"]
-[ext_resource type="Texture2D" uid="uid://dp3v82uvtxrtq" path="res://Built-In Instructions/IconLNS.svg" id="12_2ke5f"]
+[ext_resource type="Texture2D" uid="uid://dp3v82uvtxrtq" path="res://Built-In Instructions/IconDIC.svg" id="12_2ke5f"]
 [ext_resource type="Texture2D" uid="uid://dmrdutdpu7sra" path="res://Built-In Instructions/IconGRA.svg" id="13_2detx"]
 [ext_resource type="Script" uid="uid://b55qdbpegdq00" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/ColorParameter.cs" id="13_leabi"]
 [ext_resource type="Texture2D" uid="uid://cjemdotpuc4en" path="res://Built-In Instructions/IconJNT.svg" id="14_w7twv"]

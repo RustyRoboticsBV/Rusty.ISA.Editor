@@ -10,6 +10,9 @@ namespace Rusty.ISA.Editor;
 public abstract class Parser : CompilerTool
 {
     /* Public methods. */
+    /// <summary>
+    /// Decompile a string of code into a parse tree.
+    /// </summary>
     public static RootNode Parse(InstructionSet set, string code)
     {
         int currentIndex = 0;

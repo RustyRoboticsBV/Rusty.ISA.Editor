@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Godot;
 using Rusty.Graphs;
 
 namespace Rusty.ISA.Editor;
@@ -178,7 +177,7 @@ public class SyntaxTree
                 }
                 catch
                 {
-                    Log.Error($"Cannot find frame with IDField '{frameID}'.");
+                    Log.Error($"Cannot find frame with ID '{frameID}'.");
                 }
             }
         }
