@@ -26,7 +26,7 @@ public static class BuiltIn
     public const string ParameterOpcode = "PAR";
     public const string CompileRuleOpcode = "RUL";
     public const string ReferenceOpcode = "REF";
-    public const string LanguageSetOpcode = "LNS";
+    public const string LanguageSetOpcode = "DIC";
 
     public const string GraphOpcode = "GRA";
     public const string JointOpcode = "JNT";

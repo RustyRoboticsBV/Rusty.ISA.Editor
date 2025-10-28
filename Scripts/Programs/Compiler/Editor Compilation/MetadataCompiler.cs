@@ -33,7 +33,8 @@ public abstract class MetadataCompiler : CompilerTool
         metadata.AddChild(isa);
 
         // Create language block.
-        string[] languages = ledger.LanguageTab.GetAllLanguages();
+        // TODO
+        /*string[] languages = ledger.LanguageTab.GetAllLanguages();
         if (languages.Length > 0)
         {
             SubNode languageSet = MakeSub(instructionSet, BuiltIn.LanguageSetOpcode);
@@ -43,7 +44,7 @@ public abstract class MetadataCompiler : CompilerTool
             }
             languageSet.AddChild(MakeSub(instructionSet, BuiltIn.EndOfGroupOpcode));
             metadata.AddChild(languageSet);
-        }
+        }*/
 
         // Add end-of-group.
         metadata.AddChild(MakeSub(instructionSet, BuiltIn.EndOfGroupOpcode));

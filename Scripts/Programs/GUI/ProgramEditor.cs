@@ -11,10 +11,9 @@ public partial class ProgramEditor : MarginContainer
 
     private Button CopyButton { get; set; }
     private Button PasteButton { get; set; }
+    private LanguageDropdown Languages { get; set; }
 
-    private TabBar Tabs { get; set; }
     private InspectorWindow InspectorWindow { get; set; }
-    private LanguageTab LanguageWindow { get; set; }
     private GraphEdit GraphEdit { get; set; }
     private ContextMenu ContextMenu { get; set; }
 
@@ -55,15 +54,14 @@ public partial class ProgramEditor : MarginContainer
         PasteButton.Pressed += OnPressedPaste;
         buttons.AddChild(PasteButton);
 
+        VSeparator vseparator = new();
+        buttons.AddChild(vseparator);
+
+        Languages = new();
+        buttons.AddChild(Languages);
+
         // Create inspector dock.
         VBoxContainer leftDock = new();
-
-        // Create tabs.
-        Tabs = new();
-        Tabs.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        Tabs.AddTab("Inspector");
-        Tabs.AddTab("Languages");
-        leftDock.AddChild(Tabs);
 
         // Create inspector window.
         InspectorWindow = new();
@@ -71,12 +69,6 @@ public partial class ProgramEditor : MarginContainer
         InspectorWindow.SizeFlagsVertical = SizeFlags.ExpandFill;
         InspectorWindow.Name = "Inspector";
         leftDock.AddChild(InspectorWindow);
-
-        // Create language tab.
-        LanguageWindow = new();
-        LanguageWindow.SizeFlagsHorizontal = SizeFlags.Fill;
-        LanguageWindow.SizeFlagsVertical = SizeFlags.ExpandFill;
-        leftDock.AddChild(LanguageWindow);
 
         // Create graph.
         GraphEdit = new();
@@ -100,14 +92,7 @@ public partial class ProgramEditor : MarginContainer
         AddChild(ContextMenu);
 
         // Create program units container.
-        Ledger = new(set, GraphEdit, InspectorWindow, LanguageWindow);
-    }
-
-    /* Godot overrides. */
-    public override void _Process(double delta)
-    {
-        InspectorWindow.Visible = Tabs.CurrentTab == 0;
-        LanguageWindow.Visible = Tabs.CurrentTab == 1;
+        Ledger = new(set, GraphEdit, InspectorWindow);
     }
 
     /* Private methods. */
