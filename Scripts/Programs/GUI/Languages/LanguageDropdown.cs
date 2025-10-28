@@ -2,10 +2,14 @@
 
 namespace Rusty.ISA.Editor;
 
+/// <summary>
+/// A collection of UI elements for selecting, adding, removing, renaming and reordering languages.
+/// </summary>
 public partial class LanguageDropdown : HBoxContainer
 {
     /* Constants. */
     private const string IconPath = "res://Submodules/ISA/Built-In Instructions/IconLAN.svg";
+
     /* Private properties. */
     private OptionButton Dropdown { get; set; }
     private LineEditPopup AddPopup { get; set; }
@@ -33,6 +37,8 @@ public partial class LanguageDropdown : HBoxContainer
         // Create selector dropdown.
         Dropdown = new();
         Dropdown.CustomMinimumSize = new(128, 0);
+        Dropdown.TooltipText = "Select a language. This allows you to view and set\nalternate values for any node parameter "
+            + "that can\nbe localized to different languages.";
         Dropdown.AddItem("(default)");
         AddChild(Dropdown);
 
@@ -66,7 +72,7 @@ public partial class LanguageDropdown : HBoxContainer
         UpButton.Text = "\u25B2";
         UpButton.CustomMinimumSize = new(32, 0);
         UpButton.Scale = new(1f, 0.5f);
-        UpButton.TooltipText = "Swap this language with the language above it.";
+        UpButton.TooltipText = "Move this language up in the list by one spot.";
         UpButton.Pressed += OnUpButtonPressed;
         swapContainer.AddChild(UpButton);
 
@@ -75,13 +81,13 @@ public partial class LanguageDropdown : HBoxContainer
         DownButton.CustomMinimumSize = new(32, 0);
         DownButton.Position = new(0f, 16f);
         DownButton.Scale = new(1f, 0.5f);
-        DownButton.TooltipText = "Swap this language with the language below it.";
+        DownButton.TooltipText = "Move this language down in the list by one spot.";
         DownButton.Pressed += OnDownButtonPressed;
         swapContainer.AddChild(DownButton);
 
         // Create add language popup window.
         AddPopup = new();
-        AddPopup.Title = "Add Language";
+        AddPopup.Title = "Add a new language...";
         AddPopup.Confirmed += OnAddConfirmed;
         AddPopup.Canceled += OnAddCancelled;
         AddChild(AddPopup);
@@ -89,7 +95,6 @@ public partial class LanguageDropdown : HBoxContainer
 
         // Create remove language popup window.
         RemovePopup = new();
-        RemovePopup.Title = "Remove Language?";
         RemovePopup.ExtendToTitle = true;
         RemovePopup.KeepTitleVisible = true;
         RemovePopup.Size = new(512, RemovePopup.Size.Y);
@@ -100,7 +105,6 @@ public partial class LanguageDropdown : HBoxContainer
 
         // Create rename language popup window.
         RenamePopup = new();
-        RenamePopup.Title = "Rename Language";
         RenamePopup.Confirmed += OnRenameConfirmed;
         RenamePopup.Canceled += OnRenameCancelled;
         AddChild(RenamePopup);

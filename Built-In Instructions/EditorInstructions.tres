@@ -200,9 +200,9 @@ PreInstructions = []
 PostInstructions = []
 
 [sub_resource type="Resource" id="Resource_h8koe"]
-resource_name = "LNS"
+resource_name = "DIC"
 script = ExtResource("2_xvlxa")
-Opcode = "LNS"
+Opcode = "DIC"
 Parameters = []
 Icon = ExtResource("12_2ke5f")
 DisplayName = "Language Set"
