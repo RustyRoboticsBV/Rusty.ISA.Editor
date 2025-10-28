@@ -45,8 +45,7 @@ public class SyntaxTree
     public void Decompile(Ledger ledger)
     {
         // Load languages.
-        // TODO
-        /*SubNode metadataNode = Root?.GetChildWith(BuiltIn.MetadataOpcode);
+        SubNode metadataNode = Root?.GetChildWith(BuiltIn.MetadataOpcode);
         SubNode languageSetNode = metadataNode?.GetChildWith(BuiltIn.LanguageSetOpcode);
         ledger.ClearLanguages();
         if (languageSetNode != null)
@@ -54,9 +53,10 @@ public class SyntaxTree
             for (int i = 0; i < languageSetNode.ChildCount - 1; i++)
             {
                 SubNode language = languageSetNode.GetChildAt(i);
-                ledger.LanguageTab.AddLanguage(language.GetArgument(BuiltIn.LanguageID));
+                ledger.Languages.AddLanguage(language.GetArgument(BuiltIn.LanguageID));
             }
-        }*/
+            ledger.Languages.SelectDefault();
+        }
 
         // Create graph.
         SubNode graphNode = Root?.GetChildWith(BuiltIn.GraphOpcode);

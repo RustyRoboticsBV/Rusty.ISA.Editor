@@ -113,6 +113,14 @@ public partial class LanguageDropdown : HBoxContainer
 
     /* Public methods. */
     /// <summary>
+    /// Select the default language.
+    /// </summary>
+    public void SelectDefault()
+    {
+        Dropdown.Select(0);
+    }
+
+    /// <summary>
     /// Get the names of all user-defined languages.
     /// </summary>
     public string[] GetLanguages()
@@ -123,6 +131,43 @@ public partial class LanguageDropdown : HBoxContainer
             languages[i] = Dropdown.GetItemText(i + 1);
         }
         return languages;
+    }
+
+    /// <summary>
+    /// Add a language.
+    /// </summary>
+    public void AddLanguage(string language)
+    {
+        // Make sure that the new language has a legal name.
+        if (language == "")
+        {
+            Log.Error($"Cannot use the empty string as the name of a language!");
+            return;
+        }
+
+        for (int i = 0; i < Dropdown.ItemCount; i++)
+        {
+            if (Dropdown.GetItemText(i) == language)
+            {
+                Log.Error($"Cannot add language '{language}' because it already exists!");
+                return;
+            }
+        }
+
+        // Add the language.
+        Dropdown.AddItem(language);
+        Dropdown.Select(Dropdown.ItemCount - 1);
+    }
+
+    /// <summary>
+    /// Remove all user-defined languages.
+    /// </summary>
+    public void Clear()
+    {
+        while (Dropdown.ItemCount > 1)
+        {
+            Dropdown.RemoveItem(1);
+        }
     }
 
     /* Godot overrides. */
@@ -183,25 +228,8 @@ public partial class LanguageDropdown : HBoxContainer
         AddPopup.Text = "";
         AddPopup.Hide();
 
-        // Make sure that the new language has a legal name.
-        if (language == "")
-        {
-            Log.Error($"Cannot use the empty string as the name of a language!");
-            return;
-        }
-
-        for (int i = 0; i < Dropdown.ItemCount; i++)
-        {
-            if (Dropdown.GetItemText(i) == language)
-            {
-                Log.Error($"Cannot add language '{language}' because it already exists!");
-                return;
-            }
-        }
-
         // Add the language.
-        Dropdown.AddItem(language);
-        Dropdown.Select(Dropdown.ItemCount - 1);
+        AddLanguage(language);
     }
 
     private void OnAddCancelled()

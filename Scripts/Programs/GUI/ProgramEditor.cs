@@ -92,7 +92,7 @@ public partial class ProgramEditor : MarginContainer
         AddChild(ContextMenu);
 
         // Create program units container.
-        Ledger = new(set, GraphEdit, InspectorWindow);
+        Ledger = new(set, GraphEdit, InspectorWindow, Languages);
     }
 
     /* Private methods. */
