@@ -7,13 +7,13 @@ Each preview implementation should either be left empty, or return a string.
  Several special keywords are available when working with previews, which use the syntax `[[keyword]]`. The following are available:
 - Instruction Definitions:
   - `[[name]]`: gets replaced with the instruction's display name.
-  - `[[parameter_id]]`: gets replaced with a parameter's preview string.
-  - `[[rule_id]]`: gets replaced with a pre-instruction or post-instruction's preview string.
+  - `[[<parameter_id>]]`: gets replaced with a parameter's preview string.
+  - `[[<rule_id>]]`: gets replaced with a pre-instruction or post-instruction's preview string.
 - Editor Node Info:
   - `[[main]]`: gets replaced with the instruction definition's preview string.
   - `[[name]]`: gets replaced with the instruction's display name.
-  - `[[parameter_id]]`: works the same as for instruction definitions.
-  - `[[rule_id]]`: works the same as for instruction definitions.
+  - `[[<parameter_id>]]`: works the same as for instruction definitions.
+  - `[[<rule_id>]]`: works the same as for instruction definitions.
 - Parameters:
   - `[[name]]`: gets replaced with the parameter's display name.
   - `[[value]]`: gets replaced with the parameter's value.
@@ -21,7 +21,7 @@ Each preview implementation should either be left empty, or return a string.
 	- `[[min]]`: gets replaced with the slider's minimum value.
 	- `[[max]]`: gets replaced with the slider's maximum value.
   - Output Parameters:
-	- `[[parameter_id]]`: get replaced with another parameter's value. Only non-output parameters are allowed!
+	- `[[<parameter_id>]]`: get replaced with another parameter's value. Only non-output parameters are allowed!
 - Compile Rules:
   - `[[name]]`: gets replaced with the rule's display name.
   - Instruction Rule:
@@ -33,7 +33,7 @@ Each preview implementation should either be left empty, or return a string.
 	- `[[selected]]`: gets replaced with the index of the selected child rule.
 	- `[[element]]`: gets replaced with the selected child rule's preview string.
   - Tuple Rule:
-	- `[[chile_rule_id]]`: gets replaced with the specified child rule's preview string.
+	- `[[<chile_rule_id>]]`: gets replaced with the specified child rule's preview string.
 	- `[[element#]]`: does the same as the above, but uses the tuple element index instead (for example, `[[element0]]` results in the first element's preview string).
     - `[[count]]`: gets replaced with the number of elements in the tuple.
   - List Rule:
@@ -58,7 +58,7 @@ Several helper methods are available for usage in preview strings:
 - `wwrap(text : String, width : int) -> String`: automatically breaks lines that are too wide. Lines are only broken on space and dash characters.
 
 ## Limitations
-Several limitations exist to how previews may use the output of other previews, done in order to avoid the possibility of cyclic dependencies:
+To prevent cyclic dependencies in previews, several limitations exist:
 - Parameters cannot access the value of other parameters.
   - Except for outputs, which can only access non-output parameters.
 - Compile rules can only access the preview strings of their direct children.

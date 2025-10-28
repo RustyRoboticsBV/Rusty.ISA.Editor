@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="InstructionSet" load_steps=89 format=3 uid="uid://d308mnoeq7xa"]
+[gd_resource type="Resource" script_class="InstructionSet" load_steps=87 format=3 uid="uid://d308mnoeq7xa"]
 
 [ext_resource type="Texture2D" uid="uid://dijxuu7itriy1" path="res://Built-In Instructions/IconPRO.svg" id="1_2ke5f"]
 [ext_resource type="Script" uid="uid://nj3anaafielp" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/InstructionDefinition.cs" id="2_xvlxa"]
@@ -12,7 +12,6 @@
 [ext_resource type="Script" uid="uid://btht0mxxam3r7" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Node Info/EditorNodeInfo.cs" id="8_w7twv"]
 [ext_resource type="Texture2D" uid="uid://clyyxyb38ycg5" path="res://Built-In Instructions/IconRUL.svg" id="9_w7twv"]
 [ext_resource type="Script" uid="uid://dtxuwjx75byap" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/IntParameter.cs" id="10_2detx"]
-[ext_resource type="Script" uid="uid://yv1p0xvly16v" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Implementation/Implementation.cs" id="10_m1uhb"]
 [ext_resource type="Texture2D" uid="uid://4lcax2atay1q" path="res://Built-In Instructions/IconREF.svg" id="10_w7twv"]
 [ext_resource type="Script" uid="uid://beorwwi6t13op" path="res://Submodules/ISA/Scripts/Resources/Instruction Definition/Parameters/MultilineParameter.cs" id="11_6o02d"]
 [ext_resource type="Texture2D" uid="uid://dp3v82uvtxrtq" path="res://Built-In Instructions/IconDIC.svg" id="12_2ke5f"]
@@ -233,10 +232,6 @@ MinHeight = 2
 MainColor = Color(0.13, 0.13, 0.13, 1)
 metadata/_custom_type_script = "uid://btht0mxxam3r7"
 
-[sub_resource type="Resource" id="Resource_rqbqj"]
-script = ExtResource("10_m1uhb")
-metadata/_custom_type_script = "uid://yv1p0xvly16v"
-
 [sub_resource type="Resource" id="Resource_513eb"]
 resource_name = "x (int)"
 script = ExtResource("10_2detx")
@@ -258,7 +253,6 @@ resource_name = "JNT"
 script = ExtResource("2_xvlxa")
 Opcode = "JNT"
 Parameters = [SubResource("Resource_513eb"), SubResource("Resource_owem4")]
-Implementation = SubResource("Resource_rqbqj")
 Icon = ExtResource("14_w7twv")
 DisplayName = "Joint"
 Description = "An editor joint. Allows more control over edges in the editor graph. Has no in-game meaning."

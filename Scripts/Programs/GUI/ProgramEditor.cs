@@ -9,6 +9,8 @@ public partial class ProgramEditor : MarginContainer
     /* Private properties. */
     private InstructionSet InstructionSet { get; set; }
 
+    private PopupButton File { get; set; }
+    private PopupButton Edit { get; set; }
     private Button CopyButton { get; set; }
     private Button PasteButton { get; set; }
     private LanguageDropdown Languages { get; set; }
@@ -42,17 +44,19 @@ public partial class ProgramEditor : MarginContainer
         HBoxContainer buttons = new();
         vbox.AddChild(buttons);
 
-        CopyButton = new();
-        CopyButton.Text = "Copy";
-        CopyButton.FocusMode = FocusModeEnum.None;
-        CopyButton.Pressed += OnPressedCopy;
-        buttons.AddChild(CopyButton);
+        File = new();
+        File.ButtonText = "File";
+        File.Options = ["Save As", "Open", "Copy All", "Paste All"];
+        File.CustomMinimumSize = new(96, 0);
+        File.PressedOption += OnPressedFileOption;
+        buttons.AddChild(File);
 
-        PasteButton = new();
-        PasteButton.Text = "Paste";
-        PasteButton.FocusMode = FocusModeEnum.None;
-        PasteButton.Pressed += OnPressedPaste;
-        buttons.AddChild(PasteButton);
+        Edit = new();
+        Edit.ButtonText = "Edit";
+        Edit.Options = ["Undo", "Redo", "Clear"];
+        Edit.CustomMinimumSize = new(96, 0);
+        Edit.PressedOption += OnPressedEditOption;
+        buttons.AddChild(Edit);
 
         VSeparator vseparator = new();
         buttons.AddChild(vseparator);
@@ -96,7 +100,36 @@ public partial class ProgramEditor : MarginContainer
     }
 
     /* Private methods. */
-    private void OnPressedCopy()
+    private void OnPressedFileOption(long index)
+    {
+        switch (index)
+        {
+            case 0:
+                OnPressedSave();
+                break;
+            case 1:
+                OnPressedOpen();
+                break;
+            case 2:
+                OnPressedCopyAll();
+                break;
+            case 3:
+                OnPressedPasteAll();
+                break;
+        }
+    }
+
+    private void OnPressedSave()
+    {
+        Log.Error("Save as is not yet implemented.");
+    }
+
+    private void OnPressedOpen()
+    {
+        Log.Error("Open file is not yet implemented.");
+    }
+
+    private void OnPressedCopyAll()
     {
         try
         {
@@ -122,7 +155,7 @@ public partial class ProgramEditor : MarginContainer
         }
     }
 
-    private void OnPressedPaste()
+    private void OnPressedPasteAll()
     {
         // Read from clipboard.
         string code = DisplayServer.ClipboardGet();
@@ -140,6 +173,38 @@ public partial class ProgramEditor : MarginContainer
         // Decompile syntax tree.
         Log.Message("Decompilation syntax tree:", syntaxTree);
         syntaxTree.Decompile(Ledger);
+    }
+
+
+    private void OnPressedEditOption(long index)
+    {
+        switch (index)
+        {
+            case 0:
+                OnPressedUndo();
+                break;
+            case 1:
+                OnPressedRedo();
+                break;
+            case 2:
+                OnPressedClear();
+                break;
+        }
+    }
+
+    private void OnPressedUndo()
+    {
+        Log.Error("Undo not yet implemented.");
+    }
+
+    private void OnPressedRedo()
+    {
+        Log.Error("Redo not yet implemented.");
+    }
+
+    private void OnPressedClear()
+    {
+        Log.Error("Clear not yet implemented.");
     }
 
 
