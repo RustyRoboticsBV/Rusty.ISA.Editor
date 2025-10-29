@@ -33,18 +33,23 @@ public abstract partial class DockWindow<T> : MarginContainer
         AddChild(vbox);
 
         // Add title elements.
-        MarginContainer titleContainer = CreateMargin();
+        MarginContainer titleContainer = CreateMargin(false);
+        vbox.AddChild(titleContainer);
+
+        VBoxContainer titleVbox = new();
+        titleContainer.AddChild(titleVbox);
 
         TitleLabel = new();
         TitleLabel.Text = "Window";
         TitleLabel.HorizontalAlignment = HorizontalAlignment.Center;
-        TitleLabel.AddThemeFontSizeOverride("font_size", 20);
-        titleContainer.AddChild(TitleLabel);
+        titleVbox.AddChild(TitleLabel);
         TitleLabel.Name = "Title";
 
-        HSeparator separator = new();
-        titleContainer.AddChild(separator);
-        separator.Name = "Separator";
+        ColorRect separator = new();
+        separator.Color = EditorColors.InternalSeparator;
+        separator.CustomMinimumSize = new(1, 1);
+        titleVbox.AddChild(separator);
+        separator.Name = "InternalSeparator";
 
         // Add scroll view.
         ScrollContainer scroll = new();
@@ -88,7 +93,7 @@ public abstract partial class DockWindow<T> : MarginContainer
     }
 
     /* Private methods. */
-    private static MarginContainer CreateMargin()
+    private static MarginContainer CreateMargin(bool expandFillY = true)
     {
         MarginContainer margin = new();
         margin.AddThemeConstantOverride("margin_left", 4);
@@ -96,7 +101,8 @@ public abstract partial class DockWindow<T> : MarginContainer
         margin.AddThemeConstantOverride("margin_bottom", 4);
         margin.AddThemeConstantOverride("margin_top", 4);
         margin.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        margin.SizeFlagsVertical = SizeFlags.ExpandFill;
+        if (expandFillY)
+            margin.SizeFlagsVertical = SizeFlags.ExpandFill;
         return margin;
     }
 }

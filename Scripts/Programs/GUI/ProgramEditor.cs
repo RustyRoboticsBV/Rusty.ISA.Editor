@@ -31,6 +31,10 @@ public partial class ProgramEditor : MarginContainer
 
         MouseFilter = MouseFilterEnum.Pass;
 
+        // Add margins.
+        AddThemeConstantOverride("margin_left", 4);
+        AddThemeConstantOverride("margin_top", 4);
+
         // Add background.
         ColorRect background = new();
         background.Color = EditorColors.Background;
@@ -46,14 +50,14 @@ public partial class ProgramEditor : MarginContainer
 
         File = new();
         File.ButtonText = "File";
-        File.Options = ["Save As", "Open", "Copy All", "Paste All"];
+        File.Options = ["New", "Save As", "Open", "Copy All", "Paste All"];
         File.CustomMinimumSize = new(96, 0);
         File.PressedOption += OnPressedFileOption;
         buttons.AddChild(File);
 
         Edit = new();
         Edit.ButtonText = "Edit";
-        Edit.Options = ["Undo", "Redo", "Clear"];
+        Edit.Options = ["Undo", "Redo", "Copy", "Paste", "Delete", "Create Node"];
         Edit.CustomMinimumSize = new(96, 0);
         Edit.PressedOption += OnPressedEditOption;
         buttons.AddChild(Edit);
@@ -105,18 +109,26 @@ public partial class ProgramEditor : MarginContainer
         switch (index)
         {
             case 0:
-                OnPressedSave();
+                OnPressedNew();
                 break;
             case 1:
-                OnPressedOpen();
+                OnPressedSave();
                 break;
             case 2:
-                OnPressedCopyAll();
+                OnPressedOpen();
                 break;
             case 3:
+                OnPressedCopyAll();
+                break;
+            case 4:
                 OnPressedPasteAll();
                 break;
         }
+    }
+
+    private void OnPressedNew()
+    {
+        Log.Error("New as is not yet implemented.");
     }
 
     private void OnPressedSave()
@@ -187,7 +199,16 @@ public partial class ProgramEditor : MarginContainer
                 OnPressedRedo();
                 break;
             case 2:
-                OnPressedClear();
+                OnPressedCopy();
+                break;
+            case 3:
+                OnPressedPaste();
+                break;
+            case 4:
+                OnPressedDelete();
+                break;
+            case 5:
+                OnPressedCreateNode();
                 break;
         }
     }
@@ -202,9 +223,25 @@ public partial class ProgramEditor : MarginContainer
         Log.Error("Redo not yet implemented.");
     }
 
-    private void OnPressedClear()
+    private void OnPressedCopy()
     {
-        Log.Error("Clear not yet implemented.");
+        Log.Error("Copy not yet implemented.");
+    }
+
+    private void OnPressedPaste()
+    {
+        Log.Error("Paste not yet implemented.");
+    }
+
+    private void OnPressedDelete()
+    {
+        Log.Error("Delete not yet implemented.");
+    }
+
+    private void OnPressedCreateNode()
+    {
+        ContextMenu.Position = (Vector2I)(GraphEdit.GlobalPosition + GraphEdit.Size / 10f);
+        ContextMenu.Show();
     }
 
 

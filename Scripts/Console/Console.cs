@@ -26,9 +26,22 @@ public partial class Console : MarginContainer
         AddThemeConstantOverride("margin_right", 4);
         AddThemeConstantOverride("margin_bottom", 4);
 
+        // Add background.
+        ColorRect bg = new();
+        bg.Color = EditorColors.Dock;
+        AddChild(bg);
+
+        // Add margin.
+        MarginContainer margin = new();
+        margin.AddThemeConstantOverride("margin_left", 4);
+        margin.AddThemeConstantOverride("margin_right", 4);
+        margin.AddThemeConstantOverride("margin_bottom", 4);
+        margin.AddThemeConstantOverride("margin_top", 4);
+        AddChild(margin);
+
         // Add vbox.
         VBoxContainer vbox = new();
-        AddChild(vbox);
+        margin.AddChild(vbox);
 
         // Add buttons.
         HBoxContainer buttons = new();
@@ -36,7 +49,7 @@ public partial class Console : MarginContainer
         vbox.AddChild(buttons);
 
         Label label = new();
-        label.Text = "Console";
+        label.Text = " Console";
         label.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         buttons.AddChild(label);
 
@@ -57,6 +70,11 @@ public partial class Console : MarginContainer
         clearButton.SizeFlagsHorizontal = SizeFlags.ShrinkEnd;
         clearButton.Pressed += OnClearPressed;
         buttons.AddChild(clearButton);
+
+        ColorRect separator = new();
+        separator.CustomMinimumSize = new(1, 1);
+        separator.Color = EditorColors.InternalSeparator;
+        vbox.AddChild(separator);
 
         // Add scroll.
         ScrollContainer scroll = new();

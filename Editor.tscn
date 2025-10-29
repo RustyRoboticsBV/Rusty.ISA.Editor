@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://mmxot80dkahv"]
+[gd_scene load_steps=4 format=3 uid="uid://b4ajkrmo6qiaf"]
 
-[ext_resource type="Script" uid="uid://2uojmemcu4qc" path="res://Scripts/CutsceneEditor.cs" id="1_1qsck"]
-[ext_resource type="Resource" uid="uid://dnt3g5dpjm0pd" path="res://Built-In Instructions/InstructionSet.tres" id="2_agv3s"]
+[ext_resource type="Script" uid="uid://2uojmemcu4qc" path="res://Scripts/CutsceneEditor.cs" id="1_n3oiu"]
+[ext_resource type="Resource" uid="uid://dnt3g5dpjm0pd" path="res://Built-In Instructions/InstructionSet.tres" id="2_h2yt8"]
 [ext_resource type="FontVariation" uid="uid://4o20x61wdxf6" path="res://Fonts/UbuntuMono-R-Edit.tres" id="3_agv3s"]
 
 [node name="CutsceneEditor" type="MarginContainer"]
@@ -10,9 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_1qsck")
-BuiltIn = ExtResource("2_agv3s")
-Description = "The generated instruction set."
-Author = "Rusty Robotics B.V."
+script = ExtResource("1_n3oiu")
+BuiltIn = ExtResource("2_h2yt8")
 ConsoleFont = ExtResource("3_agv3s")
 metadata/_custom_type_script = "uid://2uojmemcu4qc"

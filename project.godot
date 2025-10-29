@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ISA Editor"
-run/main_scene="uid://mmxot80dkahv"
+run/main_scene="uid://b4ajkrmo6qiaf"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 

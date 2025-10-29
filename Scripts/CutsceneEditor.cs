@@ -5,6 +5,7 @@ namespace Rusty.ISA.Editor;
 [GlobalClass]
 public partial class CutsceneEditor : MarginContainer
 {
+    /* Fields. */
     [Export] InstructionSet BuiltIn { get; set; }
     [Export] string FolderPath { get; set; } = "res://.godot/Definitions";
     [Export] new string Name { get; set; } = "InstructionSet";
@@ -19,6 +20,11 @@ public partial class CutsceneEditor : MarginContainer
         // Build instruction set.
         InstructionSet set = InstructionSetBuilder.Build(Name, Description, Author, Version, BuiltIn, FolderPath);
 
+        // Create background.
+        ColorRect bg = new();
+        bg.Color = EditorColors.Background;
+        AddChild(bg);
+
         // Create program editor.
         ProgramEditor programEditor = new(set);
 
@@ -31,7 +37,7 @@ public partial class CutsceneEditor : MarginContainer
         // Create vbox.
         VSplitContainer vbox = new(programEditor, console);
         vbox.TopMinSize = 8;
-        vbox.BottomMinSize = 8f;
+        vbox.BottomMinSize = 52f;
         vbox.CurrentFactor = 0.8f;
         AddChild(vbox);
 
