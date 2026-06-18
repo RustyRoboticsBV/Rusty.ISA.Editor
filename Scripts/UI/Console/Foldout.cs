@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Rusty.ISA.Console;
+namespace Rusty.ISA.Consoles;
 
 /// <summary>
 /// A foldout label that reacts to mouse input events.
@@ -50,5 +50,69 @@ public partial class Foldout : LabeledElement
             base.LabelText = $"\u25BC  {LabelText}";
         else
             base.LabelText = $"\u25B6  {LabelText}";
+    }
+}
+
+
+
+
+
+// TODO: merge into foldout class.
+
+/// <summary>
+/// An element with a label.
+/// </summary>
+public partial class LabeledElement : HBoxContainer
+{
+    /* Public properties. */
+    public int LabelWidth
+    {
+        get => (int)Label.CustomMinimumSize.X;
+        set
+        {
+            Label.CustomMinimumSize = new(LabelWidth, 0f);
+            Label.Visible = Label.Text != "";
+        }
+    }
+    public string LabelText
+    {
+        get => Label.Text;
+        set => Label.Text = value;
+    }
+    public Color LabelColor
+    {
+        get => Label.Modulate;
+        set => Label.Modulate = value;
+    }
+    public int LabelFontSize
+    {
+        get => Label.GetThemeFontSize("font_size");
+        set => Label.AddThemeFontSizeOverride("font_size", value);
+    }
+    public Font LabelFont
+    {
+        get => Label.GetThemeFont("font");
+        set => Label.AddThemeFontOverride("font", value);
+    }
+    public virtual new string TooltipText
+    {
+        get => base.TooltipText;
+        set
+        {
+            base.TooltipText = value;
+            Label.TooltipText = value;
+        }
+    }
+
+    /* Protected properties. */
+    protected Label Label { get; private set; }
+
+    /* Constructors. */
+    public LabeledElement()
+    {
+        // Create label.
+        Label = new();
+        Label.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        AddChild(Label);
     }
 }

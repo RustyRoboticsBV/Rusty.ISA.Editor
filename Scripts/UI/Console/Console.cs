@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-namespace Rusty.ISA.Console;
+namespace Rusty.ISA.Consoles;
 
 public partial class Console : MarginContainer
 {
@@ -28,7 +28,7 @@ public partial class Console : MarginContainer
 
         // Add background.
         ColorRect bg = new();
-        bg.Color = EditorColors.Dock;
+        bg.Color = ConsoleColors.Dock;
         AddChild(bg);
 
         // Add margin.
@@ -73,7 +73,7 @@ public partial class Console : MarginContainer
 
         ColorRect separator = new();
         separator.CustomMinimumSize = new(1, 1);
-        separator.Color = EditorColors.InternalSeparator;
+        separator.Color = ConsoleColors.InternalSeparator;
         vbox.AddChild(separator);
 
         // Add scroll.
@@ -113,7 +113,8 @@ public partial class Console : MarginContainer
         ConsoleLine line = new();
         line.LabelText = text;
         line.LabelColor = color;
-        line.LabelFont = Font;
+        if (Font != null)
+            line.LabelFont = Font;
         line.BackgroundColor = Lines.Count % 2 == 0 ? OddColor : EvenColor;
         line.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         LineContainer.AddChild(line);

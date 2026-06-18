@@ -1,8 +1,8 @@
 ﻿using Godot;
 
-namespace Rusty.ISA.Editor;
+namespace Rusty.ISA.Consoles;
 
-public static class EditorColors
+public static class ConsoleColors
 {
     /* Public properties. */
     public static Color Background => new(0.5f, 0.5f, 0.5f);

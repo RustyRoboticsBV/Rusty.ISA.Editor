@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Rusty.ISA.Console;
+namespace Rusty.ISA.Consoles;
 
 public partial class ConsoleLine : MarginContainer
 {
@@ -59,7 +59,7 @@ public partial class ConsoleLine : MarginContainer
     /* Godot overrides. */
     public override void _Process(double delta)
     {
-        Foldout.SizeFlagsHorizontal = Foldout.IsOpen ? SizeFlags.ShrinkBegin : SizeFlags.ExpandFill;
+        Foldout.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         if (Foldout.IsOpen)
             Foldout.LabelText = LabelText;
         else
@@ -70,7 +70,5 @@ public partial class ConsoleLine : MarginContainer
             else
                 Foldout.LabelText = LabelText;
         }
-
-        base._Process(delta);
     }
 }

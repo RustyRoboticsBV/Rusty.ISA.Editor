@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://b42qbkyncrp8c"]
+
+[ext_resource type="Script" uid="uid://doxs4umpl6fjr" path="res://Scripts/UI/IsaEditor.cs" id="1_0lbib"]
+[ext_resource type="FontVariation" uid="uid://4o20x61wdxf6" path="res://Fonts/UbuntuMono-R-Edit.tres" id="2_0hhuw"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="IsaEditor" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_0lbib")
+ConsoleFont = ExtResource("2_0hhuw")
+metadata/_custom_type_script = "uid://doxs4umpl6fjr"
