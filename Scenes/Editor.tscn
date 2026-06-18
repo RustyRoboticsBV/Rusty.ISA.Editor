@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://b42qbkyncrp8c"]
+[gd_scene load_steps=4 format=3 uid="uid://b42qbkyncrp8c"]
 
 [ext_resource type="Script" uid="uid://dfipvca8by3jf" path="res://Scripts/UI/IsaEditor.cs" id="1_0lbib"]
+[ext_resource type="Script" uid="uid://c7iq4qdt3nxex" path="res://Scripts/Test.cs" id="1_trcuy"]
 [ext_resource type="FontVariation" uid="uid://4o20x61wdxf6" path="res://Fonts/UbuntuMono-R-Edit.tres" id="2_0hhuw"]
 
 [node name="Control" type="Control"]
@@ -11,13 +12,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="IsaEditor" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Test" type="ScrollContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+script = ExtResource("1_trcuy")
+metadata/_custom_type_script = "uid://c7iq4qdt3nxex"
+
+[node name="IsaEditor" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_0lbib")
