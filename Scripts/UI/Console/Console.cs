@@ -104,7 +104,7 @@ public partial class Console : MarginContainer
 
     public void PrintError(string text)
     {
-        Print("\u26A0 ERROR: " + text, ErrorColor);
+        Print("\u274e ERROR: " + text, ErrorColor);
     }
 
     /* Private methods. */
