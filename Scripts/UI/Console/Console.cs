@@ -99,12 +99,12 @@ public partial class Console : MarginContainer
 
     public void PrintWarning(string text)
     {
-        Print("WARNING: " + text, WarningColor);
+        Print("\u26A0 WARNING: " + text, WarningColor);
     }
 
     public void PrintError(string text)
     {
-        Print("ERROR: " + text, ErrorColor);
+        Print("\u26A0 ERROR: " + text, ErrorColor);
     }
 
     /* Private methods. */

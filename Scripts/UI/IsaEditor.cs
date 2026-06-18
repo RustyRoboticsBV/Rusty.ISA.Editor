@@ -19,5 +19,10 @@ public partial class IsaEditor : VBoxContainer
         AddChild(console);
         Log.Console = console;
         Log.Message("Kaas");
+        Log.Message("Kaas\nKaaaaas");
+        Log.Warning("Kaas");
+        Log.Warning("Kaas\nKaaaaas");
+        Log.Error("Kaas");
+        Log.Error("Kaas\nKaaaaas");
     }
 }
