@@ -9,7 +9,13 @@ public interface IValued : IWidget
     /// <summary>
     /// The value of this widget.
     /// </summary>
-    public object Value { get; set; }
+    public object Value { get; }
+
+    /* Public methods. */
+    /// <summary>
+    /// Set the value of this this widget.
+    /// </summary>
+    public void SetValue(object value);
 }
 
 /// <summary>
@@ -21,11 +27,21 @@ public interface IValued<T> : IValued
     object IValued.Value
     {
         get => Value;
-        set => Value = (T)value;
     }
 
     /// <summary>
     /// The value of this widget.
     /// </summary>
-    public new T Value { get; set; }
+    public new T Value { get; }
+
+    /* Public methods. */
+    void IValued.SetValue(object value)
+    {
+        SetValue((T)value);
+    }
+
+    /// <summary>
+    /// Set the value of this this widget.
+    /// </summary>
+    public void SetValue(T value);
 }

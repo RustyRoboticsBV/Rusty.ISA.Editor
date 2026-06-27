@@ -49,6 +49,7 @@ public partial class OptionalGroup : VBoxContainer, IWidget, IGroup, IValued<boo
             UpdateElementVisibility();
         }
     }
+    public UndoRedo UndoRedo { get; set; }
 
     public List<IWidget> Children { get; private set; } = new();
 
@@ -119,6 +120,11 @@ public partial class OptionalGroup : VBoxContainer, IWidget, IGroup, IValued<boo
         widget.Visible = Value;
         widget.Changed += OnChanged;
         OnChanged(widget);
+    }
+
+    public void SetValue(bool value)
+    {
+        Value = value;
     }
 
     /* Private methods. */

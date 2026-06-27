@@ -29,16 +29,14 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
             ColorPickerButton.TooltipText = value;
         }
     }
+    public UndoRedo UndoRedo { get; set; }
 
-    public Color Value
-    {
-        get => ColorPickerButton.Color;
-        set => ColorPickerButton.Color = value;
-    }
+    public Color Value => ColorPickerButton.Color;
 
     /* Private methods. */
     private Label Label { get; set; }
     private ColorPickerButton ColorPickerButton { get; set; }
+    private Color OldColor { get; set; }
 
     /* Public events. */
     public event Action<IWidget> Changed;
@@ -51,9 +49,11 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
         TitleWidth = 160;
 
         ColorPickerButton = new();
-        AddChild(ColorPickerButton);
+        ColorPickerButton.Color = Colors.White;
         ColorPickerButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        ColorPickerButton.ColorChanged += OnChanged;
+        ColorPickerButton.Pressed += OnColorPickerOpened;
+        ColorPickerButton.PopupClosed += OnColorPickerClosed;
+        AddChild(ColorPickerButton);
     }
 
     /* Public methods. */
@@ -65,7 +65,8 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
         field.Title = Title;
         field.TitleWidth = TitleWidth;
         field.Description = Description;
-        field.Value = Value;
+        field.ColorPickerButton.Color = Value;
+        field.UndoRedo = UndoRedo;
         return field;
     }
 
@@ -76,10 +77,32 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
             SizeFlagsVertical = SizeFlags.ExpandFill;
     }
 
-    /* Private methods. */
-    private void OnChanged(Color color)
+    public void SetValue(Color value)
     {
-        Godot.GD.Print("FCUK COLOR");
+        UndoRedo?.CreateAction($"Changed color {Title}: #{OldColor.ToHtml()} \u25B6 #{value.ToHtml()}");
+
+        UndoRedo?.AddUndoProperty(ColorPickerButton, "color", OldColor);
+        UndoRedo?.AddUndoMethod(new Callable(this, nameof(InvokeChangedEvent)));
+
+        UndoRedo?.AddDoProperty(ColorPickerButton, "color", value);
+        UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
+
+        UndoRedo?.CommitAction(true);
+    }
+
+    /* Private methods. */
+    private void OnColorPickerOpened()
+    {
+        OldColor = ColorPickerButton.Color;
+    }
+
+    private void OnColorPickerClosed()
+    {
+        SetValue(ColorPickerButton.Color);
+    }
+
+    private void InvokeChangedEvent()
+    {
         Changed?.Invoke(this);
     }
 }

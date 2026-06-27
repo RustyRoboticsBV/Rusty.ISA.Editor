@@ -29,6 +29,7 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
             SpinBox.TooltipText = value;
         }
     }
+    public UndoRedo UndoRedo { get; set; }
 
     public double Value
     {
@@ -93,6 +94,11 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
         if (vertical)
             SizeFlagsVertical = SizeFlags.ExpandFill;
+    }
+
+    public void SetValue(double value)
+    {
+        Value = value;
     }
 
     /* Private methods. */

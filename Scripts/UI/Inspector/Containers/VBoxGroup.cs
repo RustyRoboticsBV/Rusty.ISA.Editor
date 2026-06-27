@@ -40,6 +40,7 @@ public partial class VBoxGroup : VBoxContainer, IWidget, IGroup
         get => Margin.GetThemeConstant("margin_left");
         set => Margin.AddThemeConstantOverride("margin_left", value);
     }
+    public UndoRedo UndoRedo { get; set; }
 
     public List<IWidget> Children { get; private set; } = new();
 

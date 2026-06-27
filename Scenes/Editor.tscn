@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b42qbkyncrp8c"]
+[gd_scene load_steps=5 format=3 uid="uid://b42qbkyncrp8c"]
 
 [ext_resource type="Script" uid="uid://dfipvca8by3jf" path="res://Scripts/UI/IsaEditor.cs" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c7iq4qdt3nxex" path="res://Scripts/Test.cs" id="1_trcuy"]
 [ext_resource type="FontVariation" uid="uid://4o20x61wdxf6" path="res://Fonts/UbuntuMono-R-Edit.tres" id="2_0hhuw"]
+[ext_resource type="Script" uid="uid://8di4vkfpeft4" path="res://Scripts/Graph/Frame.cs" id="2_6ykgs"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -12,21 +13,59 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
-[node name="Test" type="ScrollContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(200, 200)
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Test" type="ScrollContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 script = ExtResource("1_trcuy")
 metadata/_custom_type_script = "uid://c7iq4qdt3nxex"
 
-[node name="IsaEditor" type="VBoxContainer" parent="VBoxContainer"]
+[node name="GraphEdit" type="GraphEdit" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+minimap_enabled = false
+
+[node name="Frame" type="GraphElement" parent="MarginContainer/VBoxContainer/HBoxContainer/GraphEdit"]
+layout_mode = 0
+offset_left = 75.0
+offset_top = 126.0
+offset_right = 115.0
+offset_bottom = 166.0
+position_offset = Vector2(75, 126)
+script = ExtResource("2_6ykgs")
+metadata/_custom_type_script = "uid://8di4vkfpeft4"
+
+[node name="Frame2" type="GraphElement" parent="MarginContainer/VBoxContainer/HBoxContainer/GraphEdit"]
+layout_mode = 0
+offset_left = 199.0
+offset_top = 198.0
+offset_right = 239.0
+offset_bottom = 238.0
+position_offset = Vector2(199, 198)
+script = ExtResource("2_6ykgs")
+metadata/_custom_type_script = "uid://8di4vkfpeft4"
+
+[node name="IsaEditor" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

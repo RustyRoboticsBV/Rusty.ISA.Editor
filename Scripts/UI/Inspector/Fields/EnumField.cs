@@ -29,11 +29,12 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
             OptionButton.TooltipText = value;
         }
     }
+    public UndoRedo UndoRedo { get; set; }
 
     public string[] Choices
     {
         get => OptionsCache;
-        set
+        private set
         {
             OptionsCache = value;
             OptionButton.Clear();
@@ -43,20 +44,12 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
             }
 
             if (value.Length == 0)
-                Value = -1;
+                OptionButton.Selected = -1;
             else
-                Value = 0;
+                OptionButton.Selected = 0;
         }
     }
-    public int Value
-    {
-        get => OptionButton.Selected;
-        set
-        {
-            OptionButton.Selected = value;
-            OnChanged(Value);
-        }
-    }
+    public int Value => OptionButton.Selected;
 
     /* Private methods. */
     private Label Label { get; set; }
@@ -78,7 +71,7 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         OptionButton.ItemSelected += OnChanged;
         AddChild(OptionButton);
 
-        Value = -1;
+        OptionButton.Selected = -1;
     }
 
     /* Public methods. */
@@ -91,7 +84,7 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         field.TitleWidth = TitleWidth;
         field.Description = Description;
         field.Choices = Choices;
-        field.Value = Value;
+        field.OptionButton.Selected = Value;
         return field;
     }
 
@@ -100,6 +93,17 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
         if (vertical)
             SizeFlagsVertical = SizeFlags.ExpandFill;
+    }
+
+    public void SetChoices(string[] choices)
+    {
+        Choices = choices;
+    }
+
+    public void SetValue(int value)
+    {
+        OptionButton.Selected = value;
+        OnChanged(Value);
     }
 
     /* Private methods. */

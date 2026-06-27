@@ -30,6 +30,7 @@ public partial class TextLineField : HBoxContainer, IWidget, IValued<string>
             LineEdit.TooltipText = value;
         }
     }
+    public UndoRedo UndoRedo { get; set; }
 
     public string Value
     {
@@ -75,6 +76,11 @@ public partial class TextLineField : HBoxContainer, IWidget, IValued<string>
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
         if (vertical)
             SizeFlagsVertical = SizeFlags.ExpandFill;
+    }
+
+    public void SetValue(string value)
+    {
+        Value = value;
     }
 
     /* Private methods. */

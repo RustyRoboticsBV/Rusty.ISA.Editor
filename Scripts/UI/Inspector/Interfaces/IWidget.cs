@@ -1,3 +1,4 @@
+using Godot;
 using System;
 
 namespace Rusty.ISA;
@@ -24,6 +25,10 @@ public interface IWidget
     /// Whether or not the widget is visible.
     /// </summary>
     public bool Visible { get; set; }
+    /// <summary>
+    /// The undo/redo object.
+    /// </summary>
+    public UndoRedo UndoRedo { get; set; }
 
     /* Public events. */
     /// <summary>

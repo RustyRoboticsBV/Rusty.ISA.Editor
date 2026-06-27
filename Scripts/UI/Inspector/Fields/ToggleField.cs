@@ -30,6 +30,7 @@ public partial class ToggleField : HBoxContainer, IWidget, IValued<bool>
             CheckBox.TooltipText = value;
         }
     }
+    public UndoRedo UndoRedo { get; set; }
 
     public bool Value
     {
@@ -74,6 +75,11 @@ public partial class ToggleField : HBoxContainer, IWidget, IValued<bool>
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
         if (vertical)
             SizeFlagsVertical = SizeFlags.ExpandFill;
+    }
+
+    public void SetValue(bool value)
+    {
+        Value = value;
     }
 
     /* Private methods. */

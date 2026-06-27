@@ -30,6 +30,7 @@ public partial class TextAreaField : VBoxContainer, IWidget, IValued<string>
             TextEdit.TooltipText = value;
         }
     }
+    public UndoRedo UndoRedo { get; set; }
 
     public string Value
     {
@@ -77,6 +78,11 @@ public partial class TextAreaField : VBoxContainer, IWidget, IValued<string>
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
         if (vertical)
             SizeFlagsVertical = SizeFlags.ExpandFill;
+    }
+
+    public void SetValue(string value)
+    {
+        Value = value;
     }
 
     /* Private methods. */
