@@ -43,10 +43,9 @@ public partial class Test : ScrollContainer
         toggle.UndoRedo = UndoRedo;
         togglebox.AddWidget(toggle);
 
-        NumericField number = new();
+        NumericField number = new(10f);
         number.Title = "COOL NUMBER";
         number.Description = "THIS IS A SICK NUMBER.";
-        number.Value = 10f;
         number.ExpandFill();
         number.UndoRedo = UndoRedo;
         togglebox.AddWidget(number);
@@ -69,19 +68,16 @@ public partial class Test : ScrollContainer
         area.UndoRedo = UndoRedo;
         togglebox.AddWidget(area);
 
-        ColorField color = new();
+        ColorField color = new(Colors.Red);
         color.Title = "COOL COLOR";
         color.Description = "THIS IS A SICK COLOR.";
-        color.SetValue(Colors.Red);
         color.ExpandFill();
         color.UndoRedo = UndoRedo;
         togglebox.AddWidget(color);
 
-        EnumField enums = new();
-        enums.Title = "COOL ENUM    ";
+        EnumField enums = new(["Aaa", "Bbbbb", "Ccccccc"], 1);
+        enums.Title = "COOL ENUM";
         enums.Description = "THIS IS A SICK ENUM.";
-        enums.SetChoices(["A", "B", "C"]);
-        enums.SetValue(1);
         enums.ExpandFill();
         enums.UndoRedo = UndoRedo;
         togglebox.AddWidget(enums);
@@ -124,13 +120,19 @@ public partial class Test : ScrollContainer
                 if (Input.IsKeyPressed(Key.Shift))
                 {
                     if (UndoRedo.HasRedo())
-                    {
                         UndoRedo.Redo();
-                        Log.Message(UndoRedo.GetCurrentActionName());
-                    }
                 }
                 else if (UndoRedo.HasUndo())
                     UndoRedo.Undo();
+            }
+        }
+        else if (Input.IsKeyPressed(Key.Y) && Input.IsKeyPressed(Key.Ctrl))
+        {
+            if (!UndoRedoPressed)
+            {
+                UndoRedoPressed = true;
+                if (UndoRedo.HasRedo())
+                    UndoRedo.Redo();
             }
         }
         else

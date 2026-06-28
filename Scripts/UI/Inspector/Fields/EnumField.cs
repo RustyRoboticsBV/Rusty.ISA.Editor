@@ -31,30 +31,14 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
     }
     public UndoRedo UndoRedo { get; set; }
 
-    public string[] Choices
-    {
-        get => OptionsCache;
-        private set
-        {
-            OptionsCache = value;
-            OptionButton.Clear();
-            for (int i = 0; i < value.Length; i++)
-            {
-                OptionButton.AddItem(value[i]);
-            }
-
-            if (value.Length == 0)
-                OptionButton.Selected = -1;
-            else
-                OptionButton.Selected = 0;
-        }
-    }
+    public string[] Choices => OptionsCache;
     public int Value => OptionButton.Selected;
 
     /* Private methods. */
     private Label Label { get; set; }
     private OptionButton OptionButton { get; set; }
     private string[] OptionsCache { get; set; } = [];
+    private int OldSelected { get; set; }
 
     /* Public events. */
     public event Action<IWidget> Changed;
@@ -67,11 +51,23 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         TitleWidth = 160;
 
         OptionButton = new();
-        OptionButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        OptionButton.ItemSelected += OnChanged;
-        AddChild(OptionButton);
-
         OptionButton.Selected = -1;
+        OptionButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        OptionButton.Pressed += OnDropdownOpened;
+        OptionButton.ItemSelected += OnItemSelected;
+        AddChild(OptionButton);
+    }
+
+    public EnumField(string[] choices) : this()
+    {
+        ChangeChoices(choices);
+        if (choices.Length > 0)
+            OptionButton.Selected = 0;
+    }
+
+    public EnumField(string[] choices, int selected) : this(choices)
+    {
+        OptionButton.Selected = selected;
     }
 
     /* Public methods. */
@@ -83,7 +79,7 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         field.Title = Title;
         field.TitleWidth = TitleWidth;
         field.Description = Description;
-        field.Choices = Choices;
+        field.ChangeChoices(Choices);
         field.OptionButton.Selected = Value;
         return field;
     }
@@ -95,21 +91,55 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
             SizeFlagsVertical = SizeFlags.ExpandFill;
     }
 
-    public void SetChoices(string[] choices)
-    {
-        Choices = choices;
-    }
-
     public void SetValue(int value)
     {
-        OptionButton.Selected = value;
-        OnChanged(Value);
+        SetValue(OptionButton.Selected, value);
     }
 
     /* Private methods. */
-    private void OnChanged(long index)
+    /// <summary>
+    /// Silently change the choices, without changing the selected item index.
+    /// </summary>
+    private void ChangeChoices(string[] choices)
     {
-        Godot.GD.Print("FCUK ENUM");
+        OptionsCache = choices;
+        OptionButton.Clear();
+        for (int i = 0; i < choices.Length; i++)
+        {
+            OptionButton.AddItem(choices[i]);
+        }
+    }
+
+    private void SetValue(int from, int to)
+    {
+        if (from == to)
+            return;
+
+        string fromName = from >= 0 && from < Choices.Length ? Choices[from] : from.ToString();
+        string toName = to >= 0 && to < Choices.Length ? Choices[to] : to.ToString();
+        UndoRedo?.CreateAction($"Changed color {Title}: {fromName} \u25B6 {toName}");
+
+        UndoRedo?.AddUndoProperty(OptionButton, "selected", from);
+        UndoRedo?.AddUndoMethod(new Callable(this, nameof(InvokeChangedEvent)));
+
+        UndoRedo?.AddDoProperty(OptionButton, "selected", to);
+        UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
+
+        UndoRedo?.CommitAction(true);
+    }
+
+    private void OnDropdownOpened()
+    {
+        OldSelected = OptionButton.Selected;
+    }
+
+    private void OnItemSelected(long index)
+    {
+        SetValue(OldSelected, (int)index);
+    }
+
+    private void InvokeChangedEvent()
+    {
         Changed?.Invoke(this);
     }
 }

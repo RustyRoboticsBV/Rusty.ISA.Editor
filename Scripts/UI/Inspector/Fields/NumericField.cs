@@ -31,31 +31,16 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
     }
     public UndoRedo UndoRedo { get; set; }
 
-    public double Value
-    {
-        get => SpinBox.Value;
-        set => SpinBox.Value = value;
-    }
+    public double Value => SpinBox.Value;
 
-    public double Step
-    {
-        get => SpinBox.Step;
-        set => SpinBox.Step = value;
-    }
-    public double MinValue
-    {
-        get => SpinBox.MinValue;
-        set => SpinBox.MinValue = value;
-    }
-    public double MaxValue
-    {
-        get => SpinBox.MaxValue;
-        set => SpinBox.MaxValue = value;
-    }
+    public double Step => SpinBox.Step;
+    public double MinValue => SpinBox.MinValue;
+    public double MaxValue => SpinBox.MaxValue;
 
     /* Private methods. */
     private Label Label { get; set; }
     private SpinBox SpinBox { get; set; }
+    private double OldValue { get; set; }
 
     /* Public events. */
     public event Action<IWidget> Changed;
@@ -70,7 +55,25 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
         SpinBox = new();
         AddChild(SpinBox);
         SpinBox.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        SpinBox.ValueChanged += OnChanged;
+        SpinBox.GetLineEdit().ContextMenuEnabled = false;
+        SpinBox.GetLineEdit().ShortcutKeysEnabled = false;
+        SpinBox.GetLineEdit().TextSubmitted += OnSubmitted;
+        SpinBox.GetLineEdit().FocusExited += OnSubmitted;
+    }
+
+    public NumericField(double value) : this()
+    {
+        SpinBox.Value = value;
+        OldValue = SpinBox.Value;
+    }
+
+    public NumericField(double value, double min, double max, double step) : this()
+    {
+        SpinBox.MinValue = min;
+        SpinBox.MaxValue = max;
+        SpinBox.Step = step;
+        SpinBox.Value = value;
+        OldValue = SpinBox.Value;
     }
 
     /* Public methods. */
@@ -82,10 +85,11 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
         field.Title = Title;
         field.TitleWidth = TitleWidth;
         field.Description = Description;
-        field.Value = Value;
-        field.Step = Step;
-        field.MinValue = MinValue;
-        field.MaxValue = MaxValue;
+        field.SpinBox.Value = SpinBox.Value;
+        field.SpinBox.Step = SpinBox.Step;
+        field.SpinBox.MinValue = SpinBox.MinValue;
+        field.SpinBox.MaxValue = SpinBox.MaxValue;
+        field.OldValue = OldValue;
         return field;
     }
 
@@ -98,13 +102,42 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
 
     public void SetValue(double value)
     {
-        Value = value;
+        SetValue(SpinBox.Value, value);
+        OldValue = value;
     }
 
     /* Private methods. */
-    private void OnChanged(double value)
+    private void OnSubmitted(string value)
     {
-        Godot.GD.Print("FCUK NUMBER");
+        SetValue(OldValue, double.Parse(value));
+        OldValue = SpinBox.Value;
+    }
+
+    private void OnSubmitted()
+    {
+        double value = Mathf.Clamp(double.Parse(SpinBox.GetLineEdit().Text), SpinBox.MinValue, SpinBox.MaxValue); ;
+        SetValue(OldValue, value);
+        OldValue = SpinBox.Value;
+    }
+
+    private void SetValue(double from, double to)
+    {
+        if (from == to)
+            return;
+
+        UndoRedo?.CreateAction($"Changed color {Title}: {from} \u25B6 {to}");
+
+        UndoRedo?.AddUndoProperty(SpinBox, "value", from);
+        UndoRedo?.AddUndoMethod(new Callable(this, nameof(InvokeChangedEvent)));
+
+        UndoRedo?.AddDoProperty(SpinBox, "value", to);
+        UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
+
+        UndoRedo?.CommitAction(true);
+    }
+
+    private void InvokeChangedEvent()
+    {
         Changed?.Invoke(this);
     }
 }

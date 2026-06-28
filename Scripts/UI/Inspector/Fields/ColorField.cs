@@ -56,6 +56,11 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
         AddChild(ColorPickerButton);
     }
 
+    public ColorField(Color color) : this()
+    {
+        ColorPickerButton.Color = color;
+    }
+
     /* Public methods. */
     public IWidget Copy()
     {
@@ -91,6 +96,22 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
     }
 
     /* Private methods. */
+    private void SetValue(Color from, Color to)
+    {
+        if (from == to)
+            return;
+
+        UndoRedo?.CreateAction($"Changed color {Title}: #{from.ToHtml()} \u25B6 #{to.ToHtml()}");
+
+        UndoRedo?.AddUndoProperty(ColorPickerButton, "color", from);
+        UndoRedo?.AddUndoMethod(new Callable(this, nameof(InvokeChangedEvent)));
+
+        UndoRedo?.AddDoProperty(ColorPickerButton, "color", to);
+        UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
+
+        UndoRedo?.CommitAction(true);
+    }
+
     private void OnColorPickerOpened()
     {
         OldColor = ColorPickerButton.Color;
@@ -98,7 +119,7 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
 
     private void OnColorPickerClosed()
     {
-        SetValue(ColorPickerButton.Color);
+        SetValue(OldColor, ColorPickerButton.Color);
     }
 
     private void InvokeChangedEvent()
