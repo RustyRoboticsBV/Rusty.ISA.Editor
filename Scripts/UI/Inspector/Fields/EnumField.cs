@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Security.Cryptography;
 
 namespace Rusty.ISA;
 
@@ -39,6 +40,7 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
     private OptionButton OptionButton { get; set; }
     private string[] OptionsCache { get; set; } = [];
     private int OldSelected { get; set; }
+    private bool Cancelled { get; set; }
 
     /* Public events. */
     public event Action<IWidget> Changed;
@@ -55,7 +57,10 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         OptionButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         OptionButton.Pressed += OnDropdownOpened;
         OptionButton.ItemSelected += OnItemSelected;
+        OptionButton.FocusExited += OnLostFocus;
         AddChild(OptionButton);
+
+        WidgetRegistry.Add(this);
     }
 
     public EnumField(string[] choices) : this()
@@ -68,6 +73,11 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
     public EnumField(string[] choices, int selected) : this(choices)
     {
         OptionButton.Selected = selected;
+    }
+    
+    ~EnumField()
+    {
+        WidgetRegistry.Remove(this);
     }
 
     /* Public methods. */
@@ -96,6 +106,12 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         SetValue(OptionButton.Selected, value);
     }
 
+    public void CancelFocus()
+    {
+        OptionButton.ReleaseFocus();
+        OptionButton.GetPopup().Hide();
+    }
+
     /* Private methods. */
     /// <summary>
     /// Silently change the choices, without changing the selected item index.
@@ -119,13 +135,27 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         string toName = to >= 0 && to < Choices.Length ? Choices[to] : to.ToString();
         UndoRedo?.CreateAction($"Changed color {Title}: {fromName} \u25B6 {toName}");
 
+        UndoRedo?.AddUndoMethod(new Callable(this, nameof(CancelAll)));
         UndoRedo?.AddUndoProperty(OptionButton, "selected", from);
         UndoRedo?.AddUndoMethod(new Callable(this, nameof(InvokeChangedEvent)));
 
+        UndoRedo?.AddDoMethod(new Callable(this, nameof(CancelAll)));
         UndoRedo?.AddDoProperty(OptionButton, "selected", to);
         UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
 
         UndoRedo?.CommitAction(true);
+    }
+
+    private void CancelAll()
+    {
+        WidgetRegistry.ReleaseFocus();
+    }
+
+    private void OnLostFocus()
+    {
+        Cancelled = true;
+        GetViewport().GuiGetFocusOwner()?.ReleaseFocus();
+        Cancelled = false;
     }
 
     private void OnDropdownOpened()

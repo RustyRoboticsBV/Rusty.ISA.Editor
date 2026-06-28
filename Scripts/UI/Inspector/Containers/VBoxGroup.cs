@@ -103,6 +103,8 @@ public partial class VBoxGroup : VBoxContainer, IWidget, IGroup
         OnChanged(widget);
     }
 
+    public void CancelFocus() { }
+
     /* Private methods. */
     private void OnChanged(IWidget widget)
     {

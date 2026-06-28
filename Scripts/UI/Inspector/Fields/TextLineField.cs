@@ -83,6 +83,8 @@ public partial class TextLineField : HBoxContainer, IWidget, IValued<string>
         Value = value;
     }
 
+    public void CancelFocus() { }
+
     /* Private methods. */
     private void OnChanged(string text)
     {

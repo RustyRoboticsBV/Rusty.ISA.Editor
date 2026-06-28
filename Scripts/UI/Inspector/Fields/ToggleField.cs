@@ -82,6 +82,8 @@ public partial class ToggleField : HBoxContainer, IWidget, IValued<bool>
         Value = value;
     }
 
+    public void CancelFocus() { }
+
     /* Private methods. */
     private void OnChanged()
     {

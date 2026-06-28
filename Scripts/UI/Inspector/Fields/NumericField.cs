@@ -6,7 +6,7 @@ namespace Rusty.ISA;
 /// <summary>
 /// A numeric field.
 /// </summary>
-public partial class NumericField : HBoxContainer, IWidget, IValued<double>
+public sealed partial class NumericField : HBoxContainer, IWidget, IValued<double>
 {
     /* Public properties. */
     public string Title
@@ -41,6 +41,7 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
     private Label Label { get; set; }
     private SpinBox SpinBox { get; set; }
     private double OldValue { get; set; }
+    private bool Cancelled { get; set; }
 
     /* Public events. */
     public event Action<IWidget> Changed;
@@ -57,8 +58,11 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
         SpinBox.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         SpinBox.GetLineEdit().ContextMenuEnabled = false;
         SpinBox.GetLineEdit().ShortcutKeysEnabled = false;
+        SpinBox.GetLineEdit().FocusEntered += OnSelected;
         SpinBox.GetLineEdit().TextSubmitted += OnSubmitted;
         SpinBox.GetLineEdit().FocusExited += OnSubmitted;
+
+        WidgetRegistry.Add(this);
     }
 
     public NumericField(double value) : this()
@@ -74,6 +78,11 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
         SpinBox.Step = step;
         SpinBox.Value = value;
         OldValue = SpinBox.Value;
+    }
+
+    ~NumericField()
+    {
+        WidgetRegistry.Remove(this);
     }
 
     /* Public methods. */
@@ -106,18 +115,35 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
         OldValue = value;
     }
 
+    public void CancelFocus()
+    {
+        Cancelled = true;
+        SpinBox.GetLineEdit().ReleaseFocus();
+        SpinBox.Value = OldValue;
+        Cancelled = false;
+    }
+
     /* Private methods. */
+    private void OnSelected()
+    {
+        OldValue = SpinBox.Value;
+    }
+
     private void OnSubmitted(string value)
     {
+        if (Cancelled)
+            return;
+
         SetValue(OldValue, double.Parse(value));
-        OldValue = SpinBox.Value;
     }
 
     private void OnSubmitted()
     {
+        if (Cancelled)
+            return;
+
         double value = Mathf.Clamp(double.Parse(SpinBox.GetLineEdit().Text), SpinBox.MinValue, SpinBox.MaxValue); ;
         SetValue(OldValue, value);
-        OldValue = SpinBox.Value;
     }
 
     private void SetValue(double from, double to)
@@ -127,13 +153,20 @@ public partial class NumericField : HBoxContainer, IWidget, IValued<double>
 
         UndoRedo?.CreateAction($"Changed color {Title}: {from} \u25B6 {to}");
 
+        UndoRedo?.AddUndoMethod(new Callable(this, nameof(CancelAll)));
         UndoRedo?.AddUndoProperty(SpinBox, "value", from);
         UndoRedo?.AddUndoMethod(new Callable(this, nameof(InvokeChangedEvent)));
 
+        UndoRedo?.AddDoMethod(new Callable(this, nameof(CancelAll)));
         UndoRedo?.AddDoProperty(SpinBox, "value", to);
         UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
 
         UndoRedo?.CommitAction(true);
+    }
+
+    private void CancelAll()
+    {
+        WidgetRegistry.ReleaseFocus();
     }
 
     private void InvokeChangedEvent()

@@ -127,6 +127,8 @@ public partial class OptionalGroup : VBoxContainer, IWidget, IGroup, IValued<boo
         Value = value;
     }
 
+    public void CancelFocus() { }
+
     /* Private methods. */
     private void OnPressed()
     {

@@ -86,6 +86,8 @@ public partial class FoldoutGroup : FoldableContainer, IWidget, IGroup
         OnChanged(widget);
     }
 
+    public void CancelFocus() { }
+
     /* Private methods. */
     private void OnChanged(IWidget widget)
     {

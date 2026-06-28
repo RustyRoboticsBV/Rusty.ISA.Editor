@@ -45,4 +45,8 @@ public interface IWidget
     /// Set the size flags to expand/fill.
     /// </summary>
     public void ExpandFill(bool vertical = true);
+    /// <summary>
+    /// Release focus without committing the current changes.
+    /// </summary>
+    public void CancelFocus();
 }

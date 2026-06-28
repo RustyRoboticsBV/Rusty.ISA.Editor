@@ -85,6 +85,8 @@ public partial class TextAreaField : VBoxContainer, IWidget, IValued<string>
         Value = value;
     }
 
+    public void CancelFocus() { }
+
     /* Private methods. */
     private void OnChanged()
     {

@@ -95,6 +95,8 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
         UndoRedo?.CommitAction(true);
     }
 
+    public void CancelFocus() { }
+
     /* Private methods. */
     private void SetValue(Color from, Color to)
     {
