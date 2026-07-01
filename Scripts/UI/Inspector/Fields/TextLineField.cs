@@ -88,7 +88,6 @@ public partial class TextLineField : HBoxContainer, IWidget, IValued<string>
     /* Private methods. */
     private void OnChanged(string text)
     {
-        Godot.GD.Print("FCUK TEXTLINE");
         Changed?.Invoke(this);
     }
 }

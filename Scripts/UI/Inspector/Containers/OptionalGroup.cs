@@ -133,13 +133,11 @@ public partial class OptionalGroup : VBoxContainer, IWidget, IGroup, IValued<boo
     private void OnPressed()
     {
         UpdateElementVisibility();
-        Godot.GD.Print("FCUK TOGGLEBOX");
         Changed?.Invoke(this);
     }
 
     private void OnChanged(IWidget widget)
     {
-        Godot.GD.Print("FCUK TOGGLEBOX");
         Changed?.Invoke(this);
     }
 

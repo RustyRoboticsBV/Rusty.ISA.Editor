@@ -91,6 +91,8 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         field.Description = Description;
         field.ChangeChoices(Choices);
         field.OptionButton.Selected = Value;
+        field.UndoRedo = UndoRedo;
+        field.OldSelected = Value;
         return field;
     }
 
@@ -143,7 +145,10 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         UndoRedo?.AddDoProperty(OptionButton, "selected", to);
         UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
 
-        UndoRedo?.CommitAction(true);
+        UndoRedo?.CommitAction(false);
+
+        OptionButton.Selected = to;
+        InvokeChangedEvent();
     }
 
     private void CancelAll()

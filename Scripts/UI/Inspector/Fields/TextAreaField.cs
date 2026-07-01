@@ -90,7 +90,6 @@ public partial class TextAreaField : VBoxContainer, IWidget, IValued<string>
     /* Private methods. */
     private void OnChanged()
     {
-        Godot.GD.Print("FCUK TEXTAREA");
         Changed?.Invoke(this);
     }
 }

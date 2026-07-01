@@ -108,7 +108,6 @@ public partial class VBoxGroup : VBoxContainer, IWidget, IGroup
     /* Private methods. */
     private void OnChanged(IWidget widget)
     {
-        Godot.GD.Print("FCUK VBOX");
         Changed?.Invoke(this);
     }
 }

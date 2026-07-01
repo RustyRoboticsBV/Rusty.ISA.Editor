@@ -87,7 +87,6 @@ public partial class ToggleField : HBoxContainer, IWidget, IValued<bool>
     /* Private methods. */
     private void OnChanged()
     {
-        Godot.GD.Print("FCUK TOGGLE");
         Changed?.Invoke(this);
     }
 }

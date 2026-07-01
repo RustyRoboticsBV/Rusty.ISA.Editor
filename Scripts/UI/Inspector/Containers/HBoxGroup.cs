@@ -107,7 +107,6 @@ public partial class HBoxGroup : VBoxContainer, IWidget, IGroup
     /* Private methods. */
     private void OnChanged(IWidget widget)
     {
-        Godot.GD.Print("FCUK HBOX");
         Changed?.Invoke(this);
     }
 }

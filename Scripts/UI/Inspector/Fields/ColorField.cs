@@ -37,6 +37,7 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
     private Label Label { get; set; }
     private ColorPickerButton ColorPickerButton { get; set; }
     private Color OldColor { get; set; }
+    private bool Cancelled { get; set; }
 
     /* Public events. */
     public event Action<IWidget> Changed;
@@ -54,11 +55,19 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
         ColorPickerButton.Pressed += OnColorPickerOpened;
         ColorPickerButton.PopupClosed += OnColorPickerClosed;
         AddChild(ColorPickerButton);
+        DisableHotkeys(ColorPickerButton.GetPopup());
+
+        WidgetRegistry.Add(this);
     }
 
     public ColorField(Color color) : this()
     {
         ColorPickerButton.Color = color;
+    }
+
+    ~ColorField()
+    {
+        WidgetRegistry.Remove(this);
     }
 
     /* Public methods. */
@@ -72,6 +81,7 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
         field.Description = Description;
         field.ColorPickerButton.Color = Value;
         field.UndoRedo = UndoRedo;
+        field.OldColor = Value;
         return field;
     }
 
@@ -84,18 +94,26 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
 
     public void SetValue(Color value)
     {
-        UndoRedo?.CreateAction($"Changed color {Title}: #{OldColor.ToHtml()} \u25B6 #{value.ToHtml()}");
-
-        UndoRedo?.AddUndoProperty(ColorPickerButton, "color", OldColor);
-        UndoRedo?.AddUndoMethod(new Callable(this, nameof(InvokeChangedEvent)));
-
-        UndoRedo?.AddDoProperty(ColorPickerButton, "color", value);
-        UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
-
-        UndoRedo?.CommitAction(true);
+        SetValue(OldColor, value);
     }
 
-    public void CancelFocus() { }
+    public void CancelFocus()
+    {
+        if (ColorPickerButton.GetPopup().Visible)
+        {
+            Cancelled = true;
+            ColorPickerButton.ReleaseFocus();
+            ColorPickerButton.GetPopup().Hide();
+            ColorPickerButton.Color = OldColor;
+            Cancelled = false;
+        }
+    }
+
+    public override void _GuiInput(InputEvent @event)
+    {
+        if (@event is InputEventKey)
+            AcceptEvent();
+    }
 
     /* Private methods. */
     private void SetValue(Color from, Color to)
@@ -105,13 +123,23 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
 
         UndoRedo?.CreateAction($"Changed color {Title}: #{from.ToHtml()} \u25B6 #{to.ToHtml()}");
 
+        UndoRedo?.AddUndoMethod(new Callable(this, nameof(CancelAll)));
         UndoRedo?.AddUndoProperty(ColorPickerButton, "color", from);
         UndoRedo?.AddUndoMethod(new Callable(this, nameof(InvokeChangedEvent)));
 
+        UndoRedo?.AddDoMethod(new Callable(this, nameof(CancelAll)));
         UndoRedo?.AddDoProperty(ColorPickerButton, "color", to);
         UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
 
-        UndoRedo?.CommitAction(true);
+        UndoRedo?.CommitAction(false);
+
+        ColorPickerButton.Color = to;
+        InvokeChangedEvent();
+    }
+
+    private void CancelAll()
+    {
+        WidgetRegistry.ReleaseFocus();
     }
 
     private void OnColorPickerOpened()
@@ -121,11 +149,24 @@ public partial class ColorField : HBoxContainer, IWidget, IValued<Color>
 
     private void OnColorPickerClosed()
     {
-        SetValue(OldColor, ColorPickerButton.Color);
+        if (!Cancelled)
+            SetValue(OldColor, ColorPickerButton.Color);
     }
 
     private void InvokeChangedEvent()
     {
         Changed?.Invoke(this);
+    }
+
+    private void DisableHotkeys(Node control)
+    {
+        if (control is TextEdit te)
+            te.ShortcutKeysEnabled = false;
+        if (control is LineEdit le)
+            le.ShortcutKeysEnabled = false;
+        foreach (Node child in control.GetChildren(true))
+        {
+            DisableHotkeys(child);
+        }
     }
 }

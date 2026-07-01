@@ -91,7 +91,6 @@ public partial class FoldoutGroup : FoldableContainer, IWidget, IGroup
     /* Private methods. */
     private void OnChanged(IWidget widget)
     {
-        Godot.GD.Print("FCUK FOLDOUT");
         Changed?.Invoke(this);
     }
 }

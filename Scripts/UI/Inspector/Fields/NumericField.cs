@@ -98,7 +98,8 @@ public sealed partial class NumericField : HBoxContainer, IWidget, IValued<doubl
         field.SpinBox.Step = SpinBox.Step;
         field.SpinBox.MinValue = SpinBox.MinValue;
         field.SpinBox.MaxValue = SpinBox.MaxValue;
-        field.OldValue = OldValue;
+        field.UndoRedo = UndoRedo;
+        field.OldValue = Value;
         return field;
     }
 
@@ -117,10 +118,13 @@ public sealed partial class NumericField : HBoxContainer, IWidget, IValued<doubl
 
     public void CancelFocus()
     {
-        Cancelled = true;
-        SpinBox.GetLineEdit().ReleaseFocus();
-        SpinBox.Value = OldValue;
-        Cancelled = false;
+        if (SpinBox.GetLineEdit().HasFocus())
+        {
+            Cancelled = true;
+            SpinBox.GetLineEdit().ReleaseFocus();
+            SpinBox.GetLineEdit().Text = OldValue.ToString();
+            Cancelled = false;
+        }
     }
 
     /* Private methods. */
@@ -161,7 +165,10 @@ public sealed partial class NumericField : HBoxContainer, IWidget, IValued<doubl
         UndoRedo?.AddDoProperty(SpinBox, "value", to);
         UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
 
-        UndoRedo?.CommitAction(true);
+        UndoRedo?.CommitAction(false);
+
+        SpinBox.Value = to;
+        InvokeChangedEvent();
     }
 
     private void CancelAll()
