@@ -11,6 +11,10 @@
 			<idef id="SelectDialogWindow">
 				<pdef id="name"/>
 			</idef>
+			<idef id="SetDialogWindowState">
+				<pdef id="state"/>
+				<pdef id="time"/>
+			</idef>
 			<idef id="SetDialogText">
 				<pdef id="speaker"/>
 				<pdef id="mood"/>
@@ -22,9 +26,14 @@
 		</instrs>
 		<nodes>
 			<ndef id="Dialog">
-				<odef id="select?">
-					<fdef id="select">SelectDialogWindow</fdef>
-				</odef>
+				<tdef id="select+state">
+					<odef id="select?">
+						<fdef id="select">SelectDialogWindow</fdef>
+					</odef>
+					<odef id="set_state?">
+						<fdef id="set_state">SetDialogWindowState</fdef>
+					</odef>
+				</tdef>
 				<ldef id="line[]">
 					<fdef id="line">SetDialogText</fdef>
 				</ldef>
@@ -53,11 +62,19 @@
 			<member id="0"/>
 			<start id="Start"/>
 			<label id="l100"/>
-			<option>
-				<form>
-					<arg>Main</arg>
-				</form>
-			</option>
+			<tuple>
+				<option>
+					<form>
+						<arg>Main</arg>
+					</form>
+				</option>
+				<option>
+					<form>
+						<arg>Open</arg>
+						<arg>0.25</arg>
+					</form>
+				</option>
+			</tuple>
 			<list>
 				<form>
 					<arg>Johnny</arg>

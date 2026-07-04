@@ -51,7 +51,7 @@ public sealed class ChoiceDefinitionNode : InspectorDefinitionNode
     {
         CheckTagMismatch(xml, TAG);
 
-        List<InspectorDefinitionNode> choices = null;
+        List<InspectorDefinitionNode> choices = new();
         foreach (XmlNode node in xml.ChildNodes)
         {
             switch (node.Name)

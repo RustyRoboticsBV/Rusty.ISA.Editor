@@ -51,7 +51,7 @@ public sealed class TupleDefinitionNode : InspectorDefinitionNode
     {
         CheckTagMismatch(xml, TAG);
 
-        List<InspectorDefinitionNode> elements = null;
+        List<InspectorDefinitionNode> elements = new();
         foreach (XmlNode node in xml.ChildNodes)
         {
             switch (node.Name)
