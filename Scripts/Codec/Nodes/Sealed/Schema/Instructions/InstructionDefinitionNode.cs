@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -35,7 +36,7 @@ public sealed class InstructionDefinitionNode : ElementNode
         StringBuilder sb = new StringBuilder();
         foreach (var parameter in Parameters)
         {
-            sb.AppendLine(parameter.Serialize());
+            AppendLine(sb, parameter.Serialize());
         }
 
         return Wrap(sb.ToString(), TAG, Opcode);
@@ -49,5 +50,27 @@ public sealed class InstructionDefinitionNode : ElementNode
             parameter.Hash(hash);
         }
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static InstructionDefinitionNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        List<ParameterDefinitionNode> parameters = new();
+        foreach (XmlNode node in xml.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case ParameterDefinitionNode.TAG:
+                    parameters.Add(ParameterDefinitionNode.Load(node));
+                    break;
+                default:
+                    throw InvalidChildException(node, TAG);
+            }
+        }
+        return new(GetId(xml), parameters);
     }
 }

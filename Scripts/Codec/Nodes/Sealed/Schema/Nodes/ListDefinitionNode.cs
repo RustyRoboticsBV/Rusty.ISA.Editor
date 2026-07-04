@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -27,5 +29,39 @@ public sealed class ListDefinitionNode : InspectorDefinitionNode
         StartHash(hash, TAG, ID);
         Type.Serialize();
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static ListDefinitionNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        InspectorDefinitionNode element = null;
+        foreach (XmlNode node in xml.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case FormDefinitionNode.TAG:
+                    element = FormDefinitionNode.Load(node);
+                    break;
+                case OptionDefinitionNode.TAG:
+                    element = OptionDefinitionNode.Load(node);
+                    break;
+                case ChoiceDefinitionNode.TAG:
+                    element = ChoiceDefinitionNode.Load(node);
+                    break;
+                case TupleDefinitionNode.TAG:
+                    element = TupleDefinitionNode.Load(node);
+                    break;
+                case TAG:
+                    element = Load(node);
+                    break;
+                default:
+                    throw InvalidChildException(node, TAG);
+            }
+        }
+        return new(GetId(xml), element);
     }
 }

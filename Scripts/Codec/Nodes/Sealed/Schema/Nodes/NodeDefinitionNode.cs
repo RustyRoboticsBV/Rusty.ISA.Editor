@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -35,7 +36,7 @@ public sealed class NodeDefinitionNode : ElementNode
         StringBuilder sb = new StringBuilder();
         foreach (var inspector in Inspectors)
         {
-            sb.AppendLine(inspector.Serialize());
+            AppendLine(sb, inspector.Serialize());
         }
 
         return Wrap(sb.ToString(), TAG, ID);
@@ -49,5 +50,39 @@ public sealed class NodeDefinitionNode : ElementNode
             inspector?.Hash(hash);
         }
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static NodeDefinitionNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        List<InspectorDefinitionNode> inspectors = new();
+        foreach (XmlNode node in xml.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case FormDefinitionNode.TAG:
+                    inspectors.Add(FormDefinitionNode.Load(node));
+                    break;
+                case OptionDefinitionNode.TAG:
+                    inspectors.Add(OptionDefinitionNode.Load(node));
+                    break;
+                case ChoiceDefinitionNode.TAG:
+                    inspectors.Add(ChoiceDefinitionNode.Load(node));
+                    break;
+                case TupleDefinitionNode.TAG:
+                    inspectors.Add(TupleDefinitionNode.Load(node));
+                    break;
+                case ListDefinitionNode.TAG:
+                    inspectors.Add(ListDefinitionNode.Load(node));
+                    break;
+                default:
+                    throw InvalidChildException(node, TAG);
+            }
+        }
+        return new(GetId(xml), inspectors);
     }
 }

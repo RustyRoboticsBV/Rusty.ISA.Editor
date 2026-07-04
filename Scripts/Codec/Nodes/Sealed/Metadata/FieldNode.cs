@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -35,5 +36,15 @@ public sealed class FieldNode : CodecNode
         StartHash(hash, TAG, ID);
         Hash(hash, Value);
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static FieldNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        return new FieldNode(GetId(xml), xml.InnerText);
     }
 }

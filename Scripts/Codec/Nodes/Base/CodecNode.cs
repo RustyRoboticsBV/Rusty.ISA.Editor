@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -73,4 +74,60 @@ public abstract class CodecNode
     /// Compute the checksum of an end tag.
     /// </summary>
     protected static void EndHash(HashAlgorithm hash, string tag) => Hash(hash, $"</{tag}>");
+
+    /// <summary>
+    /// Compute the checksum of a start and end tag.
+    /// </summary>
+    protected static void EmptyHash(HashAlgorithm hash, string tag, string id = null)
+    {
+        string idStr = null;
+        if (id != null)
+            idStr = $" id=\"{id}\"";
+
+        Hash(hash, $"<{tag}{idStr}/>");
+    }
+
+    /// <summary>
+    /// Append a line to a string builder.
+    /// </summary>
+    protected static void AppendLine(StringBuilder sb, string text)
+    {
+        if (sb.Length == 0)
+            sb.Append(text);
+        else
+        {
+            sb.Append('\n');
+            sb.Append(text);
+        }
+    }
+
+    /// <summary>
+    /// Get the first attribute of an XML node called "id". Returns null if here wasn't one.
+    /// </summary>
+    protected static string GetId(XmlNode node)
+    {
+        foreach (XmlAttribute attribute in node.Attributes)
+        {
+            if (attribute.Name == "id")
+                return attribute.Value;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Make sure that an XML's tag matches a value. Otherwise, throw an exception.
+    /// </summary>
+    protected static void CheckTagMismatch(XmlNode xml, string tag)
+    {
+        if (xml.Name != tag)
+            throw new FormatException($"Encountered '{xml.Name}', expected '{tag}'!");
+    }
+
+    /// <summary>
+    /// Throw an invalid child XML node exception.
+    /// </summary>
+    protected static FormatException InvalidChildException(XmlNode xml, string parentTag)
+    {
+        return new FormatException($"Encountered '{xml.Name}' as a child of '{parentTag}'!");
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -14,17 +15,27 @@ public sealed class ChecksumNode : CodecNode
     /// <summary>
     /// The checksum string.
     /// </summary>
-    public string Checksum { get; set; } = "";
+    public string String { get; set; } = "";
 
     /* Constructors. */
-    public ChecksumNode(string checksum) => Checksum = checksum;
+    public ChecksumNode(string checksum) => String = checksum;
 
     /* Public methods. */
-    public override string Serialize() => Wrap(Checksum, TAG);
+    public override string Serialize() => Wrap(String, TAG);
 
     public override void Hash(HashAlgorithm hash)
     {
         StartHash(hash, TAG);
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static ChecksumNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        return new(xml.InnerText);
     }
 }

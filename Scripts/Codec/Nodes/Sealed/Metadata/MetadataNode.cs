@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
 /// <summary>
 /// A metadata node.
 /// </summary>
-public sealed class MetaNode : CodecNode
+public sealed class MetadataNode : CodecNode
 {
     /* Constants. */
     public const string TAG = "meta";
@@ -23,9 +24,9 @@ public sealed class MetaNode : CodecNode
     public ChecksumNode Checksum { get; set; }
 
     /* Constructors. */
-    public MetaNode(List<FieldNode> fields, ChecksumNode checksum)
+    public MetadataNode(List<FieldNode> fields, ChecksumNode checksum)
     {
-        Fields = fields;
+        Fields = fields ?? new();
         Checksum = checksum;
     }
 
@@ -35,10 +36,10 @@ public sealed class MetaNode : CodecNode
         StringBuilder sb = new();
         foreach (FieldNode field in Fields)
         {
-            sb.AppendLine(field.Serialize());
+            AppendLine(sb, field.Serialize());
         }
         if (Checksum != null)
-            sb.AppendLine(Checksum.Serialize());
+            AppendLine(sb, Checksum.Serialize());
 
         return Wrap(sb.ToString(), TAG);
     }
@@ -53,5 +54,35 @@ public sealed class MetaNode : CodecNode
         if (Checksum != null)
             Checksum.Hash(hash);
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static MetadataNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        List<FieldNode> fields = new();
+        ChecksumNode checksum = null;
+
+        foreach (XmlElement child in xml)
+        {
+            if (child is XmlNode node)
+            {
+                switch (child.Name)
+                {
+                    case FieldNode.TAG:
+                        fields.Add(FieldNode.Load(node));
+                        break;
+
+                    case ChecksumNode.TAG:
+                        checksum = ChecksumNode.Load(node);
+                        break;
+                }
+            }
+        }
+
+        return new MetadataNode(fields, checksum);
     }
 }

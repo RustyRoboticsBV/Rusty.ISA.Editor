@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -33,9 +34,9 @@ public sealed class SchemaNode : ElementNode
     {
         StringBuilder sb = new();
         if (Instructions != null)
-            sb.AppendLine(Instructions.Serialize());
+            AppendLine(sb, Instructions.Serialize());
         if (Nodes != null)
-            sb.AppendLine(Nodes.Serialize());
+            AppendLine(sb, Nodes.Serialize());
         return Wrap(sb.ToString(), TAG);
     }
 
@@ -45,5 +46,31 @@ public sealed class SchemaNode : ElementNode
         Instructions?.Hash(hash);
         Nodes?.Hash(hash);
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static SchemaNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        InstructionSetNode instructionSet = null;
+        NodeSetNode nodeSet = null;
+        foreach (XmlNode node in xml.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case InstructionSetNode.TAG:
+                    instructionSet = InstructionSetNode.Load(node);
+                    break;
+                case NodeSetNode.TAG:
+                    nodeSet = NodeSetNode.Load(node);
+                    break;
+                default:
+                    throw InvalidChildException(node, TAG);
+            }
+        }
+        return new(instructionSet, nodeSet);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Godot;
 using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -28,5 +29,15 @@ public sealed class ColorNode : CodecNode
         StartHash(hash, TAG);
         Hash(hash, Color.ToHtml(Color.A < 1f));
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static ColorNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        return new(Color.FromHtml(xml.InnerText));
     }
 }

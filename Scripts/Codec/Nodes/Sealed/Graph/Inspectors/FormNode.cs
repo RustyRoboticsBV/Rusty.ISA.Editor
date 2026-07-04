@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -28,7 +28,7 @@ public sealed class FormNode : InspectorNode
         StringBuilder sb = new StringBuilder();
         foreach (var arg in Arguments)
         {
-            sb.AppendLine(arg.Serialize());
+            AppendLine(sb, arg.Serialize());
         }
 
         return Wrap(sb.ToString(), TAG);
@@ -42,5 +42,27 @@ public sealed class FormNode : InspectorNode
             arg?.Hash(hash);
         }
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static FormNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        List<ArgumentNode> arguments = new();
+        foreach (XmlNode node in xml.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case ArgumentNode.TAG:
+                    arguments.Add(ArgumentNode.Load(node));
+                    break;
+                default:
+                    throw InvalidChildException(node, TAG);
+            }
+        }
+        return new(arguments);
     }
 }

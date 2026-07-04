@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -28,5 +29,18 @@ public sealed class IndexNode : CodecNode
         StartHash(hash, TAG);
         Hash(hash, Index.ToString(CultureInfo.InvariantCulture));
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static IndexNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        if (int.TryParse(xml.InnerText, out int value))
+            return new(value);
+        else
+            return new(0);
     }
 }

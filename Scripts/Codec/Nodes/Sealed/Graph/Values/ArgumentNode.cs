@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -27,5 +28,15 @@ public sealed class ArgumentNode : CodecNode
         StartHash(hash, TAG);
         Hash(hash, Value);
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static ArgumentNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        return new(xml.InnerText);
     }
 }

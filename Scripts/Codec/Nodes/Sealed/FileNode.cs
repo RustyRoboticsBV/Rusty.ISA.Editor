@@ -1,5 +1,7 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -15,7 +17,7 @@ public sealed class FileNode : ElementNode
     /// <summary>
     /// The metadata child node.
     /// </summary>
-    public MetaNode Meta { get; set; }
+    public MetadataNode Meta { get; set; }
     /// <summary>
     /// The schema child node.
     /// </summary>
@@ -26,7 +28,7 @@ public sealed class FileNode : ElementNode
     public GraphNode Graph { get; set; }
 
     /* Constructors. */
-    public FileNode(MetaNode meta, SchemaNode schema, GraphNode graph)
+    public FileNode(MetadataNode meta, SchemaNode schema, GraphNode graph)
     {
         Meta = meta;
         Schema = schema;
@@ -38,11 +40,11 @@ public sealed class FileNode : ElementNode
     {
         StringBuilder sb = new StringBuilder();
         if (Meta != null)
-            sb.AppendLine(Meta.Serialize());
+            AppendLine(sb, Meta.Serialize());
         if (Schema != null)
-            sb.AppendLine(Schema.Serialize());
+            AppendLine(sb, Schema.Serialize());
         if (Graph != null)
-            sb.AppendLine(Graph.Serialize());
+            AppendLine(sb, Graph.Serialize());
 
         return Wrap(sb.ToString(), TAG);
     }
@@ -54,5 +56,33 @@ public sealed class FileNode : ElementNode
         Schema?.Hash(hash);
         Graph?.Hash(hash);
         EndHash(hash, TAG);
+    }
+
+    public static FileNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        MetadataNode meta = null;
+        SchemaNode schema = null;
+        GraphNode graph = null;
+        foreach (XmlNode node in xml.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case MetadataNode.TAG:
+                    meta = MetadataNode.Load(node);
+                    break;
+                case SchemaNode.TAG:
+                    schema = SchemaNode.Load(node);
+                    break;
+                case GraphNode.TAG:
+                    graph = GraphNode.Load(node);
+                    break;
+                default:
+                    throw InvalidChildException(node, TAG);
+            }
+        }
+
+        return new(meta, schema, graph);
     }
 }

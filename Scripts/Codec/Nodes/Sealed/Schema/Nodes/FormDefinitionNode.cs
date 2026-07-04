@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -27,5 +28,15 @@ public sealed class FormDefinitionNode : InspectorDefinitionNode
         StartHash(hash, TAG, ID);
         Hash(hash, Opcode);
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static FormDefinitionNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        return new(GetId(xml), xml.InnerText);
     }
 }

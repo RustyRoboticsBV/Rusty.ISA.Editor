@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -8,7 +9,7 @@ namespace Rusty.ISA.Serialization;
 public sealed class ParameterDefinitionNode : CodecNode
 {
     /* Constants. */
-    public const string TAG = "idef";
+    public const string TAG = "pdef";
 
     /* Public properties. */
     /// <summary>
@@ -26,5 +27,15 @@ public sealed class ParameterDefinitionNode : CodecNode
     {
         StartHash(hash, TAG, ID);
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static ParameterDefinitionNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        return new(GetId(xml));
     }
 }

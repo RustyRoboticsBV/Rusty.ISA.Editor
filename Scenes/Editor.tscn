@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b42qbkyncrp8c"]
+[gd_scene load_steps=6 format=3 uid="uid://b42qbkyncrp8c"]
 
 [ext_resource type="Script" uid="uid://dfipvca8by3jf" path="res://Scripts/UI/IsaEditor.cs" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c7iq4qdt3nxex" path="res://Scripts/Test.cs" id="1_trcuy"]
 [ext_resource type="FontVariation" uid="uid://4o20x61wdxf6" path="res://Fonts/UbuntuMono-R-Edit.tres" id="2_0hhuw"]
 [ext_resource type="Script" uid="uid://8di4vkfpeft4" path="res://Scripts/Graph/Frame.cs" id="2_6ykgs"]
+[ext_resource type="Script" uid="uid://duvli7sg6amtt" path="res://Scripts/Codec/TestCodec.cs" id="5_5v8xv"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -71,3 +72,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_0lbib")
 ConsoleFont = ExtResource("2_0hhuw")
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("5_5v8xv")

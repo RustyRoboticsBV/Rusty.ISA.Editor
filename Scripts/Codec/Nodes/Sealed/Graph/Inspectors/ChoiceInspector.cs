@@ -1,13 +1,14 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
 /// <summary>
 /// An choice node.
 /// </summary>
-public sealed class ChoiceNode : ElementNode
+public sealed class ChoiceNode : InspectorNode
 {
     /* Constants. */
     public const string TAG = "choice";
@@ -23,8 +24,9 @@ public sealed class ChoiceNode : ElementNode
     public InspectorNode Selected { get; set; }
 
     /* Constructors. */
-    public ChoiceNode(InspectorNode inspector)
+    public ChoiceNode(IndexNode index, InspectorNode inspector)
     {
+        Index = index;
         Selected = inspector;
     }
 
@@ -33,9 +35,9 @@ public sealed class ChoiceNode : ElementNode
     {
         StringBuilder sb = new();
         if (Index != null)
-            sb.AppendLine(Index.Serialize());
+            AppendLine(sb, Index.Serialize());
         if (Selected != null)
-            sb.AppendLine(Selected.Serialize());
+            AppendLine(sb, Selected.Serialize());
         return Wrap(sb.ToString(), TAG);
     }
 
@@ -45,5 +47,43 @@ public sealed class ChoiceNode : ElementNode
         Index?.Hash(hash);
         Selected?.Hash(hash);
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static ChoiceNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        IndexNode index = null;
+        InspectorNode selected = null;
+        foreach (XmlNode node in xml.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case IndexNode.TAG:
+                    index = IndexNode.Load(node);
+                    break;
+                case FormNode.TAG:
+                    selected = FormNode.Load(node);
+                    break;
+                case OptionNode.TAG:
+                    selected = OptionNode.Load(node);
+                    break;
+                case TAG:
+                    selected = Load(node);
+                    break;
+                case TupleNode.TAG:
+                    selected = TupleNode.Load(node);
+                    break;
+                case ListNode.TAG:
+                    selected = ListNode.Load(node);
+                    break;
+                default:
+                    throw InvalidChildException(node, TAG);
+            }
+        }
+        return new(index, selected);
     }
 }

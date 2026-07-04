@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -20,12 +21,17 @@ public sealed class LabelNode : ElementNode
     public LabelNode(string label) => Label = label;
 
     /* Public methods. */
-    public override string Serialize() => Wrap(Label, TAG);
+    public override string Serialize() => Wrap(null, TAG, Label);
 
-    public override void Hash(HashAlgorithm hash)
+    public override void Hash(HashAlgorithm hash) => EmptyHash(hash, TAG, Label);
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static LabelNode Load(XmlNode xml)
     {
-        StartHash(hash, TAG);
-        Hash(hash, Label);
-        EndHash(hash, TAG);
+        CheckTagMismatch(xml, TAG);
+
+        return new(GetId(xml));
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -30,7 +31,7 @@ public sealed class NodeSetNode : CodecNode
         StringBuilder sb = new StringBuilder();
         foreach (var node in Nodes)
         {
-            sb.AppendLine(node.Serialize());
+            AppendLine(sb, node.Serialize());
         }
 
         return Wrap(sb.ToString(), TAG);
@@ -44,5 +45,27 @@ public sealed class NodeSetNode : CodecNode
             node?.Hash(hash);
         }
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static NodeSetNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        List<NodeDefinitionNode> nodes = new();
+        foreach (XmlNode node in xml.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case NodeDefinitionNode.TAG:
+                    nodes.Add(NodeDefinitionNode.Load(node));
+                    break;
+                default:
+                    throw InvalidChildException(node, TAG);
+            }
+        }
+        return new(nodes);
     }
 }

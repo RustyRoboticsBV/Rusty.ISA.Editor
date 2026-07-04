@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -30,7 +31,7 @@ public sealed class GraphNode : ElementNode
         StringBuilder sb = new StringBuilder();
         foreach (var element in Elements)
         {
-            sb.AppendLine(element.Serialize());
+            AppendLine(sb, element.Serialize());
         }
 
         return Wrap(sb.ToString(), TAG);
@@ -44,5 +45,42 @@ public sealed class GraphNode : ElementNode
             element?.Hash(hash);
         }
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static GraphNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        List<ElementNode> elements = new();
+        foreach (XmlNode node in xml.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case JointNode.TAG:
+                    elements.Add(JointNode.Load(node));
+                    break;
+                case MemoNode.TAG:
+                    elements.Add(MemoNode.Load(node));
+                    break;
+                case FrameNode.TAG:
+                    elements.Add(FrameNode.Load(node));
+                    break;
+                case NodeNode.TAG:
+                    elements.Add(NodeNode.Load(node));
+                    break;
+                case GblockNode.TAG:
+                    elements.Add(GblockNode.Load(node));
+                    break;
+                case EblockNode.TAG:
+                    elements.Add(EblockNode.Load(node));
+                    break;
+                default:
+                    throw InvalidChildException(node, TAG);
+            }
+        }
+        return new(elements);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -17,5 +18,15 @@ public sealed class EndNode : ElementNode
     {
         StartHash(hash, TAG);
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static EndNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        return new();
     }
 }

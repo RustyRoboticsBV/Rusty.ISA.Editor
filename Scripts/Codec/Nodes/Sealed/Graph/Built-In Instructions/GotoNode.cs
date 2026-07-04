@@ -1,5 +1,5 @@
 ﻿using System.Security.Cryptography;
-using static System.Net.Mime.MediaTypeNames;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -21,12 +21,17 @@ public sealed class GotoNode : ElementNode
     public GotoNode(string targetLabel) => TargetLabel = targetLabel;
 
     /* Public methods. */
-    public override string Serialize() => Wrap(TargetLabel, TAG);
+    public override string Serialize() => Wrap(null, TAG, TargetLabel);
 
-    public override void Hash(HashAlgorithm hash)
+    public override void Hash(HashAlgorithm hash) => EmptyHash(hash, TAG, TargetLabel);
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static GotoNode Load(XmlNode xml)
     {
-        StartHash(hash, TAG);
-        Hash(hash, TargetLabel);
-        EndHash(hash, TAG);
+        CheckTagMismatch(xml, TAG);
+
+        return new(GetId(xml));
     }
 }

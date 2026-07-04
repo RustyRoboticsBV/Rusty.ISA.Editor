@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -27,7 +28,7 @@ public sealed class ChoiceDefinitionNode : InspectorDefinitionNode
         StringBuilder sb = new();
         foreach (var choice in Choices)
         {
-            sb.AppendLine(choice.Serialize());
+            AppendLine(sb, choice.Serialize());
         }
 
         return Wrap(sb.ToString(), TAG, ID);
@@ -41,5 +42,39 @@ public sealed class ChoiceDefinitionNode : InspectorDefinitionNode
             choice.Hash(hash);
         }
         EndHash(hash, TAG);
+    }
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static ChoiceDefinitionNode Load(XmlNode xml)
+    {
+        CheckTagMismatch(xml, TAG);
+
+        List<InspectorDefinitionNode> choices = null;
+        foreach (XmlNode node in xml.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case FormDefinitionNode.TAG:
+                    choices.Add(FormDefinitionNode.Load(node));
+                    break;
+                case OptionDefinitionNode.TAG:
+                    choices.Add(OptionDefinitionNode.Load(node));
+                    break;
+                case TAG:
+                    choices.Add(Load(node));
+                    break;
+                case TupleDefinitionNode.TAG:
+                    choices.Add(TupleDefinitionNode.Load(node));
+                    break;
+                case ListDefinitionNode.TAG:
+                    choices.Add(ListDefinitionNode.Load(node));
+                    break;
+                default:
+                    throw InvalidChildException(node, TAG);
+            }
+        }
+        return new(GetId(xml), choices);
     }
 }

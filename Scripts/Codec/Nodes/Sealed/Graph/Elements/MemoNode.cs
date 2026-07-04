@@ -1,17 +1,16 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Rusty.ISA.Serialization;
 
 /// <summary>
-/// A joint node.
+/// A comment node.
 /// </summary>
-public sealed class JointNode : ElementNode
+public sealed class MemoNode : ElementNode
 {
     /* Constants. */
-    public const string TAG = "joint";
+    public const string TAG = "memo";
 
     /* Public properties. */
     /// <summary>
@@ -27,22 +26,22 @@ public sealed class JointNode : ElementNode
     /// </summary>
     public MemberNode Member { get; set; }
     /// <summary>
-    /// The start point child node.
+    /// The frame header text child node.
     /// </summary>
-    public StartNode Start { get; set; }
+    public TextNode Text { get; set; }
     /// <summary>
-    /// The label child node.
+    /// The frame color child node.
     /// </summary>
-    public LabelNode Label { get; set; }
+    public ColorNode Color { get; set; }
 
     /* Constructors. */
-    public JointNode(XNode x, YNode y, MemberNode member, StartNode start, LabelNode label)
+    public MemoNode(XNode x, YNode y, MemberNode member, TextNode text, ColorNode color)
     {
         X = x;
         Y = y;
         Member = member;
-        Start = start;
-        Label = label;
+        Text = text;
+        Color = color;
     }
 
     /* Public methods. */
@@ -56,10 +55,10 @@ public sealed class JointNode : ElementNode
             AppendLine(sb, Y.Serialize());
         if (Member != null)
             AppendLine(sb, Member.Serialize());
-        if (Start != null)
-            AppendLine(sb, Start.Serialize());
-        if (Label != null)
-            AppendLine(sb, Label.Serialize());
+        if (Text != null)
+            AppendLine(sb, Text.Serialize());
+        if (Color != null)
+            AppendLine(sb, Color.Serialize());
 
         return Wrap(sb.ToString(), TAG);
     }
@@ -70,23 +69,23 @@ public sealed class JointNode : ElementNode
         X?.Hash(hash);
         Y?.Hash(hash);
         Member?.Hash(hash);
-        Start?.Hash(hash);
-        Label?.Hash(hash);
+        Text?.Hash(hash);
+        Color?.Hash(hash);
         EndHash(hash, TAG);
     }
 
     /// <summary>
     /// Load from an XML node.
     /// </summary>
-    public static JointNode Load(XmlNode xml)
+    public static MemoNode Load(XmlNode xml)
     {
         CheckTagMismatch(xml, TAG);
 
         XNode x = null;
         YNode y = null;
         MemberNode member = null;
-        StartNode start = null;
-        LabelNode label = null;
+        TextNode text = null;
+        ColorNode color = null;
         foreach (XmlNode node in xml.ChildNodes)
         {
             switch (node.Name)
@@ -100,16 +99,16 @@ public sealed class JointNode : ElementNode
                 case MemberNode.TAG:
                     member = MemberNode.Load(node);
                     break;
-                case StartNode.TAG:
-                    start = StartNode.Load(node);
+                case TextNode.TAG:
+                    text = TextNode.Load(node);
                     break;
-                case LabelNode.TAG:
-                    label = LabelNode.Load(node);
+                case ColorNode.TAG:
+                    color = ColorNode.Load(node);
                     break;
                 default:
                     throw InvalidChildException(node, TAG);
             }
         }
-        return new(x, y, member, start, label);
+        return new(x, y, member, text, color);
     }
 }

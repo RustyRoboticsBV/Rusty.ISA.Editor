@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Xml;
 
 namespace Rusty.ISA.Serialization;
 
@@ -20,12 +21,17 @@ public sealed class MemberNode : CodecNode
     public MemberNode(string id) => ID = id;
 
     /* Public methods. */
-    public override string Serialize() => Wrap(ID, TAG);
+    public override string Serialize() => Wrap(null, TAG, ID);
 
-    public override void Hash(HashAlgorithm hash)
+    public override void Hash(HashAlgorithm hash) => EmptyHash(hash, TAG, ID);
+
+    /// <summary>
+    /// Load from an XML node.
+    /// </summary>
+    public static MemberNode Load(XmlNode xml)
     {
-        StartHash(hash, TAG);
-        Hash(hash, ID);
-        EndHash(hash, TAG);
+        CheckTagMismatch(xml, TAG);
+
+        return new(GetId(xml));
     }
 }
