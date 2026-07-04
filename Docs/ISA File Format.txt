@@ -1,0 +1,137 @@
+The ISA file format uses the XML file format. It describes an ISA program graph. Only a few XML tags are allowed.
+
+
+Recognized XML tags:
+
+file		file root. Only one may appear. Must be the top element.
+
+meta		metadata root. May only appear in the <file> block. Only one may appear.
+field		metadata field. Must appear in the <meta> block. Must have an id, such as "name", "desc", "author" or "version".
+check		checksum. Must appear in the <meta> block. Only one may appear.
+
+schema		schema root, used for validating the graph, its nodes and forms. May only appear in the <file> block. Only one may appear.
+instrs		instruction set. May only appear in the <schema> block. Only one may appear.
+idef		instruction definition. May only appear in the <instrs> block. Must have an id.
+pdef		parameter definition. May only appear in an <idef> block.
+nodes		node set. May only appear in the <schema> block. Only one may appear.
+ndef		node definition. May only appear in the <nodes> block. Must have an id.
+fdef		instruction form definition. May only appear in a <ndef> block. Must have an id. The contents must be a valid instruction id.
+ldef		list definition. May only appear in a <ndef> block. Must have an id.
+tdef		tuple definition. May only appear in a <ndef> block. Must have an id.
+odef		optional definition. May only appear in a <ndef> block. Must have an id.
+cdef		choice definition. May only appear in a <ndef> block. Must have an id.
+
+graph		program graph root. May only appear in the <file> block. Only one may appear.
+x		graph element x position. May only appear in <comment>, <frame>, <joint> and <node> blocks.
+y		graph element y position. May only appear in <comment>, <frame>, <joint> and <node> blocks.
+text		graph element text. May only appear in <frame> and <comment> blocks.
+color		graph element color. May only appear in <frame> and <comment> blocks.
+member		graph frame member. May only appear in <frame>, <comment>, <joint> and <node> blocks. The contents must be a valid frame id.
+comment		graph comment / annotation. May only appear in the <graph> block.
+frame		graph frame (a visual grouping). May only appear in the <graph> block.
+width		graph element width. May only appear in <frame> blocks.
+height		graph element height. May only appear in <frame> blocks.
+joint		graph edge joint (a way to break up a straight graph edge; visual only). May only appear in the <graph> block.
+node		graph node. May only appear in the <graph> block.
+start		start point. May only appear in a <node> block.
+form		form. May only appear in a <node> block. Must positionally correspond to an fdef.
+arg		argument. May only appear in a <form> block. Must positionally correspond to an pdef.
+list		list. May only appear in a <node> block. Must positionally correspond to an ldef.
+tuple		tuple. May only appear in a <node> block. Must positionally correspond to an tdef.
+choice		choice. May only appear in a <node> block. Must positionally correspond to an cdef.
+option		optional. May only appear in a <node> block. Must positionally correspond to an odef.
+label		goto target label. May only appear in the <graph> block.
+goto		goto directive. May only appear in the <graph> block.
+end		end point. May only appear in the <graph> block.
+
+
+Example file:
+
+<file>
+  <meta>
+    <field id="title">Test</field>
+    <field id="desc">A test program.</field>
+    <field id="author">Corporation, Inc.</field>
+    <field id="version">1.0.0</field>
+    <check>b7bf65a2a60402a5e13672601a4fb496</check>
+  </meta>
+  <schema>
+    <instrs>
+      <idef id="SelectDialogWindow">
+        <pdef id="name"/>
+      </idef>
+      <idef id="SetDialogText">
+        <pdef id="speaker"/>
+        <pdef id="mood"/>
+        <pdef id="body"/>
+      </idef>
+      <idef id="InvokeEvent">
+        <pdef id="name"/>
+      </idef>
+    </instrs>
+    <nodes>
+     <ndef id="Dialog">
+       <odef id="select?">
+         <fdef id="select">SelectDialogWindow</fdef>
+       </odef>
+       <ldef id="line[]">
+         <fdef id="line">SetDialogText</fdef>
+       </ldef>
+     </ndef>
+    </nodes>
+  </schema>
+  <graph>
+    <comment>
+      <x>0</x>
+      <y>0</y>
+      <text>This is a test program.</text>
+      <color>00FF00</color>
+      <member>0</member>
+    </comment>
+    <frame id="0">
+      <x>50</x>
+      <y>50</y>
+      <width>100</width>
+      <height>100</height>
+      <text>Test Program</text>
+      <color>FF0000</color>
+    </frame>
+    <node id="Dialog">
+      <x>100</x>
+      <y>100</y>
+      <member>0</member>
+      <start>Start</start>
+      <option/>
+      <list>
+        <form>
+          <arg>Johnny</arg>
+          <arg>Happy</arg>
+          <arg>Hello, world!</arg>
+        </form>
+        <form>
+          <arg>Harry</arg>
+          <arg>Happy</arg>
+          <arg>Seeya!</arg>
+        </form>
+      </list>
+    </node>
+    <joint>
+      <x>200</x>
+      <y>200</y>
+    </joint>
+    <goto>0</goto>
+    <label>0</label>
+    <end/>
+  </graph>
+</file>
+
+
+
+Which translates to the program:
+
+s("Start"):
+  SetDialogText("Johnny", "Happy", "Hello, world!");
+  SetDialogText("Harry", "Happy", "Seeya!");
+  Goto("0");
+l("0"):
+  End();

@@ -91,7 +91,7 @@ public partial class Test : ScrollContainer
         vbox.AddWidget(hbox);
 
         IWidget x = number.Copy();
-        x.Title = "X";
+        x.Title = "Index";
         x.TitleWidth = 40;
         x.ExpandFill();
         x.UndoRedo = UndoRedo;
