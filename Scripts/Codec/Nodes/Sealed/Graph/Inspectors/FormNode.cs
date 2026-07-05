@@ -65,4 +65,17 @@ public sealed class FormNode : InspectorNode
         }
         return new(arguments);
     }
+
+    /// <summary>
+    /// Convert to a list of instructions.
+    /// </summary>
+    public List<Instruction> ToInstructions(SchemaNode schema, FormDefinitionNode definition)
+    {
+        GenericInstruction instruction = new(definition.Opcode, new string[Arguments.Count]);
+        for (int i = 0; i < Arguments.Count; i++)
+        {
+            instruction.Arguments[i] = Arguments[i].Value;
+        }
+        return [instruction];
+    }
 }

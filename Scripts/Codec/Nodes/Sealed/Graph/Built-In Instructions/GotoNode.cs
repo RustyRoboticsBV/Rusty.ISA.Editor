@@ -34,4 +34,9 @@ public sealed class GotoNode : ElementNode
 
         return new(GetId(xml));
     }
+
+    /// <summary>
+    /// Convert to an instruction.
+    /// </summary>
+    public GotoInstruction ToInstruction() => new(TargetLabel);
 }

@@ -1,10 +1,15 @@
+using Godot;
+using Godot.Collections;
 using System;
 using System.Security.Cryptography;
 using System.Xml;
 
+using Rusty.ISA.Runtime;
+
 namespace Rusty.ISA.Serialization;
 
-public static class XmlLoader
+[GlobalClass]
+public sealed partial class XmlLoader : Node
 {
     public static string Serialize(FileNode node)
     {
@@ -34,5 +39,18 @@ public static class XmlLoader
                 return FileNode.Load(node);
         }
         throw new FormatException("Empty ISA file!");
+    }
+
+    public static VirtualProgram LoadAsProgram(string str)
+    {
+        FileNode file = Load(str);
+
+        Dictionary<string, string> metadata = new();
+        foreach (var field in file.Meta.Fields)
+        {
+            metadata.Add(field.ID, field.Value);
+        }
+
+        return new(metadata, file.ToInstructions().ToArray());
     }
 }

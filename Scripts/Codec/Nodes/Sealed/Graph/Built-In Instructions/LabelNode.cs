@@ -15,15 +15,15 @@ public sealed class LabelNode : ElementNode
     /// <summary>
     /// The label ID.
     /// </summary>
-    public string Label { get; set; } = "";
+    public string ID { get; set; } = "";
 
     /* Constructors. */
-    public LabelNode(string label) => Label = label;
+    public LabelNode(string label) => ID = label;
 
     /* Public methods. */
-    public override string Serialize() => Wrap(null, TAG, Label);
+    public override string Serialize() => Wrap(null, TAG, ID);
 
-    public override void Hash(HashAlgorithm hash) => EmptyHash(hash, TAG, Label);
+    public override void Hash(HashAlgorithm hash) => EmptyHash(hash, TAG, ID);
 
     /// <summary>
     /// Load from an XML node.

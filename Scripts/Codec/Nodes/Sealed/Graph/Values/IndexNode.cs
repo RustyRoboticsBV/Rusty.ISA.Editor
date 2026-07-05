@@ -10,7 +10,7 @@ namespace Rusty.ISA.Serialization;
 public sealed class IndexNode : CodecNode
 {
     /* Constants. */
-    public const string TAG = "idx";
+    public const string TAG = "index";
 
     /* Public properties. */
     /// <summary>

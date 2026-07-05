@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Godot;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -82,5 +83,37 @@ public sealed class GraphNode : ElementNode
             }
         }
         return new(elements);
+    }
+
+    /// <summary>
+    /// Convert to a list of instructions.
+    /// </summary>
+    public List<Instruction> ToInstructions(SchemaNode schema)
+    {
+        List<Instruction> instructions = new();
+        foreach (var element in Elements)
+        {
+            switch (element)
+            {
+                case NodeNode node:
+                    AppendLists(instructions, node.ToInstructions(schema));
+                    break;
+                case JointNode joint:
+                    instructions.Add(joint.ToInstruction());
+                    break;
+                case GblockNode gblock:
+                    instructions.Add(gblock.ToInstruction());
+                    break;
+                case EblockNode eblock:
+                    instructions.Add(eblock.ToInstruction());
+                    break;
+                case FrameNode frame:
+                case MemoNode memo:
+                    break;
+                default:
+                    throw BadNodeException(this, element);
+            }
+        }
+        return instructions;
     }
 }

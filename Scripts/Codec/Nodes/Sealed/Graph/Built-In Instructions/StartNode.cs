@@ -15,15 +15,15 @@ public sealed class StartNode : CodecNode
     /// <summary>
     /// The start point name.
     /// </summary>
-    public string Name { get; set; } = "";
+    public string ID { get; set; } = "";
 
     /* Constructors. */
-    public StartNode(string name) => Name = name;
+    public StartNode(string name) => ID = name;
 
     /* Public methods. */
-    public override string Serialize() => Wrap(null, TAG, Name);
+    public override string Serialize() => Wrap(null, TAG, ID);
 
-    public override void Hash(HashAlgorithm hash) => EmptyHash(hash, TAG, Name);
+    public override void Hash(HashAlgorithm hash) => EmptyHash(hash, TAG, ID);
 
     /// <summary>
     /// Load from an XML node.

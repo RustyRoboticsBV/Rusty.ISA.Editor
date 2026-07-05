@@ -75,4 +75,15 @@ public sealed class EblockNode : ElementNode
         }
         return new(label, end);
     }
+
+    /// <summary>
+    /// Convert to an instruction.
+    /// </summary>
+    public EndInstruction ToInstruction()
+    {
+        EndInstruction instruction = End?.ToInstruction();
+        if (instruction != null && Label != null)
+            instruction.Label = Label.ID;
+        return instruction;
+    }
 }

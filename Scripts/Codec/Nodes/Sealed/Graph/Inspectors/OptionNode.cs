@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Xml;
 
 namespace Rusty.ISA.Serialization;
@@ -68,5 +69,29 @@ public sealed class OptionNode : InspectorNode
             }
         }
         return new(optional);
+    }
+
+    /// <summary>
+    /// Convert to a list of instructions.
+    /// </summary>
+    public List<Instruction> ToInstructions(SchemaNode schema, OptionDefinitionNode definition)
+    {
+        switch (Enabled)
+        {
+            case null:
+                return [];
+            case FormNode form:
+                return form.ToInstructions(schema, definition.Optional as FormDefinitionNode);
+            case OptionNode option:
+                return option.ToInstructions(schema, definition.Optional as OptionDefinitionNode);
+            case ChoiceNode choice:
+                return choice.ToInstructions(schema, definition.Optional as ChoiceDefinitionNode);
+            case TupleNode tuple:
+                return tuple.ToInstructions(schema, definition.Optional as TupleDefinitionNode);
+            case ListNode list:
+                return list.ToInstructions(schema, definition.Optional as ListDefinitionNode);
+            default:
+                throw BadNodeException(this, Enabled);
+        }
     }
 }

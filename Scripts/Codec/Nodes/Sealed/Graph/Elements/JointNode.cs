@@ -1,8 +1,7 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
-using static System.Net.Mime.MediaTypeNames;
-
 namespace Rusty.ISA.Serialization;
 
 /// <summary>
@@ -27,21 +26,16 @@ public sealed class JointNode : ElementNode
     /// </summary>
     public MemberNode Member { get; set; }
     /// <summary>
-    /// The start point child node.
-    /// </summary>
-    public StartNode Start { get; set; }
-    /// <summary>
     /// The label child node.
     /// </summary>
     public LabelNode Label { get; set; }
 
     /* Constructors. */
-    public JointNode(XNode x, YNode y, MemberNode member, StartNode start, LabelNode label)
+    public JointNode(XNode x, YNode y, MemberNode member, LabelNode label)
     {
         X = x;
         Y = y;
         Member = member;
-        Start = start;
         Label = label;
     }
 
@@ -56,8 +50,6 @@ public sealed class JointNode : ElementNode
             AppendLine(sb, Y.Serialize());
         if (Member != null)
             AppendLine(sb, Member.Serialize());
-        if (Start != null)
-            AppendLine(sb, Start.Serialize());
         if (Label != null)
             AppendLine(sb, Label.Serialize());
 
@@ -70,7 +62,6 @@ public sealed class JointNode : ElementNode
         X?.Hash(hash);
         Y?.Hash(hash);
         Member?.Hash(hash);
-        Start?.Hash(hash);
         Label?.Hash(hash);
         EndHash(hash, TAG);
     }
@@ -110,6 +101,17 @@ public sealed class JointNode : ElementNode
                     throw InvalidChildException(node, TAG);
             }
         }
-        return new(x, y, member, start, label);
+        return new(x, y, member, label);
+    }
+
+    /// <summary>
+    /// Convert to a list of instructions.
+    /// </summary>
+    public Instruction ToInstruction()
+    {
+        DummyInstruction instruction = new();
+        if (Label != null)
+            instruction.Label = Label.ID;
+        return instruction;
     }
 }

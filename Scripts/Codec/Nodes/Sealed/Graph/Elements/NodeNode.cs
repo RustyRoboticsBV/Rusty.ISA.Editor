@@ -147,4 +147,66 @@ public sealed class NodeNode : ElementNode
         }
         return new(GetId(xml), x, y, member, start, label, inspectors);
     }
+
+    /// <summary>
+    /// Convert to a list of instructions.
+    /// </summary>
+    public List<Instruction> ToInstructions(SchemaNode schema)
+    {
+        // Find node definition.
+        NodeDefinitionNode definition = null;
+        foreach (var item in schema.Nodes.Nodes)
+        {
+            if (item.ID == ID)
+            {
+                definition = item;
+                break;
+            }
+        }
+        if (definition == null)
+            throw MissingDefinitionException(ID);
+
+        // Convert instructions.
+        List<Instruction> instructions = new();
+        for (int i = 0; i < Inspectors.Count; i++)
+        {
+            List<Instruction> sub = null;
+            switch (Inspectors[i])
+            {
+                case FormNode form:
+                    sub = form.ToInstructions(schema, definition.Inspectors[i] as FormDefinitionNode);
+                    break;
+                case OptionNode option:
+                    sub = option.ToInstructions(schema, definition.Inspectors[i] as OptionDefinitionNode);
+                    break;
+                case ChoiceNode choice:
+                    sub = choice.ToInstructions(schema, definition.Inspectors[i] as ChoiceDefinitionNode);
+                    break;
+                case TupleNode tuple:
+                    sub = tuple.ToInstructions(schema, definition.Inspectors[i] as TupleDefinitionNode);
+                    break;
+                case ListNode list:
+                    sub = list.ToInstructions(schema, definition.Inspectors[i] as ListDefinitionNode);
+                    break;
+                default:
+                    throw BadNodeException(this, Inspectors[i]);
+            }
+            AppendLists(instructions, sub);
+        }
+
+        // Add start & label.
+        foreach (Instruction instruction in instructions)
+        {
+            if (instruction != null)
+            {
+                if (Start != null)
+                    instruction.Start = Start.ID;
+                if (Label != null)
+                    instruction.Label = Label.ID;
+                break;
+            }
+        }
+
+        return instructions;
+    }
 }

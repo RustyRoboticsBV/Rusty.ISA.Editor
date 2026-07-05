@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -84,5 +85,13 @@ public sealed class FileNode : ElementNode
         }
 
         return new(meta, schema, graph);
+    }
+
+    /// <summary>
+    /// Convert to a list of instructions.
+    /// </summary>
+    public List<Instruction> ToInstructions()
+    {
+        return Graph.ToInstructions(Schema);
     }
 }

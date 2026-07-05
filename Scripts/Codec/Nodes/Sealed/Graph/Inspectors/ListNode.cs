@@ -80,4 +80,38 @@ public sealed class ListNode : InspectorNode
         }
         return new(elements);
     }
+
+    /// <summary>
+    /// Convert to a list of instructions.
+    /// </summary>
+    public List<Instruction> ToInstructions(SchemaNode schema, ListDefinitionNode definition)
+    {
+        List<Instruction> instructions = new();
+        foreach (var element in Elements)
+        {
+            List<Instruction> sub = null;
+            switch (element)
+            {
+                case FormNode form:
+                    sub = form.ToInstructions(schema, definition.Type as FormDefinitionNode);
+                    break;
+                case OptionNode option:
+                    sub = option.ToInstructions(schema, definition.Type as OptionDefinitionNode);
+                    break;
+                case ChoiceNode choice:
+                    sub = choice.ToInstructions(schema, definition.Type as ChoiceDefinitionNode);
+                    break;
+                case TupleNode tuple:
+                    sub = tuple.ToInstructions(schema, definition.Type as TupleDefinitionNode);
+                    break;
+                case ListNode list:
+                    sub = list.ToInstructions(schema, definition.Type as ListDefinitionNode);
+                    break;
+                default:
+                    throw BadNodeException(this, element);
+            }
+            AppendLists(instructions, sub);
+        }
+        return instructions;
+    }
 }

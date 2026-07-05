@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Xml;
 
 namespace Rusty.ISA.Serialization;
@@ -29,4 +30,9 @@ public sealed class EndNode : ElementNode
 
         return new();
     }
+
+    /// <summary>
+    /// Convert to an instruction.
+    /// </summary>
+    public EndInstruction ToInstruction() => new();
 }

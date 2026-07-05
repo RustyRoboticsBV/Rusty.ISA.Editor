@@ -9,7 +9,8 @@ public partial class TestCodec : Node
     {
         FileAccess file = FileAccess.Open("res://Test.txt", FileAccess.ModeFlags.Read);
         string text = file.GetAsText();
-        CodecNode node = XmlLoader.Load(text);
+        FileNode node = XmlLoader.Load(text);
         GD.Print(node.Serialize());
+        node.ToInstructions();
     }
 }

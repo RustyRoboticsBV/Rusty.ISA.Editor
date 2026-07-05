@@ -75,4 +75,15 @@ public sealed class GblockNode : ElementNode
         }
         return new(label, @goto);
     }
+
+    /// <summary>
+    /// Convert to an instruction.
+    /// </summary>
+    public GotoInstruction ToInstruction()
+    {
+        GotoInstruction instruction = Goto?.ToInstruction();
+        if (instruction != null && Label != null)
+            instruction.Label = Label.ID;
+        return instruction;
+    }
 }

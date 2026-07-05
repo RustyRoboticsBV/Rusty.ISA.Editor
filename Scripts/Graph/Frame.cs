@@ -42,7 +42,7 @@ public sealed partial class Frame : GraphElement
 
 
         label = new();
-        label.Text = "New Label";
+        label.Text = "New ID";
         panel.AddChild(label);
     }
 

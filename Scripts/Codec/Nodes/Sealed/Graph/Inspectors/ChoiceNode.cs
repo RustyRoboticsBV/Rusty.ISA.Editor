@@ -86,4 +86,26 @@ public sealed class ChoiceNode : InspectorNode
         }
         return new(index, selected);
     }
+
+    /// <summary>
+    /// Convert to a list of instructions.
+    /// </summary>
+    public List<Instruction> ToInstructions(SchemaNode schema, ChoiceDefinitionNode definition)
+    {
+        switch (Selected)
+        {
+            case FormNode form:
+                return form.ToInstructions(schema, definition.Choices[Index.Index] as FormDefinitionNode);
+            case OptionNode option:
+                return option.ToInstructions(schema, definition.Choices[Index.Index] as OptionDefinitionNode);
+            case ChoiceNode choice:
+                return choice.ToInstructions(schema, definition.Choices[Index.Index] as ChoiceDefinitionNode);
+            case TupleNode tuple:
+                return tuple.ToInstructions(schema, definition.Choices[Index.Index] as TupleDefinitionNode);
+            case ListNode list:
+                return list.ToInstructions(schema, definition.Choices[Index.Index] as ListDefinitionNode);
+            default:
+                throw BadNodeException(this, Selected);
+        }
+    }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -129,5 +131,26 @@ public abstract class CodecNode
     protected static FormatException InvalidChildException(XmlNode xml, string parentTag)
     {
         return new FormatException($"Encountered '{xml.Name}' as a child of '{parentTag}'!");
+    }
+
+    /// <summary>
+    /// Add all elements of a list to another list.
+    /// </summary>
+    protected static void AppendLists<T>(List<T> target, List<T> other)
+    {
+        foreach (T item in other)
+        {
+            target.Add(item);
+        }
+    }
+
+    protected static InvalidCastException BadNodeException(CodecNode parent, CodecNode child)
+    {
+        return new InvalidCastException($"Cannot handle child node {child.GetType().Name} of {parent.GetType().Name}!");
+    }
+
+    protected static MissingPrimaryKeyException MissingDefinitionException(string id)
+    {
+        return new MissingPrimaryKeyException($"Missing definition with id {id}!");
     }
 }
