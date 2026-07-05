@@ -11,6 +11,9 @@ namespace Rusty.ISA.Serialization;
 [GlobalClass]
 public sealed partial class XmlLoader : Node
 {
+    /// <summary>
+    /// Serialize a DOM node tree into a string of XML.
+    /// </summary>
     public static string Serialize(FileNode node)
     {
         // Compute checksum.
@@ -29,10 +32,16 @@ public sealed partial class XmlLoader : Node
         return node.Serialize();
     }
 
-    public static FileNode Load(string str)
+    /// <summary>
+    /// Load a string of XML as an ISA node tree.
+    /// </summary>
+    public static FileNode Load(string xml)
     {
+        // Load XML.
         XmlDocument doc = new XmlDocument();
-        doc.LoadXml(str);
+        doc.LoadXml(xml);
+
+        // Parse DOM.
         foreach (XmlNode node in doc)
         {
             if (node is XmlElement)
@@ -41,24 +50,12 @@ public sealed partial class XmlLoader : Node
         throw new FormatException("Empty ISA file!");
     }
 
-    public static VirtualProgram LoadAsProgram(string str)
+    /// <summary>
+    /// Load a string of XML as an ISA program.
+    /// </summary>
+    public static VirtualProgram LoadAsProgram(string xml)
     {
-        FileNode file = Load(str);
-        Godot.GD.Print(file.Serialize());
-
-        Dictionary<string, string> metadata = new();
-        foreach (var field in file.Meta.Fields)
-        {
-            metadata.Add(field.ID, field.Value);
-        }
-
-        VirtualProgram program = new(metadata, file.ToInstructionSet(), file.ToInstructions().ToArray());
-
-        if (metadata.TryGetValue("title", out string title))
-            program.ResourceName = title;
-        else if (metadata.TryGetValue("name", out string name))
-            program.ResourceName = name;
-
-        return program;
+        FileNode file = Load(xml);
+        return file.ToProgram();
     }
 }
