@@ -71,11 +71,28 @@ public sealed class FormNode : InspectorNode
     /// </summary>
     public List<Instruction> ToInstructions(SchemaNode schema, FormDefinitionNode definition)
     {
+        // Generate instruction instance.
         GenericInstruction instruction = new(definition.Opcode, new string[Arguments.Count]);
         for (int i = 0; i < Arguments.Count; i++)
         {
             instruction.Arguments[i] = Arguments[i].Value;
         }
+
+        // Generate resource name.
+        StringBuilder resourceName = new();
+        resourceName.Append(instruction.Opcode);
+        resourceName.Append('(');
+        for (int i = 0; i < Arguments.Count; i++)
+        {
+            if (i > 0)
+                resourceName.Append(", ");
+            resourceName.Append("\"");
+            resourceName.Append(Arguments[i].Value);
+            resourceName.Append("\"");
+        }
+        resourceName.Append(')');
+        instruction.ResourceName = resourceName.ToString();
+
         return [instruction];
     }
 }

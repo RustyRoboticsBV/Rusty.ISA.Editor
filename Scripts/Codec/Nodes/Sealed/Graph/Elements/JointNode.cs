@@ -105,9 +105,21 @@ public sealed class JointNode : ElementNode
     /// </summary>
     public Instruction ToInstruction()
     {
+        // Generate dummy instruction.
         DummyInstruction instruction = new();
         if (Label != null)
             instruction.Label = Label.ID;
+
+        // Generate resource name.
+        StringBuilder resourceName = new();
+        if (Label != null)
+        {
+            resourceName.Append(Label.ID);
+            resourceName.Append(": ");
+        }
+        resourceName.Append("Dummy()");
+        instruction.ResourceName = resourceName.ToString();
+
         return instruction;
     }
 }

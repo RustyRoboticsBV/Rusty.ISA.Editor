@@ -84,6 +84,18 @@ public sealed class GblockNode : ElementNode
         GotoInstruction instruction = Goto?.ToInstruction();
         if (instruction != null && Label != null)
             instruction.Label = Label.ID;
+
+        // Generate resource name.
+        StringBuilder resourceName = new();
+        if (instruction != null && Label != null)
+        {
+            resourceName.Append(Label.ID);
+            resourceName.Append(": ");
+        }
+        resourceName.Append("GOTO => ");
+        resourceName.Append(Goto?.TargetLabel ?? "");
+        instruction.ResourceName = resourceName.ToString();
+
         return instruction;
     }
 }

@@ -122,7 +122,8 @@
 		<node id="Event">
 			<x>300</x>
 			<y>0</y>
-			<start>Start2</start>
+			<start id="Start2"/>
+			<label id="eee"/>
 			<form>
 				<arg>Signal</arg>
 			</form>

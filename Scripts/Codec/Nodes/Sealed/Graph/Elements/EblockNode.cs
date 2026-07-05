@@ -81,9 +81,21 @@ public sealed class EblockNode : ElementNode
     /// </summary>
     public EndInstruction ToInstruction()
     {
+        // Generate instruction instance.
         EndInstruction instruction = End?.ToInstruction();
         if (instruction != null && Label != null)
             instruction.Label = Label.ID;
+
+        // Generate resource name.
+        StringBuilder resourceName = new();
+        if (instruction != null && Label != null)
+        {
+            resourceName.Append(Label.ID);
+            resourceName.Append(": ");
+        }
+        resourceName.Append("END");
+        instruction.ResourceName = resourceName.ToString();
+
         return instruction;
     }
 }

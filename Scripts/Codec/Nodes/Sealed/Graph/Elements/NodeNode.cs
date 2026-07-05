@@ -199,10 +199,16 @@ public sealed class NodeNode : ElementNode
         {
             if (instruction != null)
             {
-                if (Start != null)
-                    instruction.Start = Start.ID;
                 if (Label != null)
+                {
                     instruction.Label = Label.ID;
+                    instruction.ResourceName = Label.ID + ": " + instruction.ResourceName;
+                }
+                if (Start != null)
+                {
+                    instruction.Start = Start.ID;
+                    instruction.ResourceName = "[" + Start.ID + "] " + instruction.ResourceName;
+                }
                 break;
             }
         }
