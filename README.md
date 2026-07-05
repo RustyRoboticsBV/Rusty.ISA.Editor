@@ -1,11 +1,17 @@
-# Rusty.ISA.Editor
-An editor app for the [ISA module](https://github.com/RustyRoboticsBV/Rusty.ISA).
+# Virtual ISA
+A generic *instruction set architecture* (ISA) module, written for the Godot game engine in C#. It allows you to:
+- Define an instruction set.
+- Write programs with this instruction set, using a graph-based editor.
+- Execute these programs from within a Godot game.
 
-It allows you to create:
-- Programs of instructions, using an arbitrary instruction set.
-- Create such instruction sets.
+It is mainly intended for cutscenes, but can be used for any kind of in-game behavior.
 
-## Program Graph Editor
+## Terminology
+In this module, we define a *process* as a node that can run a *program*, which consist of *instructions*. Each instruction has an *opcode*, *parameters* and an *execution handler*.
+
+A process can start executing a program at explicitly-defined *start points*, and stops when it reaches an *end point*. Programs may have multiple start and end points.
+
+## Graph Editor
 This tab allows for the creation of ISA programs, using a graph-based interface.
 
 [TODO: screenshot]
@@ -16,10 +22,3 @@ The editor has three components:
 - The console. It displays messages, warnings and errors.
 
 [TODO: elaborate on usage]
-
-## Adding Instructions
-You can add instruction definitions to be used in the editor by selecting the *Instruction Set* tab. Here you can create, delete and edit instruction definitions. The instruction set files are stored in the `User` folder.
-
-If you want the editor to be able to create nodes for an instruction, be sure to tick the *Has Editor Node* checkbox. If you leave this blank, then the instruction can only appear as a secondary instruction of other nodes.
-
-In addition to the [built-in instruction from the core module](https://github.com/RustyRoboticsBV/Rusty.ISA?tab=readme-ov-file#built-in-instructions), the following opcodes are reserved for *editor marker instructions*, used to preserve editability: `MTA`, `MD5`, `ISA`, `DEF`, `PAR`, `RUL`, `REF`, `PRO`, `JNT` `CMT`, `FRM`, `MBR`, `NOD`, `INS`, `PRE`, `PST`, `OPT`, `CHO`, `TPL`, `LST`, `GTG`, `ENG`, `EOG`.<br/>These instructions ar editor-only, and are stripped from programs when imported into a game project.
