@@ -1,10 +1,16 @@
 # ActionGraph
-**ActionGraph** is a visual scripting framework for the Godot game engine, written in C#. It provides the following:
+
+<p align="center">
+  <img src="Images/Logo.svg" width="250">
+</p>
+
+**ActionGraph** is a visual scripting engine for the Godot game engine, written in C#. It's intended as a generic back-end for visual scripting tools. It provides the following:
 - A graph-based editor for writing game behavior graphs.
-- An importer for graph files, which are loaded as `GraphProgram` resources.
+- A file format for storing these graphs, complete with a compiler and decompiler.
+- An importer plugin for graph files, which are loaded as `GraphProgram` resources.
 - A runtime `GraphProcess` node that can execute loaded programs.
 
-It is designed primarily for cutscenes, but can be used for any kind of game logic.
+The system is designed to be heavily extensible: a developer can add custom **node definitions**, which can then be instantiated in the graph editor.
 
 ## Concepts
 ActionGraph is built around a small set of core concepts.
