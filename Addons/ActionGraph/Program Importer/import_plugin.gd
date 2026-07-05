@@ -2,13 +2,13 @@
 extends EditorImportPlugin;
 
 func _get_importer_name():
-	return "rusty_robotics_bv.isa_importer";
+	return "rusty_robotics_bv.action_graph.program_importer";
 
 func _get_visible_name():
 	return "InstructionProgram Importer";
 
 func _get_recognized_extensions():
-	return ["isa"];
+	return ["agxp"];
 
 func _get_save_extension():
 	return "res";

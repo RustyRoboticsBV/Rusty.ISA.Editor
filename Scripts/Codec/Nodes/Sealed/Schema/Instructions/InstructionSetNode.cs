@@ -68,4 +68,17 @@ public sealed class InstructionSetNode : ElementNode
         }
         return new(instructions);
     }
+
+    /// <summary>
+    /// Convert from an instruction set.
+    /// </summary>
+    public static InstructionSetNode FromDefinitions(InstructionSet definitions)
+    {
+        InstructionSetNode node = new([]);
+        foreach (var definition in definitions.Definitions)
+        {
+            node.Instructions.Add(InstructionDefinitionNode.FromDefinition(definition));
+        }
+        return node;
+    }
 }

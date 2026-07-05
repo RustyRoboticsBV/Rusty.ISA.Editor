@@ -86,4 +86,46 @@ public sealed class InstructionDefinitionNode : ElementNode
         }
         return new(GetId(xml), executionHandler, parameters);
     }
+
+    /// <summary>
+    /// Convert from an instruction definition.
+    /// </summary>
+    public static InstructionDefinitionNode FromDefinition(InstructionDefinition definition)
+    {
+        InstructionDefinitionNode node = new(definition.Opcode, new(definition.ExecutionHandler), []);
+        foreach (string parameter in definition.Parameters)
+        {
+            node.Parameters.Add(new(parameter));
+        }
+        return node;
+    }
+
+    /// <summary>
+    /// Convert to an instruction definition.
+    /// </summary>
+    public InstructionDefinition ToDefinition()
+    {
+        // Generate instruction definition.
+        List<string> parameters = new();
+        foreach (ParameterDefinitionNode parameter in Parameters)
+        {
+            parameters.Add(parameter.ID);
+        }
+        InstructionDefinition definition = new(Opcode, parameters.ToArray(), ExecutionHandler.Name);
+
+        // Generate resource name.
+        StringBuilder resourceName = new();
+        resourceName.Append(Opcode);
+        resourceName.Append('(');
+        for (int i = 0; i < Parameters.Count; i++)
+        {
+            if (i > 0)
+                resourceName.Append(", ");
+            resourceName.Append(Parameters[i].ID);
+        }
+        resourceName.Append(')');
+        definition.ResourceName = resourceName.ToString();
+
+        return definition;
+    }
 }
