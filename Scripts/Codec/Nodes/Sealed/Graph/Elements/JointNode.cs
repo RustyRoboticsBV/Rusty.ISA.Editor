@@ -76,7 +76,6 @@ public sealed class JointNode : ElementNode
         XNode x = null;
         YNode y = null;
         MemberNode member = null;
-        StartNode start = null;
         LabelNode label = null;
         foreach (XmlNode node in xml.ChildNodes)
         {
@@ -90,9 +89,6 @@ public sealed class JointNode : ElementNode
                     break;
                 case MemberNode.TAG:
                     member = MemberNode.Load(node);
-                    break;
-                case StartNode.TAG:
-                    start = StartNode.Load(node);
                     break;
                 case LabelNode.TAG:
                     label = LabelNode.Load(node);

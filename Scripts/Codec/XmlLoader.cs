@@ -51,6 +51,13 @@ public sealed partial class XmlLoader : Node
             metadata.Add(field.ID, field.Value);
         }
 
-        return new(metadata, file.ToInstructions().ToArray());
+        VirtualProgram program = new(metadata, file.ToInstructions().ToArray());
+
+        if (metadata.TryGetValue("title", out string title))
+            program.ResourceName = title;
+        else if (metadata.TryGetValue("name", out string name))
+            program.ResourceName = name;
+
+        return program;
     }
 }

@@ -14,6 +14,8 @@ public partial class VirtualProgram : Resource
     [Export] public Instruction[] Instructions { get; private set; } = [];
 
     /* Constructors. */
+    public VirtualProgram() : this(new(), []) { }
+
     public VirtualProgram(Dictionary<string, string> metadata, Instruction[] instructions)
     {
         Metadata = metadata;

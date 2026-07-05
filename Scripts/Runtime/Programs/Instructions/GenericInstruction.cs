@@ -13,6 +13,8 @@ public sealed partial class GenericInstruction : Instruction
     [Export] public string[] Arguments { get; set; } = [];
 
     /* Constructors. */
+    public GenericInstruction() : this("", []) { }
+
     public GenericInstruction(string opcode, string[] arguments)
     {
         Opcode = opcode;
