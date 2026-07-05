@@ -21,10 +21,20 @@ public partial class InstructionDefinition : Resource
     /// <summary>
     /// The name of the execution handler.
     /// </summary>
-    [Export] public string Handler { get; private set; } = "";
+    [Export] public string ExecutionHandler { get; private set; } = "";
 
     /* Private properties. */
     private Dictionary<string, int> ParameterIndexCache { get; set; }
+
+    /* Constructors. */
+    public InstructionDefinition() : this("", [], "") { }
+
+    public InstructionDefinition(string opcode, string[] parameters, string executionHandler)
+    {
+        Opcode = opcode;
+        Parameters = parameters;
+        ExecutionHandler = executionHandler;
+    }
 
     /* Public methods. */
     /// <summary>

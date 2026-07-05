@@ -28,7 +28,7 @@ public sealed class NodeSetNode : CodecNode
     /* Public methods. */
     public override string Serialize()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new();
         foreach (var node in Nodes)
         {
             AppendLine(sb, node.Serialize());

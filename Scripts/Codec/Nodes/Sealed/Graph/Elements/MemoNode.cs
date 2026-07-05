@@ -47,7 +47,7 @@ public sealed class MemoNode : ElementNode
     /* Public methods. */
     public override string Serialize()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new();
 
         if (X != null)
             AppendLine(sb, X.Serialize());

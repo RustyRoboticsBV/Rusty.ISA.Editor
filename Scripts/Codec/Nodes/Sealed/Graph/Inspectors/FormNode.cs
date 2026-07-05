@@ -25,7 +25,7 @@ public sealed class FormNode : InspectorNode
     /* Public methods. */
     public override string Serialize()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new();
         foreach (var arg in Arguments)
         {
             AppendLine(sb, arg.Serialize());

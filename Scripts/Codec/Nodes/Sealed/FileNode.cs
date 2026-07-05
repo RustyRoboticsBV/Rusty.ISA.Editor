@@ -39,7 +39,7 @@ public sealed class FileNode : ElementNode
     /* Public methods. */
     public override string Serialize()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new();
         if (Meta != null)
             AppendLine(sb, Meta.Serialize());
         if (Schema != null)
@@ -85,6 +85,30 @@ public sealed class FileNode : ElementNode
         }
 
         return new(meta, schema, graph);
+    }
+
+    /// <summary>
+    /// Convert to an instruction set.
+    /// </summary>
+    /// <returns></returns>
+    public InstructionSet ToInstructionSet()
+    {
+        if (Schema?.Instructions?.Instructions != null)
+        {
+            List<InstructionDefinition> definitions = new();
+            foreach (InstructionDefinitionNode instruction in Schema.Instructions.Instructions)
+            {
+                List<string> parameters = new();
+                foreach (ParameterDefinitionNode parameter in instruction.Parameters)
+                {
+                    parameters.Add(parameter.ID);
+                }
+                definitions.Add(new(instruction.Opcode, parameters.ToArray(), instruction.ExecutionHandler.Name));
+            }
+            return new(definitions.ToArray());
+        }
+        else
+            return new();
     }
 
     /// <summary>

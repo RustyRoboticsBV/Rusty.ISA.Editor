@@ -9,22 +9,29 @@
 	<schema>
 		<instrs>
 			<idef id="SelectDialogWindow">
+				<exec>Rusty.Cutscenes.SelectDialogWindowHandler</exec>
 				<pdef id="name"/>
 			</idef>
 			<idef id="SetDialogWindowState">
+				<exec>Rusty.Cutscenes.SetDialogWindowState</exec>
 				<pdef id="state"/>
 				<pdef id="time"/>
 			</idef>
 			<idef id="SetDialogText">
+				<exec>Rusty.Cutscenes.SetDialogText</exec>
 				<pdef id="speaker"/>
 				<pdef id="mood"/>
 				<pdef id="body"/>
 			</idef>
 			<idef id="InvokeEvent">
+				<exec>Rusty.Cutscenes.InvokeEvent</exec>
 				<pdef id="name"/>
 			</idef>
-			<idef id="WaitForAdvanceText"/>
+			<idef id="WaitForAdvanceText">
+				<exec>Rusty.Cutscenes.WaitForAdvanceText</exec>
+			</idef>
 			<idef id="WaitForTime">
+				<exec>Rusty.Cutscenes.WaitForTime</exec>
 				<pdef id="time"/>
 			</idef>
 		</instrs>

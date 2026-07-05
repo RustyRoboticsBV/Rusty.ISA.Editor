@@ -29,7 +29,7 @@ public sealed class GraphNode : ElementNode
     /* Public methods. */
     public override string Serialize()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new();
         foreach (var element in Elements)
         {
             AppendLine(sb, element.Serialize());

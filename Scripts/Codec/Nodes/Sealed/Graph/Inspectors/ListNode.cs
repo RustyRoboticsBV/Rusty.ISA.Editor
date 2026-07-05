@@ -28,7 +28,7 @@ public sealed class ListNode : InspectorNode
     /* Public methods. */
     public override string Serialize()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new();
         foreach (var inspector in Elements)
         {
             AppendLine(sb, inspector.Serialize());

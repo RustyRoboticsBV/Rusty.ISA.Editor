@@ -33,7 +33,7 @@ public sealed class NodeDefinitionNode : ElementNode
     /* Public methods. */
     public override string Serialize()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new();
         foreach (var inspector in Inspectors)
         {
             AppendLine(sb, inspector.Serialize());

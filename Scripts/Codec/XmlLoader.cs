@@ -44,6 +44,7 @@ public sealed partial class XmlLoader : Node
     public static VirtualProgram LoadAsProgram(string str)
     {
         FileNode file = Load(str);
+        Godot.GD.Print(file.Serialize());
 
         Dictionary<string, string> metadata = new();
         foreach (var field in file.Meta.Fields)
@@ -51,7 +52,7 @@ public sealed partial class XmlLoader : Node
             metadata.Add(field.ID, field.Value);
         }
 
-        VirtualProgram program = new(metadata, file.ToInstructions().ToArray());
+        VirtualProgram program = new(metadata, file.ToInstructionSet(), file.ToInstructions().ToArray());
 
         if (metadata.TryGetValue("title", out string title))
             program.ResourceName = title;

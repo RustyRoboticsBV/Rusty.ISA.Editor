@@ -19,21 +19,28 @@ public sealed class InstructionDefinitionNode : ElementNode
     /// </summary>
     public string Opcode { get; set; }
     /// <summary>
+    /// The execution handler child node.
+    /// </summary>
+    public ExecutionHandlerNode ExecutionHandler { get; set; }
+    /// <summary>
     /// The parameter child nodes.
     /// </summary>
     public List<ParameterDefinitionNode> Parameters { get; set; }
 
     /* Constructors. */
-    public InstructionDefinitionNode(string opcode, List<ParameterDefinitionNode> parameters)
+    public InstructionDefinitionNode(string opcode, ExecutionHandlerNode executionHandler, List<ParameterDefinitionNode> parameters)
     {
         Opcode = opcode;
+        ExecutionHandler = executionHandler;
         Parameters = parameters ?? new();
     }
 
     /* Public methods. */
     public override string Serialize()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new();
+        if (ExecutionHandler != null)
+            AppendLine(sb, ExecutionHandler.Serialize());
         foreach (var parameter in Parameters)
         {
             AppendLine(sb, parameter.Serialize());
@@ -45,6 +52,8 @@ public sealed class InstructionDefinitionNode : ElementNode
     public override void Hash(HashAlgorithm hash)
     {
         StartHash(hash, TAG, Opcode);
+        if (ExecutionHandler != null)
+            ExecutionHandler.Hash(hash);
         foreach (var parameter in Parameters)
         {
             parameter.Hash(hash);
@@ -59,11 +68,15 @@ public sealed class InstructionDefinitionNode : ElementNode
     {
         CheckTagMismatch(xml, TAG);
 
+        ExecutionHandlerNode executionHandler = null;
         List<ParameterDefinitionNode> parameters = new();
         foreach (XmlNode node in xml.ChildNodes)
         {
             switch (node.Name)
             {
+                case ExecutionHandlerNode.TAG:
+                    executionHandler = ExecutionHandlerNode.Load(node);
+                    break;
                 case ParameterDefinitionNode.TAG:
                     parameters.Add(ParameterDefinitionNode.Load(node));
                     break;
@@ -71,6 +84,6 @@ public sealed class InstructionDefinitionNode : ElementNode
                     throw InvalidChildException(node, TAG);
             }
         }
-        return new(GetId(xml), parameters);
+        return new(GetId(xml), executionHandler, parameters);
     }
 }
