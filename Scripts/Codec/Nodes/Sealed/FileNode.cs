@@ -91,7 +91,6 @@ public sealed class FileNode : ElementNode
     /// <summary>
     /// Convert to an instruction set.
     /// </summary>
-    /// <returns></returns>
     public InstructionSet ToInstructionSet()
     {
         if (Schema?.Instructions?.Instructions != null)
@@ -99,12 +98,27 @@ public sealed class FileNode : ElementNode
             List<InstructionDefinition> definitions = new();
             foreach (InstructionDefinitionNode instruction in Schema.Instructions.Instructions)
             {
+                // Generate instruction definition.
                 List<string> parameters = new();
                 foreach (ParameterDefinitionNode parameter in instruction.Parameters)
                 {
                     parameters.Add(parameter.ID);
                 }
-                definitions.Add(new(instruction.Opcode, parameters.ToArray(), instruction.ExecutionHandler.Name));
+                InstructionDefinition definition = new(instruction.Opcode, parameters.ToArray(), instruction.ExecutionHandler.Name);
+                definitions.Add(definition);
+
+                // Generate resource name.
+                StringBuilder resourceName = new();
+                resourceName.Append(instruction.Opcode);
+                resourceName.Append('(');
+                for (int i = 0; i < instruction.Parameters.Count; i++)
+                {
+                    if (i > 0)
+                        resourceName.Append(", ");
+                    resourceName.Append(instruction.Parameters[i].ID);
+                }
+                resourceName.Append(')');
+                definition.ResourceName = resourceName.ToString();
             }
             return new(definitions.ToArray());
         }
