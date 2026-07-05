@@ -1,9 +1,9 @@
 using Godot;
 using System;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
-using Rusty.ISA.Consoles;
+using Rusty.ActionGraph.Consoles;
 
 [GlobalClass]
 public partial class IsaEditor : VBoxContainer

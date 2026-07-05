@@ -1,9 +1,9 @@
 ﻿using Godot;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
-/// A generic ISA instruction.
+/// A generic instruction instance.
 /// </summary>
 [GlobalClass]
 public sealed partial class GenericInstruction : Instruction

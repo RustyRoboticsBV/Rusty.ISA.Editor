@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
 /// A widget group.

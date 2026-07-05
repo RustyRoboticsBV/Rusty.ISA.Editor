@@ -1,4 +1,4 @@
-﻿namespace Rusty.ISA.Serialization;
+﻿namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
 /// An inspector definition node.

@@ -1,4 +1,4 @@
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
 /// A widget with a value.

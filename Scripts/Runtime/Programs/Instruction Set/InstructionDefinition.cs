@@ -1,10 +1,10 @@
 using Godot;
 using System.Collections.Generic;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
-/// An ISA instruction definition. It contains an opcode, parameter IDs and an execution handler name.
+/// An instruction definition. It contains an opcode, parameter IDs and an execution handler name.
 /// </summary>
 [GlobalClass]
 public partial class InstructionDefinition : Resource

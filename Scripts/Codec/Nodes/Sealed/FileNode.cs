@@ -1,11 +1,11 @@
-﻿using Rusty.ISA.Runtime;
+﻿using Rusty.ActionGraph.Runtime;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using Dictionary = Godot.Collections.Dictionary<string, string>;
 
-namespace Rusty.ISA.Serialization;
+namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
 /// A file node.
@@ -121,9 +121,9 @@ public sealed class FileNode : ElementNode
     }
 
     /// <summary>
-    /// Convert to an ISA program.
+    /// Convert to a InstructionProgram.
     /// </summary>
-    public VirtualProgram ToProgram()
+    public InstructionProgram ToProgram()
     {
         // Load metadata.
         Dictionary metadata = new();
@@ -136,7 +136,7 @@ public sealed class FileNode : ElementNode
         }
 
         // Create program.
-        VirtualProgram program = new(metadata, ToInstructionSet(), ToInstructions().ToArray());
+        InstructionProgram program = new(metadata, ToInstructionSet(), ToInstructions().ToArray());
 
         // Set resource name.
         if (metadata.TryGetValue("title", out string title))

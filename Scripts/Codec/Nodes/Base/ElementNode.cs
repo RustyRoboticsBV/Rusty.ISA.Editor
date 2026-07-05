@@ -1,4 +1,4 @@
-﻿namespace Rusty.ISA.Serialization;
+﻿namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
 /// A graph element node.

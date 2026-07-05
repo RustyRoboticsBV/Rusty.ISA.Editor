@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Rusty.ISA.Consoles;
+namespace Rusty.ActionGraph.Consoles;
 
 /// <summary>
 /// A logging utility class. It prints text both to the editor console, and to the in-app console.

@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Rusty.ISA.Serialization;
+namespace Rusty.ActionGraph.Serialization;
 
 [GlobalClass]
 public partial class TestCodec : Node

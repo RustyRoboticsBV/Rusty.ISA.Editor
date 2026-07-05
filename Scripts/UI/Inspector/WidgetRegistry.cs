@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
 /// A numeric field.

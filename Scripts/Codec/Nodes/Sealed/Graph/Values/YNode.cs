@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace Rusty.ISA.Serialization;
+namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
 /// An element y-position node.

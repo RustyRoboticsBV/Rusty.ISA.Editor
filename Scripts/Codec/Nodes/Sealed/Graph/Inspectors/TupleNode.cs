@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 
-namespace Rusty.ISA.Serialization;
+namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
 /// A tuple node.

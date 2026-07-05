@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Security.Cryptography;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
 /// An enum field.

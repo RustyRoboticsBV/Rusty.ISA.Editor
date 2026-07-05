@@ -4,15 +4,15 @@ using System;
 using System.Security.Cryptography;
 using System.Xml;
 
-using Rusty.ISA.Runtime;
+using Rusty.ActionGraph.Runtime;
 
-namespace Rusty.ISA.Serialization;
+namespace Rusty.ActionGraph.Serialization;
 
 [GlobalClass]
 public sealed partial class XmlLoader : Node
 {
     /// <summary>
-    /// Serialize a DOM node tree into a string of XML.
+    /// Serialize an ActionGraph node tree into a string of XML.
     /// </summary>
     public static string Serialize(FileNode node)
     {
@@ -33,7 +33,7 @@ public sealed partial class XmlLoader : Node
     }
 
     /// <summary>
-    /// Load a string of XML as an ISA node tree.
+    /// Load a string of XML as an ActionGraph node tree.
     /// </summary>
     public static FileNode Load(string xml)
     {
@@ -47,13 +47,13 @@ public sealed partial class XmlLoader : Node
             if (node is XmlElement)
                 return FileNode.Load(node);
         }
-        throw new FormatException("Empty ISA file!");
+        throw new FormatException("Empty XML file!");
     }
 
     /// <summary>
-    /// Load a string of XML as an ISA program.
+    /// Load a string of XML as a InstructionProgram resource.
     /// </summary>
-    public static VirtualProgram LoadAsProgram(string xml)
+    public static InstructionProgram LoadAsProgram(string xml)
     {
         FileNode file = Load(xml);
         return file.ToProgram();

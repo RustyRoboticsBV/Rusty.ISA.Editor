@@ -1,10 +1,10 @@
 using Godot;
 using System;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
-/// An ISA widget interface.
+/// A widget interface.
 /// </summary>
 public interface IWidget
 {

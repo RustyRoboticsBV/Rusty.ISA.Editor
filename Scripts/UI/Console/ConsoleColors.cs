@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Rusty.ISA.Consoles;
+namespace Rusty.ActionGraph.Consoles;
 
 public static class ConsoleColors
 {

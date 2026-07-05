@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
 /// A text line field.

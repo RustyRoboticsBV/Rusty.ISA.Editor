@@ -1,9 +1,9 @@
 using Godot;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
-/// An ISA instruction set, consisting of instruction definitions.
+/// An instruction set, consisting of an array of instruction definitions.
 /// </summary>
 [GlobalClass]
 public partial class InstructionSet : Resource

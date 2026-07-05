@@ -1,9 +1,9 @@
 ﻿using Godot;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
-/// An ISA goto instruction.
+/// An goto instruction instance.
 /// </summary>
 [GlobalClass]
 public sealed partial class GotoInstruction : Instruction

@@ -1,9 +1,9 @@
 ﻿using Godot;
 
-namespace Rusty.ISA;
+namespace Rusty.ActionGraph;
 
 /// <summary>
-/// An ISA dummy instruction. It does nothing, but can be marked with a start point or label.
+/// A dummy instruction instance. It does nothing, but can be marked with a start point or label.
 /// </summary>
 [GlobalClass]
 public sealed partial class DummyInstruction : Instruction

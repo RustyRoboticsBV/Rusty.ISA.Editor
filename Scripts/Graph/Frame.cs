@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Rusty.ISA.Graphs;
+namespace Rusty.ActionGraph.Graphs;
 
 [GlobalClass]
 public sealed partial class Frame : GraphElement
