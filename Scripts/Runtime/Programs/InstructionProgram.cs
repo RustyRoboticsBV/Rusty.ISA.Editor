@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Runtime;
 /// <summary>
 /// An program that can be executed by a InstructionProcess.
 /// </summary>
-[GlobalClass]
+[GlobalClass, Icon("InstructionProgram.svg")]
 public partial class InstructionProgram : Resource
 {
     /* Public properties. */
