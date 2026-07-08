@@ -14,7 +14,7 @@ public sealed partial class Frame : GraphElement
     public override void _Ready()
     {
         panel = new();
-        panel.MouseFilter = Control.MouseFilterEnum.Ignore;
+        panel.MouseFilter = MouseFilterEnum.Ignore;
         panel.AnchorRight = 1.0f;
         panel.AnchorBottom = 1.0f;
         AddChild(panel);
@@ -22,6 +22,10 @@ public sealed partial class Frame : GraphElement
         normalStyle = new StyleBoxFlat
         {
             BgColor = new Color(0.15f, 0.15f, 0.15f),
+            CornerRadiusBottomLeft = 4,
+            CornerRadiusBottomRight = 4,
+            CornerRadiusTopLeft = 4,
+            CornerRadiusTopRight = 4,
             BorderWidthLeft = 1,
             BorderWidthTop = 1,
             BorderWidthRight = 1,
@@ -32,6 +36,10 @@ public sealed partial class Frame : GraphElement
         selectedStyle = new StyleBoxFlat
         {
             BgColor = new Color(0.15f, 0.15f, 0.15f),
+            CornerRadiusBottomLeft = 4,
+            CornerRadiusBottomRight = 4,
+            CornerRadiusTopLeft = 4,
+            CornerRadiusTopRight = 4,
             BorderWidthLeft = 2,
             BorderWidthTop = 2,
             BorderWidthRight = 2,

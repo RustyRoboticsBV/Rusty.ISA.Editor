@@ -2,7 +2,6 @@ using Godot;
 
 namespace Rusty.ActionGraph.Graphs;
 
-[GlobalClass]
 public partial class Port : Panel
 {
     private const float EDGE_THICKNESS = 2;
