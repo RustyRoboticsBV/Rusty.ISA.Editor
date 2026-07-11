@@ -19,35 +19,15 @@ public sealed partial class Frame : GraphElement
         panel.AnchorBottom = 1.0f;
         AddChild(panel);
 
-        normalStyle = new StyleBoxFlat
-        {
-            BgColor = new Color(0.15f, 0.15f, 0.15f),
-            CornerRadiusBottomLeft = 4,
-            CornerRadiusBottomRight = 4,
-            CornerRadiusTopLeft = 4,
-            CornerRadiusTopRight = 4,
-            BorderWidthLeft = 1,
-            BorderWidthTop = 1,
-            BorderWidthRight = 1,
-            BorderWidthBottom = 1,
-            BorderColor = new Color(0.3f, 0.3f, 0.3f)
-        };
-
-        selectedStyle = new StyleBoxFlat
-        {
-            BgColor = new Color(0.15f, 0.15f, 0.15f),
-            CornerRadiusBottomLeft = 4,
-            CornerRadiusBottomRight = 4,
-            CornerRadiusTopLeft = 4,
-            CornerRadiusTopRight = 4,
-            BorderWidthLeft = 2,
-            BorderWidthTop = 2,
-            BorderWidthRight = 2,
-            BorderWidthBottom = 2,
-            BorderColor = Colors.DodgerBlue
-        };
-        panel.AddThemeStyleboxOverride("panel", normalStyle);
-
+        normalStyle = PanelUtility.GetStyleBox(
+            new Color(0.15f, 0.15f, 0.15f), 4, 4, 4, 4,
+            new Color(0.3f, 0.3f, 0.3f), 1, 1, 1, 1
+        );
+        selectedStyle = PanelUtility.GetStyleBox(
+            new Color(0.15f, 0.15f, 0.15f), 4, 4, 4, 4,
+            Colors.DodgerBlue, 2, 2, 2, 2
+        );
+        PanelUtility.SetPanelStyle(panel, normalStyle);
 
         label = new();
         label.Text = "New ID";
@@ -56,8 +36,6 @@ public sealed partial class Frame : GraphElement
 
     public override void _Process(double delta)
     {
-        panel.AddThemeStyleboxOverride(
-            "panel",
-            Selected ? selectedStyle : normalStyle);
+        PanelUtility.SetPanelStyle(panel, Selected ? selectedStyle : normalStyle);
     }
 }

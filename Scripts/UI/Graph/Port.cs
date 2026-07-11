@@ -4,8 +4,6 @@ namespace Rusty.ActionGraph.Graphs;
 
 public partial class Port : Panel
 {
-    private const float EDGE_THICKNESS = 2;
-
     private StyleBoxFlat StyleBox { get; set; }
 
     public Color EdgeColor

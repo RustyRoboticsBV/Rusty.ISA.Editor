@@ -5,7 +5,7 @@
 </p>
 
 **ActionGraph** is a visual scripting engine for the Godot game engine, written in C#. It's intended as a generic back-end for visual scripting tools. It provides the following:
-- A graph-based editor for writing game behavior graphs.
+- A graph-based editor for creating game behavior graphs.
 - A file format for storing these graphs, complete with a compiler and decompiler.
 - An importer plugin for graph files, which are loaded as `InstructionProgram` resources.
 - A runtime `InstructionProcess` node that can execute loaded programs.
