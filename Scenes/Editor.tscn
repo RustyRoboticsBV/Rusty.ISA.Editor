@@ -1,10 +1,10 @@
 [gd_scene load_steps=11 format=3 uid="uid://b42qbkyncrp8c"]
 
-[ext_resource type="Script" uid="uid://dfipvca8by3jf" path="res://Scripts/UI/IsaEditor.cs" id="1_0lbib"]
+[ext_resource type="Script" uid="uid://dfipvca8by3jf" path="res://Addons/ActionGraph/Editor/UI/IsaEditor.cs" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c7iq4qdt3nxex" path="res://Scripts/Test.cs" id="1_trcuy"]
 [ext_resource type="FontVariation" uid="uid://4o20x61wdxf6" path="res://Fonts/UbuntuMono-R-Edit.tres" id="2_0hhuw"]
-[ext_resource type="Script" uid="uid://8di4vkfpeft4" path="res://Scripts/Graph/Frame.cs" id="2_6ykgs"]
-[ext_resource type="Script" uid="uid://gnvmc7xxf2l0" path="res://Scripts/UI/Graph/GraphNode.cs" id="6_5v8xv"]
+[ext_resource type="Script" uid="uid://8di4vkfpeft4" path="res://Addons/ActionGraph/Editor/Graph/Frame.cs" id="2_6ykgs"]
+[ext_resource type="Script" uid="uid://gnvmc7xxf2l0" path="res://Addons/ActionGraph/Editor/UI/Graph/GraphNode.cs" id="6_5v8xv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_847jc"]
 bg_color = Color(0.1, 0.1, 0.1, 1)
@@ -19,7 +19,6 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dfuwn"]
-load_path = "res://.godot/imported/InstructionProgram_old.svg-4ae7e330d8cc3f74645f3046ca13e64f.ctex"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fx05v"]
 bg_color = Color(0.028800016, 0.25920016, 0.72, 1)
