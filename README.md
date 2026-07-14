@@ -4,39 +4,32 @@
   <img src="Images/Logo.svg" width="250">
 </p>
 
-**ActionGraph** is a visual scripting engine for the Godot game engine, written in C#. It's intended as a generic back-end for visual scripting tools. It provides the following:
-- A graph-based editor for creating game behavior graphs.
-- A file format for storing these graphs, complete with a compiler and decompiler.
-- An importer plugin for graph files, which are loaded as `InstructionProgram` resources.
-- A runtime `InstructionProcess` node that can execute loaded programs.
+**ActionGraph** is a visual scripting engine for the Godot game engine, written in C#. It's intended as a generic back-end for visual scripting tools and provides:
+- A graph-based visual scripting editor.
+- An importer plugin that can load graphs as executable programs.
+- A runtime node that can execute imported programs.
 
-The system is designed to be heavily extensible: a developer can add custom **node definitions**, which can then be instantiated in the graph editor.
+The bare editor does not ship with any instantiable nodes - instead, a developer must add their own **node definitions**, which can then be instantiated in the graph editor.
 
-## Concepts
-ActionGraph is built around a small set of core concepts.
+## Architecture
+ActionGraph is built around a set of core concepts, grouped into three layers.
 
-### Graphs
-The **graph** is the core of the module. It consists of a set of nodes and connections between them, and represents a program of some kind. Each node can be marked as a **start point** from which execution can be started; multiple start points can exist.
+### The Runtime
+- **Programs**: programs that can be executed by an `InstructionProcess` node. They contain:
+  - A list of **instruction definitions**, which define the executable units of the program. Each contains an opcode, a list of parameter IDs and the name of an execution handler.
+  - A list of **instruction instances**. Each carries a list of arguments, which correspond to the parameter IDs from the definition.
+- **Execution handlers**: small scripts that contain the implementation of an instruction.
+- **Processes**: scene nodes that can run an ActionGraph program. They are also responsible for locating execution handlers.
 
-A **graph element** is an object on the graph. Four types exist:
-- A **node** represents an action of some kind.
-- A **frame** is a visual grouping of elements.
-- A **memo** is an editor comment or sticky note.
-- A **joint** is a way to break up straight lines in the editor.
+### The Editor
+- **Graphs**: The editor representation of a program. It supports four types of elements: nodes (the executable parts), frames (a visual grouping of elements), memos (editor sticky notes), and joints (a way to break up a straight edge).
+- **Nodes**: The executable graph elements, defined by a list of **node definitions**. Each definition tells the editor what the node's contents are, and how they are drawn in the inspector and what instructions the node will compile to. A single node can compile to many runtime instructions. Each instruction is represented by an inspector **form**, which contains a **field** for each instruction argument. Forms can be arranged into structures using options, choices, tuples, and lists.
+  - A special type of parameter are **outputs**. These do not drawn as a field in the inspector, but instead add an output port to the node.
 
-The **inspector** shows the editable contents of a selected element.
+### The Importer
+A series of import plugins.
+- **Program loader**: takes the `.agxp` files created by the graph editor, and converts them into executable programs.
+- **Node definition loader**: loads `.agxn` files and converts them to a node definition.
+- **Instruction definition loader**: loads `.agxi` files and converts them to an instruction definition.
 
-### Nodes
-Nodes essentially act as a container for **instructions**, which are the core executable units of the module. Nodes can expose various **structures** of instructions, such as optional toggles, choice dropdowns, tuple groups and lists.
-
-By default, no instructions and nodes exist in the module. A user must implement their own **instruction definitions** and **node definitions** before programs can be created.
-
-Graphs are saved as `.agxp` **action graph program files**, which is based on the XML format. These files contains an intermediate representation all graph elements, connections, the instruction set, the node set and metadata. They can be compiled into runtime `InstructionProgram` resources.
-
-### Programs
-A **program** is the imported, compiled result of an `.agxp` file: a flat list of **instructions**, paired with an **instruction set** that defines what those instructions mean. Programs are stored as `InstructionProgram` resources.
-
-### Execution Handlers
-An **execution handler** is the code that actually runs an instruction at runtime. Handlers inherit from `ExecutionHandler` and are collected by the `GraphProcess` node upon initialization.
-
-Because handlers are resolved by name rather than by direct reference, new instructions can be added to a project simply by writing a handler and registering it in an instruction set - no changes to the core runtime are required.
+All three ActionGraph file types are based on the XML format.
