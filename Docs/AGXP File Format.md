@@ -1,0 +1,47 @@
+# AGXP File Format
+The **AGXP** (*ActionGraph XML Program*) file format is used to store the graphs created in the editor. It uses the extension `.agxp`. Each file describes a single program graph, containing all of its elements and edges as well as metadata and schema (node and instruction definitions).
+
+Only a few XML tags are allowed.
+- `file`: File root. Must by the top-level element. Only one may appear.
+  - `meta`: Metadata root. May only appear in the `file` block. Only one may appear.
+    - `field`: Metadata field. Must appear in the `meta` block. Must have a unique `id` attribute, such as "name", "desc", "author" or "version".
+    - `check`: Checksum. Must appear in the `meta` block. Only one may appear.
+  - `schema`: Schema root, used for validating the graph, its nodes and forms. May only appear in the `file` block. Only one may appear.
+    - `instrs`: Instruction set. May only appear in the `schema` block. Only one may appear.
+      - `idef`: Instruction definition. May only appear in the `instrs` block. Must have a unique `id` attribute.
+        - `pdef`: Parameter definition. May only appear in an `idef` block. Must have a unique `id` attribute.
+    - `nodes`: Node set. May only appear in the `schema` block. Only one may appear.
+      - `ndef`: Node definition. May only appear in the `nodes` block. Must have a unique `id` attribute.
+        - `fdef`: Form definition. May only appear in a `ndef` block. Must have a unique `id` attribute. The contents must correspond to an `idef`'s `id`.
+          - `adef`: Argument definition. May only appear in a `fdef` block. Contains the parameter type, which must be either `val` or `out`. Must positionally correspond to an `pdef`.
+        - `odef`: Optional definition. May only appear in a `ndef` block. Must have a unique `id` attribute.
+        - `cdef`: Choice definition. May only appear in a `ndef` block. Must have a unique `id` attribute.
+        - `tdef`: Tuple definition. May only appear in a `ndef` block. Must have a unique `id` attribute.
+        - `ldef`: List definition. May only appear in a `ndef` block. Must have a unique `id` attribute.
+  - `graph`: program graph root. May only appear in the `file` block. Only one may appear.
+    - `elements`: elements block. May only appear in the `graph` block. Only one may appear.
+      - Generic attributes:
+        - `x`: An element's x position. May only appear in `memo`, `frame`, `joint` and `node` blocks.
+        - `y`: An element's y position. May only appear in `memo`, `frame`, `joint` and `node` blocks.
+        - `member`: Marks an element as a member of a frame. May only appear in `frame`, `memo`, `joint` and `node` blocks. The contents must correspond to a `frame`'s `id`.
+        - `start`: A start point. May only appear in a `node` or `memo` block.
+        - `text`: A graph element text. May only appear in `frame` and `memo` blocks.
+        - `color`: A graph element color. May only appear in `frame` and `memo` blocks.
+      - `memo`: A sticky note element. May only appear in the `graph` block. Must have a unique `id` attribute. Must have a unique `id` attribute.
+      - `frame`: A frame element. May only appear in the `graph` block. Must have a unique `id` attribute.
+        - `width`: A frame's width. May only appear in `frame` blocks.
+        - `height`: A frame's height. May only appear in `frame` blocks.
+      - `joint`: An edge joint element. May only appear in the `graph` block. Must have a unique `id` attribute.
+      - `node`: A node element. May only appear in the `graph` block. Must have a unique `id` attribute.
+        - `type`: A node's type. The contents must correspond to an `ndef`'s `id`. May only appear in the `elements` block.
+        - `form`: A form. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block. Must positionally correspond to an `fdef`.
+          - `arg`: An argument. May only appear in a `form` block. Must positionally correspond to an `adef`. If that `adef` is of type `out`, then the `arg`'s contents must match an `edge`'s `id`.
+        - `list`: A list. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to an `ldef`.
+        - `tuple`: A tuple. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to a `tdef`.
+        - `choice`: A choice. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to a `cdef`.
+        - `option`: An option. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to an `odef`.
+    - `edges`: edges block. May only appear in the `graph` block. Only one may appear.
+      - `edge`: An edge. May only appear in the `edges` block. Must have a unique `id` attribute.
+        - `from`: The source element's ID.
+        - `output`: The source element's output port index.
+        - `to`: The target element's ID.
