@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph;
 /// An instruction set, consisting of an array of instruction definitions.
 /// </summary>
 [GlobalClass]
-public partial class InstructionSet : Resource
+public sealed partial class InstructionSet : Resource
 {
     /* Public properties. */
     [Export] public InstructionDefinition[] Definitions { get; private set; }

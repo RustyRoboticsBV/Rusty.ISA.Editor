@@ -7,7 +7,7 @@ namespace Rusty.ActionGraph;
 /// An instruction definition. It contains an opcode, parameter IDs and an execution handler name.
 /// </summary>
 [GlobalClass]
-public partial class InstructionDefinition : Resource
+public sealed partial class InstructionDefinition : Resource
 {
     /* Public properties. */
     /// <summary>
