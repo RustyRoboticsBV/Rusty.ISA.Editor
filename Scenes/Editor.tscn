@@ -5,7 +5,6 @@
 [ext_resource type="FontVariation" uid="uid://4o20x61wdxf6" path="res://Fonts/UbuntuMono-R-Edit.tres" id="2_0hhuw"]
 [ext_resource type="Script" uid="uid://8di4vkfpeft4" path="res://Scripts/Graph/Frame.cs" id="2_6ykgs"]
 [ext_resource type="Script" uid="uid://gnvmc7xxf2l0" path="res://Scripts/UI/Graph/GraphNode.cs" id="6_5v8xv"]
-[ext_resource type="Texture2D" uid="uid://cjtxfeekjwlcw" path="res://Scripts/Runtime/Programs/InstructionProgram_old.svg" id="7_brgpd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_847jc"]
 bg_color = Color(0.1, 0.1, 0.1, 1)
@@ -18,6 +17,9 @@ corner_radius_bottom_left = 4
 bg_color = Color(3.272891e-06, 0.63725317, 0.94939107, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dfuwn"]
+load_path = "res://.godot/imported/InstructionProgram_old.svg-4ae7e330d8cc3f74645f3046ca13e64f.ctex"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fx05v"]
 bg_color = Color(0.028800016, 0.25920016, 0.72, 1)
@@ -130,7 +132,7 @@ theme_override_constants/margin_bottom = 4
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer/GraphEdit/PanelContainer/VBoxContainer/PanelContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
-texture = ExtResource("7_brgpd")
+texture = SubResource("CompressedTexture2D_dfuwn")
 expand_mode = 2
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/GraphEdit/PanelContainer/VBoxContainer/PanelContainer/HBoxContainer"]

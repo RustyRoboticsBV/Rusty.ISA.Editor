@@ -12,7 +12,7 @@ public partial class Port : Panel
         set => StyleBox.BorderColor = value;
     }
 
-    public override void _EnterTree()
+    public Port()
     {
         StyleBox = new();
         StyleBox.BgColor = Color.FromHtml("131313");
