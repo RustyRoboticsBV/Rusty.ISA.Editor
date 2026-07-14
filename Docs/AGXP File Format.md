@@ -43,5 +43,5 @@ Only a few XML tags are allowed.
     - `edges`: The edges block. May only appear in the `graph` block. Only one may appear.
       - `edge`: A graph edge. May only appear in the `edges` block. Must have a unique `id` attribute.
         - `from`: The source element's `id`. May only appear in `edge` blocks.
-        - `output`: The source element's output port index. May only appear in `edge` blocks.
+        - `port`: The source element's output port index. May only appear in `edge` blocks.
         - `to`: The target element's `id`. May only appear in `edge` blocks.
