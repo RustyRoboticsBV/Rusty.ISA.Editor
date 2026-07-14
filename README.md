@@ -31,5 +31,3 @@ A series of import plugins.
 - **Program loader**: takes the `.agxp` files created by the graph editor, and converts them into executable programs.
 - **Node definition loader**: loads `.agxn` files and converts them to a node definition.
 - **Instruction definition loader**: loads `.agxi` files and converts them to an instruction definition.
-
-All three ActionGraph file types are based on the XML format.
