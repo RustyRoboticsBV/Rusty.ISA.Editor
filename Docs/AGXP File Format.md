@@ -36,12 +36,12 @@ Only a few XML tags are allowed.
         - `type`: A node's type. The contents must correspond to an `ndef`'s `id`. May only appear in the `elements` block.
         - `form`: A form. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block. Must positionally correspond to an `fdef`.
           - `arg`: An argument. May only appear in a `form` block. Must positionally correspond to an `adef`. If that `adef` is of type `out`, then the `arg`'s contents must match an `edge`'s `id`.
-        - `list`: A list. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to an `ldef`.
-        - `tuple`: A tuple. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to a `tdef`.
-        - `choice`: A choice. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to a `cdef`.
         - `option`: An option. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to an `odef`.
+        - `choice`: A choice. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to a `cdef`.
+        - `tuple`: A tuple. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to a `tdef`.
+        - `list`: A list. May only appear in a `node`, `option`, `choice`, `tuple` or `list` block.  Must positionally correspond to an `ldef`.
     - `edges`: edges block. May only appear in the `graph` block. Only one may appear.
       - `edge`: An edge. May only appear in the `edges` block. Must have a unique `id` attribute.
-        - `from`: The source element's ID.
+        - `from`: The source element's `id`.
         - `output`: The source element's output port index.
-        - `to`: The target element's ID.
+        - `to`: The target element's `id`.
