@@ -4,7 +4,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed partial class CheckCodec : Codec
+public sealed class CheckCodec : Codec
 {
     /* Constants. */
     public const string TAG = "check";

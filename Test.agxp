@@ -8,79 +8,61 @@
 	</meta>
 	<schema>
 		<instrs>
-			<idef id="SelectDialogWindow">
-				<exec>Rusty.Cutscenes.SelectDialogWindowHandler</exec>
-				<pdef id="name"/>
+			<idef id="i1">
+				<exec>Handler1</exec>
+				<pdef id="p1"/>
 			</idef>
-			<idef id="SetDialogWindowState">
-				<exec>Rusty.Cutscenes.SetDialogWindowState</exec>
-				<pdef id="state"/>
-				<pdef id="time"/>
+			<idef id="i2">
+				<exec>Handler2</exec>
+				<pdef id="p2"/>
+				<pdef id="p3"/>
 			</idef>
-			<idef id="SetDialogText">
-				<exec>Rusty.Cutscenes.SetDialogText</exec>
-				<pdef id="speaker"/>
-				<pdef id="mood"/>
-				<pdef id="body"/>
-			</idef>
-			<idef id="InvokeEvent">
-				<exec>Rusty.Cutscenes.InvokeEvent</exec>
-				<pdef id="name"/>
-			</idef>
-			<idef id="WaitForAdvanceText">
-				<exec>Rusty.Cutscenes.WaitForAdvanceText</exec>
-			</idef>
-			<idef id="WaitForTime">
-				<exec>Rusty.Cutscenes.WaitForTime</exec>
-				<pdef id="time"/>
+			<idef id="i3">
+				<exec>Handler3</exec>
+				<pdef id="p4"/>
+				<pdef id="p5"/>
+				<pdef id="p6"/>
 			</idef>
 		</instrs>
 		<nodes>
-			<ndef id="Dialog">
-				<tdef id="select+state">
-					<odef id="select?">
-						<fdef type="SelectDialogWindow" id="select">
-							<vadef/>
-						</fdef>
-					</odef>
-					<odef id="set_state?">
-						<fdef type="SetDialogWindowState" id="set_state">
-							<vadef/>
-							<vadef/>
-						</fdef>
-					</odef>
-				</tdef>
-				<ldef id="line[]">
-					<fdef type="SetDialogText" id="line">
-						<vadef/>
-						<vadef/>
-						<vadef/>
-					</fdef>
+			<ndef id="n1">
+				<ldef id="l1">
+					<tdef id="t1">
+						<cdef id="c1">
+							<odef id="o1">
+								<fdef type="i1" id="f1">
+									<vadef id="va1" type="p1"/>
+								</fdef>
+							</odef>
+							<odef id="o2">
+								<fdef type="i2" id="f2">
+									<vadef id="va2" type="p2"/>
+									<oadef id="oa3" type="p3">false</oadef>
+								</fdef>
+							</odef>
+							<odef id="o3">
+								<fdef type="i3" id="f3">
+									<oadef id="oa4" type="p4">false</oadef>
+									<vadef id="va5" type="p5"/>
+									<oadef id="oa6" type="p6">true</oadef>
+								</fdef>
+							</odef>
+						</cdef>
+					</tdef>
 				</ldef>
-				<cdef id="wait_advance/wait_time">
-					<fdef type="WaitForAdvanceText" id="wait_advance"/>
-					<fdef type="WaitForTime" id="wait_time">
-						<vadef/>
-					</fdef>
-				</cdef>
-			</ndef>
-			<ndef id="Event">
-				<fdef type="InvokeEvent" id="invoke">
-					<vadef/>
-				</fdef>
 			</ndef>
 		</nodes>
 	</schema>
 	<graph>
 		<elems>
-			<memo id="m0">
+			<memo id="m1">
 				<x>0</x>
 				<y>0</y>
-				<member id="0"/>
+				<member id="f1"/>
 				<text>This is a test program.</text>
 				<color>00ff00</color>
 			</memo>
-			<frame id="f0">
+			<frame id="f1">
 				<x>50</x>
 				<y>50</y>
 				<width>100</width>
@@ -88,68 +70,35 @@
 				<text>Test Program</text>
 				<color>ff0000</color>
 			</frame>
-			<node id="n1" type="Dialog">
+			<node id="n1" type="n1">
 				<x>100</x>
 				<y>100</y>
-				<member id="0"/>
+				<member id="f1"/>
 				<start id="Start"/>
-				<tuple>
-					<option>
-						<form>
-							<arg>Main</arg>
-						</form>
-					</option>
-					<option>
-						<form>
-							<arg>Open</arg>
-							<arg>0.25</arg>
-						</form>
-					</option>
-				</tuple>
 				<list>
-					<form>
-						<arg>Johnny</arg>
-						<arg>Happy</arg>
-						<arg>Hello, world!</arg>
-					</form>
-					<form>
-						<arg>Harry</arg>
-						<arg>Happy</arg>
-						<arg>Seeya!</arg>
-					</form>
+					<tuple>
+						<choice select="o3">
+							<option>
+								<form>
+									<arg type="oa4"/>
+									<arg type="va5"/>
+									<arg type="oa6"/>
+								</form>
+							</option>
+						</choice>
+					</tuple>
 				</list>
-				<choice select="wait_advance">
-					<form/>
-				</choice>
 			</node>
-			<node id="n1" type="Event">
-				<x>300</x>
-				<y>0</y>
-				<start id="Start2"/>
-				<form>
-					<arg>Signal</arg>
-				</form>
-			</node>
-			<joint id="j0">
+			<joint id="j1">
 				<x>200</x>
 				<y>200</y>
 			</joint>
 		</elems>
 		<edges>
-			<edge id="e0">
-				<from id="n0"/>
-				<port>0</port>
-				<to id="j0"/>
-			</edge>
 			<edge id="e1">
-				<from id="j0"/>
-				<port>0</port>
-				<to id="n1"/>
-			</edge>
-			<edge id="e2">
 				<from id="n1"/>
 				<port>0</port>
-				<to id="n0"/>
+				<to id="j1"/>
 			</edge>
 		</edges>
 	</graph>

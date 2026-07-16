@@ -12,6 +12,11 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 public abstract class Codec
 {
+    /* Constants. */
+    public const string ID = "id";
+    public const string Type = "type";
+    public const string Select = "select";
+
     /* Public properties. */
     public string InnerText { get; set; } = "";
     public Dictionary<string, List<Codec>> Children { get; } = new();
@@ -244,6 +249,16 @@ public abstract class Codec
     }
 
     /// <summary>
+    /// Get an attribute's value. Returns "" if the attribute could not be found.
+    /// </summary>
+    public string GetAttribute(string name)
+    {
+        if (Attributes.TryGetValue(name, out var attribute))
+            return attribute;
+        return "";
+    }
+
+    /// <summary>
     /// Get the first child node with some tag. Returns null if the child does not exist.
     /// </summary>
     public Codec GetFirstChild(string tag)
@@ -269,6 +284,9 @@ public abstract class Codec
             throw new InvalidCastException($"Cannot convert codec with tag '{tag}' to type '{typeof(T)}'.");
     }
 
+    /// <summary>
+    /// Get all children with a tag.
+    /// </summary>
     public List<Codec> GetChildren(string tag)
     {
         if (Children.TryGetValue(tag, out var childrenOfType))
@@ -276,6 +294,9 @@ public abstract class Codec
         return [];
     }
 
+    /// <summary>
+    /// Get all children of some type.
+    /// </summary>
     public List<T> GetChildren<T>()
         where T : Codec
     {

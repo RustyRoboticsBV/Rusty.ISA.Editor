@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed partial class FormCodec : Codec
+public sealed class FormCodec : Codec
 {
     /* Constants. */
     public const string TAG = "form";

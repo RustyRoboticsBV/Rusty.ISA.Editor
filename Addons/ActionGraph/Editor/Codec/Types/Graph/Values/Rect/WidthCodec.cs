@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed partial class WidthCodec : Codec
+public sealed class WidthCodec : Codec
 {
     /* Constants. */
     public const string TAG = "width";

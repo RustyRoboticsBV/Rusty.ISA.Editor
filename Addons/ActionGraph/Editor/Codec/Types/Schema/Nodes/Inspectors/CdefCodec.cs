@@ -3,14 +3,14 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed partial class CdefCodec : Codec
+public sealed class CdefCodec : Codec
 {
     /* Constants. */
     public const string TAG = "cdef";
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => ["id"];
+    protected override HashSet<string> AllowedAttributes => [ID];
     protected override HashSet<string> AllowedChildren => [FdefCodec.TAG, OdefCodec.TAG, TAG, TdefCodec.TAG, LdefCodec.TAG];
 
     /* Constructors. */

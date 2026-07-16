@@ -1,5 +1,4 @@
 ﻿using Rusty.ActionGraph.Serialization;
-using System;
 using System.Collections.Generic;
 
 namespace Rusty.ActionGraph.Compilation;

@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed partial class PortCodec : Codec
+public sealed class PortCodec : Codec
 {
     /* Constants. */
     public const string TAG = "port";
