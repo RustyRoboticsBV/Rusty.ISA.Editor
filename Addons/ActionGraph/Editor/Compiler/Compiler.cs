@@ -14,9 +14,24 @@ public static class Compiler
         List<JointCodec> joints = file.GetFirstChild<GraphCodec>()?.GetFirstChild<ElemsCodec>()?.GetChildren<JointCodec>() ?? [];
         List<EdgeCodec> edges = file.GetFirstChild<GraphCodec>()?.GetFirstChild<EdgesCodec>()?.GetChildren<EdgeCodec>() ?? [];
 
+        Metadata metadata = Compile(file?.GetFirstChild<MetaCodec>());
         InstructionSet iset = Compile(file?.GetFirstChild<SchemaCodec>()?.GetFirstChild<InstrsCodec>());
 
-        return new(new(), iset, []);
+        return new(metadata, iset, []);
+    }
+
+    /// <summary>
+    /// Compile an instruction set.
+    /// </summary>
+    private static Metadata Compile(MetaCodec meta)
+    {
+        Metadata metadata = new();
+        var datas = meta.GetChildren<DataCodec>();
+        foreach (var data in datas)
+        {
+            metadata.AddValue(data.GetAttribute(Codec.ID), data.InnerText);
+        }
+        return metadata;
     }
 
     /// <summary>
