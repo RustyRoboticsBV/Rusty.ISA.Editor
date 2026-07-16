@@ -269,6 +269,27 @@ public abstract class Codec
             throw new InvalidCastException($"Cannot convert codec with tag '{tag}' to type '{typeof(T)}'.");
     }
 
+    public List<Codec> GetChildren(string tag)
+    {
+        if (Children.TryGetValue(tag, out var childrenOfType))
+            return childrenOfType;
+        return [];
+    }
+
+    public List<T> GetChildren<T>()
+        where T : Codec
+    {
+        string tag = Tags[typeof(T)];
+        List<Codec> list = GetChildren(tag);
+
+        List<T> typed = new();
+        foreach (Codec codec in list)
+        {
+            typed.Add(codec as T);
+        }
+        return typed;
+    }
+
     /// <summary>
     /// Add a node of some type.
     /// </summary>

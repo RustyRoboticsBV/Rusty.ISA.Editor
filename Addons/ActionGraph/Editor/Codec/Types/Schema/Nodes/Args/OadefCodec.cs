@@ -15,4 +15,9 @@ public sealed partial class OadefCodec : Codec
 
     /* Constructors. */
     public OadefCodec(XmlNode xml) : base(xml) { }
+
+    public void SetValue(bool hideDefaultOutput)
+    {
+        InnerText = hideDefaultOutput ? "true" : "false";
+    }
 }
