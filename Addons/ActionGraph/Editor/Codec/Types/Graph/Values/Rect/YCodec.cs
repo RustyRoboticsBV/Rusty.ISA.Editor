@@ -15,7 +15,4 @@ public sealed partial class YCodec : Codec
 
     /* Constructors. */
     public YCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(YCodec));
 }

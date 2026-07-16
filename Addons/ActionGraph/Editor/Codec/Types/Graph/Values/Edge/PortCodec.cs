@@ -15,7 +15,4 @@ public sealed partial class PortCodec : Codec
 
     /* Constructors. */
     public PortCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(PortCodec));
 }

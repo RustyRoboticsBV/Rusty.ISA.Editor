@@ -15,7 +15,4 @@ public sealed partial class TupleCodec : Codec
 
     /* Constructors. */
     public TupleCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(TupleCodec));
 }

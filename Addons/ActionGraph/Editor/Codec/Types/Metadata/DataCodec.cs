@@ -15,7 +15,4 @@ public sealed partial class DataCodec : Codec
 
     /* Constructors. */
     public DataCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(DataCodec));
 }

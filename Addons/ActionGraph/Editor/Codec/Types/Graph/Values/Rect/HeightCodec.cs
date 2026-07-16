@@ -15,7 +15,4 @@ public sealed partial class HeightCodec : Codec
 
     /* Constructors. */
     public HeightCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(HeightCodec));
 }

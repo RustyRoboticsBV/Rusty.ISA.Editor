@@ -15,7 +15,4 @@ public sealed partial class ColorCodec : Codec
 
     /* Constructors. */
     public ColorCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(ColorCodec));
 }

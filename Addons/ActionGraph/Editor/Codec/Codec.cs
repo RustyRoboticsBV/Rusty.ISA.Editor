@@ -23,73 +23,77 @@ public abstract class Codec
     protected virtual HashSet<string> AllowedAttributes { get; } = new();
 
     protected static Dictionary<string, Type> Codecs { get; } = new();
+    protected static Dictionary<Type, string> Tags { get; } = new();
 
     /* Constructors. */
     static Codec()
     {
-        FileCodec.Register();
+        Register<FileCodec>(FileCodec.TAG);
 
         // Metadata.
-        MetaCodec.Register();
-        DataCodec.Register();
-        CheckCodec.Register();
+        Register<MetaCodec>(MetaCodec.TAG);
+        Register<DataCodec>(DataCodec.TAG);
+        Register<CheckCodec>(CheckCodec.TAG);
 
         // Schema.
-        SchemaCodec.Register();
+        Register<SchemaCodec>(SchemaCodec.TAG);
 
-        InstrsCodec.Register();
+        Register<InstrsCodec>(InstrsCodec.TAG);
 
-        IdefCodec.Register();
-        PdefCodec.Register();
-        ExecCodec.Register();
+        Register<IdefCodec>(IdefCodec.TAG);
+        Register<PdefCodec>(PdefCodec.TAG);
+        Register<ExecCodec>(ExecCodec.TAG);
 
-        NodesCodec.Register();
+        Register<NodesCodec>(NodesCodec.TAG);
 
-        NdefCodec.Register();
+        Register<NdefCodec>(NdefCodec.TAG);
 
-        FdefCodec.Register();
-        OdefCodec.Register();
-        CdefCodec.Register();
-        TdefCodec.Register();
-        LdefCodec.Register();
+        Register<FdefCodec>(FdefCodec.TAG);
+        Register<OdefCodec>(OdefCodec.TAG);
+        Register<CdefCodec>(CdefCodec.TAG);
+        Register<TdefCodec>(TdefCodec.TAG);
+        Register<LdefCodec>(LdefCodec.TAG);
 
-        VadefCodec.Register();
-        OadefCodec.Register();
+        Register<VadefCodec>(VadefCodec.TAG);
+        Register<OadefCodec>(OadefCodec.TAG);
 
         // Graph.
-        GraphCodec.Register();
+        Register<GraphCodec>(GraphCodec.TAG);
 
-        ElemsCodec.Register();
+        Register<ElemsCodec>(ElemsCodec.TAG);
 
-        NodeCodec.Register();
-        JointCodec.Register();
-        FrameCodec.Register();
-        MemoCodec.Register();
+        Register<NodeCodec>(NodeCodec.TAG);
+        Register<JointCodec>(JointCodec.TAG);
+        Register<FrameCodec>(FrameCodec.TAG);
+        Register<MemoCodec>(MemoCodec.TAG);
 
-        XCodec.Register();
-        YCodec.Register();
-        WidthCodec.Register();
-        HeightCodec.Register();
-        MemberCodec.Register();
-        StartCodec.Register();
-        TextCodec.Register();
-        ColorCodec.Register();
+        Register<XCodec>(XCodec.TAG);
+        Register<YCodec>(YCodec.TAG);
+        Register<WidthCodec>(WidthCodec.TAG);
+        Register<HeightCodec>(HeightCodec.TAG);
 
-        FormCodec.Register();
-        OptionCodec.Register();
-        ChoiceCodec.Register();
-        TupleCodec.Register();
-        ListCodec.Register();
-        ArgCodec.Register();
+        Register<MemberCodec>(MemberCodec.TAG);
+        Register<StartCodec>(StartCodec.TAG);
+        Register<TextCodec>(TextCodec.TAG);
+        Register<ColorCodec>(ColorCodec.TAG);
 
-        EdgesCodec.Register();
+        Register<FormCodec>(FormCodec.TAG);
+        Register<ArgCodec>(ArgCodec.TAG);
+        Register<OptionCodec>(OptionCodec.TAG);
+        Register<ChoiceCodec>(ChoiceCodec.TAG);
+        Register<TupleCodec>(TupleCodec.TAG);
+        Register<ListCodec>(ListCodec.TAG);
 
-        EdgeCodec.Register();
+        Register<EdgesCodec>(EdgesCodec.TAG);
 
-        FromCodec.Register();
-        PortCodec.Register();
-        ToCodec.Register();
+        Register<EdgeCodec>(EdgeCodec.TAG);
+
+        Register<FromCodec>(FromCodec.TAG);
+        Register<PortCodec>(PortCodec.TAG);
+        Register<ToCodec>(ToCodec.TAG);
     }
+
+    public Codec() { }
 
     public Codec(XmlNode xml)
     {
@@ -124,7 +128,7 @@ public abstract class Codec
     /// <summary>
     /// Convert this node to XML.
     /// </summary>
-    public virtual string Serialize()
+    public string Serialize()
     {
         // Handle attributes.
         StringBuilder attributes = new();
@@ -191,7 +195,42 @@ public abstract class Codec
     /// <summary>
     /// Compute the checksum of this node and its child nodes.
     /// </summary>
-    public virtual void Hash(HashAlgorithm hash) => Hash(hash, Serialize());
+    public virtual void Hash(HashAlgorithm hash)
+    {
+        // Hash start tag.
+        Hash(hash, "<");
+        Hash(hash, Tag);
+
+        foreach (var attribute in Attributes)
+        {
+            Hash(hash, " ");
+            Hash(hash, attribute.Key);
+            Hash(hash, "=\"");
+            Hash(hash, attribute.Value);
+            Hash(hash, "\"");
+        }
+
+        Hash(hash, ">");
+
+        // Hash contents.
+        if (Children.Count == 0)
+            Hash(hash, InnerText);
+        else
+        {
+            foreach (var childrenOfType in Children)
+            {
+                foreach (Codec child in childrenOfType.Value)
+                {
+                    child.Hash(hash);
+                }
+            }
+        }
+
+        // Hash end tag.
+        Hash(hash, "</");
+        Hash(hash,  Tag);
+        Hash(hash, ">");
+    }
 
     /// <summary>
     /// Load from an XML node.
@@ -202,6 +241,42 @@ public abstract class Codec
             return Instantiate(type, xml);
         else
             throw new InvalidOperationException($"Unknown XML child tag '{xml.Name}'.");
+    }
+
+    /// <summary>
+    /// Get the first child node with some tag. Returns null if the child does not exist.
+    /// </summary>
+    public Codec GetFirstChild(string tag)
+    {
+        if (Children.TryGetValue(tag, out var childrenOfType))
+        {
+            if (childrenOfType.Count > 0)
+                return childrenOfType[0];
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Get the first child node with some tag. Returns null if the child does not exist.
+    /// </summary>
+    public T GetFirstChild<T>()
+        where T : Codec
+    {
+        string tag = Tags[typeof(T)];
+        if (GetFirstChild(tag) is T typed)
+            return typed;
+        else
+            throw new InvalidCastException($"Cannot convert codec with tag '{tag}' to type '{typeof(T)}'.");
+    }
+
+    /// <summary>
+    /// Add a node of some type.
+    /// </summary>
+    public void AddChild(Codec node)
+    {
+        if (!Children.ContainsKey(node.Tag))
+            Children.Add(node.Tag, new());
+        Children[node.Tag].Add(node);
     }
 
     /* Protected methods. */
@@ -227,5 +302,12 @@ public abstract class Codec
             throw new NullReferenceException($"Type {type.Name} has no constructor that takes an {nameof(XmlNode)} argument.");
 
         return ctor.Invoke([xml]) as Codec;
+    }
+
+    /* Private methods. */
+    private static void Register<T>(string tag)
+    {
+        Codecs.Add(tag, typeof(T));
+        Tags.Add(typeof(T), tag);
     }
 }

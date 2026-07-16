@@ -15,7 +15,4 @@ public sealed partial class OptionCodec : Codec
 
     /* Constructors. */
     public OptionCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(OptionCodec));
 }

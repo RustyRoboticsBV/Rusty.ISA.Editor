@@ -15,7 +15,4 @@ public sealed partial class FormCodec : Codec
 
     /* Constructors. */
     public FormCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(FormCodec));
 }

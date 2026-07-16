@@ -15,7 +15,4 @@ public sealed partial class MemberCodec : Codec
 
     /* Constructors. */
     public MemberCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(MemberCodec));
 }

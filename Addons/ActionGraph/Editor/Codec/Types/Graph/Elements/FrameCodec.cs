@@ -15,7 +15,4 @@ public sealed partial class FrameCodec : Codec
 
     /* Constructors. */
     public FrameCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(FrameCodec));
 }

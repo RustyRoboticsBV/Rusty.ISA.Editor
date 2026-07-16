@@ -15,7 +15,4 @@ public sealed partial class ExecCodec : Codec
 
     /* Constructors. */
     public ExecCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(ExecCodec));
 }

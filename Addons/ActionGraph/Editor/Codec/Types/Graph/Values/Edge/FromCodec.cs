@@ -15,7 +15,4 @@ public sealed partial class FromCodec : Codec
 
     /* Constructors. */
     public FromCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(FromCodec));
 }

@@ -15,7 +15,4 @@ public sealed partial class SchemaCodec : Codec
 
     /* Constructors. */
     public SchemaCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(SchemaCodec));
 }

@@ -15,7 +15,4 @@ public sealed partial class FdefCodec : Codec
 
     /* Constructors. */
     public FdefCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(FdefCodec));
 }

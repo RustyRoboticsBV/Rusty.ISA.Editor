@@ -15,7 +15,4 @@ public sealed partial class EdgeCodec : Codec
 
     /* Constructors. */
     public EdgeCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(EdgeCodec));
 }

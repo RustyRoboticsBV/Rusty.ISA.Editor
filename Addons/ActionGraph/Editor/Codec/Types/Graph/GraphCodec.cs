@@ -15,7 +15,4 @@ public sealed partial class GraphCodec : Codec
 
     /* Constructors. */
     public GraphCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(GraphCodec));
 }

@@ -15,7 +15,4 @@ public sealed partial class VadefCodec : Codec
 
     /* Constructors. */
     public VadefCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(VadefCodec));
 }

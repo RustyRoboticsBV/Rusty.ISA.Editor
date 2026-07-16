@@ -1,10 +1,10 @@
 using Godot;
-using Godot.Collections;
 using System;
 using System.Security.Cryptography;
 using System.Xml;
 
 using Rusty.ActionGraph.Runtime;
+using Rusty.ActionGraph.Compilation;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -14,23 +14,32 @@ public sealed partial class XmlLoader : Node
     /// <summary>
     /// Serialize an ActionGraph node tree into a string of XML.
     /// </summary>
-    /*public static string Serialize(FileNode node)
+    public static string Serialize(FileCodec file)
     {
         // Compute checksum.
-        if (node.Meta == null)
-            node.Meta = new(null, null);
-        if (node.Meta.Checksum == null)
-            node.Meta.Checksum = new("");
+        MetaCodec meta = file.GetFirstChild<MetaCodec>();
+        if (meta == null)
+        {
+            meta = new();
+            file.AddChild(meta);
+        }
+
+        CheckCodec check = meta.GetFirstChild<CheckCodec>();
+        if (check == null)
+        {
+            check = new();
+            meta.AddChild(check);
+        }
 
         MD5 md5 = MD5.Create();
-        node.Hash(md5);
+        file.Hash(md5);
         byte[] hashBytes = md5.TransformFinalBlock([], 0, 0);
-        string hashHex = Convert.ToHexString(hashBytes);
-        node.Meta.Checksum.String = hashHex;
+        string hashHex = Convert.ToHexString(md5.Hash);
+        check.InnerText = hashHex;
 
         // Serialize.
-        return node.Serialize();
-    }*/
+        return file.Serialize();
+    }
 
     /// <summary>
     /// Load a string of XML as an ActionGraph node tree.
@@ -56,19 +65,12 @@ public sealed partial class XmlLoader : Node
         throw new FormatException("Empty XML file!");
     }
 
-    public static InstructionProgram LoadAsProgram(string xml)
-    {
-        FileCodec file = Load(xml);
-        Godot.GD.Print(file.Serialize());
-        return new();
-    }
-
     /// <summary>
     /// Load a string of XML as a InstructionProgram resource.
     /// </summary>
-    /*public static InstructionProgram LoadAsProgram(string xml)
+    public static InstructionProgram LoadAsProgram(string xml)
     {
-        FileNode file = Load(xml);
-        return file.ToProgram();
-    }*/
+        FileCodec file = Load(xml);
+        return Compiler.Compile(file);
+    }
 }

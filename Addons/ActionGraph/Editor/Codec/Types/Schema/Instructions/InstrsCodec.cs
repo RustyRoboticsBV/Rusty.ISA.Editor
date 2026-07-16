@@ -15,7 +15,4 @@ public sealed partial class InstrsCodec : Codec
 
     /* Constructors. */
     public InstrsCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(InstrsCodec));
 }

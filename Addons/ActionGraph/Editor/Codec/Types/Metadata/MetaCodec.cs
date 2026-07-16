@@ -14,8 +14,7 @@ public sealed partial class MetaCodec : Codec
     protected override HashSet<string> AllowedChildren => [DataCodec.TAG, CheckCodec.TAG];
 
     /* Constructors. */
-    public MetaCodec(XmlNode xml) : base(xml) { }
+    public MetaCodec() : base() { }
 
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(MetaCodec));
+    public MetaCodec(XmlNode xml) : base(xml) { }
 }

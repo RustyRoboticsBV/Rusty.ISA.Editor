@@ -15,7 +15,4 @@ public sealed partial class ListCodec : Codec
 
     /* Constructors. */
     public ListCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(ListCodec));
 }

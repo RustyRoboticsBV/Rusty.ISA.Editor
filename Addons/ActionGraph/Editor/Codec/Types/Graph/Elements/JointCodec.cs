@@ -15,7 +15,4 @@ public sealed partial class JointCodec : Codec
 
     /* Constructors. */
     public JointCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(JointCodec));
 }

@@ -15,7 +15,4 @@ public sealed partial class ArgCodec : Codec
 
     /* Constructors. */
     public ArgCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(ArgCodec));
 }

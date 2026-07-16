@@ -15,7 +15,4 @@ public sealed partial class WidthCodec : Codec
 
     /* Constructors. */
     public WidthCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(WidthCodec));
 }

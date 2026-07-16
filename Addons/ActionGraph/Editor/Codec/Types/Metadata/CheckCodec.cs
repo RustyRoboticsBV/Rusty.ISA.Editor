@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
@@ -14,8 +15,17 @@ public sealed partial class CheckCodec : Codec
     protected override HashSet<string> AllowedChildren => [];
 
     /* Constructors. */
+    public CheckCodec() : base() { }
+
     public CheckCodec(XmlNode xml) : base(xml) { }
 
     /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(CheckCodec));
+    public override void Hash(HashAlgorithm hash)
+    {
+        Hash(hash, "<");
+        Hash(hash, Tag);
+        Hash(hash, "></");
+        Hash(hash, Tag);
+        Hash(hash, ">");
+    }
 }
