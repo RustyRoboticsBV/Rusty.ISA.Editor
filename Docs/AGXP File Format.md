@@ -4,15 +4,16 @@ The **AGXP** (*ActionGraph XML Program*) file format is used to store the graphs
 Only a few XML tags are allowed.
 - `file`: The file root. Must be the top-level element. Only one may appear.
   - `meta`: The metadata root. May only appear in the `file` block. Only one may appear.
-    - `data`: A metadata entry. May only appear in the `meta` block. Must have a unique `id` attribute, such as "name", "desc", "author" or "version".
-    - `check`: The checksum. May only appear in the `meta` block. Only one may appear.
+  - `data`: A metadata entry. May only appear in the `meta` block. Must have a unique `id` attribute, such as "name", "desc", "author" or "version".
+  - `check`: The checksum. May only appear in the `meta` block. Only one may appear.
   - `schema`: The schema root, used for validating the graph, its nodes and forms. May only appear in the `file` block. Only one may appear.
-    - `instrs`: The instruction set. May only appear in the `schema` block. Only one may appear.
-      - `idef`: An instruction definition. May only appear in the `instrs` block. Must have a unique `id` attribute.
-        - `pdef`: Parameter definition. May only appear in `idef` blocks. Must have a unique `id` attribute.
-    - `nodes`: The node set. May only appear in the `schema` block. Only one may appear.
-      - `ndef`: A node definition. May only appear in the `nodes` block. Must have a unique `id` attribute.
-        - `fdef`: A form definition. May only appear in `ndef` blocks. Must have a unique `id` attribute and a `type` attribute that must correspond to an `idef`'s `id`.
+  - `instrs`: The instruction set. May only appear in the `schema` block. Only one may appear.
+    - `idef`: An instruction definition. May only appear in the `instrs` block. Must have a unique `id` attribute.
+      - `exec`: The name of the instruction's execution handler class. Should include a namespace if there are naming collisions.
+      - `pdef`: A parameter definition. May only appear in `idef` blocks. Must have a unique `id` attribute.
+  - `nodes`: The node set. May only appear in the `schema` block. Only one may appear.
+    - `ndef`: A node definition. May only appear in the `nodes` block. Must have a unique `id` attribute.
+    - `fdef`: A form definition. May only appear in `ndef` blocks. Must have a unique `id` attribute and a `type` attribute that must correspond to an `idef`'s `id`.
           - `vadef`: A value argument definition. May only appear in `fdef` blocks. Must positionally correspond to a `pdef`.
           - `oadef`: An output argument definition. May only appear in `fdef` blocks. Must positionally correspond to a `pdef`.
         - `odef`: An option definition. May only appear in `ndef` blocks. Must have a unique `id` attribute.
@@ -20,26 +21,29 @@ Only a few XML tags are allowed.
         - `tdef`: A tuple definition. May only appear in `ndef` blocks. Must have a unique `id` attribute.
         - `ldef`: A list definition. May only appear in `ndef` blocks. Must have a unique `id` attribute.
   - `graph`: The program graph root. May only appear in the `file` block. Only one may appear.
-    - `elements`: The elements block. May only appear in the `graph` block. Only one may appear.
-      - Shared element contents:
-        - `x`: An element's x position. May only appear in `memo`, `frame`, `joint` and `node` blocks.
-        - `y`: An element's y position. May only appear in `memo`, `frame`, `joint` and `node` blocks.
-        - `member`: Assigns the enclosing element to a frame. May only appear in `frame`, `memo`, `joint` and `node` blocks. The contents must correspond to a `frame`'s `id`.
-        - `start`: A start point. May only appear in `node` and `joint` blocks.
-        - `text`: A graph element text. May only appear in `frame` and `memo` blocks.
-        - `color`: A graph element color. May only appear in `frame` and `memo` blocks.
-      - `memo`: A sticky note element. May only appear in the `graph` block. Must have a unique `id` attribute.
-      - `frame`: A frame element. May only appear in the `graph` block. Must have a unique `id` attribute.
-        - `width`: A frame's width. May only appear in `frame` blocks.
-        - `height`: A frame's height. May only appear in `frame` blocks.
-      - `joint`: An edge joint element. May only appear in the `graph` block. Must have a unique `id` attribute.
+    - Shared element contents:
+      - `x`: An element's x position. May only appear in `memo`, `frame`, `joint` and `node` blocks.
+      - `y`: An element's y position. May only appear in `memo`, `frame`, `joint` and `node` blocks.
+      - `member`: Assigns the enclosing element to a frame. May only appear in `frame`, `memo`, `joint` and `node` blocks. The contents must correspond to a `frame`'s `id`.
+      - `text`: A graph element text. May only appear in `frame` and `memo` blocks.
+      - `color`: A graph element color. May only appear in `frame` and `memo` blocks.
+    - `nodes`: A container for all graph nodes. May only appear in the `graph` block. Only one may appear.
       - `node`: A node element. May only appear in the `graph` block. Must have a unique `id` attribute and a `type` attribute that must correspond to an `ndef`'s `id`. May only appear in the `elements` block.
+        - `start`: A start point. May only appear in `node` blocks. Only one may appear per `node`. Must have an `id` attribute.
         - `form`: A form. May only appear in `node`, `option`, `choice`, `tuple` and `list` blocks. Must positionally correspond to an `fdef`.
           - `arg`: An argument. May only appear in `form` blocks. Must positionally correspond to a `vadef` or an `oadef`. If it corresponds to an `oadef`, then its contents must match an `edge`'s `id`.
         - `option`: An option. May only appear in `node`, `option`, `choice`, `tuple` and `list` blocks. Must positionally correspond to an `odef`.
         - `choice`: A choice. May only appear in `node`, `option`, `choice`, `tuple` and `list` blocks. Must positionally correspond to a `cdef`.
         - `tuple`: A tuple. May only appear in `node`, `option`, `choice`, `tuple` and `list` blocks. Must positionally correspond to a `tdef`.
         - `list`: A list. May only appear in `node`, `option`, `choice`, `tuple` and `list` blocks. Must positionally correspond to an `ldef`.
+    - `joints`: A container for all graph joints. May only appear in the `graph` block. Only one may appear.
+      - `joint`: An edge joint element. May only appear in the `joints` block. Must have a unique `id` attribute.
+    - `memos`: A container for all graph memos. May only appear in the `graph` block. Only one may appear.
+      - `memo`: A sticky note element. May only appear in the `graph` block. Must have a unique `id` attribute.
+    - `frames`: A container for all graph frames. May only appear in the `graph` block. Only one may appear.
+      - `frame`: A frame element. May only appear in the `graph` block. Must have a unique `id` attribute.
+        - `width`: A frame's width. May only appear in `frame` blocks.
+        - `height`: A frame's height. May only appear in `frame` blocks.
     - `edges`: The edges block. May only appear in the `graph` block. Only one may appear.
       - `edge`: A graph edge. May only appear in the `edges` block. Must have a unique `id` attribute.
         - `from`: The source element. May only appear in `edge` blocks. The contents must match the `id` of a `node` or `joint`.

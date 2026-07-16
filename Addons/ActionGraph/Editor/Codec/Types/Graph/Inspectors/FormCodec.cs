@@ -1,0 +1,21 @@
+﻿using System.Collections.Generic;
+using System.Xml;
+
+namespace Rusty.ActionGraph.Serialization;
+
+public sealed partial class FormCodec : Codec
+{
+    /* Constants. */
+    public const string TAG = "form";
+
+    /* Public properties. */
+    protected override string Tag => TAG;
+    protected override HashSet<string> AllowedAttributes => [];
+    protected override HashSet<string> AllowedChildren => [ArgCodec.TAG];
+
+    /* Constructors. */
+    public FormCodec(XmlNode xml) : base(xml) { }
+
+    /* Public methods. */
+    public static void Register() => Codecs.Add(TAG, typeof(FormCodec));
+}

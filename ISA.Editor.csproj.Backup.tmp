@@ -1,0 +1,11 @@
+<Project Sdk="Godot.NET.Sdk/4.5.0">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Addons\ActionGraph\Editor\Codec\Nodes\Sealed\**" />
+    <EmbeddedResource Remove="Addons\ActionGraph\Editor\Codec\Nodes\Sealed\**" />
+  </ItemGroup>
+</Project>

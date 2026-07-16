@@ -14,7 +14,7 @@ public sealed partial class XmlLoader : Node
     /// <summary>
     /// Serialize an ActionGraph node tree into a string of XML.
     /// </summary>
-    public static string Serialize(FileNode node)
+    /*public static string Serialize(FileNode node)
     {
         // Compute checksum.
         if (node.Meta == null)
@@ -30,12 +30,12 @@ public sealed partial class XmlLoader : Node
 
         // Serialize.
         return node.Serialize();
-    }
+    }*/
 
     /// <summary>
     /// Load a string of XML as an ActionGraph node tree.
     /// </summary>
-    public static FileNode Load(string xml)
+    public static FileCodec Load(string xml)
     {
         // Load XML.
         XmlDocument doc = new XmlDocument();
@@ -45,17 +45,30 @@ public sealed partial class XmlLoader : Node
         foreach (XmlNode node in doc)
         {
             if (node is XmlElement)
-                return FileNode.Load(node);
+            {
+                Codec codec = Codec.Load(node);
+                if (codec is FileCodec file)
+                    return file;
+                else
+                    throw new InvalidCastException($"Files must have a <{FileCodec.TAG}> root element.");
+            }
         }
         throw new FormatException("Empty XML file!");
+    }
+
+    public static InstructionProgram LoadAsProgram(string xml)
+    {
+        FileCodec file = Load(xml);
+        Godot.GD.Print(file.Serialize());
+        return new();
     }
 
     /// <summary>
     /// Load a string of XML as a InstructionProgram resource.
     /// </summary>
-    public static InstructionProgram LoadAsProgram(string xml)
+    /*public static InstructionProgram LoadAsProgram(string xml)
     {
         FileNode file = Load(xml);
         return file.ToProgram();
-    }
+    }*/
 }
