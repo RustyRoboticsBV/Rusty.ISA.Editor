@@ -15,4 +15,18 @@ public sealed class NodesCodec : Codec
 
     /* Constructors. */
     public NodesCodec(XmlNode xml) : base(xml) { }
+
+    /* Public methods. */
+    /// <summary>
+    /// Find a node definition with some ID.
+    /// </summary>
+    public NdefCodec FindNode(string id)
+    {
+        foreach (NdefCodec ndef in GetChildren<NdefCodec>())
+        {
+            if (ndef.GetAttribute(ID) == id)
+                return ndef;
+        }
+        return null;
+    }
 }

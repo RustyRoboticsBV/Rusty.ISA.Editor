@@ -17,7 +17,11 @@ public static class Compiler
         // Compile into units.
         foreach (var element in elements)
         {
+            if (element.Value is NodeCodec node)
+            {
+                NdefCodec ndef = file.GetFirstChild<SchemaCodec>()?.GetFirstChild<NodesCodec>()?.FindNode(element.Key);
 
+            }
         }
 
         // Compile.
