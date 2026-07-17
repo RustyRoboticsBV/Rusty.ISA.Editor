@@ -7,11 +7,18 @@ namespace Rusty.ActionGraph.Compilation;
 
 public static class Compiler
 {
+    /* Public methods. */
     public static InstructionProgram Compile(FileCodec file)
     {
         // Collect nodes, joints & edges.
         var elements = GetElements(file?.GetFirstChild<GraphCodec>()?.GetFirstChild<ElemsCodec>());
         var edges = file.GetFirstChild<GraphCodec>()?.GetFirstChild<EdgesCodec>()?.GetChildren<EdgeCodec>() ?? [];
+
+        // Compile into units.
+        foreach (var element in elements)
+        {
+
+        }
 
         // Compile.
         Metadata metadata = Compile(file?.GetFirstChild<MetaCodec>());
@@ -21,23 +28,21 @@ public static class Compiler
         return new(metadata, iset, instructions.ToArray());
     }
 
+    /* Private methods. */
     /// <summary>
     /// Collect all nodes and joints from the graph.
     /// </summary>
     private static Dictionary<string, Codec> GetElements(ElemsCodec elems)
     {
         Dictionary<string, Codec> elements = new();
-        foreach (var elementsOfType in elems.Children)
+        foreach (var element in elems.Children)
         {
-            if (elementsOfType.Key == NodeCodec.TAG || elementsOfType.Key == JointCodec.TAG)
+            if (element is NodeCodec || element is JointCodec)
             {
-                foreach (Codec element in elementsOfType.Value)
-                {
-                    string id = element.GetAttribute(Codec.ID);
-                    if (elements.ContainsKey(id))
-                        throw new DuplicateNameException($"Duplicate elementsOfType ID '{id}'.");
-                    elements.Add(id, element);
-                }
+                string id = element.GetAttribute(Codec.ID);
+                if (elements.ContainsKey(id))
+                    throw new DuplicateNameException($"Duplicate element ID '{id}'.");
+                elements.Add(id, element);
             }
         }
         return elements;

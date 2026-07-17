@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed partial class OdefCodec : Codec
+public sealed partial class OdefCodec : InspectorDefinitionCodec
 {
     /* Constants. */
     public const string TAG = "odef";
@@ -15,7 +15,4 @@ public sealed partial class OdefCodec : Codec
 
     /* Constructors. */
     public OdefCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    public static void Register() => Codecs.Add(TAG, typeof(OdefCodec));
 }

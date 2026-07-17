@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed class OptionCodec : Codec
+public sealed class OptionCodec : InspectorCodec
 {
     /* Constants. */
     public const string TAG = "option";

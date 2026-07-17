@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed class LdefCodec : Codec
+public sealed class LdefCodec : InspectorDefinitionCodec
 {
     /* Constants. */
     public const string TAG = "ldef";

@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed class FdefCodec : Codec
+public sealed class FdefCodec : InspectorDefinitionCodec
 {
     /* Constants. */
     public const string TAG = "fdef";
@@ -15,4 +15,18 @@ public sealed class FdefCodec : Codec
 
     /* Constructors. */
     public FdefCodec(XmlNode xml) : base(xml) { }
+
+    /* Public methods. */
+    /// <summary>
+    /// Try to find an output definition codec.
+    /// </summary>
+    public OadefCodec FindOadef(string id)
+    {
+        foreach (OadefCodec codec in GetChildren<OadefCodec>())
+        {
+            if (codec.GetAttribute(ID) == id)
+                return codec;
+        }
+        return null;
+    }
 }

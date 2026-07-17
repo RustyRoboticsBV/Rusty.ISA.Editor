@@ -19,7 +19,7 @@ public abstract class Codec
 
     /* Public properties. */
     public string InnerText { get; set; } = "";
-    public Dictionary<string, List<Codec>> Children { get; } = new();
+    public List<Codec> Children { get; } = new();
     public Dictionary<string, string> Attributes { get; } = new();
 
     /* Protected properties. */
@@ -115,9 +115,7 @@ public abstract class Codec
                     throw new InvalidOperationException($"Unknown child type '{childTag}'.");
                 if (!AllowedChildren.Contains(childTag))
                     throw new InvalidOperationException($"Node '{Tag}' cannot have a childrenOfType child of type '{child.Name}'.");
-                if (!Children.ContainsKey(childTag))
-                    Children.Add(childTag, new());
-                Children[childTag].Add(Instantiate(Codecs[childTag], child));
+                AddChild(Instantiate(Codecs[childTag], child));
             }
         }
 
@@ -151,17 +149,14 @@ public abstract class Codec
 
         // Handle children.
         StringBuilder children = new();
-        foreach (var childrenOfType in Children)
+        foreach (Codec child in Children)
         {
-            if (!AllowedChildren.Contains(childrenOfType.Key))
-                throw new KeyNotFoundException($"{GetType().Name} does not allow attribute elements with xml {childrenOfType.Key}.");
+            if (!AllowedChildren.Contains(child.Tag))
+                throw new KeyNotFoundException($"{GetType().Name} does not allow attribute elements with xml tag '{child.Tag}'.");
 
-            foreach (Codec child in childrenOfType.Value)
-            {
-                if (children.Length > 0)
-                    children.Append('\n');
-                children.Append(child.Serialize());
-            }
+            if (children.Length > 0)
+                children.Append('\n');
+            children.Append(child.Serialize());
         }
 
         // Build XML.
@@ -222,12 +217,9 @@ public abstract class Codec
             Hash(hash, InnerText);
         else
         {
-            foreach (var childrenOfType in Children)
+            foreach (Codec child in Children)
             {
-                foreach (Codec child in childrenOfType.Value)
-                {
-                    child.Hash(hash);
-                }
+                child.Hash(hash);
             }
         }
 
@@ -263,10 +255,10 @@ public abstract class Codec
     /// </summary>
     public Codec GetFirstChild(string tag)
     {
-        if (Children.TryGetValue(tag, out var childrenOfType))
+        foreach (Codec child in Children)
         {
-            if (childrenOfType.Count > 0)
-                return childrenOfType[0];
+            if (child.Tag == tag)
+                return child;
         }
         return null;
     }
@@ -277,11 +269,12 @@ public abstract class Codec
     public T GetFirstChild<T>()
         where T : Codec
     {
-        string tag = Tags[typeof(T)];
-        if (GetFirstChild(tag) is T typed)
-            return typed;
-        else
-            throw new InvalidCastException($"Cannot convert codec with tag '{tag}' to type '{typeof(T)}'.");
+        foreach (Codec child in Children)
+        {
+            if (child is T typed)
+                return typed;
+        }
+        return null;
     }
 
     /// <summary>
@@ -289,8 +282,12 @@ public abstract class Codec
     /// </summary>
     public List<Codec> GetChildren(string tag)
     {
-        if (Children.TryGetValue(tag, out var childrenOfType))
-            return childrenOfType;
+        List<Codec> children = new();
+        foreach (Codec child in Children)
+        {
+            if (child.Tag == tag)
+                children.Add(child);
+        }
         return [];
     }
 
@@ -300,15 +297,13 @@ public abstract class Codec
     public List<T> GetChildren<T>()
         where T : Codec
     {
-        string tag = Tags[typeof(T)];
-        List<Codec> list = GetChildren(tag);
-
-        List<T> typed = new();
-        foreach (Codec codec in list)
+        List<T> children = new();
+        foreach (Codec child in Children)
         {
-            typed.Add(codec as T);
+            if (child is T typed)
+                children.Add(typed);
         }
-        return typed;
+        return [];
     }
 
     /// <summary>
@@ -316,9 +311,7 @@ public abstract class Codec
     /// </summary>
     public void AddChild(Codec node)
     {
-        if (!Children.ContainsKey(node.Tag))
-            Children.Add(node.Tag, new());
-        Children[node.Tag].Add(node);
+        Children.Add(node);
     }
 
     /* Protected methods. */

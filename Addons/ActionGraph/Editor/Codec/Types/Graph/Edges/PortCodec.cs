@@ -15,4 +15,10 @@ public sealed class PortCodec : Codec
 
     /* Constructors. */
     public PortCodec(XmlNode xml) : base(xml) { }
+
+    /* Public methods. */
+    /// <summary>
+    /// Return the inner text as an integer.
+    /// </summary>
+    public int AsInt() => int.Parse(InnerText);
 }
