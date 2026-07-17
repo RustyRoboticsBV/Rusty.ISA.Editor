@@ -19,12 +19,15 @@ ActionGraph is built around a set of core concepts, grouped into three layers.
   - A list of **instruction definitions**, which define the executable units of the program. Each contains an opcode, a list of parameter IDs and the name of an execution handler.
   - A list of **instruction instances**. Each carries a list of arguments, which correspond to the parameter IDs from the definition.
 - **Execution handlers**: small scripts that contain the implementation of an instruction.
-- **Processes**: scene nodes that can run an ActionGraph program. They are also responsible for locating execution handlers.
+- **Processes**: scene nodes that can run a program. They are also responsible for locating execution handlers.
 
 ### The Editor
-- **Graphs**: The editor representation of a program. It supports four types of elements: nodes (the executable parts), frames (a visual grouping of elements), memos (editor sticky notes), and joints (a way to break up a straight edge).
-- **Nodes**: The executable graph elements, defined by a list of **node definitions**. Each definition tells the editor what the node's contents are, and how they are drawn in the inspector and what instructions the node will compile to. A single node can compile to many runtime instructions. Each instruction is represented by an inspector **form**, which contains a **field** for each instruction argument. Forms can be arranged into structures using options, choices, tuples, and lists.
-  - A special type of parameter are **outputs**. These do not drawn as a field in the inspector, but instead add an output port to the node.
+- **Graphs**: The editor representation of a program. It supports four types of elements:
+  - **Frames**: A visual grouping of graph elements.
+  - **Memos**: An editor sticky note.
+  - **Joints**: A way to reroute & organize editor edges.
+  - **Nodes**: The executable graph elements, defined by a list of **node definitions**. Each definition tells the editor what the node's contents are, and how they are drawn in the inspector and what instructions the node will compile to. A single node can compile to many runtime instructions. Each instruction is represented by an inspector **form**, which contains a **field** for each instruction argument. Forms can be arranged into structures using options, choices, tuples, and lists.
+    - A special type of parameter are **outputs**. These do not drawn as a field in the inspector, but instead add an output port to the node.
 
 ### The Importer
 A series of import plugins.
