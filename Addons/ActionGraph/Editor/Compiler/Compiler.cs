@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using Rusty.ActionGraph.Runtime;
 using Rusty.ActionGraph.Serialization;
 
@@ -8,16 +9,38 @@ public static class Compiler
 {
     public static InstructionProgram Compile(FileCodec file)
     {
-        Godot.GD.Print(XmlLoader.Serialize(file));
         // Collect nodes, joints & edges.
-        List<NodeCodec> nodes = file.GetFirstChild<GraphCodec>()?.GetFirstChild<ElemsCodec>()?.GetChildren<NodeCodec>() ?? [];
-        List<JointCodec> joints = file.GetFirstChild<GraphCodec>()?.GetFirstChild<ElemsCodec>()?.GetChildren<JointCodec>() ?? [];
-        List<EdgeCodec> edges = file.GetFirstChild<GraphCodec>()?.GetFirstChild<EdgesCodec>()?.GetChildren<EdgeCodec>() ?? [];
+        var elements = GetElements(file?.GetFirstChild<GraphCodec>()?.GetFirstChild<ElemsCodec>());
+        var edges = file.GetFirstChild<GraphCodec>()?.GetFirstChild<EdgesCodec>()?.GetChildren<EdgeCodec>() ?? [];
 
+        // Compile.
         Metadata metadata = Compile(file?.GetFirstChild<MetaCodec>());
         InstructionSet iset = Compile(file?.GetFirstChild<SchemaCodec>()?.GetFirstChild<InstrsCodec>());
+        List<Instruction> instructions = Compile(iset, file.GetFirstChild<GraphCodec>());
 
-        return new(metadata, iset, []);
+        return new(metadata, iset, instructions.ToArray());
+    }
+
+    /// <summary>
+    /// Collect all nodes and joints from the graph.
+    /// </summary>
+    private static Dictionary<string, Codec> GetElements(ElemsCodec elems)
+    {
+        Dictionary<string, Codec> elements = new();
+        foreach (var elementsOfType in elems.Children)
+        {
+            if (elementsOfType.Key == NodeCodec.TAG || elementsOfType.Key == JointCodec.TAG)
+            {
+                foreach (Codec element in elementsOfType.Value)
+                {
+                    string id = element.GetAttribute(Codec.ID);
+                    if (elements.ContainsKey(id))
+                        throw new DuplicateNameException($"Duplicate elementsOfType ID '{id}'.");
+                    elements.Add(id, element);
+                }
+            }
+        }
+        return elements;
     }
 
     /// <summary>
@@ -26,6 +49,9 @@ public static class Compiler
     private static Metadata Compile(MetaCodec meta)
     {
         Metadata metadata = new();
+        if (meta == null)
+            return metadata;
+
         var datas = meta.GetChildren<DataCodec>();
         foreach (var data in datas)
         {
@@ -57,13 +83,13 @@ public static class Compiler
     /// <summary>
     /// Compile an instruction definition.
     /// </summary>
-    private static InstructionDefinition Compile(IdefCodec codec)
+    private static InstructionDefinition Compile(IdefCodec idef)
     {
         // Read opcode.
-        string opcode = codec.GetAttribute(Codec.ID);
+        string opcode = idef.GetAttribute(Codec.ID);
 
         // Read parameters.
-        var pdefs = codec.GetChildren<PdefCodec>();
+        var pdefs = idef.GetChildren<PdefCodec>();
         string[] parameters = new string[pdefs.Count];
         for (int i = 0; i < pdefs.Count; i++)
         {
@@ -71,9 +97,19 @@ public static class Compiler
         }
 
         // Read execution handler.
-        string executionHandler = codec.GetFirstChild<ExecCodec>()?.InnerText ?? "";
+        string executionHandler = idef.GetFirstChild<ExecCodec>()?.InnerText ?? "";
 
         // Create definition.
         return new(opcode, parameters, executionHandler);
+    }
+
+    /// <summary>
+    /// Compile a graph.
+    /// </summary>
+    private static List<Instruction> Compile(InstructionSet iset, GraphCodec graph)
+    {
+        List<Instruction> instructions = new();
+
+        return instructions;
     }
 }

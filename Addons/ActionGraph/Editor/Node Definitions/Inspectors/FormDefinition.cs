@@ -3,10 +3,10 @@ using Godot;
 namespace Rusty.ActionGraph;
 
 /// <summary>
-/// An instruction inspector definition.
+/// A form definition.
 /// </summary>
 [GlobalClass]
-public sealed partial class InstructionInspectorDefinition : InspectorDefinition
+public sealed partial class FormDefinition : InspectorDefinition
 {
     /* Public properties. */
     /// <summary>

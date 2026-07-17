@@ -6,9 +6,13 @@ namespace Rusty.ActionGraph;
 /// A tuple inspector definition.
 /// </summary>
 [GlobalClass]
-public sealed partial class TupleInspectorDefinition : InspectorDefinition
+public sealed partial class TupleDefinition : InspectorDefinition
 {
     /* Public properties. */
+    /// <summary>
+    /// The layout direction of the inspector contents.
+    /// </summary>
+    [Export] public LayoutDirection LayoutDirection { get; set; }
     /// <summary>
     /// The elements.
     /// </summary>

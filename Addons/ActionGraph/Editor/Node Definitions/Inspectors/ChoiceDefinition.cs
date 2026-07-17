@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph;
 /// A choice inspector definition.
 /// </summary>
 [GlobalClass]
-public sealed partial class ChoiceInspectorDefinition : InspectorDefinition
+public sealed partial class ChoiceDefinition : InspectorDefinition
 {
     /* Public properties. */
     /// <summary>

@@ -10,7 +10,11 @@ public abstract partial class FieldDefinition : WidgetDefinition
 {
     /* Public properties. */
     /// <summary>
-    /// The display name of the widget.
+    /// The ID of the field.
     /// </summary>
-    [Export] public string ParameterID { get; private set; } = "";
+    [Export] public string ID { get; set; } = "";
+    /// <summary>
+    /// The ID of the parameter.
+    /// </summary>
+    [Export] public string Type { get; set; } = "";
 }

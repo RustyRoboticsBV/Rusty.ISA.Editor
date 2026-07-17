@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dfipvca8by3jf" path="res://Addons/ActionGraph/Editor/UI/IsaEditor.cs" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c7iq4qdt3nxex" path="res://Scripts/Test.cs" id="1_trcuy"]
 [ext_resource type="FontVariation" uid="uid://4o20x61wdxf6" path="res://Fonts/UbuntuMono-R-Edit.tres" id="2_0hhuw"]
-[ext_resource type="Script" uid="uid://8di4vkfpeft4" path="res://Addons/ActionGraph/Editor/Graph/Frame.cs" id="2_6ykgs"]
+[ext_resource type="Script" uid="uid://8di4vkfpeft4" path="res://Addons/ActionGraph/Editor/UI/Graph/Frame.cs" id="2_6ykgs"]
 [ext_resource type="Script" uid="uid://gnvmc7xxf2l0" path="res://Addons/ActionGraph/Editor/UI/Graph/GraphNode.cs" id="6_5v8xv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_847jc"]
