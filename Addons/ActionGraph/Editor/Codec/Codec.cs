@@ -16,6 +16,8 @@ public abstract class Codec
     public const string ID = "id";
     public const string Type = "type";
     public const string Select = "select";
+    public const string Element = "elem";
+    public const string Index = "index";
 
     /* Public properties. */
     public string InnerText { get; set; } = "";

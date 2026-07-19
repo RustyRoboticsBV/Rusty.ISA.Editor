@@ -22,9 +22,9 @@ public sealed class NodesCodec : Codec
     /// </summary>
     public NdefCodec FindNode(string id)
     {
-        foreach (NdefCodec ndef in GetChildren<NdefCodec>())
+        foreach (Codec child in Children)
         {
-            if (ndef.GetAttribute(ID) == id)
+            if (child is NdefCodec ndef && ndef.GetAttribute(ID) == id)
                 return ndef;
         }
         return null;

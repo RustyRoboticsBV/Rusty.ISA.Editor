@@ -10,7 +10,7 @@ public sealed class PortCodec : Codec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => ["index"];
+    protected override HashSet<string> AllowedAttributes => [Index];
     protected override HashSet<string> AllowedChildren => [];
 
     /* Constructors. */

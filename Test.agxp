@@ -96,9 +96,14 @@
 		</elems>
 		<edges>
 			<edge id="e1">
-				<from id="n1"/>
-				<port>0</port>
-				<to id="j1"/>
+				<from elem="n1"/>
+				<port index="0"/>
+				<to elem="j1"/>
+			</edge>
+			<edge id="e2">
+				<from elem="j1"/>
+				<port index="0"/>
+				<to elem="n1"/>
 			</edge>
 		</edges>
 	</graph>

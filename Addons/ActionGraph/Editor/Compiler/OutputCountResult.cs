@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-namespace Rusty.ActionGraph.Compilation;
-
 /// <summary>
 /// The result of counting the outputs of a node codec.
 /// </summary>
@@ -14,6 +12,8 @@ public struct OutputCountResult
     public int ParameterOutputs { get; set; }
 
     /* Public methods. */
+    public int CountOutputs() => HideDefaultOutput ? ParameterOutputs : ParameterOutputs + 1;
+
     public static OutputCountResult Combine(OutputCountResult a, OutputCountResult b)
     {
         OutputCountResult result = new();
@@ -23,7 +23,6 @@ public struct OutputCountResult
         return result;
     }
 
-    /* Constructors. */
     public static OutputCountResult Create(NdefCodec ndef, NodeCodec node)
     {
         OutputCountResult result = new();
