@@ -75,14 +75,14 @@
 				<y>100</y>
 				<member id="f1"/>
 				<start id="Start"/>
-				<list>
-					<tuple>
-						<choice select="o3">
-							<option>
-								<form>
-									<arg type="oa4"/>
+				<list type="l1">
+					<tuple type="t1">
+						<choice type="c1" select="o3">
+							<option type="o3">
+								<form type="f3">
+									<out type="oa4"/>
 									<arg type="va5"/>
-									<arg type="oa6"/>
+									<out type="oa6"/>
 								</form>
 							</option>
 						</choice>

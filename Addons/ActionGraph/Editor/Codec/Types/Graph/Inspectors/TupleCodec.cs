@@ -10,7 +10,7 @@ public sealed class TupleCodec : InspectorCodec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => [];
+    protected override HashSet<string> AllowedAttributes => ["type"];
     protected override HashSet<string> AllowedChildren => [FormCodec.TAG, OptionCodec.TAG, ChoiceCodec.TAG, TAG, ListCodec.TAG];
 
     /* Constructors. */

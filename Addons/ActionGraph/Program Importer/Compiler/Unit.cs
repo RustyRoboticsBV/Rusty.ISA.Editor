@@ -7,8 +7,10 @@ public sealed class Unit
 {
     public List<Unit> Input { get; } = new();
     public Unit[] Outputs { get; }
-    public bool IsGoto { get; set; }
     public Codec Contents { get; set; }
+    public List<Instruction> Compiled { get; set; } = new();
+    public string Start { get; set; } = null;
+    public string Label { get; set; } = null;
 
     /* Constructors. */
     public Unit(int outputs)
@@ -42,17 +44,5 @@ public sealed class Unit
 
         Outputs[port].Input.Remove(this);
         Outputs[port] = null;
-    }
-
-    /// <summary>
-    /// Insert a goto in the middle of an edge.
-    /// </summary>
-    public static Unit InsertGoto(Unit from, int port, Unit to)
-    {
-        Unit @goto = new Unit(1);
-        @goto.IsGoto = true;
-        from.ConnectTo(port, @goto);
-        @goto.ConnectTo(0, to);
-        return @goto;
     }
 }

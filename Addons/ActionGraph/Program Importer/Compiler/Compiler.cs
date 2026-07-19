@@ -20,6 +20,10 @@ public static class Compiler
         ElemsCodec elems = Extract<ElemsCodec>(graph);
         EdgesCodec edges = Extract<EdgesCodec>(graph);
 
+        // Compile metadata & instruction set.
+        Metadata metadata = Compile(meta);
+        InstructionSet iset = Compile(instrs);
+
         // Create units for nodes & joints.
         Dictionary<string, Unit> units = new();
         Dictionary<string, Codec> elements = GetElements(elems);
@@ -39,11 +43,13 @@ public static class Compiler
 
                 // Create unit.
                 Unit unit = new(outputs.CountOutputs());
+                unit.Contents = node;
                 units.Add(id, unit);
             }
             else if (element is JointCodec joint)
             {
                 Unit unit = new(1);
+                unit.Contents = joint;
                 units.Add(id, unit);
             }
         }
@@ -86,19 +92,31 @@ public static class Compiler
         }
 
         // Compile to instructions.
-        List<Instruction> instructions = new();
-        Dictionary<Unit, string> labels = new();
         int nextLabel = 0;
         visited.Clear();
         foreach (Unit startUnit in starts)
         {
-            Compile(startUnit, instructions, visited, labels, nextLabel);
+            Compile(startUnit, visited, nextLabel);
         }
 
-        // Compile.
-        Metadata metadata = Compile(meta);
-        InstructionSet iset = Compile(instrs);
+        // Combine instructions.
+        List<Instruction> instructions = new();
+        foreach (Unit unit in units.Values)
+        {
+            // Apply label to first instruction in unit.
+            if (unit.Label != null && unit.Compiled.Count > 0)
+                unit.Compiled[0].Label = unit.Label;
+            if (unit.Start != null && unit.Compiled.Count > 0)
+                unit.Compiled[0].Start = unit.Start;
 
+            // Add instructions to list.
+            foreach (Instruction instruction in unit.Compiled)
+            {
+                instructions.Add(instruction);
+            }
+        }
+
+        // Create program.
         return new(metadata, iset, instructions.ToArray());
     }
 
@@ -197,25 +215,58 @@ public static class Compiler
     /// <summary>
     /// Compile a graph.
     /// </summary>
-    private static void Compile(Unit unit, List<Instruction> instructions, HashSet<Unit> visited, Dictionary<Unit, string> labels, int nextLabel)
+    private static void Compile(Unit unit, HashSet<Unit> visited, int nextLabel)
     {
         // Mark unit as visited.
         visited.Add(unit);
 
         // Compile contents.
-        if (unit.Contents == null)
-            instructions.Add(new DummyInstruction());
-        else
+        if (unit.Contents is JointCodec)
+            unit.Compiled.Add(new DummyInstruction());
+        else if (unit.Contents is NodeCodec)
         {
             // Compile contents.
-            // TODO: implement.
-            GenericInstruction instruction = new("TEST", []);
-            instructions.Add(instruction);
+            foreach (Codec child in unit.Contents.Children)
+            {
+                // Mark with start point if necessary.
+                if (child is StartCodec start)
+                    unit.Start = start.GetAttribute(Codec.ID);
 
-            // Mark with start point if necessary.
-            StartCodec start = unit.Contents.GetFirstChild<StartCodec>();
-            if (start != null)
-                instruction.Start = start.GetAttribute(Codec.ID);
+                // Compile form.
+                else if (child is FormCodec form)
+                {
+                    string type = form.GetAttribute(Codec.Type);
+                    unit.Compiled.Add(new GenericInstruction()); // TODO
+                }
+
+                // Compile option.
+                else if (child is OptionCodec option)
+                {
+                    string type = option.GetAttribute(Codec.Type);
+                    unit.Compiled.Add(new GenericInstruction()); // TODO
+                }
+
+                // Compile choice.
+                else if (child is ChoiceCodec choice)
+                {
+                    string type = choice.GetAttribute(Codec.Type);
+                    unit.Compiled.Add(new GenericInstruction()); // TODO
+                }
+
+                // Compile tuple.
+                else if (child is TupleCodec tuple)
+                {
+                    string type = tuple.GetAttribute(Codec.Type);
+                    unit.Compiled.Add(new GenericInstruction()); // TODO
+                }
+
+                // Compile list.
+                else if (child is ListCodec list)
+                {
+                    string type = list.GetAttribute(Codec.Type);
+                    unit.Compiled.Add(new GenericInstruction()); // TODO
+                }
+            }
         }
 
         // Handle outputs.
@@ -223,7 +274,7 @@ public static class Compiler
         {
             // If empty, generate end instruction.
             if (output == null)
-                instructions.Add(new EndInstruction());
+                unit.Compiled.Add(new EndInstruction());
 
             // If not empty...
             else
@@ -232,21 +283,27 @@ public static class Compiler
                 if (visited.Contains(output))
                 {
                     // Generate label if necessary.
-                    if (!labels.ContainsKey(output))
+                    if (output.Label == null)
                     {
-                        labels.Add(output, nextLabel.ToString());
+                        output.Label = nextLabel.ToString();
                         nextLabel++;
                     }
 
                     // Generate goto.
-                    instructions.Add(new GotoInstruction(labels[output]));
+                    unit.Compiled.Add(new GotoInstruction(output.Label));
                 }
 
                 // Else, compile output unit.
                 else
-                    Compile(output, instructions, visited, labels, nextLabel);
+                    Compile(output, visited, nextLabel);
             }
         }
+    }
+
+    private static void Compile(Unit unit, FormCodec form, InstructionDefinition definition)
+    {
+        GenericInstruction instruction = new(definition.Opcode, new string[definition.Parameters.Length]);
+        unit.Compiled.Add(instruction);
     }
 
     /// <summary>

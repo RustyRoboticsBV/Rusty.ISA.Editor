@@ -9,7 +9,7 @@ namespace Rusty.ActionGraph;
 public sealed partial class GotoInstruction : Instruction
 {
     /* Public properties. */
-    public string TargetLabel { get; set; } = "";
+    [Export] public string TargetLabel { get; set; } = "";
 
     /* Constructors. */
     public GotoInstruction() : this("") { }

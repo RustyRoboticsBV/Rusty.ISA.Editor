@@ -27,7 +27,7 @@ ActionGraph is built around a set of core concepts, grouped into three layers.
   - **Memos**: An editor sticky note.
   - **Joints**: A way to reroute & organize editor edges.
   - **Nodes**: The executable graph elements, defined by a list of **node definitions**. Each definition tells the editor what the node's contents are, and how they are drawn in the inspector and what instructions the node will compile to. A single node can compile to many runtime instructions. Each instruction is represented by an inspector **form**, which contains a **field** for each instruction argument. Forms can be arranged into structures using options, choices, tuples, and lists.
-    - A special type of parameter are **outputs**. These do not drawn as a field in the inspector, but instead add an output port to the node.
+	- A special type of parameter are **outputs**. These do not drawn as a field in the inspector, but instead add an output port to the node.
 
 ### The Importer
 A series of import plugins.

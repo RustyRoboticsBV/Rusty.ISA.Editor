@@ -85,11 +85,13 @@ public abstract class Codec
         Register<ColorCodec>(ColorCodec.TAG);
 
         Register<FormCodec>(FormCodec.TAG);
-        Register<ArgCodec>(ArgCodec.TAG);
         Register<OptionCodec>(OptionCodec.TAG);
         Register<ChoiceCodec>(ChoiceCodec.TAG);
         Register<TupleCodec>(TupleCodec.TAG);
         Register<ListCodec>(ListCodec.TAG);
+
+        Register<ArgCodec>(ArgCodec.TAG);
+        Register<OutCodec>(OutCodec.TAG);
 
         Register<EdgesCodec>(EdgesCodec.TAG);
 
