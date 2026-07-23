@@ -223,7 +223,7 @@ public static class Compiler
             foreach (Codec child in unit.Contents.Children)
             {
                 if (child is FormCodec or OptionCodec or ChoiceCodec or TupleCodec or ListCodec)
-                    Compile(unit, ndef, child, node);
+                    Compile(unit, ndef, node, child);
             }
 
             unit.Start = node.GetAttribute(Codec.Start);
@@ -263,19 +263,21 @@ public static class Compiler
     private static void Compile(Unit unit, Codec parentDefinition, Codec parent, Codec current)
     {
         // Find child definition.
-        string childInspectorType = current.GetAttribute(Codec.Type);
-        Codec currentDefinition = ExtractWithID<Codec>(parentDefinition, childInspectorType);
+        string currentType = current.GetAttribute(Codec.Type);
+        Codec currentDefinition = ExtractWithID<Codec>(parentDefinition, currentType);
 
         // Compile form.
-        if (current is FormCodec form)
+        if (current is FormCodec form && currentDefinition is FdefCodec fdef)
         {
-            FdefCodec fdef = ExtractWithID<FdefCodec>(parent, form.GetAttribute(Codec.Type));
             string opcode = fdef.GetAttribute(Codec.Type);
             List<string> arguments = new();
             foreach (Codec child in current.Children)
             {
                 if (child is VadefCodec varg)
-                    arguments.Add(varg.InnerText);
+                {
+                    string value = varg.GetAttribute(Codec.Value);
+                    arguments.Add(value);
+                }
                 else if (child is OadefCodec oarg)
                     arguments.Add("");
             }
@@ -286,8 +288,11 @@ public static class Compiler
         else if (current is OptionCodec option)
         {
             Codec child = option.GetFirstChild<Codec>();
-            string childType = child.GetAttribute(Codec.Type);
-            Compile(unit, currentDefinition, current, child);
+            if (child != null)
+            {
+                string childType = child.GetAttribute(Codec.Type);
+                Compile(unit, currentDefinition, current, child);
+            }
         }
 
         // Compile choice.
@@ -317,6 +322,9 @@ public static class Compiler
                 Compile(unit, currentDefinition, current, child);
             }
         }
+
+        else
+            throw new InvalidOperationException($"Invalid coded pair: '{current?.GetType()?.Name ?? "null"}' and '{currentDefinition?.GetType()?.Name ?? "null"}'.");
     }
 
     private static T ExtractWithID<T>(Codec codec, string id)
@@ -324,16 +332,10 @@ public static class Compiler
     {
         foreach (Codec child in codec.Children)
         {
-            if (child is T typed && child.GetAttribute(id) == id)
+            if (child is T typed && child.GetAttribute(Codec.ID) == id)
                 return typed;
         }
         return null;
-    }
-
-    private static void Compile(Unit unit, FormCodec form, FdefCodec fdef, InstructionDefinition definition)
-    {
-        GenericInstruction instruction = new(definition.Opcode, new string[definition.Parameters.Length]);
-        unit.Compiled.Add(instruction);
     }
 
     /// <summary>

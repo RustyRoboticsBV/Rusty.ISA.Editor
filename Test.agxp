@@ -1,10 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: ActionGraph Editor -->
+
 <file>
+	
 	<!-- Metadata -->
 	<meta id="title" value="Test"/>
 	<meta id="desc" value="A test program."/>
 	<meta id="author" value="Corporation, Inc."/>
 	<meta id="version" value="1.0.0"/>
-	<check value="b7bf65a2a60402a5e13672601a4fb496"/>
+	<check value="74651DA025B5406878122DF9EFDC20C3"/>
 	
 	<!-- Schema -->
 	<idef id="i1" exec="Handler1">
