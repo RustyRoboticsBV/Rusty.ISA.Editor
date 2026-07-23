@@ -13,6 +13,7 @@ namespace Rusty.ActionGraph.Serialization;
 public abstract class Codec
 {
     /* Constants. */
+    public const string Checksum = "csum";
     public const string ID = "id";
     public const string Value = "value";
     public const string Exec = "exec";
@@ -26,7 +27,7 @@ public abstract class Codec
     public const string Text = "text";
     public const string Color = "color";
     public const string Index = "index";
-    public const string HideDefault = "nodefault";
+    public const string HideDefault = "hidedf";
     public const string From = "from";
     public const string Port = "port";
     public const string To = "to";
@@ -51,7 +52,6 @@ public abstract class Codec
 
         // Metadata.
         Register<MetaCodec>(MetaCodec.TAG);
-        Register<CheckCodec>(CheckCodec.TAG);
 
         // Schema.
         Register<IdefCodec>(IdefCodec.TAG);
@@ -105,7 +105,7 @@ public abstract class Codec
                 if (!Codecs.ContainsKey(childTag))
                     throw new InvalidOperationException($"Unknown child type '{childTag}'.");
                 if (!AllowedChildren.Contains(childTag))
-                    throw new InvalidOperationException($"Node '{Tag}' cannot have a childrenOfType child of type '{child.Name}'.");
+                    throw new InvalidOperationException($"Codec '{Tag}' cannot have a child of type '{child.Name}'.");
                 AddChild(Instantiate(Codecs[childTag], child));
             }
         }
@@ -113,7 +113,7 @@ public abstract class Codec
         foreach (XmlAttribute attribute in xml.Attributes)
         {
             if (!AllowedAttributes.Contains(attribute.Name))
-                throw new InvalidOperationException($"Node '{Tag}' cannot have an name of type '{attribute.Name}'.");
+                throw new InvalidOperationException($"Codec '{Tag}' cannot have an attribute of type '{attribute.Name}'.");
             Attributes.TryAdd(attribute.Name, attribute.Value);
         }
     }
@@ -136,7 +136,7 @@ public abstract class Codec
         foreach (var attr in Attributes)
         {
             if (!AllowedAttributes.Contains(attr.Key))
-                throw new KeyNotFoundException($"{GetType().Name} does not allow name {attr.Key}.");
+                throw new KeyNotFoundException($"Codec '{Tag}' does not allow name {attr.Key}.");
 
             attributes.Append(' ');
             attributes.Append(attr.Key);
@@ -150,7 +150,7 @@ public abstract class Codec
         foreach (Codec child in Children)
         {
             if (!AllowedChildren.Contains(child.Tag))
-                throw new KeyNotFoundException($"{GetType().Name} does not allow name elements with xml tag '{child.Tag}'.");
+                throw new KeyNotFoundException($"Codec '{Tag}' does not allow child elements with xml tag '{child.Tag}'.");
 
             if (children.Length > 0)
                 children.Append('\n');
@@ -201,6 +201,9 @@ public abstract class Codec
 
         foreach (var attribute in Attributes)
         {
+            if (attribute.Key == Checksum)
+                continue;
+
             Hash(hash, " ");
             Hash(hash, attribute.Key);
             Hash(hash, "=\"");
@@ -356,7 +359,7 @@ public abstract class Codec
         if (!root)
         {
             sb.Append(prefix);
-            sb.Append(last ? "\u2514\u2500\u2500 " : "\u251C\u2500\u2500 ");
+            sb.Append(last ? "\u2514\u2500" : "\u251C\u2500");
         }
 
         sb.Append(Tag);
@@ -393,7 +396,7 @@ public abstract class Codec
 
         string childPrefix = root
             ? ""
-            : prefix + (last ? "    " : "\u2502   ");
+            : prefix + (last ? "  " : "\u2502 ");
 
         for (int i = 0; i < Children.Count; i++)
             Children[i].AppendToString(sb, childPrefix, i == Children.Count - 1, false);

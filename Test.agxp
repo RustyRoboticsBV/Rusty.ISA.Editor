@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: ActionGraph Editor -->
 
-<file>
+<file csum="74651DA025B5406878122DF9EFDC20C3">
 	
 	<!-- Metadata -->
 	<meta id="title" value="Test"/>
 	<meta id="desc" value="A test program."/>
 	<meta id="author" value="Corporation, Inc."/>
 	<meta id="version" value="1.0.0"/>
-	<check value="74651DA025B5406878122DF9EFDC20C3"/>
 	
 	<!-- Schema -->
 	<idef id="i1" exec="Handler1">
@@ -35,14 +34,14 @@
 					<odef id="o2">
 						<fdef type="i2" id="f2">
 							<vadef id="va2" type="p2"/>
-							<oadef id="oa3" type="p3" nodefault="false"/>
+							<oadef id="oa3" type="p3" hidedf="false"/>
 						</fdef>
 					</odef>
 					<odef id="o3">
 						<fdef type="i3" id="f3">
-							<oadef id="oa4" type="p4" nodefault="false"/>
+							<oadef id="oa4" type="p4" hidedf="false"/>
 							<vadef id="va5" type="p5"/>
-							<oadef id="oa6" type="p6" nodefault="true"/>
+							<oadef id="oa6" type="p6" hidedf="true"/>
 						</fdef>
 					</odef>
 				</cdef>

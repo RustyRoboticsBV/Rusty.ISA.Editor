@@ -41,7 +41,8 @@ internal struct OutputCountResult
         return result;
     }
 
-    public static OutputCountResult Create(InspectorDefinitionCodec definition, InspectorCodec inspector)
+    /* Private methods. */
+    private static OutputCountResult Create(InspectorDefinitionCodec definition, InspectorCodec inspector)
     {
         if (definition is FdefCodec fdef && inspector is FormCodec form)
             return Create(fdef, form);
@@ -56,7 +57,7 @@ internal struct OutputCountResult
         throw new ArgumentException("Bad arguments.");
     }
 
-    public static OutputCountResult Create(FdefCodec fdef, FormCodec form)
+    private static OutputCountResult Create(FdefCodec fdef, FormCodec form)
     {
         OutputCountResult result = new();
         foreach (ArgCodec codec in form.GetChildren<ArgCodec>())
@@ -66,21 +67,21 @@ internal struct OutputCountResult
             if (oadef != null)
             {
                 result.ParameterOutputs++;
-                if (oadef.InnerText.Trim().ToLower() == "true")
+                if (oadef.GetAttribute(Codec.HideDefault) == "true")
                     result.HideDefaultOutput = true;
             }
         }
         return result;
     }
 
-    public static OutputCountResult Create(OdefCodec odef, OptionCodec option)
+    private static OutputCountResult Create(OdefCodec odef, OptionCodec option)
     {
         InspectorDefinitionCodec definition = odef.GetFirstChild<InspectorDefinitionCodec>();
         InspectorCodec inspector = option.GetFirstChild<InspectorCodec>();
         return Create(definition, inspector);
     }
 
-    public static OutputCountResult Create(CdefCodec cdef, ChoiceCodec choice)
+    private static OutputCountResult Create(CdefCodec cdef, ChoiceCodec choice)
     {
         string selected = choice.GetFirstChild<Codec>()?.GetAttribute(Codec.Type);
 
@@ -99,7 +100,7 @@ internal struct OutputCountResult
         return Create(definition, inspector);
     }
 
-    public static OutputCountResult Create(TdefCodec tdef, TupleCodec tuple)
+    private static OutputCountResult Create(TdefCodec tdef, TupleCodec tuple)
     {
         OutputCountResult result = new();
 
@@ -113,7 +114,7 @@ internal struct OutputCountResult
         return result;
     }
 
-    public static OutputCountResult Create(LdefCodec ldef, ListCodec list)
+    private static OutputCountResult Create(LdefCodec ldef, ListCodec list)
     {
         OutputCountResult result = new();
 

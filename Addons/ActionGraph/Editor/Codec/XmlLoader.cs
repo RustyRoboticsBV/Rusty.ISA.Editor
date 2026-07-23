@@ -17,22 +17,15 @@ public sealed partial class XmlLoader : Node
     public static string Serialize(FileCodec file)
     {
         // Compute checksum.
-        CheckCodec check = file.GetFirstChild<CheckCodec>();
-        if (check == null)
-        {
-            check = new();
-            file.AddChild(check);
-        }
-
         MD5 md5 = MD5.Create();
         file.Hash(md5);
         byte[] hashBytes = md5.TransformFinalBlock([], 0, 0);
         string hashHex = Convert.ToHexString(md5.Hash);
-        check.SetAttribute(Codec.Value, hashHex);
+        file.SetAttribute(Codec.Checksum, hashHex);
 
         // Serialize.
         string text = file.Serialize();
-        text = InsertComment(text, "Metadata", [MetaCodec.TAG, CheckCodec.TAG]);
+        text = InsertComment(text, "Metadata", [MetaCodec.TAG]);
         text = InsertComment(text, "Schema", [IdefCodec.TAG, NdefCodec.TAG]);
         text = InsertComment(text, "Graph", [NodeCodec.TAG, JointCodec.TAG, FrameCodec.TAG, MemoCodec.TAG, EdgeCodec.TAG]);
         return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- Generator: ActionGraph Editor -->\n" + text;
@@ -68,7 +61,6 @@ public sealed partial class XmlLoader : Node
     public static InstructionProgram LoadAsProgram(string xml)
     {
         FileCodec file = Load(xml);
-        Godot.GD.Print(Serialize(file));
         return Compiler.Compile(file);
     }
 
