@@ -36,7 +36,7 @@ public static class Compiler
                 string type = node.GetAttribute(Codec.Type);
                 NdefCodec ndef = nodes.FindNode(type);
                 if (ndef == null)
-                    throw new KeyNotFoundException($"Could not find node definition '{type}'.");
+                    throw new KeyNotFoundException($"Could not find node currentDefinition '{type}'.");
 
                 // Count outputs.
                 var outputs = OutputCountResult.Create(ndef, node);
@@ -96,7 +96,7 @@ public static class Compiler
         visited.Clear();
         foreach (Unit startUnit in starts)
         {
-            Compile(startUnit, visited, nextLabel);
+            Compile(startUnit, nodes, visited, nextLabel);
         }
 
         // Combine instructions.
@@ -106,6 +106,8 @@ public static class Compiler
             // Apply label to first instruction in unit.
             if (unit.Label != null && unit.Compiled.Count > 0)
                 unit.Compiled[0].Label = unit.Label;
+
+            // Apply start to first instruction in unit.
             if (unit.Start != null && unit.Compiled.Count > 0)
                 unit.Compiled[0].Start = unit.Start;
 
@@ -161,10 +163,10 @@ public static class Compiler
         if (meta == null)
             return metadata;
 
-        var datas = meta.GetChildren<DataCodec>();
-        foreach (var data in datas)
+        foreach (Codec child in meta.Children)
         {
-            metadata.AddValue(data.GetAttribute(Codec.ID), data.InnerText);
+            if (child is DataCodec data)
+                metadata.AddValue(data.GetAttribute(Codec.ID), data.InnerText);
         }
         return metadata;
     }
@@ -215,7 +217,7 @@ public static class Compiler
     /// <summary>
     /// Compile a graph.
     /// </summary>
-    private static void Compile(Unit unit, HashSet<Unit> visited, int nextLabel)
+    private static void Compile(Unit unit, NodesCodec nodes, HashSet<Unit> visited, int nextLabel)
     {
         // Mark unit as visited.
         visited.Add(unit);
@@ -223,8 +225,10 @@ public static class Compiler
         // Compile contents.
         if (unit.Contents is JointCodec)
             unit.Compiled.Add(new DummyInstruction());
-        else if (unit.Contents is NodeCodec)
+        else if (unit.Contents is NodeCodec node)
         {
+            NdefCodec ndef = ExtractWithID<NdefCodec>(nodes, unit.Contents.GetAttribute(Codec.Type));
+
             // Compile contents.
             foreach (Codec child in unit.Contents.Children)
             {
@@ -232,40 +236,9 @@ public static class Compiler
                 if (child is StartCodec start)
                     unit.Start = start.GetAttribute(Codec.ID);
 
-                // Compile form.
-                else if (child is FormCodec form)
-                {
-                    string type = form.GetAttribute(Codec.Type);
-                    unit.Compiled.Add(new GenericInstruction()); // TODO
-                }
-
-                // Compile option.
-                else if (child is OptionCodec option)
-                {
-                    string type = option.GetAttribute(Codec.Type);
-                    unit.Compiled.Add(new GenericInstruction()); // TODO
-                }
-
-                // Compile choice.
-                else if (child is ChoiceCodec choice)
-                {
-                    string type = choice.GetAttribute(Codec.Type);
-                    unit.Compiled.Add(new GenericInstruction()); // TODO
-                }
-
-                // Compile tuple.
-                else if (child is TupleCodec tuple)
-                {
-                    string type = tuple.GetAttribute(Codec.Type);
-                    unit.Compiled.Add(new GenericInstruction()); // TODO
-                }
-
-                // Compile list.
-                else if (child is ListCodec list)
-                {
-                    string type = list.GetAttribute(Codec.Type);
-                    unit.Compiled.Add(new GenericInstruction()); // TODO
-                }
+                // Compile inspector.
+                else if (child is FormCodec or OptionCodec or ChoiceCodec or TupleCodec or ListCodec)
+                    Compile(unit, ndef, child, node);
             }
         }
 
@@ -295,12 +268,82 @@ public static class Compiler
 
                 // Else, compile output unit.
                 else
-                    Compile(output, visited, nextLabel);
+                    Compile(output, nodes, visited, nextLabel);
             }
         }
     }
 
-    private static void Compile(Unit unit, FormCodec form, InstructionDefinition definition)
+    private static void Compile(Unit unit, Codec parentDefinition, Codec parent, Codec current)
+    {
+        // Find child definition.
+        string childInspectorType = current.GetAttribute(Codec.Type);
+        Codec currentDefinition = ExtractWithID<Codec>(parentDefinition, childInspectorType);
+
+        // Compile form.
+        if (current is FormCodec form)
+        {
+            FdefCodec fdef = ExtractWithID<FdefCodec>(parent, form.GetAttribute(Codec.Type));
+            string opcode = fdef.GetAttribute(Codec.Type);
+            List<string> arguments = new();
+            foreach (Codec child in current.Children)
+            {
+                if (child is VadefCodec varg)
+                    arguments.Add(varg.InnerText);
+                else if (child is OadefCodec oarg)
+                    arguments.Add("");
+            }
+            unit.Compiled.Add(new GenericInstruction(opcode, arguments.ToArray()));
+        }
+
+        // Compile option.
+        else if (current is OptionCodec option)
+        {
+            Codec child = option.GetFirstChild<Codec>();
+            string childType = child.GetAttribute(Codec.Type);
+            Compile(unit, currentDefinition, current, child);
+        }
+
+        // Compile choice.
+        else if (current is ChoiceCodec choice)
+        {
+            Codec child = choice.GetFirstChild<Codec>();
+            string childType = child.GetAttribute(Codec.Type);
+            Compile(unit, currentDefinition, current, child);
+        }
+
+        // Compile tuple.
+        else if (current is TupleCodec tuple)
+        {
+            foreach (Codec child in tuple.Children)
+            {
+                string childType = child.GetAttribute(Codec.Type);
+                Compile(unit, currentDefinition, current, child);
+            }
+        }
+
+        // Compile list.
+        else if (current is ListCodec list)
+        {
+            foreach (Codec child in list.Children)
+            {
+                string childType = child.GetAttribute(Codec.Type);
+                Compile(unit, currentDefinition, current, child);
+            }
+        }
+    }
+
+    private static T ExtractWithID<T>(Codec codec, string id)
+        where T : Codec
+    {
+        foreach (Codec child in codec.Children)
+        {
+            if (child is T typed && child.GetAttribute(id) == id)
+                return typed;
+        }
+        return null;
+    }
+
+    private static void Compile(Unit unit, FormCodec form, FdefCodec fdef, InstructionDefinition definition)
     {
         GenericInstruction instruction = new(definition.Opcode, new string[definition.Parameters.Length]);
         unit.Compiled.Add(instruction);

@@ -87,6 +87,11 @@
 							</option>
 						</choice>
 					</tuple>
+					<tuple type="t1">
+						<choice type="c1" select="o1">
+							<option type="o1"/>
+						</choice>
+					</tuple>
 				</list>
 			</node>
 			<joint id="j1">
