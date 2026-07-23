@@ -17,18 +17,11 @@ public sealed partial class XmlLoader : Node
     public static string Serialize(FileCodec file)
     {
         // Compute checksum.
-        MetaCodec meta = file.GetFirstChild<MetaCodec>();
-        if (meta == null)
-        {
-            meta = new();
-            file.AddChild(meta);
-        }
-
-        CheckCodec check = meta.GetFirstChild<CheckCodec>();
+        CheckCodec check = file.GetFirstChild<CheckCodec>();
         if (check == null)
         {
             check = new();
-            meta.AddChild(check);
+            file.AddChild(check);
         }
 
         MD5 md5 = MD5.Create();

@@ -10,8 +10,7 @@ public sealed class ArgCodec : Codec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => [Type];
-    protected override HashSet<string> AllowedChildren => [];
+    protected override HashSet<string> AllowedAttributes => [Type, Value];
 
     /* Constructors. */
     public ArgCodec(XmlNode xml) : base(xml) { }

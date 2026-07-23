@@ -14,10 +14,22 @@ public abstract class Codec
 {
     /* Constants. */
     public const string ID = "id";
+    public const string Value = "value";
+    public const string Exec = "exec";
     public const string Type = "type";
-    public const string Select = "select";
-    public const string Element = "elem";
+    public const string X = "x";
+    public const string Y = "y";
+    public const string Width = "width";
+    public const string Height = "height";
+    public const string Member = "member";
+    public const string Start = "start";
+    public const string Text = "text";
+    public const string Color = "color";
     public const string Index = "index";
+    public const string HideDefault = "nodefault";
+    public const string From = "from";
+    public const string Port = "port";
+    public const string To = "to";
 
     /* Public properties. */
     public string InnerText { get; set; } = "";
@@ -39,19 +51,11 @@ public abstract class Codec
 
         // Metadata.
         Register<MetaCodec>(MetaCodec.TAG);
-        Register<DataCodec>(DataCodec.TAG);
         Register<CheckCodec>(CheckCodec.TAG);
 
         // Schema.
-        Register<SchemaCodec>(SchemaCodec.TAG);
-
-        Register<InstrsCodec>(InstrsCodec.TAG);
-
         Register<IdefCodec>(IdefCodec.TAG);
         Register<PdefCodec>(PdefCodec.TAG);
-        Register<ExecCodec>(ExecCodec.TAG);
-
-        Register<NodesCodec>(NodesCodec.TAG);
 
         Register<NdefCodec>(NdefCodec.TAG);
 
@@ -65,24 +69,12 @@ public abstract class Codec
         Register<OadefCodec>(OadefCodec.TAG);
 
         // Graph.
-        Register<GraphCodec>(GraphCodec.TAG);
-
-        Register<ElemsCodec>(ElemsCodec.TAG);
-
         Register<NodeCodec>(NodeCodec.TAG);
         Register<JointCodec>(JointCodec.TAG);
         Register<FrameCodec>(FrameCodec.TAG);
         Register<MemoCodec>(MemoCodec.TAG);
 
-        Register<XCodec>(XCodec.TAG);
-        Register<YCodec>(YCodec.TAG);
-        Register<WidthCodec>(WidthCodec.TAG);
-        Register<HeightCodec>(HeightCodec.TAG);
-
-        Register<MemberCodec>(MemberCodec.TAG);
-        Register<StartCodec>(StartCodec.TAG);
-        Register<TextCodec>(TextCodec.TAG);
-        Register<ColorCodec>(ColorCodec.TAG);
+        Register<EdgeCodec>(EdgeCodec.TAG);
 
         Register<FormCodec>(FormCodec.TAG);
         Register<OptionCodec>(OptionCodec.TAG);
@@ -92,14 +84,6 @@ public abstract class Codec
 
         Register<ArgCodec>(ArgCodec.TAG);
         Register<OutCodec>(OutCodec.TAG);
-
-        Register<EdgesCodec>(EdgesCodec.TAG);
-
-        Register<EdgeCodec>(EdgeCodec.TAG);
-
-        Register<FromCodec>(FromCodec.TAG);
-        Register<PortCodec>(PortCodec.TAG);
-        Register<ToCodec>(ToCodec.TAG);
     }
 
     public Codec() { }
@@ -114,6 +98,9 @@ public abstract class Codec
         {
             foreach (XmlNode child in xml.ChildNodes)
             {
+                if (child is XmlComment)
+                    continue;
+
                 string childTag = child.Name;
                 if (!Codecs.ContainsKey(childTag))
                     throw new InvalidOperationException($"Unknown child type '{childTag}'.");

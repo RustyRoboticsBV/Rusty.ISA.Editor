@@ -10,9 +10,8 @@ public sealed class NodeCodec : Codec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => [ID, Type];
+    protected override HashSet<string> AllowedAttributes => [ID, Type, X, Y, Member, Start];
     protected override HashSet<string> AllowedChildren => [
-        XCodec.TAG, YCodec.TAG, MemberCodec.TAG, StartCodec.TAG,
         FormCodec.TAG, OptionCodec.TAG, ChoiceCodec.TAG, TupleCodec.TAG, ListCodec.TAG
     ];
 

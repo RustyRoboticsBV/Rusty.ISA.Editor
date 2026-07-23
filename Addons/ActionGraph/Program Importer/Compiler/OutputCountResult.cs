@@ -76,7 +76,7 @@ public struct OutputCountResult
 
     public static OutputCountResult Create(CdefCodec cdef, ChoiceCodec choice)
     {
-        string selected = choice.GetAttribute(Codec.Select);
+        string selected = choice.GetFirstChild<Codec>()?.GetAttribute(Codec.Type);
 
         InspectorDefinitionCodec definition = null;
         foreach (var codec in cdef.GetChildren<InspectorDefinitionCodec>())

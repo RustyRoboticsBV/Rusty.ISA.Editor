@@ -11,7 +11,6 @@ public sealed class OutCodec : Codec
     /* Public properties. */
     protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [Type];
-    protected override HashSet<string> AllowedChildren => [];
 
     /* Constructors. */
     public OutCodec(XmlNode xml) : base(xml) { }

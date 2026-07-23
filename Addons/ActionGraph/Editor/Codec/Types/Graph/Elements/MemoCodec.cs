@@ -10,8 +10,7 @@ public sealed class MemoCodec : Codec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => [ID];
-    protected override HashSet<string> AllowedChildren => [XCodec.TAG, YCodec.TAG, MemberCodec.TAG, TextCodec.TAG, ColorCodec.TAG];
+    protected override HashSet<string> AllowedAttributes => [ID, X, Y, Member, Text, Color];
 
     /* Constructors. */
     public MemoCodec(XmlNode xml) : base(xml) { }

@@ -10,7 +10,7 @@ public sealed class ChoiceCodec : InspectorCodec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => ["type", "select"];
+    protected override HashSet<string> AllowedAttributes => [Type];
     protected override HashSet<string> AllowedChildren => [FormCodec.TAG, OptionCodec.TAG, TAG, TupleCodec.TAG, ListCodec.TAG];
 
     /* Constructors. */

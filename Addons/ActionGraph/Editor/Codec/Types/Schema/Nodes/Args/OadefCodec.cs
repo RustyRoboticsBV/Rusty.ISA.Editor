@@ -10,14 +10,9 @@ public sealed class OadefCodec : Codec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => [ID, Type];
+    protected override HashSet<string> AllowedAttributes => [ID, Type, HideDefault];
     protected override HashSet<string> AllowedChildren => [];
 
     /* Constructors. */
     public OadefCodec(XmlNode xml) : base(xml) { }
-
-    public void SetValue(bool hideDefaultOutput)
-    {
-        InnerText = hideDefaultOutput ? "true" : "false";
-    }
 }

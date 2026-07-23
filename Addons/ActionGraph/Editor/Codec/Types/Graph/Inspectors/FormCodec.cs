@@ -10,7 +10,7 @@ public sealed class FormCodec : InspectorCodec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => ["type"];
+    protected override HashSet<string> AllowedAttributes => [Type];
     protected override HashSet<string> AllowedChildren => [ArgCodec.TAG, OutCodec.TAG];
 
     /* Constructors. */

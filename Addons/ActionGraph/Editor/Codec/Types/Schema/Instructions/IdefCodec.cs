@@ -10,8 +10,8 @@ public sealed class IdefCodec : Codec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => [ID];
-    protected override HashSet<string> AllowedChildren => [PdefCodec.TAG, ExecCodec.TAG];
+    protected override HashSet<string> AllowedAttributes => [ID, Exec];
+    protected override HashSet<string> AllowedChildren => [PdefCodec.TAG];
 
     /* Constructors. */
     public IdefCodec(XmlNode xml) : base(xml) { }

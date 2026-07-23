@@ -10,11 +10,8 @@ public sealed class MetaCodec : Codec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => [];
-    protected override HashSet<string> AllowedChildren => [DataCodec.TAG, CheckCodec.TAG];
+    protected override HashSet<string> AllowedAttributes => [ID, Value];
 
     /* Constructors. */
-    public MetaCodec() : base() { }
-
     public MetaCodec(XmlNode xml) : base(xml) { }
 }

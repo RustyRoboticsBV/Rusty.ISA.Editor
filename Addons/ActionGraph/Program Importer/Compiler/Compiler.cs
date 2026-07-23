@@ -11,30 +11,21 @@ public static class Compiler
     /* Public methods. */
     public static InstructionProgram Compile(FileCodec file)
     {
-        // Get meta, schema & graph codecs and subcontainers.
-        MetaCodec meta = Extract<MetaCodec>(file);
-        SchemaCodec schema = Extract<SchemaCodec>(file);
-        InstrsCodec instrs = Extract<InstrsCodec>(schema);
-        NodesCodec nodes = Extract<NodesCodec>(schema);
-        GraphCodec graph = Extract<GraphCodec>(file);
-        ElemsCodec elems = Extract<ElemsCodec>(graph);
-        EdgesCodec edges = Extract<EdgesCodec>(graph);
-
         // Compile metadata & instruction set.
-        Metadata metadata = Compile(meta);
-        InstructionSet iset = Compile(instrs);
+        Metadata metadata = CompileMetadata(file);
+        InstructionSet iset = CompileInsructionSet(file);
 
         // Create units for nodes & joints.
         Dictionary<string, Unit> units = new();
-        Dictionary<string, Codec> elements = GetElements(elems);
-        foreach (Codec element in elems.Children)
+        Dictionary<string, Codec> elements = GetElements(file);
+        foreach (Codec element in file.Children)
         {
             string id = element.GetAttribute(Codec.ID);
             if (element is NodeCodec node)
             {
                 // Find ndef.
                 string type = node.GetAttribute(Codec.Type);
-                NdefCodec ndef = nodes.FindNode(type);
+                NdefCodec ndef = ExtractWithID<NdefCodec>(file, type);
                 if (ndef == null)
                     throw new KeyNotFoundException($"Could not find node currentDefinition '{type}'.");
 
@@ -55,21 +46,20 @@ public static class Compiler
         }
 
         // Connect units according to graph edges.
-        foreach (var edge in edges.Children)
+        foreach (Codec codec in file.Children)
         {
-            FromCodec from = Extract<FromCodec>(edge);
-            PortCodec port = Extract<PortCodec>(edge);
-            ToCodec to = Extract<ToCodec>(edge);
+            if (codec is EdgeCodec edge)
+            {
+                string from = edge.GetAttribute(Codec.From);
+                string port = edge.GetAttribute(Codec.Port);
+                string to = edge.GetAttribute(Codec.To);
 
-            string fromStr = from.GetAttribute(Codec.Element);
-            string portStr = port.GetAttribute(Codec.Index);
-            string toStr = to.GetAttribute(Codec.Element);
-            
-            Unit fromUnit = units[fromStr];
-            int portIndex = int.Parse(portStr);
-            Unit toUnit = units[toStr];
+                Unit fromUnit = units[from];
+                int portIndex = int.Parse(port);
+                Unit toUnit = units[to];
 
-            fromUnit.ConnectTo(portIndex, toUnit);
+                fromUnit.ConnectTo(portIndex, toUnit);
+            }
         }
 
         // Find start units.
@@ -96,7 +86,7 @@ public static class Compiler
         visited.Clear();
         foreach (Unit startUnit in starts)
         {
-            Compile(startUnit, nodes, visited, nextLabel);
+            CompileUnit(startUnit, file, visited, nextLabel);
         }
 
         // Combine instructions.
@@ -138,10 +128,10 @@ public static class Compiler
     /// <summary>
     /// Collect all nodes and joints from the graph.
     /// </summary>
-    private static Dictionary<string, Codec> GetElements(ElemsCodec elems)
+    private static Dictionary<string, Codec> GetElements(FileCodec file)
     {
         Dictionary<string, Codec> elements = new();
-        foreach (var element in elems.Children)
+        foreach (var element in file.Children)
         {
             if (element is NodeCodec || element is JointCodec)
             {
@@ -155,17 +145,17 @@ public static class Compiler
     }
 
     /// <summary>
-    /// Compile an instruction set.
+    /// Compile metadata.
     /// </summary>
-    private static Metadata Compile(MetaCodec meta)
+    private static Metadata CompileMetadata(FileCodec file)
     {
         Metadata metadata = new();
-        if (meta == null)
+        if (file == null)
             return metadata;
 
-        foreach (Codec child in meta.Children)
+        foreach (Codec child in file.Children)
         {
-            if (child is DataCodec data)
+            if (child is MetaCodec data)
                 metadata.AddValue(data.GetAttribute(Codec.ID), data.InnerText);
         }
         return metadata;
@@ -174,17 +164,17 @@ public static class Compiler
     /// <summary>
     /// Compile an instruction set.
     /// </summary>
-    private static InstructionSet Compile(InstrsCodec instrs)
+    private static InstructionSet CompileInsructionSet(FileCodec file)
     {
-        if (instrs == null)
+        if (file == null)
             return new();
 
         // Read instructions.
-        var idefs = instrs.GetChildren<IdefCodec>();
+        var idefs = file.GetChildren<IdefCodec>();
         InstructionDefinition[] definitions = new InstructionDefinition[idefs.Count];
         for (int i = 0; i < idefs.Count; i++)
         {
-            definitions[i] = Compile(idefs[i]);
+            definitions[i] = CompileIdef(idefs[i]);
         }
 
         // Create instruction set.
@@ -194,7 +184,7 @@ public static class Compiler
     /// <summary>
     /// Compile an instruction definition.
     /// </summary>
-    private static InstructionDefinition Compile(IdefCodec idef)
+    private static InstructionDefinition CompileIdef(IdefCodec idef)
     {
         // Read opcode.
         string opcode = idef.GetAttribute(Codec.ID);
@@ -208,7 +198,7 @@ public static class Compiler
         }
 
         // Read execution handler.
-        string executionHandler = idef.GetFirstChild<ExecCodec>()?.InnerText ?? "";
+        string executionHandler = idef.GetAttribute(Codec.Exec);
 
         // Create definition.
         return new(opcode, parameters, executionHandler);
@@ -217,7 +207,7 @@ public static class Compiler
     /// <summary>
     /// Compile a graph.
     /// </summary>
-    private static void Compile(Unit unit, NodesCodec nodes, HashSet<Unit> visited, int nextLabel)
+    private static void CompileUnit(Unit unit, FileCodec file, HashSet<Unit> visited, int nextLabel)
     {
         // Mark unit as visited.
         visited.Add(unit);
@@ -227,19 +217,16 @@ public static class Compiler
             unit.Compiled.Add(new DummyInstruction());
         else if (unit.Contents is NodeCodec node)
         {
-            NdefCodec ndef = ExtractWithID<NdefCodec>(nodes, unit.Contents.GetAttribute(Codec.Type));
+            NdefCodec ndef = ExtractWithID<NdefCodec>(file, unit.Contents.GetAttribute(Codec.Type));
 
             // Compile contents.
             foreach (Codec child in unit.Contents.Children)
             {
-                // Mark with start point if necessary.
-                if (child is StartCodec start)
-                    unit.Start = start.GetAttribute(Codec.ID);
-
-                // Compile inspector.
-                else if (child is FormCodec or OptionCodec or ChoiceCodec or TupleCodec or ListCodec)
+                if (child is FormCodec or OptionCodec or ChoiceCodec or TupleCodec or ListCodec)
                     Compile(unit, ndef, child, node);
             }
+
+            unit.Start = node.GetAttribute(Codec.Start);
         }
 
         // Handle outputs.
@@ -268,7 +255,7 @@ public static class Compiler
 
                 // Else, compile output unit.
                 else
-                    Compile(output, nodes, visited, nextLabel);
+                    CompileUnit(output, file, visited, nextLabel);
             }
         }
     }

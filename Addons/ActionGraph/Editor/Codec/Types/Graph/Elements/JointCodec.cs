@@ -10,8 +10,7 @@ public sealed class JointCodec : Codec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => [ID];
-    protected override HashSet<string> AllowedChildren => [XCodec.TAG, YCodec.TAG, MemberCodec.TAG];
+    protected override HashSet<string> AllowedAttributes => [ID, X, Y, Member];
 
     /* Constructors. */
     public JointCodec(XmlNode xml) : base(xml) { }

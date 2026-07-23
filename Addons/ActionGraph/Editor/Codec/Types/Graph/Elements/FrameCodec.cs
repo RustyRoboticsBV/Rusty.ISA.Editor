@@ -10,8 +10,7 @@ public sealed class FrameCodec : Codec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => [ID];
-    protected override HashSet<string> AllowedChildren => [XCodec.TAG, YCodec.TAG, WidthCodec.TAG, HeightCodec.TAG, MemberCodec.TAG, TextCodec.TAG, ColorCodec.TAG];
+    protected override HashSet<string> AllowedAttributes => [ID, X, Y, Width, Height, Member, Text, Color];
 
     /* Constructors. */
     public FrameCodec(XmlNode xml) : base(xml) { }
