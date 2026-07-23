@@ -3,35 +3,42 @@ using System.Collections.Generic;
 
 namespace Rusty.ActionGraph.Compilation;
 
-public sealed class Unit
+internal sealed class Unit
 {
-    public List<Unit> Input { get; } = new();
-    public Unit[] Outputs { get; }
-    public Codec Contents { get; set; }
+    public List<Unit> From { get; } = new();
+    public Unit[] To { get; }
+
+    public Codec Codec { get; set; }
+    public OutputCountResult OutputData { get; set; }
+
     public List<Instruction> Compiled { get; set; } = new();
     public string Start { get; set; } = null;
     public string Label { get; set; } = null;
 
     /* Constructors. */
-    public Unit(int outputs)
+    public Unit()
     {
-        Outputs = new Unit[outputs];
+        To = [];
     }
 
-    public Unit(Codec contents, int outputs) : this(outputs)
+    public Unit(OutputCountResult outputs, Codec codec)
     {
-        Contents = contents;
+        To = new Unit[outputs.CountOutputs()];
+        OutputData = outputs;
+        Codec = codec;
     }
 
     /* Public methods. */
+    public override string ToString() => (Codec?.GetTag() ?? "") + " " + OutputData.ToString();
+
     /// <summary>
     /// Connect an output port
     /// </summary>
     public void ConnectTo(int port, Unit to)
     {
         Disconnect(port);
-        Outputs[port] = to;
-        to.Input.Add(this);
+        To[port] = to;
+        to.From.Add(this);
     }
 
     /// <summary>
@@ -39,10 +46,10 @@ public sealed class Unit
     /// </summary>
     public void Disconnect(int port)
     {
-        if (Outputs[port] == null)
+        if (To[port] == null)
             return;
 
-        Outputs[port].Input.Remove(this);
-        Outputs[port] = null;
+        To[port].From.Remove(this);
+        To[port] = null;
     }
 }

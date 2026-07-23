@@ -5,14 +5,20 @@ using System.Collections.Generic;
 /// <summary>
 /// The result of counting the outputs of a node codec.
 /// </summary>
-public struct OutputCountResult
+internal struct OutputCountResult
 {
     /* Public properties. */
+    public static OutputCountResult Default => new();
+
     public bool HideDefaultOutput { get; set; }
     public int ParameterOutputs { get; set; }
 
     /* Public methods. */
+    public override string ToString() => (HideDefaultOutput ? "" : "D") + ParameterOutputs;
+
     public int CountOutputs() => HideDefaultOutput ? ParameterOutputs : ParameterOutputs + 1;
+
+    public bool IsParameterPort(int portIndex) => !HideDefaultOutput && portIndex == 0 && portIndex < CountOutputs();
 
     public static OutputCountResult Combine(OutputCountResult a, OutputCountResult b)
     {

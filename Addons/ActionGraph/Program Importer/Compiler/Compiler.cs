@@ -11,6 +11,7 @@ public static class Compiler
     /* Public methods. */
     public static InstructionProgram Compile(FileCodec file)
     {
+        Godot.GD.Print(file);
         // Compile metadata & instruction set.
         Metadata metadata = CompileMetadata(file);
         InstructionSet iset = CompileInsructionSet(file);
@@ -30,17 +31,16 @@ public static class Compiler
                     throw new KeyNotFoundException($"Could not find node definition '{type}'.");
 
                 // Count outputs.
-                var outputs = OutputCountResult.Create(ndef, node);
+                OutputCountResult outputs = OutputCountResult.Create(ndef, node);
 
                 // Create unit.
-                Unit unit = new(outputs.CountOutputs());
-                unit.Contents = node;
+                Unit unit = new(outputs, node);
                 units.Add(id, unit);
             }
             else if (element is JointCodec joint)
             {
-                Unit unit = new(1);
-                unit.Contents = joint;
+                Unit unit = new(OutputCountResult.Default, joint);
+                unit.Codec = joint;
                 units.Add(id, unit);
             }
         }
@@ -62,12 +62,28 @@ public static class Compiler
             }
         }
 
+        // Insert ends.
+        int endIndex = 0;
+        foreach (var unit in units)
+        {
+            for (int i = 0; i < unit.Value.To.Length; i++)
+            {
+                if (unit.Value.To[i] == null)
+                {
+                    Unit endUnit = new();
+                    unit.Value.ConnectTo(i, endUnit);
+                    units.Add("_end" + endIndex, endUnit);
+                    endIndex++;
+                }
+            }
+        }
+
         // Find start units.
         HashSet<Unit> starts = new();
         HashSet<Unit> visited = new();
         foreach (var unit in units)
         {
-            if (unit.Value.Input.Count == 0)
+            if (unit.Value.From.Count == 0)
             {
                 starts.Add(unit.Value);
                 MarkVisited(unit.Value, visited);
@@ -86,13 +102,16 @@ public static class Compiler
         visited.Clear();
         foreach (Unit startUnit in starts)
         {
-            CompileUnit(startUnit, file, visited, nextLabel);
+            CompileUnitInstructions(startUnit, file, visited, ref nextLabel);
         }
 
         // Combine instructions.
         List<Instruction> instructions = new();
-        foreach (Unit unit in units.Values)
+        foreach (var unitPair in units)
         {
+            Unit unit = unitPair.Value;
+            Godot.GD.Print(unitPair.Key + " " + unit);
+
             // Apply label to first instruction in unit.
             if (unit.Label != null && unit.Compiled.Count > 0)
                 unit.Compiled[0].Label = unit.Label;
@@ -113,18 +132,6 @@ public static class Compiler
     }
 
     /* Private methods. */
-    /// <summary>
-    /// Retrieve the first child of some type from a codec. Throw an exception if it can't be found.
-    /// </summary>
-    private static T Extract<T>(Codec codec)
-        where T : Codec
-    {
-        T child = codec.GetFirstChild<T>();
-        if (child == null)
-            throw new NullReferenceException($"Missing {typeof(T).Name} in {codec.GetType().Name}.");
-        return child;
-    }
-
     /// <summary>
     /// Collect all nodes and joints from the graph.
     /// </summary>
@@ -205,42 +212,42 @@ public static class Compiler
     }
 
     /// <summary>
-    /// Compile a graph.
+    /// Compile a unit's instructions.
     /// </summary>
-    private static void CompileUnit(Unit unit, FileCodec file, HashSet<Unit> visited, int nextLabel)
+    private static void CompileUnitInstructions(Unit unit, FileCodec file, HashSet<Unit> visited, ref int nextLabel)
     {
         // Mark unit as visited.
         visited.Add(unit);
 
         // Compile contents.
-        if (unit.Contents is JointCodec)
+        if (unit.Codec == null)
+            unit.Compiled.Add(new EndInstruction());
+        else if (unit.Codec is JointCodec)
             unit.Compiled.Add(new DummyInstruction());
-        else if (unit.Contents is NodeCodec node)
+        else if (unit.Codec is NodeCodec node)
         {
-            NdefCodec ndef = ExtractWithID<NdefCodec>(file, unit.Contents.GetAttribute(Codec.Type));
+            NdefCodec ndef = ExtractWithID<NdefCodec>(file, unit.Codec.GetAttribute(Codec.Type));
 
             // Compile contents.
-            foreach (Codec child in unit.Contents.Children)
+            int handledOutputArgs = 0;
+            foreach (Codec child in unit.Codec.Children)
             {
                 if (child is FormCodec or OptionCodec or ChoiceCodec or TupleCodec or ListCodec)
-                    Compile(unit, ndef, node, child);
+                    CompileInspectorInstructions(unit, ndef, node, child, ref handledOutputArgs, ref nextLabel);
             }
 
             unit.Start = node.GetAttribute(Codec.Start);
         }
 
         // Handle outputs.
-        foreach (Unit output in unit.Outputs)
+        for (int i = 0; i < unit.To.Length; i++)
         {
-            // If empty, generate end instruction.
-            if (output == null)
-                unit.Compiled.Add(new EndInstruction());
+            Unit output = unit.To[i];
 
-            // If not empty...
-            else
+            // If the unit was already compiled, generate goto instruction.
+            if (visited.Contains(output))
             {
-                // If the unit was already compiled, generate goto instruction.
-                if (visited.Contains(output))
+                if (!unit.OutputData.IsParameterPort(i))
                 {
                     // Generate label if necessary.
                     if (output.Label == null)
@@ -252,15 +259,18 @@ public static class Compiler
                     // Generate goto.
                     unit.Compiled.Add(new GotoInstruction(output.Label));
                 }
-
-                // Else, compile output unit.
-                else
-                    CompileUnit(output, file, visited, nextLabel);
             }
+
+            // Else, compile output unit.
+            else
+                CompileUnitInstructions(output, file, visited, ref nextLabel);
         }
     }
 
-    private static void Compile(Unit unit, Codec parentDefinition, Codec parent, Codec current)
+    /// <summary>
+    /// Compile an inspector's instructions.
+    /// </summary>
+    private static void CompileInspectorInstructions(Unit unit, Codec parentDefinition, Codec parent, Codec current, ref int handledOutputArgs, ref int nextLabel)
     {
         // Find child definition.
         string currentType = current.GetAttribute(Codec.Type);
@@ -279,7 +289,18 @@ public static class Compiler
                     arguments.Add(value);
                 }
                 else if (child is OadefCodec oarg)
-                    arguments.Add("");
+                {
+                    int outputPort = unit.OutputData.HideDefaultOutput ? handledOutputArgs : handledOutputArgs + 1;
+                    Unit to = unit.To[outputPort];
+
+                    if (to.Label == null)
+                    {
+                        to.Label = nextLabel.ToString();
+                        nextLabel++;
+                    }
+
+                    arguments.Add(to.Label);
+                }
             }
             unit.Compiled.Add(new GenericInstruction(opcode, arguments.ToArray()));
         }
@@ -291,7 +312,7 @@ public static class Compiler
             if (child != null)
             {
                 string childType = child.GetAttribute(Codec.Type);
-                Compile(unit, currentDefinition, current, child);
+                CompileInspectorInstructions(unit, currentDefinition, current, child, ref handledOutputArgs, ref nextLabel);
             }
         }
 
@@ -300,7 +321,7 @@ public static class Compiler
         {
             Codec child = choice.GetFirstChild<Codec>();
             string childType = child.GetAttribute(Codec.Type);
-            Compile(unit, currentDefinition, current, child);
+            CompileInspectorInstructions(unit, currentDefinition, current, child, ref handledOutputArgs, ref nextLabel);
         }
 
         // Compile tuple.
@@ -309,7 +330,7 @@ public static class Compiler
             foreach (Codec child in tuple.Children)
             {
                 string childType = child.GetAttribute(Codec.Type);
-                Compile(unit, currentDefinition, current, child);
+                CompileInspectorInstructions(unit, currentDefinition, current, child, ref handledOutputArgs, ref nextLabel);
             }
         }
 
@@ -319,7 +340,7 @@ public static class Compiler
             foreach (Codec child in list.Children)
             {
                 string childType = child.GetAttribute(Codec.Type);
-                Compile(unit, currentDefinition, current, child);
+                CompileInspectorInstructions(unit, currentDefinition, current, child, ref handledOutputArgs, ref nextLabel);
             }
         }
 
@@ -349,7 +370,7 @@ public static class Compiler
             return;
 
         marked.Add(current);
-        foreach (Unit output in current.Outputs)
+        foreach (Unit output in current.To)
         {
             MarkVisited(output, marked);
         }

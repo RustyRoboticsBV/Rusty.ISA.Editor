@@ -119,6 +119,13 @@ public abstract class Codec
     }
 
     /* Public methods. */
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendToString(sb, "", true, true);
+        return sb.ToString();
+    }
+
     /// <summary>
     /// Convert this node to XML.
     /// </summary>
@@ -313,6 +320,11 @@ public abstract class Codec
         Children.Add(node);
     }
 
+    /// <summary>
+    /// Return the tag of the codec.
+    /// </summary>
+    public string GetTag() => Tag;
+
     /* Protected methods. */
     /// <summary>
     /// Compute the checksum of a string.
@@ -339,6 +351,54 @@ public abstract class Codec
     }
 
     /* Private methods. */
+    private void AppendToString(StringBuilder sb, string prefix, bool last, bool root)
+    {
+        if (!root)
+        {
+            sb.Append(prefix);
+            sb.Append(last ? "\u2514\u2500\u2500 " : "\u251C\u2500\u2500 ");
+        }
+
+        sb.Append(Tag);
+
+        if (Attributes.Count > 0)
+        {
+            sb.Append(" {");
+
+            bool first = true;
+            foreach (var attribute in Attributes)
+            {
+                if (!first)
+                    sb.Append(", ");
+
+                sb.Append(attribute.Key);
+                sb.Append("=\"");
+                sb.Append(attribute.Value);
+                sb.Append('"');
+
+                first = false;
+            }
+
+            sb.Append('}');
+        }
+
+        if (!string.IsNullOrEmpty(InnerText))
+        {
+            sb.Append(" : \"");
+            sb.Append(InnerText);
+            sb.Append('"');
+        }
+
+        sb.AppendLine();
+
+        string childPrefix = root
+            ? ""
+            : prefix + (last ? "    " : "\u2502   ");
+
+        for (int i = 0; i < Children.Count; i++)
+            Children[i].AppendToString(sb, childPrefix, i == Children.Count - 1, false);
+    }
+
     private static void Register<T>(string tag)
     {
         Codecs.Add(tag, typeof(T));
