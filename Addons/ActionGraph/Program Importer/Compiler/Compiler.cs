@@ -27,7 +27,7 @@ public static class Compiler
                 string type = node.GetAttribute(Codec.Type);
                 NdefCodec ndef = ExtractWithID<NdefCodec>(file, type);
                 if (ndef == null)
-                    throw new KeyNotFoundException($"Could not find node currentDefinition '{type}'.");
+                    throw new KeyNotFoundException($"Could not find node definition '{type}'.");
 
                 // Count outputs.
                 var outputs = OutputCountResult.Create(ndef, node);

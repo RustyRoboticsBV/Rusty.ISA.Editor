@@ -11,7 +11,7 @@ public sealed class CheckCodec : Codec
 
     /* Public properties. */
     protected override string Tag => TAG;
-    protected override HashSet<string> AllowedAttributes => [];
+    protected override HashSet<string> AllowedAttributes => [Value];
 
     /* Constructors. */
     public CheckCodec() : base() { }
@@ -23,8 +23,10 @@ public sealed class CheckCodec : Codec
     {
         Hash(hash, "<");
         Hash(hash, Tag);
-        Hash(hash, "></");
-        Hash(hash, Tag);
-        Hash(hash, ">");
+        Hash(hash, " ");
+        Hash(hash, Value);
+        Hash(hash, "=\"");
+        Hash(hash, GetAttribute(Value));
+        Hash(hash, "\"/>");
     }
 }
