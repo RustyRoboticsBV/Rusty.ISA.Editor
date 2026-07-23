@@ -28,10 +28,14 @@ public sealed partial class XmlLoader : Node
         file.Hash(md5);
         byte[] hashBytes = md5.TransformFinalBlock([], 0, 0);
         string hashHex = Convert.ToHexString(md5.Hash);
-        check.InnerText = hashHex;
+        check.SetAttribute(Codec.Value, hashHex);
 
         // Serialize.
-        return file.Serialize();
+        string text = file.Serialize();
+        text = InsertComment(text, "Metadata", [MetaCodec.TAG, CheckCodec.TAG]);
+        text = InsertComment(text, "Schema", [IdefCodec.TAG, NdefCodec.TAG]);
+        text = InsertComment(text, "Graph", [NodeCodec.TAG, JointCodec.TAG, FrameCodec.TAG, MemoCodec.TAG, EdgeCodec.TAG]);
+        return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- Generator: ActionGraph Editor -->\n" + text;
     }
 
     /// <summary>
@@ -64,6 +68,23 @@ public sealed partial class XmlLoader : Node
     public static InstructionProgram LoadAsProgram(string xml)
     {
         FileCodec file = Load(xml);
+        Godot.GD.Print(Serialize(file));
         return Compiler.Compile(file);
+    }
+
+    /* Private methods. */
+    private static string InsertComment(string text, string comment, string[] tags)
+    {
+        int index = -1;
+        foreach (string tag in tags)
+        {
+            int index2 = text.IndexOf($"<{tag}");
+            if (index == -1 || index2 < index)
+                index = index2;
+        }
+        if (index >= 0)
+            return text.Insert(index, $"\n\t<!-- {comment} -->\n\t");
+        else
+            return text;
     }
 }

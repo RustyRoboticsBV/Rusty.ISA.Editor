@@ -113,7 +113,7 @@ public abstract class Codec
         foreach (XmlAttribute attribute in xml.Attributes)
         {
             if (!AllowedAttributes.Contains(attribute.Name))
-                throw new InvalidOperationException($"Node '{Tag}' cannot have an attribute of type '{attribute.Name}'.");
+                throw new InvalidOperationException($"Node '{Tag}' cannot have an name of type '{attribute.Name}'.");
             Attributes.TryAdd(attribute.Name, attribute.Value);
         }
     }
@@ -129,7 +129,7 @@ public abstract class Codec
         foreach (var attr in Attributes)
         {
             if (!AllowedAttributes.Contains(attr.Key))
-                throw new KeyNotFoundException($"{GetType().Name} does not allow attribute {attr.Key}.");
+                throw new KeyNotFoundException($"{GetType().Name} does not allow name {attr.Key}.");
 
             attributes.Append(' ');
             attributes.Append(attr.Key);
@@ -143,7 +143,7 @@ public abstract class Codec
         foreach (Codec child in Children)
         {
             if (!AllowedChildren.Contains(child.Tag))
-                throw new KeyNotFoundException($"{GetType().Name} does not allow attribute elements with xml tag '{child.Tag}'.");
+                throw new KeyNotFoundException($"{GetType().Name} does not allow name elements with xml tag '{child.Tag}'.");
 
             if (children.Length > 0)
                 children.Append('\n');
@@ -229,6 +229,14 @@ public abstract class Codec
             return Instantiate(type, xml);
         else
             throw new InvalidOperationException($"Unknown XML child tag '{xml.Name}'.");
+    }
+
+    /// <summary>
+    /// Set an attribute's value.
+    /// </summary>
+    public void SetAttribute(string name, string value)
+    {
+        Attributes[name] = value;
     }
 
     /// <summary>
@@ -321,7 +329,7 @@ public abstract class Codec
     protected static Codec Instantiate(Type type, XmlNode xml)
     {
         if (!type.IsAssignableTo(typeof(Codec)))
-            throw new InvalidCastException($"Type {type.Name} is not a codec attribute.");
+            throw new InvalidCastException($"Type {type.Name} is not a codec name.");
 
         ConstructorInfo ctor = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public, [typeof(XmlNode)]);
         if (ctor == null)
