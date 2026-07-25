@@ -287,6 +287,20 @@ public abstract class Codec
     }
 
     /// <summary>
+    /// Find the first child codec with a specific attribute value.
+    /// </summary>
+    public Codec FindChildWithAttribute(string attributeName, string attributeValue)
+    {
+        foreach (Codec child in Children)
+        {
+            if (child.GetAttribute(attributeName) == attributeValue)
+                return child;
+        }
+        return null;
+    }
+
+
+    /// <summary>
     /// Get all children with a tag.
     /// </summary>
     public List<Codec> GetChildren(string tag)
@@ -327,7 +341,6 @@ public abstract class Codec
     /// Return the tag of the codec.
     /// </summary>
     public string GetTag() => Tag;
-
     /* Protected methods. */
     /// <summary>
     /// Compute the checksum of a string.

@@ -1,130 +1,136 @@
-﻿using Rusty.ActionGraph.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Text;
+
+namespace Rusty.ActionGraph.Serialization;
+
+/// <summary>
+/// A OadefCodec and OutCodec pair representing an argument output port.
+/// </summary>
+internal class OutputPortInfo
+{
+    /* Public properties. */
+    public PdefCodec Parameter { get; private set; }
+    public OadefCodec Definition { get; private set; }
+    public OutCodec Instance { get; private set; }
+
+    /* Constructors. */
+    public OutputPortInfo(PdefCodec parameter, OadefCodec definition, OutCodec instance)
+    {
+        Parameter = parameter;
+        Definition = definition;
+        Instance = instance;
+    }
+
+    /* Public methods. */
+    public override string ToString()
+    {
+        return Parameter.GetAttribute(Codec.ID)
+            + " / " + Definition.GetAttribute(Codec.ID)
+            + ": " + Instance.GetAttribute(Codec.Value);
+    }
+}
 
 /// <summary>
 /// The result of counting the outputs of a node codec.
 /// </summary>
-internal struct OutputCountResult
+internal class OutputCountResult
 {
     /* Public properties. */
     public static OutputCountResult Default => new();
 
     public bool HideDefaultOutput { get; set; }
-    public int ParameterOutputs { get; set; }
+    public List<OutputPortInfo> Arguments { get; } = new();
 
-    /* Public methods. */
-    public override string ToString() => (HideDefaultOutput ? "" : "D") + ParameterOutputs;
+    /* Constructors. */
+    public OutputCountResult() { }
 
-    public int CountOutputs() => HideDefaultOutput ? ParameterOutputs : ParameterOutputs + 1;
-
-    public bool IsParameterPort(int portIndex) => !HideDefaultOutput && portIndex == 0 && portIndex < CountOutputs();
-
-    public static OutputCountResult Combine(OutputCountResult a, OutputCountResult b)
+    public OutputCountResult(NodeCodec node, FileCodec file)
     {
-        OutputCountResult result = new();
-        if (a.HideDefaultOutput || b.HideDefaultOutput)
-            result.HideDefaultOutput = true;
-        result.ParameterOutputs = a.ParameterOutputs + b.ParameterOutputs;
-        return result;
+        // Find the ndef.
+        string nodeType = node.GetAttribute(Codec.Type);
+        NdefCodec ndef = file.FindNdef(nodeType);
+
+        // Search for outputs.
+        Search(file, ndef, node);
     }
 
-    public static OutputCountResult Create(NdefCodec ndef, NodeCodec node)
+    /* Public methods. */
+    public override string ToString()
     {
-        OutputCountResult result = new();
-        List<InspectorDefinitionCodec> definitions = ndef.GetChildren<InspectorDefinitionCodec>();
-        List<InspectorCodec> inspectors = node.GetChildren<InspectorCodec>();
-        for (int i = 0; i < definitions.Count && i < inspectors.Count; i++)
+        StringBuilder sb = new();
+        if (!HideDefaultOutput)
+            sb.Append("Default");
+        foreach (OutputPortInfo arg in Arguments)
         {
-            Combine(result, Create(definitions[i], inspectors[i]));
+            if (sb.Length > 0)
+                sb.Append("\n");
+            sb.Append(arg.ToString());
         }
-        return result;
+        return sb.ToString();
+    }
+
+    public int CountOutputs()
+    {
+        if (Arguments.Count == 0)
+            return 1;
+        else
+        {
+            if (HideDefaultOutput)
+                return Arguments.Count;
+            else
+                return Arguments.Count + 1;
+        }
+    }
+
+    public bool IsParameterPort(int index)
+    {
+        if (index < 0 || index >= CountOutputs())
+            throw new ArgumentOutOfRangeException(nameof(index));
+
+        return !HideDefaultOutput && index == 0;
     }
 
     /* Private methods. */
-    private static OutputCountResult Create(InspectorDefinitionCodec definition, InspectorCodec inspector)
+    private void Search(FileCodec file, Codec definition, Codec instance)
     {
-        if (definition is FdefCodec fdef && inspector is FormCodec form)
-            return Create(fdef, form);
-        if (definition is OdefCodec odef && inspector is OptionCodec option)
-            return Create(odef, option);
-        if (definition is CdefCodec cdef && inspector is ChoiceCodec choice)
-            return Create(cdef, choice);
-        if (definition is TdefCodec tdef && inspector is TupleCodec tuple)
-            return Create(tdef, tuple);
-        if (definition is LdefCodec ldef && inspector is ListCodec list)
-            return Create(ldef, list);
-        throw new ArgumentException("Bad arguments.");
-    }
-
-    private static OutputCountResult Create(FdefCodec fdef, FormCodec form)
-    {
-        OutputCountResult result = new();
-        foreach (ArgCodec codec in form.GetChildren<ArgCodec>())
+        // If a form, search it.
+        if (definition is FdefCodec fdef && instance is FormCodec form)
         {
-            string type = codec.GetAttribute(Codec.Type);
-            OadefCodec oadef = fdef.FindOadef(type);
-            if (oadef != null)
+            //Search(file, fdef, form);
+            return;
+        }
+
+        // Search children.
+        else if (definition is CollectionDefinitionCodec collection && instance is InspectorCodec inspector)
+        {
+            for (int i = 0; i < inspector.Children.Count; i++)
             {
-                result.ParameterOutputs++;
-                if (oadef.GetAttribute(Codec.HideDefault) == "true")
-                    result.HideDefaultOutput = true;
+                //Codec child = inspector.Children[i];
+                //InspectorDefinitionCodec childDefinition = collection.FindInspector(child.GetAttribute(Codec.Type));
+                //Search(file, childDefinition, child);
             }
         }
-        return result;
     }
 
-    private static OutputCountResult Create(OdefCodec odef, OptionCodec option)
+    private void Search(FileCodec file, FdefCodec fdef, FormCodec form)
     {
-        InspectorDefinitionCodec definition = odef.GetFirstChild<InspectorDefinitionCodec>();
-        InspectorCodec inspector = option.GetFirstChild<InspectorCodec>();
-        return Create(definition, inspector);
-    }
+        // Find the idef.
+        IdefCodec idef = file.FindIdef(fdef.GetAttribute(Codec.Type));
 
-    private static OutputCountResult Create(CdefCodec cdef, ChoiceCodec choice)
-    {
-        string selected = choice.GetFirstChild<Codec>()?.GetAttribute(Codec.Type);
-
-        InspectorDefinitionCodec definition = null;
-        foreach (var codec in cdef.GetChildren<InspectorDefinitionCodec>())
+        // Parallel-search arguments.
+        int count = Math.Min(fdef.Children.Count, form.Children.Count);
+        for (int i = 0; i < count; i++)
         {
-            if (codec.GetAttribute(Codec.ID) == selected)
+            if (fdef.Children[i] is OadefCodec oadef && form.Children[i] is OutCodec output)
             {
-                definition = codec;
-                break;
+                PdefCodec parameter = idef.FindPdef(oadef.GetAttribute(Codec.Type));
+
+                Arguments.Add(new OutputPortInfo(parameter, oadef, output));
+
+                if (oadef.GetAttribute(Codec.HideDefault).ToLower() == "true")
+                    HideDefaultOutput = true;
             }
         }
-
-        InspectorCodec inspector = choice.GetFirstChild<InspectorCodec>();
-
-        return Create(definition, inspector);
-    }
-
-    private static OutputCountResult Create(TdefCodec tdef, TupleCodec tuple)
-    {
-        OutputCountResult result = new();
-
-        var definitions = tdef.GetChildren<InspectorDefinitionCodec>();
-        var inspectors = tuple.GetChildren<InspectorCodec>();
-        for (int i = 0; i < definitions.Count && i < inspectors.Count; i++)
-        {
-            Combine(result, Create(definitions[i], inspectors[i]));
-        }
-
-        return result;
-    }
-
-    private static OutputCountResult Create(LdefCodec ldef, ListCodec list)
-    {
-        OutputCountResult result = new();
-
-        var definition = ldef.GetFirstChild<InspectorDefinitionCodec>();
-        var inspectors = list.GetChildren<InspectorCodec>();
-        for (int i = 0; i < inspectors.Count; i++)
-        {
-            Combine(result, Create(definition, inspectors[i]));
-        }
-
-        return result;
     }
 }

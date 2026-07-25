@@ -19,4 +19,31 @@ public sealed class FileCodec : Codec
 
     /* Constructors. */
     public FileCodec(XmlNode xml) : base(xml) { }
+
+    /* Public methods. */
+    /// <summary>
+    /// Find an IdefCodec with some ID. Returns null if it doesn't exist.
+    /// </summary>
+    public IdefCodec FindIdef(string id)
+    {
+        foreach (Codec child in Children)
+        {
+            if (child is IdefCodec idef && idef.GetAttribute(ID) == id)
+                return idef;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Find an NdefCodec with some ID. Returns null if it doesn't exist.
+    /// </summary>
+    public NdefCodec FindNdef(string id)
+    {
+        foreach (Codec child in Children)
+        {
+            if (child is NdefCodec ndef && ndef.GetAttribute(ID) == id)
+                return ndef;
+        }
+        return null;
+    }
 }

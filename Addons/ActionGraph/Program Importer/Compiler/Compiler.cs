@@ -24,14 +24,9 @@ public static class Compiler
             string id = element.GetAttribute(Codec.ID);
             if (element is NodeCodec node)
             {
-                // Find ndef.
-                string type = node.GetAttribute(Codec.Type);
-                NdefCodec ndef = ExtractWithID<NdefCodec>(file, type);
-                if (ndef == null)
-                    throw new KeyNotFoundException($"Could not find node definition '{type}'.");
-
                 // Count outputs.
-                OutputCountResult outputs = OutputCountResult.Create(ndef, node);
+                OutputCountResult outputs = new(node, file);
+                Godot.GD.Print(outputs);
 
                 // Create unit.
                 Unit unit = new(outputs, node);

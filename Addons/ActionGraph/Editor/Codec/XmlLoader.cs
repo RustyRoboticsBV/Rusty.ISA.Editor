@@ -28,7 +28,9 @@ public sealed partial class XmlLoader : Node
         text = InsertComment(text, "Metadata", [MetaCodec.TAG]);
         text = InsertComment(text, "Schema", [IdefCodec.TAG, NdefCodec.TAG]);
         text = InsertComment(text, "Graph", [NodeCodec.TAG, JointCodec.TAG, FrameCodec.TAG, MemoCodec.TAG, EdgeCodec.TAG]);
-        return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- Generator: ActionGraph Editor -->\n" + text;
+        return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+            + "<!-- Generator: ActionGraph Editor -->\n"
+            + text;
     }
 
     /// <summary>
