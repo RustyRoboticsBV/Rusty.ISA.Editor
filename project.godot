@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="ISA Editor"
+config/name="ActionGraph"
 run/main_scene="uid://b42qbkyncrp8c"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
@@ -21,7 +21,7 @@ window/size/mode=2
 
 [dotnet]
 
-project/assembly_name="ISA.Editor"
+project/assembly_name="ActionGraph"
 
 [editor_plugins]
 

@@ -58,7 +58,7 @@ public static class Compiler
         }
 
         // Insert ends.
-        int endIndex = 0;
+        List<Unit> endBuffer = new();
         foreach (var unit in units)
         {
             for (int i = 0; i < unit.Value.To.Length; i++)
@@ -67,8 +67,7 @@ public static class Compiler
                 {
                     Unit endUnit = new();
                     unit.Value.ConnectTo(i, endUnit);
-                    units.Add("_end" + endIndex, endUnit);
-                    endIndex++;
+                    endBuffer.Add(endUnit);
                 }
             }
         }

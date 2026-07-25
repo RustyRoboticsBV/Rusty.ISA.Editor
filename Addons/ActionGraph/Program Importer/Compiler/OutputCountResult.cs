@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Godot;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -27,7 +28,7 @@ internal class OutputPortInfo
     {
         return Parameter.GetAttribute(Codec.ID)
             + " / " + Definition.GetAttribute(Codec.ID)
-            + ": " + Instance.GetAttribute(Codec.Value);
+            + ": \"" + Instance.GetAttribute(Codec.Value) + '"';
     }
 }
 
@@ -97,7 +98,7 @@ internal class OutputCountResult
         // If a form, search it.
         if (definition is FdefCodec fdef && instance is FormCodec form)
         {
-            //Search(file, fdef, form);
+            Search(file, fdef, form);
             return;
         }
 
@@ -106,11 +107,30 @@ internal class OutputCountResult
         {
             for (int i = 0; i < inspector.Children.Count; i++)
             {
-                //Codec child = inspector.Children[i];
-                //InspectorDefinitionCodec childDefinition = collection.FindInspector(child.GetAttribute(Codec.Type));
-                //Search(file, childDefinition, child);
+                Codec child = inspector.Children[i];
+                string type = child.GetAttribute(Codec.Type);
+                InspectorDefinitionCodec childDefinition = collection.FindInspector(child.GetAttribute(Codec.Type));
+                if (childDefinition == null)
+                    throw new NullReferenceException($"Cannot find definition '{type}' in '{collection.GetTag()}'.");
+                Search(file, childDefinition, child);
             }
         }
+
+        else if (definition is NdefCodec ndef && instance is NodeCodec node)
+        {
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                Codec child = node.Children[i];
+                string type = child.GetAttribute(Codec.Type);
+                InspectorDefinitionCodec childDefinition = ndef.FindInspector(type);
+                if (childDefinition == null)
+                    throw new NullReferenceException($"Cannot find definition '{type}' in '{ndef.GetTag()}'.");
+                Search(file, childDefinition, child);
+            }
+        }
+
+        else
+            throw new Exception("Failure: cannot find outputs of codec " + instance + " / " + definition);
     }
 
     private void Search(FileCodec file, FdefCodec fdef, FormCodec form)
