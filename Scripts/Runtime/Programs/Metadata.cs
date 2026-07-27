@@ -1,7 +1,7 @@
 ﻿using Godot;
 using Godot.Collections;
 
-namespace Rusty.ActionGraph.Runtime;
+namespace Rusty.ActionGraph;
 
 /// <summary>
 /// A program metadata container.

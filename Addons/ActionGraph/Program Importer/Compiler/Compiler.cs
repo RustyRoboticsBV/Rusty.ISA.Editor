@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using Rusty.ActionGraph.Runtime;
 using Rusty.ActionGraph.Serialization;
 
 namespace Rusty.ActionGraph.Compilation;
@@ -11,10 +9,6 @@ public static class Compiler
     /* Public methods. */
     public static InstructionProgram Compile(FileCodec file)
     {
-        // Compile metadata & instruction set.
-        Metadata metadata = CompileMetadata(file);
-        InstructionSet iset = CompileInstructionSet(file);
-
         // Create units for nodes & joints.
         Dictionary<string, Unit> units = new();
         foreach (Codec element in file.Children)
@@ -71,7 +65,7 @@ public static class Compiler
         HashSet<Unit> gotoTargets = new();
         foreach (Unit unit in starts)
         {
-            DetermineExecutionOrder(unit, visited, executionOrder, gotoTargets);
+            Linearize(unit, visited, executionOrder, gotoTargets);
         }
 
         // Generate a label for each goto target.
@@ -115,75 +109,19 @@ public static class Compiler
             instructions.AddRange(unitInstructions);
         }
 
+        // Compile metadata & instruction set.
+        Metadata metadata = CompileMetadata(file);
+        InstructionSet iset = CompileInstructionSet(file);
+
         // Create program.
         return new(metadata, iset, instructions.ToArray());
     }
 
     /* Private methods. */
     /// <summary>
-    /// Compile metadata.
-    /// </summary>
-    private static Metadata CompileMetadata(FileCodec file)
-    {
-        Metadata metadata = new();
-        if (file == null)
-            return metadata;
-
-        foreach (Codec child in file.Children)
-        {
-            if (child is MetaCodec data)
-                metadata.AddValue(data.GetAttribute(Codec.ID), data.InnerText);
-        }
-        return metadata;
-    }
-
-    /// <summary>
-    /// Compile an instruction set.
-    /// </summary>
-    private static InstructionSet CompileInstructionSet(FileCodec file)
-    {
-        if (file == null)
-            return new();
-
-        // Read instructions.
-        var idefs = file.GetChildren<IdefCodec>();
-        InstructionDefinition[] definitions = new InstructionDefinition[idefs.Count];
-        for (int i = 0; i < idefs.Count; i++)
-        {
-            definitions[i] = CompileIdef(idefs[i]);
-        }
-
-        // Create instruction set.
-        return new(definitions);
-    }
-
-    /// <summary>
-    /// Compile an instruction definition.
-    /// </summary>
-    private static InstructionDefinition CompileIdef(IdefCodec idef)
-    {
-        // Read opcode.
-        string opcode = idef.GetAttribute(Codec.ID);
-
-        // Read parameters.
-        var pdefs = idef.GetChildren<PdefCodec>();
-        string[] parameters = new string[pdefs.Count];
-        for (int i = 0; i < pdefs.Count; i++)
-        {
-            parameters[i] = pdefs[i].GetAttribute(Codec.ID);
-        }
-
-        // Read execution handler.
-        string executionHandler = idef.GetAttribute(Codec.Exec);
-
-        // Create definition.
-        return new(opcode, parameters, executionHandler);
-    }
-
-    /// <summary>
     /// Recursively mark all units reachable from one unit as reachable. 
     /// </summary>
-    static void MarkVisited(Unit current, HashSet<Unit> marked)
+    private static void MarkVisited(Unit current, HashSet<Unit> marked)
     {
         if (current == null)
             return;
@@ -203,9 +141,9 @@ public static class Compiler
     }
 
     /// <summary>
-    /// Recursively determine the execution order, insert gotos & ends, and find label targets.
+    /// Recursively linearize a subgraph: determine the execution order, insert gotos & ends, and find label targets.
     /// </summary>
-    static void DetermineExecutionOrder(Unit unit, HashSet<Unit> visited, List<Unit> executionOrder, HashSet<Unit> labelTargets)
+    private static void Linearize(Unit unit, HashSet<Unit> visited, List<Unit> executionOrder, HashSet<Unit> labelTargets)
     {
         // Register unit as visited.
         if (!visited.Add(unit))
@@ -239,7 +177,7 @@ public static class Compiler
                 }
 
                 // Continue with output unit.
-                DetermineExecutionOrder(joint.To, visited, executionOrder, labelTargets);
+                Linearize(joint.To, visited, executionOrder, labelTargets);
                 break;
 
             case NodeUnit node:
@@ -263,7 +201,7 @@ public static class Compiler
                     }
 
                     // Continue with output unit.
-                    DetermineExecutionOrder(node.To[i], visited, executionOrder, labelTargets);
+                    Linearize(node.To[i], visited, executionOrder, labelTargets);
 
                     // Register as label target if parameter output.
                     if (i > 0 || (i == 0 && node.OutputData.HideDefaultOutput))
@@ -378,5 +316,65 @@ public static class Compiler
 
         else
             throw new InvalidOperationException($"Invalid coded pair: '{current?.GetType()?.Name ?? "null"}' and '{currentDefinition?.GetType()?.Name ?? "null"}'.");
+    }
+
+    /// <summary>
+    /// Compile metadata.
+    /// </summary>
+    private static Metadata CompileMetadata(FileCodec file)
+    {
+        Metadata metadata = new();
+        if (file == null)
+            return metadata;
+
+        foreach (Codec child in file.Children)
+        {
+            if (child is MetaCodec data)
+                metadata.AddValue(data.GetAttribute(Codec.ID), data.InnerText);
+        }
+        return metadata;
+    }
+
+    /// <summary>
+    /// Compile an instruction set.
+    /// </summary>
+    private static InstructionSet CompileInstructionSet(FileCodec file)
+    {
+        if (file == null)
+            return new();
+
+        // Read instructions.
+        var idefs = file.GetChildren<IdefCodec>();
+        InstructionDefinition[] definitions = new InstructionDefinition[idefs.Count];
+        for (int i = 0; i < idefs.Count; i++)
+        {
+            definitions[i] = CompileIdef(idefs[i]);
+        }
+
+        // Create instruction set.
+        return new(definitions);
+    }
+
+    /// <summary>
+    /// Compile an instruction definition.
+    /// </summary>
+    private static InstructionDefinition CompileIdef(IdefCodec idef)
+    {
+        // Read opcode.
+        string opcode = idef.GetAttribute(Codec.ID);
+
+        // Read parameters.
+        var pdefs = idef.GetChildren<PdefCodec>();
+        string[] parameters = new string[pdefs.Count];
+        for (int i = 0; i < pdefs.Count; i++)
+        {
+            parameters[i] = pdefs[i].GetAttribute(Codec.ID);
+        }
+
+        // Read execution handler.
+        string executionHandler = idef.GetAttribute(Codec.Exec);
+
+        // Create definition.
+        return new(opcode, parameters, executionHandler);
     }
 }

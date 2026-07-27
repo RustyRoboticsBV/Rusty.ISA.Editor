@@ -1,4 +1,4 @@
-﻿namespace Rusty.ActionGraph.Runtime;
+﻿namespace Rusty.ActionGraph;
 
 /// <summary>
 /// The action that the process must make after finishing execution of an instruction.

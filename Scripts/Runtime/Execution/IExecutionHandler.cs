@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rusty.ActionGraph.Runtime;
+namespace Rusty.ActionGraph;
 
 /// <summary>
 /// An intercace for instruction execution handlers.

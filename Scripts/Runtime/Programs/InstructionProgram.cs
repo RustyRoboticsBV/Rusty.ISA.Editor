@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Rusty.ActionGraph.Runtime;
+namespace Rusty.ActionGraph;
 
 /// <summary>
 /// An program that can be executed by a InstructionProcess.

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Rusty.ActionGraph.Runtime;
+namespace Rusty.ActionGraph;
 
 /// <summary>
 /// A process that can execute an InstructionProgram.
