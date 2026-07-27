@@ -41,6 +41,8 @@ public static class Compiler
         }
 
         // Find start units.
+        // TODO: while this guarantees all units are visited, it does not guarantee the minimum set.
+        // TODO: replace with SCC-based algorithm.
         HashSet<Unit> starts = new();
         HashSet<Unit> visited = new();
         foreach (var unit in units)
@@ -330,7 +332,7 @@ public static class Compiler
         foreach (Codec child in file.Children)
         {
             if (child is MetaCodec data)
-                metadata.AddValue(data.GetAttribute(Codec.ID), data.InnerText);
+                metadata.AddValue(data.GetAttribute(Codec.ID), data.GetAttribute(Codec.Value));
         }
         return metadata;
     }
@@ -344,15 +346,15 @@ public static class Compiler
             return new();
 
         // Read instructions.
-        var idefs = file.GetChildren<IdefCodec>();
-        InstructionDefinition[] definitions = new InstructionDefinition[idefs.Count];
-        for (int i = 0; i < idefs.Count; i++)
+        List<InstructionDefinition> definitions = new();
+        foreach (Codec child in file.Children)
         {
-            definitions[i] = CompileIdef(idefs[i]);
+            if (child is IdefCodec idef)
+                definitions.Add(CompileIdef(idef));
         }
 
         // Create instruction set.
-        return new(definitions);
+        return new(definitions.ToArray());
     }
 
     /// <summary>
@@ -363,18 +365,18 @@ public static class Compiler
         // Read opcode.
         string opcode = idef.GetAttribute(Codec.ID);
 
+        // Read execution handler.
+        string exec = idef.GetAttribute(Codec.Exec);
+
         // Read parameters.
-        var pdefs = idef.GetChildren<PdefCodec>();
-        string[] parameters = new string[pdefs.Count];
-        for (int i = 0; i < pdefs.Count; i++)
+        List<string> parameters = new();
+        foreach (Codec child in idef.Children)
         {
-            parameters[i] = pdefs[i].GetAttribute(Codec.ID);
+            if (child is PdefCodec pdef)
+                parameters.Add(pdef.GetAttribute(Codec.ID));
         }
 
-        // Read execution handler.
-        string executionHandler = idef.GetAttribute(Codec.Exec);
-
         // Create definition.
-        return new(opcode, parameters, executionHandler);
+        return new(opcode, parameters.ToArray(), exec);
     }
 }

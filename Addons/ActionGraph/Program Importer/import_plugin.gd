@@ -46,6 +46,6 @@ func _import(source_file, save_path, _options, _r_platform_variants, _r_gen_file
 		return FileAccess.get_open_error();
 	
 	var text := file.get_as_text();
-	var resource : InstructionProgram = XmlLoader.LoadAsProgram(text);
+	var resource : Resource = InstructionProgramImporter.Import(text);
 	var error = ResourceSaver.save(resource, "%s.res" % save_path);
 	return error;
