@@ -11,33 +11,19 @@ public static class Compiler
     /* Public methods. */
     public static InstructionProgram Compile(FileCodec file)
     {
-        Godot.GD.Print(file);
         // Compile metadata & instruction set.
         Metadata metadata = CompileMetadata(file);
-        InstructionSet iset = CompileInsructionSet(file);
+        InstructionSet iset = CompileInstructionSet(file);
 
         // Create units for nodes & joints.
         Dictionary<string, Unit> units = new();
-        Dictionary<string, Codec> elements = GetElements(file);
         foreach (Codec element in file.Children)
         {
             string id = element.GetAttribute(Codec.ID);
             if (element is NodeCodec node)
-            {
-                // Count outputs.
-                OutputCountResult outputs = new(node, file);
-                Godot.GD.Print(outputs);
-
-                // Create unit.
-                Unit unit = new(outputs, node);
-                units.Add(id, unit);
-            }
+                units.Add(id, new NodeUnit(file, node));
             else if (element is JointCodec joint)
-            {
-                Unit unit = new(OutputCountResult.Default, joint);
-                unit.Codec = joint;
-                units.Add(id, unit);
-            }
+                units.Add(id, new JointUnit(joint));
         }
 
         // Connect units according to graph edges.
@@ -53,22 +39,10 @@ public static class Compiler
                 int portIndex = int.Parse(port);
                 Unit toUnit = units[to];
 
-                fromUnit.ConnectTo(portIndex, toUnit);
-            }
-        }
-
-        // Insert ends.
-        List<Unit> endBuffer = new();
-        foreach (var unit in units)
-        {
-            for (int i = 0; i < unit.Value.To.Length; i++)
-            {
-                if (unit.Value.To[i] == null)
-                {
-                    Unit endUnit = new();
-                    unit.Value.ConnectTo(i, endUnit);
-                    endBuffer.Add(endUnit);
-                }
+                if (fromUnit is NodeUnit node)
+                    node.ConnectTo(portIndex, toUnit);
+                else if (fromUnit is JointUnit joint)
+                    joint.ConnectTo(toUnit);
             }
         }
 
@@ -91,34 +65,54 @@ public static class Compiler
             MarkVisited(unit.Value, visited);
         }
 
-        // Compile to instructions.
-        int nextLabel = 0;
+        // Determine execution order, insert gotos and insert ends.
         visited.Clear();
-        foreach (Unit startUnit in starts)
+        List<Unit> executionOrder = new();
+        HashSet<Unit> gotoTargets = new();
+        foreach (Unit unit in starts)
         {
-            CompileUnitInstructions(startUnit, file, visited, ref nextLabel);
+            DetermineExecutionOrder(unit, visited, executionOrder, gotoTargets);
         }
 
-        // Combine instructions.
-        List<Instruction> instructions = new();
-        foreach (var unitPair in units)
+        // Generate a label for each goto target.
+        Dictionary<Unit, string> labels = [];
+        int nextLabel = 0;
+
+        foreach (Unit target in gotoTargets)
         {
-            Unit unit = unitPair.Value;
-            Godot.GD.Print(unitPair.Key + " " + unit);
+            labels[target] = "L_" + nextLabel.ToString();
+            nextLabel++;
+        }
 
-            // Apply label to first instruction in unit.
-            if (unit.Label != null && unit.Compiled.Count > 0)
-                unit.Compiled[0].Label = unit.Label;
-
-            // Apply start to first instruction in unit.
-            if (unit.Start != null && unit.Compiled.Count > 0)
-                unit.Compiled[0].Start = unit.Start;
-
-            // Add instructions to list.
-            foreach (Instruction instruction in unit.Compiled)
+        // Compile to instructions.
+        List<Instruction> instructions = new();
+        List<Instruction> unitInstructions = new();
+        foreach (Unit unit in executionOrder)
+        {
+            // Compile this unit's instructions.
+            unitInstructions.Clear();
+            switch (unit)
             {
-                instructions.Add(instruction);
+                case EndUnit:
+                    unitInstructions.Add(new EndInstruction());
+                    break;
+                case GotoUnit gto:
+                    unitInstructions.Add(new GotoInstruction(labels[gto.To]));
+                    break;
+                case JointUnit:
+                    unitInstructions.Add(new DummyInstruction());
+                    break;
+                case NodeUnit node:
+                    CompileNode(node, file, unitInstructions, labels);
+                    break;
             }
+
+            // Add label if necessary.
+            if (labels.ContainsKey(unit) && unitInstructions.Count > 0)
+                unitInstructions[0].Label = labels[unit];
+
+            // Add unit's instructions to compiled program.
+            instructions.AddRange(unitInstructions);
         }
 
         // Create program.
@@ -126,25 +120,6 @@ public static class Compiler
     }
 
     /* Private methods. */
-    /// <summary>
-    /// Collect all nodes and joints from the graph.
-    /// </summary>
-    private static Dictionary<string, Codec> GetElements(FileCodec file)
-    {
-        Dictionary<string, Codec> elements = new();
-        foreach (var element in file.Children)
-        {
-            if (element is NodeCodec || element is JointCodec)
-            {
-                string id = element.GetAttribute(Codec.ID);
-                if (elements.ContainsKey(id))
-                    throw new DuplicateNameException($"Duplicate element ID '{id}'.");
-                elements.Add(id, element);
-            }
-        }
-        return elements;
-    }
-
     /// <summary>
     /// Compile metadata.
     /// </summary>
@@ -165,7 +140,7 @@ public static class Compiler
     /// <summary>
     /// Compile an instruction set.
     /// </summary>
-    private static InstructionSet CompileInsructionSet(FileCodec file)
+    private static InstructionSet CompileInstructionSet(FileCodec file)
     {
         if (file == null)
             return new();
@@ -206,154 +181,6 @@ public static class Compiler
     }
 
     /// <summary>
-    /// Compile a unit's instructions.
-    /// </summary>
-    private static void CompileUnitInstructions(Unit unit, FileCodec file, HashSet<Unit> visited, ref int nextLabel)
-    {
-        // Mark unit as visited.
-        visited.Add(unit);
-
-        // Compile contents.
-        if (unit.Codec == null)
-            unit.Compiled.Add(new EndInstruction());
-        else if (unit.Codec is JointCodec)
-            unit.Compiled.Add(new DummyInstruction());
-        else if (unit.Codec is NodeCodec node)
-        {
-            NdefCodec ndef = ExtractWithID<NdefCodec>(file, unit.Codec.GetAttribute(Codec.Type));
-
-            // Compile contents.
-            int handledOutputArgs = 0;
-            foreach (Codec child in unit.Codec.Children)
-            {
-                if (child is FormCodec or OptionCodec or ChoiceCodec or TupleCodec or ListCodec)
-                    CompileInspectorInstructions(unit, ndef, node, child, ref handledOutputArgs, ref nextLabel);
-            }
-
-            unit.Start = node.GetAttribute(Codec.Start);
-        }
-
-        // Handle outputs.
-        for (int i = 0; i < unit.To.Length; i++)
-        {
-            Unit output = unit.To[i];
-
-            // If the unit was already compiled, generate goto instruction.
-            if (visited.Contains(output))
-            {
-                if (!unit.OutputData.IsParameterPort(i))
-                {
-                    // Generate label if necessary.
-                    if (output.Label == null)
-                    {
-                        output.Label = nextLabel.ToString();
-                        nextLabel++;
-                    }
-
-                    // Generate goto.
-                    unit.Compiled.Add(new GotoInstruction(output.Label));
-                }
-            }
-
-            // Else, compile output unit.
-            else
-                CompileUnitInstructions(output, file, visited, ref nextLabel);
-        }
-    }
-
-    /// <summary>
-    /// Compile an inspector's instructions.
-    /// </summary>
-    private static void CompileInspectorInstructions(Unit unit, Codec parentDefinition, Codec parent, Codec current, ref int handledOutputArgs, ref int nextLabel)
-    {
-        // Find child definition.
-        string currentType = current.GetAttribute(Codec.Type);
-        Codec currentDefinition = ExtractWithID<Codec>(parentDefinition, currentType);
-
-        // Compile form.
-        if (current is FormCodec form && currentDefinition is FdefCodec fdef)
-        {
-            string opcode = fdef.GetAttribute(Codec.Type);
-            List<string> arguments = new();
-            foreach (Codec child in current.Children)
-            {
-                if (child is VadefCodec varg)
-                {
-                    string value = varg.GetAttribute(Codec.Value);
-                    arguments.Add(value);
-                }
-                else if (child is OadefCodec oarg)
-                {
-                    int outputPort = unit.OutputData.HideDefaultOutput ? handledOutputArgs : handledOutputArgs + 1;
-                    Unit to = unit.To[outputPort];
-
-                    if (to.Label == null)
-                    {
-                        to.Label = nextLabel.ToString();
-                        nextLabel++;
-                    }
-
-                    arguments.Add(to.Label);
-                }
-            }
-            unit.Compiled.Add(new GenericInstruction(opcode, arguments.ToArray()));
-        }
-
-        // Compile option.
-        else if (current is OptionCodec option)
-        {
-            Codec child = option.GetFirstChild<Codec>();
-            if (child != null)
-            {
-                string childType = child.GetAttribute(Codec.Type);
-                CompileInspectorInstructions(unit, currentDefinition, current, child, ref handledOutputArgs, ref nextLabel);
-            }
-        }
-
-        // Compile choice.
-        else if (current is ChoiceCodec choice)
-        {
-            Codec child = choice.GetFirstChild<Codec>();
-            string childType = child.GetAttribute(Codec.Type);
-            CompileInspectorInstructions(unit, currentDefinition, current, child, ref handledOutputArgs, ref nextLabel);
-        }
-
-        // Compile tuple.
-        else if (current is TupleCodec tuple)
-        {
-            foreach (Codec child in tuple.Children)
-            {
-                string childType = child.GetAttribute(Codec.Type);
-                CompileInspectorInstructions(unit, currentDefinition, current, child, ref handledOutputArgs, ref nextLabel);
-            }
-        }
-
-        // Compile list.
-        else if (current is ListCodec list)
-        {
-            foreach (Codec child in list.Children)
-            {
-                string childType = child.GetAttribute(Codec.Type);
-                CompileInspectorInstructions(unit, currentDefinition, current, child, ref handledOutputArgs, ref nextLabel);
-            }
-        }
-
-        else
-            throw new InvalidOperationException($"Invalid coded pair: '{current?.GetType()?.Name ?? "null"}' and '{currentDefinition?.GetType()?.Name ?? "null"}'.");
-    }
-
-    private static T ExtractWithID<T>(Codec codec, string id)
-        where T : Codec
-    {
-        foreach (Codec child in codec.Children)
-        {
-            if (child is T typed && child.GetAttribute(Codec.ID) == id)
-                return typed;
-        }
-        return null;
-    }
-
-    /// <summary>
     /// Recursively mark all units reachable from one unit as reachable. 
     /// </summary>
     static void MarkVisited(Unit current, HashSet<Unit> marked)
@@ -364,9 +191,192 @@ public static class Compiler
             return;
 
         marked.Add(current);
-        foreach (Unit output in current.To)
+        if (current is NodeUnit node)
         {
-            MarkVisited(output, marked);
+            foreach (Unit output in node.To)
+            {
+                MarkVisited(output, marked);
+            }
         }
+        else if (current is JointUnit joint)
+            MarkVisited(joint.To, marked);
+    }
+
+    /// <summary>
+    /// Recursively determine the execution order, insert gotos & ends, and find label targets.
+    /// </summary>
+    static void DetermineExecutionOrder(Unit unit, HashSet<Unit> visited, List<Unit> executionOrder, HashSet<Unit> labelTargets)
+    {
+        // Register unit as visited.
+        if (!visited.Add(unit))
+            return;
+
+        // Add unit to execution order.
+        executionOrder.Add(unit);
+
+        switch (unit)
+        {
+            case EndUnit:
+            case GotoUnit:
+                break;
+
+            case JointUnit joint:
+
+                // Insert end if necessary.
+                if (joint.To == null)
+                    joint.ConnectTo(new EndUnit());
+
+                // Insert goto if necessary.
+                else if (visited.Contains(joint.To))
+                {
+                    // Register as label target.
+                    labelTargets.Add(joint.To);
+
+                    // Insert goto.
+                    GotoUnit gto = new();
+                    gto.ConnectTo(joint.To);
+                    joint.ConnectTo(gto);
+                }
+
+                // Continue with output unit.
+                DetermineExecutionOrder(joint.To, visited, executionOrder, labelTargets);
+                break;
+
+            case NodeUnit node:
+
+                for (int i = 0; i < node.To.Length; i++)
+                {
+                    // Insert end if necessary.
+                    if (node.To[i] == null)
+                        node.ConnectTo(i, new EndUnit());
+
+                    // Insert goto if necessary.
+                    else if (visited.Contains(node.To[i]))
+                    {
+                        // Register as label target.
+                        labelTargets.Add(node.To[i]);
+
+                        // Insert goto.
+                        GotoUnit gto = new();
+                        gto.ConnectTo(node.To[i]);
+                        node.ConnectTo(i, gto);
+                    }
+
+                    // Continue with output unit.
+                    DetermineExecutionOrder(node.To[i], visited, executionOrder, labelTargets);
+
+                    // Register as label target if parameter output.
+                    if (i > 0 || (i == 0 && node.OutputData.HideDefaultOutput))
+                        labelTargets.Add(node.To[i]);
+                }
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Compile a unit's instructions.
+    /// </summary>
+    private static void CompileNode(NodeUnit unit, FileCodec file, List<Instruction> instructions, Dictionary<Unit, string> labels)
+    {
+        // Find node definition.
+        NodeCodec node = unit.Codec;
+        NdefCodec ndef = file.FindNdef(node.GetAttribute(Codec.Type));
+
+        // Compile contents.
+        int handledOutputArgs = 0;
+        foreach (Codec child in unit.Codec.Children)
+        {
+            if (child is InspectorCodec inspector)
+                CompileInspector(unit, ndef, node, inspector, instructions, labels, ref handledOutputArgs);
+        }
+
+        // Check for entry point.
+        if (instructions.Count > 0)
+            instructions[0].Start = unit.Codec.GetAttribute(Codec.Start);
+    }
+
+    /// <summary>
+    /// Compile an inspector's instructions.
+    /// </summary>
+    private static void CompileInspector(NodeUnit node, Codec parentDefinition, Codec parent, InspectorCodec current, List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
+    {
+        // Find child definition.
+        string currentType = current.GetAttribute(Codec.Type);
+        Codec currentDefinition = parentDefinition.FindChildWithAttribute(Codec.ID, currentType);
+
+        // Compile form.
+        if (current is FormCodec form && currentDefinition is FdefCodec fdef)
+        {
+            string opcode = fdef.GetAttribute(Codec.Type);
+            List<string> arguments = new();
+            foreach (Codec child in form.Children)
+            {
+                if (child is ArgCodec varg)
+                {
+                    string value = varg.GetAttribute(Codec.Value);
+                    arguments.Add(value);
+                }
+                else if (child is OutCodec oarg)
+                {
+                    // Find parameter target unit.
+                    int outputPort = node.OutputData.HideDefaultOutput ? handledOutputArgs : handledOutputArgs + 1;
+                    Unit to = node.To[outputPort];
+                    handledOutputArgs++;
+
+                    // Set argument value.
+                    string value = labels[to];
+                    arguments.Add(value);
+                }
+            }
+            instructions.Add(new GenericInstruction(opcode, arguments.ToArray()));
+        }
+
+        // Compile option.
+        else if (current is OptionCodec option && currentDefinition is OdefCodec odef)
+        {
+            InspectorCodec child = option.GetFirstChild<InspectorCodec>();
+            if (child != null)
+            {
+                string childType = child.GetAttribute(Codec.Type);
+                CompileInspector(node, currentDefinition, current, child, instructions, labels, ref handledOutputArgs);
+            }
+        }
+
+        // Compile choice.
+        else if (current is ChoiceCodec choice && currentDefinition is CdefCodec cdef)
+        {
+            InspectorCodec child = choice.GetFirstChild<InspectorCodec>();
+            string childType = child.GetAttribute(Codec.Type);
+            CompileInspector(node, currentDefinition, current, child, instructions, labels, ref handledOutputArgs);
+        }
+
+        // Compile tuple.
+        else if (current is TupleCodec tuple && currentDefinition is TdefCodec tdef)
+        {
+            foreach (Codec element in tuple.Children)
+            {
+                if (element is InspectorCodec child)
+                {
+                    string childType = element.GetAttribute(Codec.Type);
+                    CompileInspector(node, currentDefinition, current, child, instructions, labels, ref handledOutputArgs);
+                }
+            }
+        }
+
+        // Compile list.
+        else if (current is ListCodec list && currentDefinition is LdefCodec ldef)
+        {
+            foreach (Codec element in list.Children)
+            {
+                if (element is InspectorCodec child)
+                {
+                    string childType = element.GetAttribute(Codec.Type);
+                    CompileInspector(node, currentDefinition, current, child, instructions, labels, ref handledOutputArgs);
+                }
+            }
+        }
+
+        else
+            throw new InvalidOperationException($"Invalid coded pair: '{current?.GetType()?.Name ?? "null"}' and '{currentDefinition?.GetType()?.Name ?? "null"}'.");
     }
 }

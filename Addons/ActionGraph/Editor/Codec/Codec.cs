@@ -122,7 +122,14 @@ public abstract class Codec
     public override string ToString()
     {
         StringBuilder sb = new();
-        AppendToString(sb, "", true, true);
+        AppendToString(sb, "", true, true, true);
+        return sb.ToString();
+    }
+
+    public string GetHeader()
+    {
+        StringBuilder sb = new();
+        AppendToString(sb, "", true, true, false);
         return sb.ToString();
     }
 
@@ -367,7 +374,7 @@ public abstract class Codec
     }
 
     /* Private methods. */
-    private void AppendToString(StringBuilder sb, string prefix, bool last, bool root)
+    private void AppendToString(StringBuilder sb, string prefix, bool last, bool root, bool recurse)
     {
         if (!root)
         {
@@ -405,14 +412,24 @@ public abstract class Codec
             sb.Append('"');
         }
 
-        sb.AppendLine();
+        if (recurse)
+        {
+            sb.AppendLine();
 
-        string childPrefix = root
-            ? ""
-            : prefix + (last ? "  " : "\u2502 ");
+            string childPrefix = root
+                ? ""
+                : prefix + (last ? "  " : "\u2502 ");
 
-        for (int i = 0; i < Children.Count; i++)
-            Children[i].AppendToString(sb, childPrefix, i == Children.Count - 1, false);
+            for (int i = 0; i < Children.Count; i++)
+            {
+                Children[i].AppendToString(sb, childPrefix, i == Children.Count - 1, false, recurse);
+            }
+        }
+        else
+        {
+            if (Children.Count > 0)
+                sb.Append("...");
+        }
     }
 
     private static void Register<T>(string tag)

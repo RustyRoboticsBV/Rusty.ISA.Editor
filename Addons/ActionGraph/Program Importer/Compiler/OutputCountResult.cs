@@ -1,5 +1,4 @@
-﻿using Godot;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -46,7 +45,7 @@ internal class OutputCountResult
     /* Constructors. */
     public OutputCountResult() { }
 
-    public OutputCountResult(NodeCodec node, FileCodec file)
+    public OutputCountResult(FileCodec file, Codec node)
     {
         // Find the ndef.
         string nodeType = node.GetAttribute(Codec.Type);
@@ -130,7 +129,7 @@ internal class OutputCountResult
         }
 
         else
-            throw new Exception("Failure: cannot find outputs of codec " + instance + " / " + definition);
+            throw new InvalidOperationException("Cannot find outputs of codec " + instance + " / " + definition);
     }
 
     private void Search(FileCodec file, FdefCodec fdef, FormCodec form)
