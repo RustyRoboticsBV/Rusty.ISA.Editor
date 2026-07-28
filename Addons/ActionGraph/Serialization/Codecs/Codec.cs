@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 
@@ -140,46 +139,6 @@ public abstract class Codec
     public bool AllowsChild(string type) => AllowedChildren.Contains(type);
     public bool AllowsAttribute(string name) => AllowedAttributes.Contains(name);
 
-    // TODO: move to serializer.
-    /// <summary>
-    /// Compute the checksum of this node and its child nodes.
-    /// </summary>
-    public void Hash(HashAlgorithm hash)
-    {
-        // Hash start tag.
-        Hash(hash, "<");
-        Hash(hash, Tag);
-
-        foreach (var attribute in Attributes)
-        {
-            if (attribute.Key == Checksum)
-                continue;
-
-            Hash(hash, " ");
-            Hash(hash, attribute.Key);
-            Hash(hash, "=\"");
-            Hash(hash, attribute.Value);
-            Hash(hash, "\"");
-        }
-
-        Hash(hash, ">");
-
-        // Hash contents.
-        if (Children.Count == 0)
-            Hash(hash, InnerText);
-        else
-        {
-            foreach (Codec child in Children)
-            {
-                child.Hash(hash);
-            }
-        }
-
-        // Hash end tag.
-        Hash(hash, "</");
-        Hash(hash, Tag);
-        Hash(hash, ">");
-    }
     /// <summary>
     /// Load from an XML node.
     /// </summary>
@@ -245,15 +204,6 @@ public abstract class Codec
     }
 
     /* Protected methods. */
-    /// <summary>
-    /// Compute the checksum of a string.
-    /// </summary>
-    protected static void Hash(HashAlgorithm hash, string str)
-    {
-        byte[] bytes = Encoding.UTF8.GetBytes(str);
-        hash.TransformBlock(bytes, 0, bytes.Length, null, 0);
-    }
-
     /// <summary>
     /// Instantiate a codec node from a type and XML node.
     /// </summary>
