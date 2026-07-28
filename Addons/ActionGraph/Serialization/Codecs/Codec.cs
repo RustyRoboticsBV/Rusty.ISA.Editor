@@ -16,6 +16,7 @@ public abstract class Codec
     public const string ID = "id";
     public const string Value = "value";
     public const string Exec = "exec";
+    public const string Localizable = "loc";
     public const string Type = "type";
     public const string X = "x";
     public const string Y = "y";

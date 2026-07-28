@@ -11,16 +11,16 @@
 	
 	<!-- Schema -->
 	<idef id="i1" exec="Handler1">
-		<pdef id="p1"/>
+		<pdef id="p1" loc="true"/>
 	</idef>
 	<idef id="i2" exec="Handler2">
-		<pdef id="p2"/>
-		<pdef id="p3"/>
+		<pdef id="p2" loc="false"/>
+		<pdef id="p3" loc="false"/>
 	</idef>
 	<idef id="i3" exec="Handler3">
-		<pdef id="p4"/>
-		<pdef id="p5"/>
-		<pdef id="p6"/>
+		<pdef id="p4" loc="false"/>
+		<pdef id="p5" loc="false"/>
+		<pdef id="p6" loc="false"/>
 	</idef>
 	<ndef id="n1">
 		<ldef id="l1">

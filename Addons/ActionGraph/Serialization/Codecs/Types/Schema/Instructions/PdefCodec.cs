@@ -10,7 +10,7 @@ public sealed class PdefCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID];
+    protected override HashSet<string> AllowedAttributes => [ID, Localizable];
     protected override HashSet<string> AllowedChildren => [];
 
     /* Constructors. */
