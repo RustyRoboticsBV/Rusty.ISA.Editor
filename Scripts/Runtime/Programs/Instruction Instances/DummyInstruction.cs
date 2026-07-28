@@ -10,4 +10,10 @@ public sealed partial class DummyInstruction : Instruction
 {
     /* Constructors. */
     public DummyInstruction() { }
+
+    /* Public methods. */
+    public override string ToString()
+    {
+        return base.ToString() + $"DUMMY()";
+    }
 }

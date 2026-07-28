@@ -10,4 +10,10 @@ public sealed partial class EndInstruction : Instruction
 {
     /* Constructors. */
     public EndInstruction() { }
+
+    /* Public methods. */
+    public override string ToString()
+    {
+        return base.ToString() + $"END()";
+    }
 }

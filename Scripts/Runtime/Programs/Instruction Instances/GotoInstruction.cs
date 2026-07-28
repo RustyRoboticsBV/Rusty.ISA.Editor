@@ -18,4 +18,10 @@ public sealed partial class GotoInstruction : Instruction
     {
         TargetLabel = targetLabel;
     }
+
+    /* Public methods. */
+    public override string ToString()
+    {
+        return base.ToString() + $"GOTO(\"{TargetLabel}\")";
+    }
 }

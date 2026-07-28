@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<file csum="deadbeef123456">
+
+    <!-- Metadata -->
+    <meta id="name" value="Kitchen Sink Demo"/>
+    <meta id="author" value="AGXP Example"/>
+    <lang id="en-US"/>
+    <lang id="nl-NL"/>
+
+
+    <!-- Instruction definitions -->
+
+    <idef id="add" exec="executeAdd">
+        <pdef id="left"/>
+        <pdef id="right" loc="true"/>
+        <pdef id="result"/>
+    </idef>
+
+    <idef id="print" exec="executePrint">
+        <pdef id="text" loc="true"/>
+    </idef>
+
+
+    <!-- Node definitions -->
+
+    <ndef id="mathNode">
+
+        <!-- Simple option -->
+        <odef id="mode">
+            <fdef id="modeForm" type="print">
+                <vadef id="modeText" type="text"/>
+            </fdef>
+        </odef>
+
+        <!-- Choice -->
+        <cdef id="operation">
+            <fdef id="addChoiceForm" type="add">
+                <vadef id="addLeft" type="left"/>
+                <vadef id="addRight" type="right"/>
+                <oadef id="addOutput" type="result"/>
+            </fdef>
+
+            <odef id="subtractOption"/>
+        </cdef>
+
+
+        <!-- Tuple -->
+        <tdef id="position">
+            <fdef id="tupleForm" type="print">
+                <vadef id="tupleText" type="text"/>
+            </fdef>
+
+            <odef id="xValue"/>
+            <odef id="yValue"/>
+        </tdef>
+
+
+        <!-- List -->
+        <ldef id="items">
+            <fdef id="itemForm" type="print">
+                <vadef id="itemText" type="text"/>
+            </fdef>
+        </ldef>
+
+
+        <!-- Nested definitions -->
+
+        <odef id="nestedOption">
+            <cdef id="nestedChoice">
+                <odef id="nestedChoiceA"/>
+                <odef id="nestedChoiceB"/>
+            </cdef>
+        </odef>
+
+
+        <!-- Forms -->
+
+        <fdef id="calculateForm" type="add">
+
+            <vadef id="a" type="left"/>
+            <vadef id="b" type="right"/>
+
+            <oadef id="out" type="result" hidedf="true"/>
+
+        </fdef>
+
+    </ndef>
+
+
+    <!-- Another node definition -->
+
+    <ndef id="displayNode">
+
+        <fdef id="displayForm" type="print">
+            <vadef id="displayText" type="text"/>
+        </fdef>
+
+    </ndef>
+
+
+
+    <!-- Actual graph -->
+
+    <frame
+        id="mainFrame"
+        x="20"
+        y="30"
+        width="800"
+        height="600"
+        text="Main Program"
+        color="#336699"
+    />
+
+
+    <memo
+        id="note1"
+        x="50"
+        y="70"
+        text="Example sticky note"
+        color="yellow"
+        member="mainFrame"
+    />
+
+
+    <joint
+        id="join1"
+        x="400"
+        y="300"
+        member="mainFrame"
+    />
+
+
+    <!-- Math node -->
+
+    <node
+        id="nodeAdd"
+        type="mathNode"
+        x="100"
+        y="100"
+        member="mainFrame"
+        start="entry"
+    >
+
+        <form type="calculateForm">
+
+            <arg
+                type="a"
+                value="10"
+            />
+
+            <arg
+                type="b"
+                value="20"
+            />
+
+            <out type="out"/>
+
+        </form>
+
+
+        <option type="mode">
+
+            <form type="modeForm">
+                <arg
+                    type="modeText"
+                    value="fast"
+                />
+            </form>
+
+        </option>
+
+
+        <choice type="operation">
+
+            <form type="addChoiceForm">
+
+                <arg
+                    type="addLeft"
+                    value="1"
+                />
+
+                <arg
+                    type="addRight"
+                    value="2"
+                />
+
+                <out type="addOutput"/>
+
+            </form>
+
+        </choice>
+
+
+        <tuple type="position">
+
+            <option type="xValue"/>
+            <option type="yValue"/>
+
+        </tuple>
+
+
+        <list type="items">
+
+            <form type="itemForm">
+                <arg
+                    type="itemText"
+                    value="first"
+                />
+            </form>
+
+            <form type="itemForm">
+                <arg
+                    type="itemText"
+                    value="second"
+                />
+            </form>
+
+        </list>
+
+
+    </node>
+
+
+
+    <!-- Display node -->
+
+    <node
+        id="nodePrint"
+        type="displayNode"
+        x="500"
+        y="100"
+    >
+
+        <form type="displayForm">
+
+            <arg
+                type="displayText"
+                value="Hello AGXP"
+            />
+
+        </form>
+
+    </node>
+
+
+
+    <!-- Nested option example -->
+
+    <node
+        id="nodeNested"
+        type="mathNode"
+        x="300"
+        y="400"
+    >
+
+        <option type="nestedOption">
+
+            <choice type="nestedChoice">
+
+                <option type="nestedChoiceA"/>
+
+            </choice>
+
+        </option>
+
+    </node>
+
+
+
+    <!-- Connections -->
+
+    <edge
+        id="edge1"
+        from="nodeAdd"
+        port="0"
+        to="join1"
+    />
+
+    <edge
+        id="edge2"
+        from="join1"
+        port="0"
+        to="nodePrint"
+    />
+
+    <edge
+        id="edge3"
+        from="nodeNested"
+        port="0"
+        to="join1"
+    />
+
+
+</file>

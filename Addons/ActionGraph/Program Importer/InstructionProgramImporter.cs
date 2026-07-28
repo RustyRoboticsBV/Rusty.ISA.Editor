@@ -20,6 +20,8 @@ public abstract partial class InstructionProgramImporter : Node
         Godot.GD.Print(Serializer.Serialize(codec));
 
         // Compile the codec into a program.
-        return Compiler.Compile(codec);
+        InstructionProgram program = Compiler.Compile(codec);
+        Godot.GD.Print(program);
+        return program;
     }
 }

@@ -20,4 +20,17 @@ public sealed partial class GenericInstruction : Instruction
         Opcode = opcode;
         Arguments = arguments;
     }
+
+    /* Public methods. */
+    public override string ToString()
+    {
+        string args = "";
+        foreach (var arg in Arguments)
+        {
+            if (args.Length > 0)
+                args += ", ";
+            args += '"' + arg + '"';
+        }
+        return base.ToString() + $"_{Opcode}({args})";
+    }
 }

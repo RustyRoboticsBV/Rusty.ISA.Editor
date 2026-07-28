@@ -235,9 +235,12 @@ public static class Compiler
                 CompileInspector(unit, ndef, node, inspector, instructions, labels, ref handledOutputArgs);
         }
 
+        // Ensure a dummy instruction if the node compiled to no instructions.
+        if (instructions.Count == 0)
+            instructions.Add(new DummyInstruction());
+
         // Check for entry point.
-        if (instructions.Count > 0)
-            instructions[0].Start = unit.Codec.GetAttribute(Codec.Start);
+        instructions[0].Start = unit.Codec.GetAttribute(Codec.Start);
     }
 
     /// <summary>

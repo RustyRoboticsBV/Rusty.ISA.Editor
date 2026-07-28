@@ -22,4 +22,17 @@ public partial class InstructionProgram : Resource
         InstructionSet = instructionSet;
         Instructions = instructions;
     }
+
+    /* Public methods. */
+    public override string ToString()
+    {
+        string str = "";
+        foreach (Instruction instruction in Instructions)
+        {
+            if (str.Length > 0)
+                str += "\n";
+            str += instruction.ToString();
+        }
+        return str;
+    }
 }
