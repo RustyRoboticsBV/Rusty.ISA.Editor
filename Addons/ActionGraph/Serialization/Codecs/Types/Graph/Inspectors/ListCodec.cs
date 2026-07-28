@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed class ListCodec : InspectorCodec
+public sealed class ListCodec : InspectorCodec, ICodecGroup<InspectorCodec>
 {
     /* Constants. */
     public const string TAG = "list";

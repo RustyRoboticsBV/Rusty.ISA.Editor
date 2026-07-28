@@ -75,28 +75,15 @@ internal class OutputCountResult
         }
 
         // Search children.
-        else if (definition is CollectionDefinitionCodec collection && instance is InspectorCodec inspector)
+        else if (definition is ICodecGroup<InspectorDefinitionCodec> collection && instance is ICodecGroup<InspectorCodec> inspector)
         {
             for (int i = 0; i < inspector.Children.Count; i++)
             {
                 Codec child = inspector.Children[i];
                 string type = child.GetAttribute(Codec.Type);
-                InspectorDefinitionCodec childDefinition = collection.FindInspector(child.GetAttribute(Codec.Type));
+                InspectorDefinitionCodec childDefinition = collection.Find(type);
                 if (childDefinition == null)
-                    throw new NullReferenceException($"Cannot find definition '{type}' in '{collection.ToStringHeader()}'.");
-                Search(file, childDefinition, child);
-            }
-        }
-
-        else if (definition is NdefCodec ndef && instance is NodeCodec node)
-        {
-            for (int i = 0; i < node.Children.Count; i++)
-            {
-                Codec child = node.Children[i];
-                string type = child.GetAttribute(Codec.Type);
-                InspectorDefinitionCodec childDefinition = ndef.FindInspector(type);
-                if (childDefinition == null)
-                    throw new NullReferenceException($"Cannot find definition '{type}' in '{ndef.ToStringHeader()}'.");
+                    throw new NullReferenceException($"Cannot find definition '{type}' in '{definition.ToString(true)}'.");
                 Search(file, childDefinition, child);
             }
         }

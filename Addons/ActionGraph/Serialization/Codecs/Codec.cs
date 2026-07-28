@@ -118,6 +118,9 @@ public abstract class Codec
     }
 
     /* Public methods. */
+    /// <summary>
+    /// Return the string representation of this codec.
+    /// </summary>
     public override string ToString()
     {
         StringBuilder sb = new();
@@ -126,10 +129,13 @@ public abstract class Codec
     }
 
     /// <summary>
-    /// Return the string representation of this codec (ignoring the child codecs).
+    /// Return the string representation of this codec.
     /// </summary>
-    public string ToStringHeader()
+    public string ToString(bool omitChildren)
     {
+        if (!omitChildren)
+            return ToString();
+
         StringBuilder sb = new();
         AppendToString(sb, "", true, true, false);
         return sb.ToString();
