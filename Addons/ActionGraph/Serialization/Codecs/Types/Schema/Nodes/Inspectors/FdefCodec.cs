@@ -15,18 +15,4 @@ public sealed class FdefCodec : InspectorDefinitionCodec
 
     /* Constructors. */
     public FdefCodec(XmlNode xml) : base(xml) { }
-
-    /* Public methods. */
-    /// <summary>
-    /// Try to find an output definition codec.
-    /// </summary>
-    public OadefCodec FindOadef(string id)
-    {
-        foreach (Codec child in Children)
-        {
-            if (child is OadefCodec oadef && oadef.GetAttribute(ID) == id)
-                return oadef;
-        }
-        return null;
-    }
 }
