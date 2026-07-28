@@ -212,6 +212,9 @@ public static class Compiler
                         labelTargets.Add(node.To[i]);
                 }
                 break;
+
+            default:
+                throw new InvalidOperationException($"Invalid unit: {unit}");
         }
     }
 

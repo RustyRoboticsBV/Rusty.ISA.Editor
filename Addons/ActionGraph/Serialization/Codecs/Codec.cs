@@ -51,6 +51,7 @@ public abstract class Codec
 
         // Metadata.
         Register<MetaCodec>(MetaCodec.TAG);
+        Register<LangCodec>(LangCodec.TAG);
 
         // Schema.
         Register<IdefCodec>(IdefCodec.TAG);

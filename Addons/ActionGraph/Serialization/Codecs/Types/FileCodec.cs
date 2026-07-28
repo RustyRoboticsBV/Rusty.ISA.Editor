@@ -11,7 +11,7 @@ public sealed class FileCodec : Codec
 
     /* Public properties. */
     protected override HashSet<string> AllowedChildren => [
-        MetaCodec.TAG,
+        MetaCodec.TAG, LangCodec.TAG,
         IdefCodec.TAG, NdefCodec.TAG,
         NodeCodec.TAG, JointCodec.TAG, FrameCodec.TAG, MemoCodec.TAG, EdgeCodec.TAG
     ];

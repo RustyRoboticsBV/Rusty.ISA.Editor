@@ -8,6 +8,8 @@
 	<meta id="desc" value="A test program."/>
 	<meta id="author" value="Corporation, Inc."/>
 	<meta id="version" value="1.0.0"/>
+	<lang id="french"/>
+	<lang id="german"/>
 	
 	<!-- Schema -->
 	<idef id="i1" exec="Handler1">

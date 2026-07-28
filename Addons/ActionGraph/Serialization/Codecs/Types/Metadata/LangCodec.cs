@@ -4,17 +4,17 @@ using System.Xml;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A codec representing a metadata record.
+/// A codec representing a language definition.
 /// </summary>
-public sealed class MetaCodec : Codec
+public sealed class LangCodec : Codec
 {
     /* Constants. */
-    public const string TAG = "meta";
+    public const string TAG = "lang";
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID, Value];
+    protected override HashSet<string> AllowedAttributes => [ID];
 
     /* Constructors. */
-    public MetaCodec(XmlNode xml) : base(xml) { }
+    public LangCodec(XmlNode xml) : base(xml) { }
 }
