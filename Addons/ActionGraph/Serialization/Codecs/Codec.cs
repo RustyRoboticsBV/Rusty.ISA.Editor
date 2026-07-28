@@ -7,7 +7,7 @@ using System.Xml;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A codec node.
+/// A serializer codec.
 /// </summary>
 public abstract class Codec
 {
@@ -103,16 +103,12 @@ public abstract class Codec
                 string childTag = child.Name;
                 if (!Codecs.ContainsKey(childTag))
                     throw new InvalidOperationException($"Unknown child type '{childTag}'.");
-                if (!AllowedChildren.Contains(childTag))
-                    throw new InvalidOperationException($"Codec '{Tag}' cannot have a child of type '{child.Name}'.");
                 AddChild(Instantiate(Codecs[childTag], child));
             }
         }
 
         foreach (XmlAttribute attribute in xml.Attributes)
         {
-            if (!AllowedAttributes.Contains(attribute.Name))
-                throw new InvalidOperationException($"Codec '{Tag}' cannot have an attribute of type '{attribute.Name}'.");
             Attributes.TryAdd(attribute.Name, attribute.Value);
         }
     }
@@ -141,10 +137,6 @@ public abstract class Codec
         return sb.ToString();
     }
 
-    // TODO: remove by turning giving the properties a public or internal getter.
-    public bool AllowsChild(string type) => AllowedChildren.Contains(type);
-    public bool AllowsAttribute(string name) => AllowedAttributes.Contains(name);
-
     /// <summary>
     /// Load from an XML node.
     /// </summary>
@@ -156,11 +148,19 @@ public abstract class Codec
             throw new InvalidOperationException($"Unknown XML child tag '{xml.Name}'.");
     }
 
+
+    /// <summary>
+    /// Check whether or not an attribute with some name is allowed by this codec.
+    /// </summary>
+    public bool AllowsAttribute(string name) => AllowedAttributes.Contains(name);
+
     /// <summary>
     /// Set an attribute's value.
     /// </summary>
     public void SetAttribute(string name, string value)
     {
+        if (!AllowsAttribute(name))
+            throw new InvalidOperationException($"Codec '{GetType().Name}' cannot have an attribute with name '{name}'.");
         Attributes[name] = value;
     }
 
@@ -175,10 +175,17 @@ public abstract class Codec
     }
 
     /// <summary>
+    /// Check whether or not a child with some tag is allowed by this codec.
+    /// </summary>
+    public bool AllowsChild(string tag) => AllowedChildren.Contains(tag);
+
+    /// <summary>
     /// Add a node of some type.
     /// </summary>
     public void AddChild(Codec node)
     {
+        if (!AllowsChild(node.Tag))
+            throw new InvalidOperationException($"Codec '{GetType().Name}' cannot have a child with tag '{node.GetType().Name}'.");
         Children.Add(node);
     }
 
@@ -268,23 +275,19 @@ public abstract class Codec
         {
             sb.AppendLine();
 
-            string childPrefix = root
-                ? ""
-                : prefix + (last ? "  " : "\u2502 ");
+            string childPrefix = root ? "" : prefix + (last ? "  " : "\u2502 ");
 
             for (int i = 0; i < Children.Count; i++)
             {
                 Children[i].AppendToString(sb, childPrefix, i == Children.Count - 1, false, recurse);
             }
         }
-        else
-        {
-            if (Children.Count > 0)
-                sb.Append("...");
-        }
+        else if (Children.Count > 0)
+            sb.Append("...");
     }
 
     private static void Register<T>(string tag)
+        where T : Codec
     {
         Codecs.Add(tag, typeof(T));
     }

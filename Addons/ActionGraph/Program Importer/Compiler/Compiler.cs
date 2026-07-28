@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Rusty.ActionGraph.Serialization;
+using System;
 using System.Collections.Generic;
-using Rusty.ActionGraph.Serialization;
 
 namespace Rusty.ActionGraph.Compilation;
+
+using Labels = Dictionary<Unit, string>;
 
 public static class Compiler
 {
@@ -71,7 +73,7 @@ public static class Compiler
         }
 
         // Generate a label for each goto target.
-        Dictionary<Unit, string> labels = [];
+        Labels labels = [];
         int nextLabel = 0;
 
         foreach (Unit target in gotoTargets)
@@ -216,7 +218,7 @@ public static class Compiler
     /// <summary>
     /// Compile a unit's instructions.
     /// </summary>
-    private static void CompileNode(NodeUnit unit, FileCodec file, List<Instruction> instructions, Dictionary<Unit, string> labels)
+    private static void CompileNode(NodeUnit unit, FileCodec file, List<Instruction> instructions, Labels labels)
     {
         // Find node definition.
         NodeCodec node = unit.Codec;
@@ -238,86 +240,114 @@ public static class Compiler
     /// <summary>
     /// Compile an inspector's instructions.
     /// </summary>
-    private static void CompileInspector(NodeUnit node, Codec parentDefinition, Codec parent, InspectorCodec current, List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
+    private static void CompileInspector(NodeUnit node, Codec parentDefinition, Codec parent, InspectorCodec current, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
         // Find child definition.
         string currentType = current.GetAttribute(Codec.Type);
         Codec currentDefinition = parentDefinition.FindChildWithAttribute(Codec.ID, currentType);
 
-        // Compile form.
-        if (current is FormCodec form && currentDefinition is FdefCodec fdef)
+        switch (currentDefinition, current)
         {
-            string opcode = fdef.GetAttribute(Codec.Type);
-            List<string> arguments = new();
-            foreach (Codec child in form.Children)
-            {
-                if (child is ArgCodec varg)
-                {
-                    string value = varg.GetAttribute(Codec.Value);
-                    arguments.Add(value);
-                }
-                else if (child is OutCodec oarg)
-                {
-                    // Find parameter target unit.
-                    int outputPort = node.OutputData.HideDefaultOutput ? handledOutputArgs : handledOutputArgs + 1;
-                    Unit to = node.To[outputPort];
-                    handledOutputArgs++;
-
-                    // Set argument value.
-                    string value = labels[to];
-                    arguments.Add(value);
-                }
-            }
-            instructions.Add(new GenericInstruction(opcode, arguments.ToArray()));
+            case (FdefCodec fdef, FormCodec form):
+                CompileForm(node, fdef, form, instructions, labels, ref handledOutputArgs);
+                break;
+            case (OdefCodec odef, OptionCodec option):
+                CompileOption(node, odef, option, instructions, labels, ref handledOutputArgs);
+                break;
+            case (CdefCodec cdef, ChoiceCodec choice):
+                CompileChoice(node, cdef, choice, instructions, labels, ref handledOutputArgs);
+                break;
+            case (TdefCodec tdef, TupleCodec tuple):
+                CompileTuple(node, tdef, tuple, instructions, labels, ref handledOutputArgs);
+                break;
+            case (LdefCodec ldef, ListCodec list):
+                CompileList(node, ldef, list, instructions, labels, ref handledOutputArgs);
+                break;
+            default:
+                throw new InvalidOperationException($"Invalid coded pair: '{current?.ToString(true) ?? "null"}' and '{currentDefinition?.ToString(true) ?? "null"}'.");
         }
+    }
 
-        // Compile option.
-        else if (current is OptionCodec option && currentDefinition is OdefCodec odef)
+    /// <summary>
+    /// Compile an option.
+    /// </summary>
+    private static void CompileOption(NodeUnit node, OdefCodec odef, OptionCodec option, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    {
+        InspectorCodec child = option.GetFirstChild<InspectorCodec>();
+        if (child != null)
         {
-            InspectorCodec child = option.GetFirstChild<InspectorCodec>();
-            if (child != null)
-            {
-                string childType = child.GetAttribute(Codec.Type);
-                CompileInspector(node, currentDefinition, current, child, instructions, labels, ref handledOutputArgs);
-            }
-        }
-
-        // Compile choice.
-        else if (current is ChoiceCodec choice && currentDefinition is CdefCodec cdef)
-        {
-            InspectorCodec child = choice.GetFirstChild<InspectorCodec>();
             string childType = child.GetAttribute(Codec.Type);
-            CompileInspector(node, currentDefinition, current, child, instructions, labels, ref handledOutputArgs);
+            CompileInspector(node, odef, option, child, instructions, labels, ref handledOutputArgs);
         }
+    }
 
-        // Compile tuple.
-        else if (current is TupleCodec tuple && currentDefinition is TdefCodec tdef)
+    /// <summary>
+    /// Compile a choice.
+    /// </summary>
+    private static void CompileChoice(NodeUnit node, CdefCodec cdef, ChoiceCodec choice, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    {
+        InspectorCodec child = choice.GetFirstChild<InspectorCodec>();
+        string childType = child.GetAttribute(Codec.Type);
+        CompileInspector(node, cdef, choice, child, instructions, labels, ref handledOutputArgs);
+    }
+
+    /// <summary>
+    /// Compile a tuple.
+    /// </summary>
+    private static void CompileTuple(NodeUnit node, TdefCodec tdef, TupleCodec tuple, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    {
+        foreach (Codec element in tuple.Children)
         {
-            foreach (Codec element in tuple.Children)
+            if (element is InspectorCodec child)
             {
-                if (element is InspectorCodec child)
-                {
-                    string childType = element.GetAttribute(Codec.Type);
-                    CompileInspector(node, currentDefinition, current, child, instructions, labels, ref handledOutputArgs);
-                }
+                string childType = element.GetAttribute(Codec.Type);
+                CompileInspector(node, tdef, tuple, child, instructions, labels, ref handledOutputArgs);
             }
         }
+    }
 
-        // Compile list.
-        else if (current is ListCodec list && currentDefinition is LdefCodec ldef)
+    /// <summary>
+    /// Compile a list.
+    /// </summary>
+    private static void CompileList(NodeUnit node, LdefCodec ldef, ListCodec list, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    {
+        foreach (Codec element in list.Children)
         {
-            foreach (Codec element in list.Children)
+            if (element is InspectorCodec child)
             {
-                if (element is InspectorCodec child)
-                {
-                    string childType = element.GetAttribute(Codec.Type);
-                    CompileInspector(node, currentDefinition, current, child, instructions, labels, ref handledOutputArgs);
-                }
+                string childType = element.GetAttribute(Codec.Type);
+                CompileInspector(node, ldef, list, child, instructions, labels, ref handledOutputArgs);
             }
         }
+    }
 
-        else
-            throw new InvalidOperationException($"Invalid coded pair: '{current?.GetType()?.Name ?? "null"}' and '{currentDefinition?.GetType()?.Name ?? "null"}'.");
+    /// <summary>
+    /// Compile a form.
+    /// </summary>
+    private static void CompileForm(NodeUnit node, FdefCodec fdef, FormCodec form, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    {
+        string opcode = fdef.GetAttribute(Codec.Type);
+        List<string> arguments = new();
+        foreach (Codec child in form.Children)
+        {
+            if (child is ArgCodec varg)
+            {
+                string value = varg.GetAttribute(Codec.Value);
+                arguments.Add(value);
+            }
+            else if (child is OutCodec oarg)
+            {
+                // Find parameter target unit.
+                int outputPort = node.OutputData.HideDefaultOutput ? handledOutputArgs : handledOutputArgs + 1;
+                Unit to = node.To[outputPort];
+                handledOutputArgs++;
+
+                // Set argument value.
+                string value = labels[to];
+                arguments.Add(value);
+            }
+        }
+        instructions.Add(new GenericInstruction(opcode, arguments.ToArray()));
     }
 
     /// <summary>
