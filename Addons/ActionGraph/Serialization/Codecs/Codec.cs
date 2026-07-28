@@ -43,7 +43,6 @@ public abstract class Codec
     protected virtual HashSet<string> AllowedAttributes { get; } = new();
 
     protected static Dictionary<string, Type> Codecs { get; } = new();
-    protected static Dictionary<Type, string> Tags { get; } = new();
 
     /* Constructors. */
     static Codec()
@@ -126,81 +125,26 @@ public abstract class Codec
         return sb.ToString();
     }
 
-    public string GetHeader()
+    /// <summary>
+    /// Return the string representation of this codec (ignoring the child codecs).
+    /// </summary>
+    public string ToStringHeader()
     {
         StringBuilder sb = new();
         AppendToString(sb, "", true, true, false);
         return sb.ToString();
     }
 
-    /// <summary>
-    /// Convert this node to XML.
-    /// </summary>
-    public string Serialize()
-    {
-        // Handle attributes.
-        StringBuilder attributes = new();
-        foreach (var attr in Attributes)
-        {
-            if (!AllowedAttributes.Contains(attr.Key))
-                throw new KeyNotFoundException($"Codec '{Tag}' does not allow name {attr.Key}.");
+    // TODO: remove by turning giving the properties a public or internal getter.
+    public string GetTag() => Tag;
+    public bool AllowsChild(string type) => AllowedChildren.Contains(type);
+    public bool AllowsAttribute(string name) => AllowedAttributes.Contains(name);
 
-            attributes.Append(' ');
-            attributes.Append(attr.Key);
-            attributes.Append("=\"");
-            attributes.Append(attr.Value);
-            attributes.Append('"');
-        }
-
-        // Handle children.
-        StringBuilder children = new();
-        foreach (Codec child in Children)
-        {
-            if (!AllowedChildren.Contains(child.Tag))
-                throw new KeyNotFoundException($"Codec '{Tag}' does not allow child elements with xml tag '{child.Tag}'.");
-
-            if (children.Length > 0)
-                children.Append('\n');
-            children.Append(child.Serialize());
-        }
-
-        // Build XML.
-        StringBuilder xml = new();
-        xml.Append('<');
-        xml.Append(Tag);
-        xml.Append(attributes.ToString());
-
-        if (children.Length > 0)
-        {
-            xml.Append(">");
-
-            xml.Append("\n\t");
-            xml.Append(children.ToString().Replace("\n", "\n\t"));
-
-            xml.Append("\n</");
-            xml.Append(Tag);
-            xml.Append(">");
-        }
-        else if (InnerText.Length > 0)
-        {
-            xml.Append(">");
-
-            xml.Append(InnerText);
-
-            xml.Append("</");
-            xml.Append(Tag);
-            xml.Append(">");
-        }
-        else if (children.Length == 0 && InnerText.Length == 0)
-            xml.Append("/>");
-
-        return xml.ToString();
-    }
-
+    // TODO: move to serializer.
     /// <summary>
     /// Compute the checksum of this node and its child nodes.
     /// </summary>
-    public virtual void Hash(HashAlgorithm hash)
+    public void Hash(HashAlgorithm hash)
     {
         // Hash start tag.
         Hash(hash, "<");
@@ -233,10 +177,9 @@ public abstract class Codec
 
         // Hash end tag.
         Hash(hash, "</");
-        Hash(hash,  Tag);
+        Hash(hash, Tag);
         Hash(hash, ">");
     }
-
     /// <summary>
     /// Load from an XML node.
     /// </summary>
@@ -269,19 +212,6 @@ public abstract class Codec
     /// <summary>
     /// Get the first child node with some tag. Returns null if the child does not exist.
     /// </summary>
-    public Codec GetFirstChild(string tag)
-    {
-        foreach (Codec child in Children)
-        {
-            if (child.Tag == tag)
-                return child;
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// Get the first child node with some tag. Returns null if the child does not exist.
-    /// </summary>
     public T GetFirstChild<T>()
         where T : Codec
     {
@@ -306,36 +236,6 @@ public abstract class Codec
         return null;
     }
 
-
-    /// <summary>
-    /// Get all children with a tag.
-    /// </summary>
-    public List<Codec> GetChildren(string tag)
-    {
-        List<Codec> children = new();
-        foreach (Codec child in Children)
-        {
-            if (child.Tag == tag)
-                children.Add(child);
-        }
-        return [];
-    }
-
-    /// <summary>
-    /// Get all children of some type.
-    /// </summary>
-    public List<T> GetChildren<T>()
-        where T : Codec
-    {
-        List<T> children = new();
-        foreach (Codec child in Children)
-        {
-            if (child is T typed)
-                children.Add(typed);
-        }
-        return [];
-    }
-
     /// <summary>
     /// Add a node of some type.
     /// </summary>
@@ -344,10 +244,6 @@ public abstract class Codec
         Children.Add(node);
     }
 
-    /// <summary>
-    /// Return the tag of the codec.
-    /// </summary>
-    public string GetTag() => Tag;
     /* Protected methods. */
     /// <summary>
     /// Compute the checksum of a string.
@@ -435,6 +331,5 @@ public abstract class Codec
     private static void Register<T>(string tag)
     {
         Codecs.Add(tag, typeof(T));
-        Tags.Add(typeof(T), tag);
     }
 }

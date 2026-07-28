@@ -4,6 +4,9 @@ using Rusty.ActionGraph.Serialization;
 
 namespace Rusty.ActionGraph.ImportPlugins;
 
+/// <summary>
+/// An importer for instruction programs. Serves as an entry point for the GDScript-based import plugin.
+/// </summary>
 [GlobalClass]
 public abstract partial class InstructionProgramImporter : Node
 {
@@ -12,10 +15,11 @@ public abstract partial class InstructionProgramImporter : Node
     /// </summary>
     public static InstructionProgram Import(string xml)
     {
-        // Parse the XML as a FileCodec.
-        FileCodec file = Parser.Parse(xml);
+        // Parse the XML as a codec.
+        FileCodec codec = Parser.Parse(xml);
+        Godot.GD.Print(Serializer.Serialize(codec));
 
-        // Compile the FileCodec into a program.
-        return Compiler.Compile(file);
+        // Compile the codec into a program.
+        return Compiler.Compile(codec);
     }
 }

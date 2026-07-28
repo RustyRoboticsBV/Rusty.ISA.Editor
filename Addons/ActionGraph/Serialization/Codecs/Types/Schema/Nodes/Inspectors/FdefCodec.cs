@@ -22,10 +22,10 @@ public sealed class FdefCodec : InspectorDefinitionCodec
     /// </summary>
     public OadefCodec FindOadef(string id)
     {
-        foreach (OadefCodec codec in GetChildren<OadefCodec>())
+        foreach (Codec child in Children)
         {
-            if (codec.GetAttribute(ID) == id)
-                return codec;
+            if (child is OadefCodec oadef && oadef.GetAttribute(ID) == id)
+                return oadef;
         }
         return null;
     }

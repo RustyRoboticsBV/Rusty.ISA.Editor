@@ -17,5 +17,5 @@ internal class JointUnit : MonoUnit
     public JointUnit(JointCodec codec) => Codec = codec;
 
     /* Public methods. */
-    public override string ToString() => Codec?.GetHeader() ?? "";
+    public override string ToString() => Codec?.ToStringHeader() ?? "";
 }

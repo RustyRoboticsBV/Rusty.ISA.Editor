@@ -83,7 +83,7 @@ internal class OutputCountResult
                 string type = child.GetAttribute(Codec.Type);
                 InspectorDefinitionCodec childDefinition = collection.FindInspector(child.GetAttribute(Codec.Type));
                 if (childDefinition == null)
-                    throw new NullReferenceException($"Cannot find definition '{type}' in '{collection.GetTag()}'.");
+                    throw new NullReferenceException($"Cannot find definition '{type}' in '{collection.ToStringHeader()}'.");
                 Search(file, childDefinition, child);
             }
         }
@@ -96,7 +96,7 @@ internal class OutputCountResult
                 string type = child.GetAttribute(Codec.Type);
                 InspectorDefinitionCodec childDefinition = ndef.FindInspector(type);
                 if (childDefinition == null)
-                    throw new NullReferenceException($"Cannot find definition '{type}' in '{ndef.GetTag()}'.");
+                    throw new NullReferenceException($"Cannot find definition '{type}' in '{ndef.ToStringHeader()}'.");
                 Search(file, childDefinition, child);
             }
         }
