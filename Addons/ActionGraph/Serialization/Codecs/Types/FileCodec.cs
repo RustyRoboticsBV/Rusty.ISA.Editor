@@ -7,9 +7,9 @@ public sealed class FileCodec : Codec
 {
     /* Constants. */
     public const string TAG = "file";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedChildren => [
         MetaCodec.TAG,
         IdefCodec.TAG, NdefCodec.TAG,

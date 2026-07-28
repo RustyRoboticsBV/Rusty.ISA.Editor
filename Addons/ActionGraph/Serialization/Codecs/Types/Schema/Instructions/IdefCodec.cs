@@ -7,9 +7,9 @@ public sealed class IdefCodec : Codec
 {
     /* Constants. */
     public const string TAG = "idef";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [ID, Exec];
     protected override HashSet<string> AllowedChildren => [PdefCodec.TAG];
 

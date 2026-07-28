@@ -7,9 +7,9 @@ public sealed class OptionCodec : InspectorCodec
 {
     /* Constants. */
     public const string TAG = "option";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [Type];
     protected override HashSet<string> AllowedChildren => [FormCodec.TAG, TAG, ChoiceCodec.TAG, TupleCodec.TAG, ListCodec.TAG];
 

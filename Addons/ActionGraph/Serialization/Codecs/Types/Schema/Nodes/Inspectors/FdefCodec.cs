@@ -7,9 +7,9 @@ public sealed class FdefCodec : InspectorDefinitionCodec
 {
     /* Constants. */
     public const string TAG = "fdef";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [ID, Type];
     protected override HashSet<string> AllowedChildren => [VadefCodec.TAG, OadefCodec.TAG];
 

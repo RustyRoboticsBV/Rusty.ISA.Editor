@@ -7,9 +7,9 @@ public sealed class LdefCodec : CollectionDefinitionCodec
 {
     /* Constants. */
     public const string TAG = "ldef";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [ID];
     protected override HashSet<string> AllowedChildren => [FdefCodec.TAG, OdefCodec.TAG, CdefCodec.TAG, TdefCodec.TAG, TAG];
 

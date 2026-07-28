@@ -7,9 +7,9 @@ public sealed partial class OdefCodec : CollectionDefinitionCodec
 {
     /* Constants. */
     public const string TAG = "odef";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [ID];
     protected override HashSet<string> AllowedChildren => [FdefCodec.TAG, TAG, CdefCodec.TAG, TdefCodec.TAG, LdefCodec.TAG];
 

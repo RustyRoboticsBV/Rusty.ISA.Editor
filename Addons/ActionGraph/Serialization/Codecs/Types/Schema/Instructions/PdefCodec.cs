@@ -7,9 +7,9 @@ public sealed class PdefCodec : Codec
 {
     /* Constants. */
     public const string TAG = "pdef";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [ID];
     protected override HashSet<string> AllowedChildren => [];
 

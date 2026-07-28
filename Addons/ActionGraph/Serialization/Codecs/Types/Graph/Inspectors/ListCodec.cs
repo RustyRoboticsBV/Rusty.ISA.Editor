@@ -7,9 +7,9 @@ public sealed class ListCodec : InspectorCodec
 {
     /* Constants. */
     public const string TAG = "list";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [Type];
     protected override HashSet<string> AllowedChildren => [FormCodec.TAG, OptionCodec.TAG, ChoiceCodec.TAG, TupleCodec.TAG, TAG];
 

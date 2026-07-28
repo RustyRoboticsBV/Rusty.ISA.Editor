@@ -7,9 +7,9 @@ public sealed class OutCodec : Codec
 {
     /* Constants. */
     public const string TAG = "out";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [Type];
 
     /* Constructors. */

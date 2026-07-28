@@ -7,9 +7,9 @@ public sealed class VadefCodec : Codec
 {
     /* Constants. */
     public const string TAG = "vadef";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [ID, Type];
     protected override HashSet<string> AllowedChildren => [];
 

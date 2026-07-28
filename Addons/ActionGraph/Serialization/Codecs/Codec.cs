@@ -32,12 +32,12 @@ public abstract class Codec
     public const string To = "to";
 
     /* Public properties. */
+    public abstract string Tag { get; }
     public string InnerText { get; set; } = "";
     public List<Codec> Children { get; } = new();
     public Dictionary<string, string> Attributes { get; } = new();
 
     /* Protected properties. */
-    protected abstract string Tag { get; }
     protected virtual HashSet<string> AllowedChildren { get; } = new();
     protected virtual HashSet<string> AllowedAttributes { get; } = new();
 
@@ -135,7 +135,6 @@ public abstract class Codec
     }
 
     // TODO: remove by turning giving the properties a public or internal getter.
-    public string GetTag() => Tag;
     public bool AllowsChild(string type) => AllowedChildren.Contains(type);
     public bool AllowsAttribute(string name) => AllowedAttributes.Contains(name);
 
@@ -169,6 +168,14 @@ public abstract class Codec
     }
 
     /// <summary>
+    /// Add a node of some type.
+    /// </summary>
+    public void AddChild(Codec node)
+    {
+        Children.Add(node);
+    }
+
+    /// <summary>
     /// Get the first child node with some tag. Returns null if the child does not exist.
     /// </summary>
     public T GetFirstChild<T>()
@@ -193,14 +200,6 @@ public abstract class Codec
                 return child;
         }
         return null;
-    }
-
-    /// <summary>
-    /// Add a node of some type.
-    /// </summary>
-    public void AddChild(Codec node)
-    {
-        Children.Add(node);
     }
 
     /* Protected methods. */

@@ -7,9 +7,9 @@ public sealed class OadefCodec : Codec
 {
     /* Constants. */
     public const string TAG = "oadef";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [ID, Type, HideDefault];
     protected override HashSet<string> AllowedChildren => [];
 

@@ -7,9 +7,9 @@ public sealed class ArgCodec : Codec
 {
     /* Constants. */
     public const string TAG = "arg";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [Type, Value];
 
     /* Constructors. */

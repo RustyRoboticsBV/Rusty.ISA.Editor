@@ -7,9 +7,9 @@ public sealed class NdefCodec : Codec
 {
     /* Constants. */
     public const string TAG = "ndef";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [ID];
     protected override HashSet<string> AllowedChildren => [FdefCodec.TAG, OdefCodec.TAG, CdefCodec.TAG, TdefCodec.TAG, LdefCodec.TAG];
 

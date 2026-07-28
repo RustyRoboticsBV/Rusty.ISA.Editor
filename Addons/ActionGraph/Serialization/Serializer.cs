@@ -40,7 +40,7 @@ public static class Serializer
     {
         // Hash start tag.
         Hash(hash, "<");
-        Hash(hash, codec.GetTag());
+        Hash(hash, codec.Tag);
 
         foreach (var attribute in codec.Attributes)
         {
@@ -69,7 +69,7 @@ public static class Serializer
 
         // Hash end tag.
         Hash(hash, "</");
-        Hash(hash, codec.GetTag());
+        Hash(hash, codec.Tag);
         Hash(hash, ">");
     }
 
@@ -105,8 +105,8 @@ public static class Serializer
         StringBuilder children = new();
         foreach (Codec child in codec.Children)
         {
-            if (!codec.AllowsChild(child.GetTag()))
-                throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow child elements with xml tag '{child.GetTag()}'.");
+            if (!codec.AllowsChild(child.Tag))
+                throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow child elements with xml tag '{child.Tag}'.");
 
             if (children.Length > 0)
                 children.Append('\n');
@@ -116,7 +116,7 @@ public static class Serializer
         // Build XML.
         StringBuilder xml = new();
         xml.Append('<');
-        xml.Append(codec.GetTag());
+        xml.Append(codec.Tag);
         xml.Append(attributes.ToString());
 
         if (children.Length > 0)
@@ -127,7 +127,7 @@ public static class Serializer
             xml.Append(children.ToString().Replace("\n", "\n\t"));
 
             xml.Append("\n</");
-            xml.Append(codec.GetTag());
+            xml.Append(codec.Tag);
             xml.Append(">");
         }
         else if (codec.InnerText.Length > 0)
@@ -137,7 +137,7 @@ public static class Serializer
             xml.Append(codec.InnerText);
 
             xml.Append("</");
-            xml.Append(codec.GetTag());
+            xml.Append(codec.Tag);
             xml.Append(">");
         }
         else if (children.Length == 0 && codec.InnerText.Length == 0)

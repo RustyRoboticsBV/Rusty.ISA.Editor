@@ -7,9 +7,9 @@ public sealed class JointCodec : Codec
 {
     /* Constants. */
     public const string TAG = "joint";
+    public override string Tag => TAG;
 
     /* Public properties. */
-    protected override string Tag => TAG;
     protected override HashSet<string> AllowedAttributes => [ID, X, Y, Member];
 
     /* Constructors. */
