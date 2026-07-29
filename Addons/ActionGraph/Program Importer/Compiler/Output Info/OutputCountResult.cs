@@ -107,7 +107,7 @@ internal class OutputCountResult
 
                 Arguments.Add(new OutputPortInfo(parameter, oadef, output));
 
-                if (oadef.GetAttribute(Codec.HideDefault).ToLower() == "true")
+                if (oadef.GetAttribute(Codec.NoDefault).ToLower() == "true")
                     HideDefaultOutput = true;
             }
         }

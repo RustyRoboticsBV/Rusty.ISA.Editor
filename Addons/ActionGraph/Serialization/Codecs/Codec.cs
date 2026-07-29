@@ -27,7 +27,7 @@ public abstract class Codec
     public const string Text = "text";
     public const string Color = "color";
     public const string Index = "index";
-    public const string HideDefault = "hidedf";
+    public const string NoDefault = "nodflt";
     public const string From = "from";
     public const string Port = "port";
     public const string To = "to";

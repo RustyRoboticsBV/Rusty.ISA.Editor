@@ -18,11 +18,11 @@ public abstract partial class Instruction : Resource
         bool hasStart = !string.IsNullOrEmpty(Start);
         bool hasLabel = !string.IsNullOrEmpty(Label);
         if (hasStart && hasLabel)
-            return $"[{Start}] <{Label}> ";
+            return $"[{Start}] {Label}: ";
         else if (hasStart)
             return $"[{Start}] ";
         else if (hasLabel)
-            return $"<{Label}> ";
+            return $"{Label}: ";
         else
             return "";
     }

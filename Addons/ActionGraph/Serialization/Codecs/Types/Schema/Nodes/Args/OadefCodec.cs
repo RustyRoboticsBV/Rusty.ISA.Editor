@@ -10,7 +10,7 @@ public sealed class OadefCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID, Type, HideDefault];
+    protected override HashSet<string> AllowedAttributes => [ID, Type, NoDefault];
     protected override HashSet<string> AllowedChildren => [];
 
     /* Constructors. */

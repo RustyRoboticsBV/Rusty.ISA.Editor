@@ -36,14 +36,14 @@
 					<odef id="o2">
 						<fdef type="i2" id="f2">
 							<vadef id="va2" type="p2"/>
-							<oadef id="oa3" type="p3" hidedf="false"/>
+							<oadef id="oa3" type="p3" nodflt="false"/>
 						</fdef>
 					</odef>
 					<odef id="o3">
 						<fdef type="i3" id="f3">
-							<oadef id="oa4" type="p4" hidedf="false"/>
+							<oadef id="oa4" type="p4" nodflt="false"/>
 							<vadef id="va5" type="p5"/>
-							<oadef id="oa6" type="p6" hidedf="true"/>
+							<oadef id="oa6" type="p6" nodflt="true"/>
 						</fdef>
 					</odef>
 				</cdef>

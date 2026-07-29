@@ -80,7 +80,7 @@
             <vadef id="a" type="left"/>
             <vadef id="b" type="right"/>
 
-            <oadef id="out" type="result" hidedf="true"/>
+            <oadef id="out" type="result" nodflt="true"/>
 
         </fdef>
 
