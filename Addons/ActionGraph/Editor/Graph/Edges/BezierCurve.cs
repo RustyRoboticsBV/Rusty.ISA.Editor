@@ -85,6 +85,40 @@ internal class BezierCurve
             t * t * t * End;
     }
 
+    /// <summary>
+    /// Find the closest position on the curve to a point, as a number between 0 and 1. Returns -1 if no point can be found.
+    /// </summary>
+    public float FindPosition(int sampleCount, Vector2 point, float maxDistance = -1f)
+    {
+        Vector2[] points = Sample(sampleCount);
+
+        float bestDistance = float.PositiveInfinity;
+        float bestT = -1.0f;
+
+        for (int i = 0; i < points.Length - 1; i++)
+        {
+            Vector2 closest = Geometry2D.GetClosestPointToSegment(point, points[i], points[i + 1]);
+
+            float distance = point.DistanceTo(closest);
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+
+                float segmentLength = points[i].DistanceTo(points[i + 1]);
+
+                float localT = 0.0f;
+                if (segmentLength > 0)
+                    localT = points[i].DistanceTo(closest) / segmentLength;
+
+                bestT = Mathf.Lerp((float)i / sampleCount, (float)(i + 1) / sampleCount, localT);
+            }
+        }
+
+        if (maxDistance >= 0f)
+            return bestDistance <= maxDistance ? bestT : -1.0f;
+        return bestT;
+    }
+
     /* Private methods. */
     private static Vector2 CubicBezier(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3, float t)
     {

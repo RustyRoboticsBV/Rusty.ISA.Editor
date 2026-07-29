@@ -32,22 +32,7 @@ public partial class ClickableEdge : Control
         AddChild(Line);
 
         UpdateCurve();
-        QueueRedraw();
     }
-
-    /*public override void _Draw()
-    {
-        // Sample curve.
-        UpdateCurve();
-        Vector2[] points = Curve.Sample(SAMPLES);
-        for (int i = 0; i < points.Length; i++)
-        {
-            points[i] -= Position;
-        }
-
-        // Draw curve.
-        DrawPolyline(points, Colors.White, LINE_WIDTH);
-    }*/
 
     public override void _GuiInput(InputEvent @event)
     {
@@ -55,18 +40,15 @@ public partial class ClickableEdge : Control
         {
             Vector2 mouse = mouseEvent.Position + Position;
 
-            UpdateCurve();
-            float t = FindClickT(Curve, mouse);
+            float t = Curve.FindPosition(SAMPLES, mouse, CLICK_DISTANCE);
             if (t >= 0.0f)
             {
                 Vector2 pos = Curve.GetPoint(t);
                 Clicked?.Invoke(this, pos);
                 End = pos;
 
-                QueueRedraw();
-
+                UpdateCurve();
                 AcceptEvent();
-                return;
             }
         }
     }
@@ -74,6 +56,7 @@ public partial class ClickableEdge : Control
     /* Private methods. */
     private void UpdateCurve()
     {
+        // Update curve.
         if (Curve == null)
             Curve = new(Start, End);
         else
@@ -82,19 +65,7 @@ public partial class ClickableEdge : Control
             Curve.End = End;
         }
 
-        UpdateBounds();
-
-        Vector2[] points = Curve.Sample(SAMPLES);
-        for (int i = 0; i < points.Length; i++)
-        {
-            points[i] -= Position;
-        }
-        Line.Points = points;
-    }
-
-    private void UpdateBounds()
-    {
-        // Find min/max position.
+        // Update bounds.
         Vector2 minPos = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
         Vector2 maxPos = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
 
@@ -105,38 +76,16 @@ public partial class ClickableEdge : Control
             maxPos = maxPos.Max(point);
         }
 
-        // Update size and position.
         Vector2 padding = Vector2.One * (CLICK_DISTANCE + LINE_WIDTH);
         Position = minPos - padding;
         Size = maxPos - minPos + padding * 2;
-    }
 
-    private static float FindClickT(BezierCurve curve, Vector2 mouse)
-    {
-        Vector2[] points = curve.Sample(SAMPLES);
-
-        float bestDistance = float.PositiveInfinity;
-        float bestT = -1.0f;
-
-        for (int i = 0; i < points.Length - 1; i++)
+        // Update graphic.
+        Vector2[] localPoints = Curve.Sample(SAMPLES);
+        for (int i = 0; i < localPoints.Length; i++)
         {
-            Vector2 closest = Geometry2D.GetClosestPointToSegment(mouse, points[i], points[i + 1]);
-
-            float distance = mouse.DistanceTo(closest);
-            if (distance < bestDistance)
-            {
-                bestDistance = distance;
-
-                float segmentLength = points[i].DistanceTo(points[i + 1]);
-
-                float localT = 0.0f;
-                if (segmentLength > 0)
-                    localT = points[i].DistanceTo(closest) / segmentLength;
-
-                bestT = Mathf.Lerp((float)i / SAMPLES, (float)(i + 1) / SAMPLES, localT);
-            }
+            localPoints[i] -= Position;
         }
-
-        return bestDistance <= CLICK_DISTANCE ? bestT : -1.0f;
+        Line.Points = localPoints;
     }
 }
