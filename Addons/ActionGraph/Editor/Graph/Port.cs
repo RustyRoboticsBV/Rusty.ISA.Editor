@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Rusty.ActionGraph.Graphs;
+namespace Rusty.ActionGraph.Editor;
 
 public partial class Port : Panel
 {

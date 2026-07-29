@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Rusty.ActionGraph.Graphs;
+namespace Rusty.ActionGraph.Editor;
 
 public sealed partial class PortPair : HBoxContainer
 {

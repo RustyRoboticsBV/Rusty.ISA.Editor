@@ -3,33 +3,42 @@ using System;
 
 namespace Rusty.ActionGraph.Editor;
 
-[GlobalClass]
-public partial class ClickableEdge : Control
+/// <summary>
+/// A graph editor edge.
+/// </summary>
+public partial class Edge : GraphElement
 {
     /* Private constants. */
     private const float LINE_WIDTH = 3.0f;
     private const float CLICK_DISTANCE = 8.0f;
     private const int SAMPLES = 64;
 
+    /* Fields. */
+    private Vector2 end;
+
     /* Public properties. */
-    [Export] Vector2 Start { get; set; } = new(100, 300);
-    [Export] Vector2 End { get; set; } = new(700, 100);
+    [Export] public Vector2 End
+    {
+        get => end;
+        set
+        {
+            end = value;
+            UpdateCurve();
+        }
+    }
 
     /* Private properties. */
     private BezierCurve Curve { get; set; }
-    private Line2D Line { get; set; }
 
     /* Public events. */
-    public event Action<ClickableEdge, Vector2> Clicked;
+    public event Action<Edge, Vector2> Clicked;
 
     /* Godot overrides. */
     public override void _Ready()
     {
         MouseFilter = MouseFilterEnum.Stop;
-
-        Line = new();
-        Line.Width = LINE_WIDTH;
-        AddChild(Line);
+        Draggable = false;
+        Selectable = false;
 
         UpdateCurve();
     }
@@ -38,7 +47,7 @@ public partial class ClickableEdge : Control
     {
         if (@event is InputEventMouseButton mouseEvent && mouseEvent.ButtonIndex == MouseButton.Left && mouseEvent.Pressed)
         {
-            Vector2 mouse = mouseEvent.Position + Position;
+            Vector2 mouse = mouseEvent.Position + PositionOffset;
 
             float t = Curve.FindPosition(SAMPLES, mouse, CLICK_DISTANCE);
             if (t >= 0.0f)
@@ -53,17 +62,31 @@ public partial class ClickableEdge : Control
         }
     }
 
+    public override void _Draw()
+    {
+        // Update curve.
+        Curve.Start = PositionOffset;
+        Curve.End = End;
+
+        // Sample curve.
+        Vector2[] points = Curve.Sample(SAMPLES);
+        for (int i = 0; i < points.Length; i++)
+        {
+            points[i] -= PositionOffset;
+        }
+
+        // Draw curve.
+        DrawPolyline(points, Colors.White, LINE_WIDTH);
+    }
+
     /* Private methods. */
     private void UpdateCurve()
     {
         // Update curve.
         if (Curve == null)
-            Curve = new(Start, End);
+            Curve = new(Vector2.Zero, End);
         else
-        {
-            Curve.Start = Start;
             Curve.End = End;
-        }
 
         // Update bounds.
         Vector2 minPos = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
@@ -77,15 +100,10 @@ public partial class ClickableEdge : Control
         }
 
         Vector2 padding = Vector2.One * (CLICK_DISTANCE + LINE_WIDTH);
-        Position = minPos - padding;
+        PositionOffset = minPos - padding;
         Size = maxPos - minPos + padding * 2;
 
         // Update graphic.
-        Vector2[] localPoints = Curve.Sample(SAMPLES);
-        for (int i = 0; i < localPoints.Length; i++)
-        {
-            localPoints[i] -= Position;
-        }
-        Line.Points = localPoints;
+        QueueRedraw();
     }
 }

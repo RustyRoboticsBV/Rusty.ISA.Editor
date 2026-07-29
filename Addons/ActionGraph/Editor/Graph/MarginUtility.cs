@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Rusty.ActionGraph.Graphs;
+namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// An utility class for creating and altering margin containers.

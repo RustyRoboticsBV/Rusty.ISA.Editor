@@ -1,11 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://b42qbkyncrp8c"]
+[gd_scene load_steps=13 format=3 uid="uid://b42qbkyncrp8c"]
 
 [ext_resource type="Script" uid="uid://dfipvca8by3jf" path="res://Addons/ActionGraph/Editor/UI/IsaEditor.cs" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c7iq4qdt3nxex" path="res://Scripts/Test.cs" id="1_trcuy"]
 [ext_resource type="FontVariation" uid="uid://4o20x61wdxf6" path="res://Fonts/UbuntuMono-R-Edit.tres" id="2_0hhuw"]
-[ext_resource type="Script" uid="uid://8di4vkfpeft4" path="res://Addons/ActionGraph/Editor/UI/Graph/Frame.cs" id="2_6ykgs"]
-[ext_resource type="Script" uid="uid://gnvmc7xxf2l0" path="res://Addons/ActionGraph/Editor/UI/Graph/GraphNode.cs" id="6_5v8xv"]
-[ext_resource type="Script" uid="uid://dr03u5ajmrv5t" path="res://Addons/ActionGraph/Editor/Graph/Edges/ClickableEdge.cs" id="6_brgpd"]
+[ext_resource type="Script" uid="uid://8di4vkfpeft4" path="res://Addons/ActionGraph/Editor/Graph/Elements/Frame.cs" id="2_6ykgs"]
+[ext_resource type="Script" uid="uid://bf8q8rlogna4j" path="res://Addons/ActionGraph/Editor/Graph/Graph.cs" id="4_5v8xv"]
+[ext_resource type="Script" uid="uid://c0yqlrviv6aae" path="res://Addons/ActionGraph/Editor/Graph/MouseLabel.cs" id="5_brgpd"]
+[ext_resource type="Script" uid="uid://gnvmc7xxf2l0" path="res://Addons/ActionGraph/Editor/Graph/Elements/GraphNode.cs" id="6_5v8xv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_847jc"]
 bg_color = Color(0.1, 0.1, 0.1, 1)
@@ -70,6 +71,7 @@ script = ExtResource("1_trcuy")
 metadata/_custom_type_script = "uid://c7iq4qdt3nxex"
 
 [node name="GraphEdit" type="GraphEdit" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -220,18 +222,29 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_tpgpw")
 [node name="Control" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/GraphEdit/PanelContainer"]
 layout_mode = 2
 
+[node name="Graph" type="GraphEdit" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("4_5v8xv")
+metadata/_custom_type_script = "uid://bf8q8rlogna4j"
+
+[node name="MouseLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/Graph" node_paths=PackedStringArray("Graph")]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("5_brgpd")
+Graph = NodePath("..")
+metadata/_custom_type_script = "uid://c0yqlrviv6aae"
+
 [node name="IsaEditor" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_0lbib")
 ConsoleFont = ExtResource("2_0hhuw")
-
-[node name="ClickableEdge" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 435.0
-offset_top = 107.0
-offset_right = 475.0
-offset_bottom = 147.0
-script = ExtResource("6_brgpd")
-metadata/_custom_type_script = "uid://dr03u5ajmrv5t"
