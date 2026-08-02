@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace Rusty.ActionGraph;
+namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// A color field.

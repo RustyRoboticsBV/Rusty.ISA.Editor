@@ -1,7 +1,6 @@
 using Godot;
-using Rusty.ActionGraph.Consoles;
 
-namespace Rusty.ActionGraph;
+namespace Rusty.ActionGraph.Editor;
 
 [GlobalClass]
 public partial class Test : ScrollContainer

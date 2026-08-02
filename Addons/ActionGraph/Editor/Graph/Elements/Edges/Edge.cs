@@ -36,7 +36,7 @@ public partial class Edge : GraphElement
     /* Godot overrides. */
     public override void _Ready()
     {
-        MouseFilter = MouseFilterEnum.Stop;
+        MouseFilter = MouseFilterEnum.Pass;
         Draggable = false;
         Selectable = false;
 

@@ -7,18 +7,27 @@ namespace Rusty.ActionGraph.Editor;
 /// </summary>
 public partial class Joint : GraphElement
 {
-    public static float RADIUS = 10f;
+    /* Public constants. */
+    public static float RADIUS = 5f;
 
-    [Export] public Color FillColor = Colors.White;
-    [Export] public Color OutlineColor = Colors.Gray;
+    /* Public properties. */
+    [Export] public Color FillColor { get; set; } = Colors.White;
+    [Export] public Color OutlineColor { get; set; } = Colors.Gray;
 
-    [Export] public Color SelectedFillColor = Colors.Gray;
-    [Export] public Color SelectedOutlineColor = Colors.DodgerBlue;
+    [Export] public Color SelectedFillColor { get; set; } = Colors.Gray;
+    [Export] public Color SelectedOutlineColor { get; set; } = Colors.DodgerBlue;
 
+    /* Private properties. */
     private bool Hovered { get; set; }
 
+    /* Public methods. */
+    public Vector2 GetGlobalCenter() => GlobalPosition + Size / 2f;
+
+    /* Godot overrides. */
     public override void _Ready()
     {
+        OffsetBottom = -RADIUS;
+        OffsetLeft = -RADIUS;
         CustomMinimumSize = Vector2.One * RADIUS * 2;
         Size = CustomMinimumSize;
 

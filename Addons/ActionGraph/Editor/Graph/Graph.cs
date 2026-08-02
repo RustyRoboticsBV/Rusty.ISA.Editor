@@ -18,7 +18,11 @@ public partial class Graph : GraphEdit
     /// <summary>
     /// Get the graph coordinate corresponding to the current mouse position.
     /// </summary>
-    public Vector2 GetMouseCoordinate() => (GetLocalMousePosition() + ScrollOffset) / Zoom;
+    public Vector2 GetMouseCoordinate() => GetCoordinate(GetGlobalMousePosition());
+    /// <summary>
+    /// Get the graph coordinate corresponding to the current mouse position.
+    /// </summary>
+    public Vector2 GetCoordinate(Vector2 globalPosition) => (globalPosition - GlobalPosition + ScrollOffset) / Zoom;
 
     public Joint AddJoint(Vector2 position)
     {
@@ -74,7 +78,7 @@ public partial class Graph : GraphEdit
         edge.End = position - edge.Position;
 
         // Add joint.
-        Joint joint = AddJoint(position);
+        Joint joint = AddJoint(position - Joint.RADIUS * Vector2.One);
 
         // Create second edge.
         AddEdge(position, end);

@@ -1,8 +1,7 @@
 using Godot;
 using System;
-using System.Security.Cryptography;
 
-namespace Rusty.ActionGraph;
+namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// An enum field.

@@ -1,12 +1,11 @@
 using Godot;
 using System;
 
-namespace Rusty.ActionGraph;
+namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// A toggle field.
 /// </summary>
-[GlobalClass]
 public partial class ToggleField : HBoxContainer, IWidget, IValued<bool>
 {
     /* Public properties. */

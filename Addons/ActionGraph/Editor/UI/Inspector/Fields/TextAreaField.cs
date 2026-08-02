@@ -1,12 +1,11 @@
 using Godot;
 using System;
 
-namespace Rusty.ActionGraph;
+namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// A text area field.
 /// </summary>
-[GlobalClass]
 public partial class TextAreaField : VBoxContainer, IWidget, IValued<string>
 {
     /* Public properties. */
