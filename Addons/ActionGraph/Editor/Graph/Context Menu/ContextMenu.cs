@@ -30,8 +30,12 @@ internal partial class ContextMenu : PopupMenu
         NodesMenu.IdPressed += OnNodeSelected;
         AddSubmenuNodeItem("Nodes", NodesMenu);
 
-        Add($"{scriptDir}/IconMemo.svg", "Frame");
-        Add($"{scriptDir}/IconFrame.svg", "Sticky Note");
+        Texture2D textureFrame = GD.Load<Texture2D>($"{scriptDir}/Icons/Frame.svg");
+        AddIconItem(textureFrame, "Frame");
+
+        Texture2D textureMemo = GD.Load<Texture2D>($"{scriptDir}/Icons/Memo.svg");
+        AddIconItem(textureMemo, "Sticky Note");
+
         IdPressed += OnItemSelected;
     }
 
@@ -45,12 +49,6 @@ internal partial class ContextMenu : PopupMenu
     }
 
     /* Private methods. */
-    private void Add(string iconPath, string label)
-    {
-        Texture2D texture = GD.Load<Texture2D>(iconPath);
-        AddIconItem(texture, label);
-    }
-
     private void OnItemSelected(long id)
     {
         if (id == 2)

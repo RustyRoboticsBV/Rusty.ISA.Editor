@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1x30d4vamogw"
-path="res://.godot/imported/IconFrame.svg-074afba7c5d8d0b9ad4340f8204e673e.ctex"
+uid="uid://d2o5giuy56djw"
+path="res://.godot/imported/Memo.svg-425113f77d78bda2b12eea25559f71f6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Addons/ActionGraph/Editor/Graph/IconFrame.svg"
-dest_files=["res://.godot/imported/IconFrame.svg-074afba7c5d8d0b9ad4340f8204e673e.ctex"]
+source_file="res://Addons/ActionGraph/Editor/Graph/Context Menu/Icons/Memo.svg"
+dest_files=["res://.godot/imported/Memo.svg-425113f77d78bda2b12eea25559f71f6.ctex"]
 
 [params]
 
