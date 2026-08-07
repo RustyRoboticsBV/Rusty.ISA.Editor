@@ -14,6 +14,20 @@ public partial class Graph : GraphEdit
     public Array<Memo> Memos { get; } = new();
     public Array<Edge> Edges { get; } = new();
 
+    /* Private properties. */
+    private ContextMenu ContextMenu { get; set; }
+
+    /* Constructors. */
+    public Graph()
+    {
+        ContextMenu = new();
+        ContextMenu.NodeSelected += OnContextMenuNodeSelected;
+        ContextMenu.FrameSelected += OnContextMenuFrameSelected;
+        ContextMenu.MemoSelected += OnContextMenuMemoSelected;
+        AddChild(ContextMenu);
+        ContextMenu.Hide();
+    }
+
     /* Public methods. */
     /// <summary>
     /// Get the graph coordinate corresponding to the current mouse position.
@@ -68,6 +82,15 @@ public partial class Graph : GraphEdit
         AddEdge(new(100, 100), new(200, 1000));
     }
 
+    public override void _GuiInput(InputEvent @event)
+    {
+        if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Right)
+        {
+            ContextMenu.Position = (Vector2I)GetGlobalMousePosition();
+            ContextMenu.Show();
+        }
+    }
+
     /* Private methods. */
     private void OnEdgeClicked(Edge edge, Vector2 position)
     {
@@ -82,5 +105,20 @@ public partial class Graph : GraphEdit
 
         // Create second edge.
         AddEdge(position, end);
+    }
+
+    private void OnContextMenuNodeSelected(int index)
+    {
+        GD.Print("Node " + index);
+    }
+
+    private void OnContextMenuFrameSelected()
+    {
+        GD.Print("Frame");
+    }
+
+    private void OnContextMenuMemoSelected()
+    {
+        GD.Print("Memo");
     }
 }
