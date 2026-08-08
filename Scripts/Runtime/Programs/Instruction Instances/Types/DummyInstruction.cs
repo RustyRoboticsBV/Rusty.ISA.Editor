@@ -14,6 +14,6 @@ public sealed partial class DummyInstruction : Instruction
     /* Public methods. */
     public override string ToString()
     {
-        return base.ToString() + $"DUMMY()";
+        return base.ToString() + "DUMMY()";
     }
 }

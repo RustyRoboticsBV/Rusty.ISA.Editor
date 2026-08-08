@@ -11,12 +11,12 @@ public partial class InstructionProgram : Resource
     /* Public properties. */
     [Export] public Metadata Metadata { get; private set; } = new();
     [Export] public InstructionSet InstructionSet { get; private set; } = new();
-    [Export] public Instruction[] Instructions { get; private set; } = [];
+    [Export] public InstructionList Instructions { get; private set; } = new();
 
     /* Constructors. */
-    public InstructionProgram() : this(new(), new(), []) { }
+    public InstructionProgram() : this(new(), new(), new()) { }
 
-    public InstructionProgram(Metadata metadata, InstructionSet instructionSet, Instruction[] instructions)
+    public InstructionProgram(Metadata metadata, InstructionSet instructionSet, InstructionList instructions)
     {
         Metadata = metadata;
         InstructionSet = instructionSet;
@@ -24,15 +24,5 @@ public partial class InstructionProgram : Resource
     }
 
     /* Public methods. */
-    public override string ToString()
-    {
-        string str = "";
-        foreach (Instruction instruction in Instructions)
-        {
-            if (str.Length > 0)
-                str += "\n";
-            str += instruction.ToString();
-        }
-        return str;
-    }
+    public override string ToString() => Instructions.ToString();
 }

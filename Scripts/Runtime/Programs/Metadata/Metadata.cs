@@ -6,10 +6,11 @@ namespace Rusty.ActionGraph;
 /// <summary>
 /// A program metadata container.
 /// </summary>
+[GlobalClass]
 public partial class Metadata : Resource
 {
     /* Public properties. */
-    [Export] public Dictionary<string, string> Values { get; private set; } = new();
+    [Export] Dictionary<string, string> Values { get; set; } = new();
 
     public string Title => GetValue("title");
     public string Description => GetValue("desc");

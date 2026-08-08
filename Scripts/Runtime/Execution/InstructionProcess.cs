@@ -47,7 +47,7 @@ public partial class InstructionProcess : Node
         // Find start points and labels.
         StartPoints.Clear();
         Labels.Clear();
-        for (int i = 0; i < program.Instructions.Length; i++)
+        for (int i = 0; i < program.Instructions.Count; i++)
         {
             Instruction instruction = program.Instructions[i];
             if (!string.IsNullOrEmpty(instruction.Start))
@@ -190,7 +190,7 @@ public partial class InstructionProcess : Node
     private void Advance()
     {
         ProgramCounter++;
-        if (ProgramCounter >= Program.Instructions.Length)
+        if (ProgramCounter >= Program.Instructions.Count)
             throw new IndexOutOfRangeException($"{nameof(ProgramCounter)} went out of bounds. All branches of a program must be terminated by end instructions.");
     }
 

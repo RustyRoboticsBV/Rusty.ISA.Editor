@@ -9,6 +9,7 @@ namespace Rusty.ActionGraph;
 public sealed partial class InstructionSet : Resource
 {
     /* Public properties. */
+    // TODO: make private so that this class is immutable, and expose indexer + count property.
     [Export] public InstructionDefinition[] Definitions { get; private set; }
 
     /* Constructors. */

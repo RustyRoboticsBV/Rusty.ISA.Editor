@@ -118,7 +118,7 @@ public static class Compiler
         InstructionSet iset = CompileInstructionSet(file);
 
         // Create program.
-        return new(metadata, iset, instructions.ToArray());
+        return new(metadata, iset, new(instructions));
     }
 
     /* Private methods. */
