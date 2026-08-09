@@ -17,11 +17,9 @@ public abstract partial class InstructionProgramImporter : Node
     {
         // Parse the XML as a codec.
         FileCodec codec = Parser.Parse(xml);
-        Godot.GD.Print(Serializer.Serialize(codec));
 
         // Compile the codec into a program.
         InstructionProgram program = Compiler.Compile(codec);
-        Godot.GD.Print(program);
         return program;
     }
 }

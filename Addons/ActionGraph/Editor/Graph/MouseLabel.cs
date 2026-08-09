@@ -3,7 +3,7 @@
 namespace Rusty.ActionGraph.Editor;
 
 [GlobalClass]
-public partial class MouseLabel : Label
+internal partial class MouseLabel : Label
 {
     [Export] public Graph Graph { get; set; }
 

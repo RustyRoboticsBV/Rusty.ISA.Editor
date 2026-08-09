@@ -3,9 +3,9 @@
 namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
-/// A TextEdit that suppresses built-in undo/redo behavior.
+/// A CheckBox that suppresses built-in undo/redo behavior.
 /// </summary>
-public sealed partial class TextEdit : Godot.TextEdit
+public sealed partial class CheckBox : Godot.CheckBox
 {
     /* Godot overrides. */
     public override void _GuiInput(InputEvent @event)
@@ -14,8 +14,13 @@ public sealed partial class TextEdit : Godot.TextEdit
         {
             if (key.CtrlPressed && key.Keycode == Key.Z)
                 AcceptEvent();
-            if (key.CtrlPressed && key.Keycode == Key.Y)
+            else if (key.CtrlPressed && key.Keycode == Key.Y)
                 AcceptEvent();
+            else if (!key.CtrlPressed && key.Keycode == Key.Escape)
+            {
+                ReleaseFocus();
+                AcceptEvent();
+            }
         }
     }
 }

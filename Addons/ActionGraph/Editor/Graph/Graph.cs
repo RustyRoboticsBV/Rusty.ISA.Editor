@@ -3,11 +3,10 @@ using Godot.Collections;
 
 namespace Rusty.ActionGraph.Editor;
 
-[GlobalClass]
 /// <summary>
 /// A graph editor joint, used to split up edges.
 /// </summary>
-public partial class Graph : GraphEdit
+internal partial class Graph : GraphEdit
 {
     /* Public properties. */
     public Array<Joint> Joints { get; } = new();

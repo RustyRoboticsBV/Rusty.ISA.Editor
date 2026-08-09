@@ -1,6 +1,6 @@
-﻿using Rusty.ActionGraph.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Rusty.ActionGraph.Serialization;
 
 namespace Rusty.ActionGraph.Compilation;
 

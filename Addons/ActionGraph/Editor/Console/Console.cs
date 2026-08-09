@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-namespace Rusty.ActionGraph.Consoles;
+namespace Rusty.ActionGraph.Editor;
 
 public partial class Console : MarginContainer
 {

@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Rusty.ActionGraph.Consoles;
+namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// A foldout label that reacts to mouse input events.

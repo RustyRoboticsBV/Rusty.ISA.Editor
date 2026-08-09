@@ -14,8 +14,13 @@ public sealed partial class HSlider : Godot.HSlider
         {
             if (key.CtrlPressed && key.Keycode == Key.Z)
                 AcceptEvent();
-            if (key.CtrlPressed && key.Keycode == Key.Y)
+            else if (key.CtrlPressed && key.Keycode == Key.Y)
                 AcceptEvent();
+            else if (!key.CtrlPressed && key.Keycode == Key.Escape)
+            {
+                ReleaseFocus();
+                AcceptEvent();
+            }
         }
     }
 }
