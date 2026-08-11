@@ -75,6 +75,14 @@ internal partial class Inspector : ScrollContainer
         enum2.SetSelected(2);
         Vbox.AddChild(@enum2);
 
+        ListElement element = new(enum2.DuplicateField());
+        element.PressedInsert += (element) => GD.Print("Pressed insert: " + element);
+        element.PressedDuplicate += (element) => GD.Print("Pressed duplicate: " + element);
+        element.PressedDelete += (element) => GD.Print("Pressed delete: " + element);
+        element.MovedUp += (element) => GD.Print("Moved up: " + element);
+        element.MovedDown += (element) => GD.Print("Moved down: " + element);
+        Vbox.AddChild(element);
+
         Vbox.AddChild(new CheckBox());
         Vbox.AddChild(new CheckButton());
         Vbox.AddChild(new SpinBox());
