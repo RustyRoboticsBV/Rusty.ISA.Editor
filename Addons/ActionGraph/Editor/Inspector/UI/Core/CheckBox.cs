@@ -7,6 +7,15 @@ namespace Rusty.ActionGraph.Editor;
 /// </summary>
 public sealed partial class CheckBox : Godot.CheckBox
 {
+    /* Public properties. */
+    public UndoRedo UndoRedo { get; set; }
+
+    /* Constructors. */
+    public CheckBox() : base()
+    {
+        Pressed += OnPressed;
+    }
+
     /* Godot overrides. */
     public override void _GuiInput(InputEvent @event)
     {
@@ -16,11 +25,32 @@ public sealed partial class CheckBox : Godot.CheckBox
                 AcceptEvent();
             else if (key.CtrlPressed && key.Keycode == Key.Y)
                 AcceptEvent();
-            else if (!key.CtrlPressed && key.Keycode == Key.Escape)
+            else if (!key.CtrlPressed && (key.Keycode == Key.Escape || key.Keycode == Key.Enter))
             {
                 ReleaseFocus();
                 AcceptEvent();
             }
         }
+    }
+
+    /* Private methods. */
+    private void OnPressed()
+    {
+        Record(!ButtonPressed, ButtonPressed);
+        ReleaseFocus();
+    }
+
+    private void Record(bool from, bool to)
+    {
+        if (UndoRedo == null || from == to)
+            return;
+
+        UndoRedo.CreateAction($"Changed CheckButton '{Name}': {from} => {to}");
+
+        UndoRedo.AddUndoProperty(this, "button_pressed", from);
+
+        UndoRedo.AddDoProperty(this, "button_pressed", to);
+
+        UndoRedo.CommitAction(false);
     }
 }

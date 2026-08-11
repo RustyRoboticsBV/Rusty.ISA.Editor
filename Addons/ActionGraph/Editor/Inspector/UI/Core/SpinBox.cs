@@ -1,5 +1,4 @@
 ﻿using Godot;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Rusty.ActionGraph.Editor;
 
@@ -33,7 +32,6 @@ public sealed partial class SpinBox : Godot.SpinBox
 
     public void CommitValue(double value)
     {
-        GD.Print("Checking " + value + " against " + LastValue);
         if (value != LastValue)
         {
             Record(LastValue, value);
@@ -50,7 +48,6 @@ public sealed partial class SpinBox : Godot.SpinBox
 
         if (@event is InputEventKey key)
         {
-            GD.Print("KEY " + key.Keycode);
             if (key.Pressed)
             {
                 if (key.CtrlPressed && key.Keycode == Key.Z)
@@ -82,7 +79,6 @@ public sealed partial class SpinBox : Godot.SpinBox
 
     private void OnFocusExited()
     {
-        GD.Print("TEXT " + GetLineEdit().Text);
         if (double.TryParse(GetLineEdit().Text, out double parsed))
             CommitValue(parsed);
         LastValue = Value;
@@ -90,7 +86,6 @@ public sealed partial class SpinBox : Godot.SpinBox
 
     private void Record(double from, double to)
     {
-        GD.Print("HOLY FUCKING SHIT " + from + " => " + to);
         if (UndoRedo == null || from == to)
             return;
 

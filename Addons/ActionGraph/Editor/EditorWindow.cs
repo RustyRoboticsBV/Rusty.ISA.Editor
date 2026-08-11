@@ -50,7 +50,11 @@ public abstract partial class EditorWindow : VBoxContainer
         // TODO: temporary undo/redo testing. Remove later.
         void SetupUndoRedo(UndoRedo undoRedo, Node node)
         {
-            if (node is LineEdit le)
+            if (node is CheckBox cb)
+                cb.UndoRedo = undoRedo;
+            else if (node is CheckButton cb2)
+                cb2.UndoRedo = undoRedo;
+            else if (node is LineEdit le)
                 le.UndoRedo = undoRedo;
             else if (node is ColorPickerButton cpb)
                 cpb.UndoRedo = undoRedo;
