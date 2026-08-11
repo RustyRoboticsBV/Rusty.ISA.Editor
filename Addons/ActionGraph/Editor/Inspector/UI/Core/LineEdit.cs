@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System;
 
 namespace Rusty.ActionGraph.Editor;
 
@@ -13,6 +14,9 @@ public sealed partial class LineEdit : Godot.LineEdit
     /* Private properties. */
     private string LastText { get; set; } = "";
 
+    /* Public events. */
+    public event Action<string> CommittedText;
+
     /* Constructors. */
     public LineEdit() : base()
     {
@@ -20,20 +24,27 @@ public sealed partial class LineEdit : Godot.LineEdit
     }
 
     /* Public methods. */
-    public void SetValue(string text)
+    public new void SetText(string text)
     {
         Text = text;
         LastText = text;
     }
 
-    public void CommitValue(string text)
+    public void CommitText(string text)
     {
         if (text != LastText)
         {
             Record(LastText, text);
             Text = text;
             LastText = text;
+            CommittedText?.Invoke(text);
         }
+    }
+
+    public void CancelText()
+    {
+        Text = LastText;
+        ReleaseFocus();
     }
 
     /* Godot overrides. */
@@ -53,13 +64,12 @@ public sealed partial class LineEdit : Godot.LineEdit
                 AcceptEvent();
             else if (!key.CtrlPressed && key.Keycode == Key.Escape)
             {
-                Text = LastText;
-                ReleaseFocus();
+                CancelText();
                 AcceptEvent();
             }
             else if (!key.CtrlPressed && key.Keycode == Key.Enter)
             {
-                ReleaseFocus();
+                CancelText();
                 AcceptEvent();
             }
         }
@@ -68,7 +78,7 @@ public sealed partial class LineEdit : Godot.LineEdit
     /* Private methods. */
     private void OnFocusExited()
     {
-        CommitValue(Text);
+        CommitText(Text);
     }
 
     private void Record(string from, string to)

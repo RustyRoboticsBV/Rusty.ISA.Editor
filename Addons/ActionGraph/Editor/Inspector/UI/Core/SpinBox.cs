@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System;
 
 namespace Rusty.ActionGraph.Editor;
 
@@ -12,6 +13,9 @@ public sealed partial class SpinBox : Godot.SpinBox
 
     /* Private properties. */
     private double LastValue { get; set; }
+
+    /* Public events. */
+    public event Action<double> CommittedValue;
 
     /* Constructors. */
     public SpinBox() : base()
@@ -37,7 +41,15 @@ public sealed partial class SpinBox : Godot.SpinBox
             Record(LastValue, value);
             Value = value;
             LastValue = value;
+            CommittedValue?.Invoke(value);
         }
+    }
+
+    public void CancelValue()
+    {
+        GetLineEdit().Text = LastValue.ToString();
+        GetLineEdit().ReleaseFocus();
+        ReleaseFocus();
     }
 
     /* Godot overrides. */
@@ -56,9 +68,7 @@ public sealed partial class SpinBox : Godot.SpinBox
                     AcceptEvent();
                 else if (!key.CtrlPressed && key.Keycode == Key.Escape)
                 {
-                    GetLineEdit().Text = LastValue.ToString();
-                    GetLineEdit().ReleaseFocus();
-                    ReleaseFocus();
+                    CancelValue();
                     AcceptEvent();
                 }
                 else if (!key.CtrlPressed && key.Keycode == Key.Enter)

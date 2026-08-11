@@ -1,4 +1,6 @@
 ﻿using Godot;
+using System;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Rusty.ActionGraph.Editor;
 
@@ -12,6 +14,9 @@ public sealed partial class HSlider : Godot.HSlider
 
     /* Private properties. */
     private double LastValue { get; set; }
+
+    /* Public events. */
+    public event Action<double> CommittedValue;
 
     /* Constructors. */
     public HSlider() : base()
@@ -34,7 +39,14 @@ public sealed partial class HSlider : Godot.HSlider
             Record(LastValue, value);
             Value = value;
             LastValue = value;
+            CommittedValue?.Invoke(value);
         }
+    }
+
+    public void CancelValue()
+    {
+        Value = LastValue;
+        ReleaseFocus();
     }
 
     /* Godot overrides. */
@@ -48,8 +60,7 @@ public sealed partial class HSlider : Godot.HSlider
                 AcceptEvent();
             else if (!key.CtrlPressed && key.Keycode == Key.Escape)
             {
-                Value = LastValue;
-                ReleaseFocus();
+                CancelValue();
                 AcceptEvent();
             }
             else if (!key.CtrlPressed && key.Keycode == Key.Enter)
@@ -76,7 +87,7 @@ public sealed partial class HSlider : Godot.HSlider
         if (UndoRedo == null || from == to)
             return;
 
-        UndoRedo.CreateAction($"Changed SpinBox '{Name}': {from} => {to}");
+        UndoRedo.CreateAction($"Changed HSlider '{Name}': {from} => {to}");
 
         UndoRedo.AddUndoProperty(this, "value", from);
 

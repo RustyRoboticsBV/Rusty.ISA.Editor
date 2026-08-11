@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System;
 
 namespace Rusty.ActionGraph.Editor;
 
@@ -13,6 +14,9 @@ public sealed partial class ColorPickerButton : Godot.ColorPickerButton
     /* Private properties. */
     private Color LastColor { get; set; }
 
+    /* Public events. */
+    public event Action<Color> CommittedColor;
+
     /* Constructors. */
     public ColorPickerButton() : base()
     {
@@ -22,20 +26,28 @@ public sealed partial class ColorPickerButton : Godot.ColorPickerButton
     }
 
     /* Public methods. */
-    public void SetValue(Color color)
+    public void SetColor(Color color)
     {
         Color = color;
         LastColor = color;
     }
 
-    public void CommitValue(Color color)
+    public void CommitColor(Color color)
     {
         if (color != LastColor)
         {
             Record(LastColor, color);
             Color = color;
             LastColor = color;
+            CommittedColor?.Invoke(color);
         }
+    }
+
+    public void CancelColor()
+    {
+        Color = LastColor;
+        GetPopup().Hide();
+        ReleaseFocus();
     }
 
     /* Godot overrides. */
@@ -57,17 +69,13 @@ public sealed partial class ColorPickerButton : Godot.ColorPickerButton
                     AcceptEvent();
                 else if (!key.CtrlPressed && key.Keycode == Key.Escape)
                 {
-                    Color = LastColor;
-                    GetPopup().Hide();
-                    ReleaseFocus();
+                    CancelColor();
                     AcceptEvent();
                 }
             }
             else if (!key.CtrlPressed && key.Keycode == Key.Escape)
             {
-                Color = LastColor;
-                GetPopup().Hide();
-                ReleaseFocus();
+                CancelColor();
                 AcceptEvent();
             }
         }
@@ -78,14 +86,14 @@ public sealed partial class ColorPickerButton : Godot.ColorPickerButton
     {
         if (GetPopup().Visible)
             GetPopup().Hide();
-        CommitValue(Color);
+        CommitColor(Color);
     }
 
     private void OnPopupHide()
     {
         if (HasFocus())
             ReleaseFocus();
-        CommitValue(Color);
+        CommitColor(Color);
     }
 
     private void Record(Color from, Color to)
