@@ -35,7 +35,7 @@ public partial class BoolField : HBoxContainer, IField<BoolField>
         set => CheckButton.UndoRedo = value;
     }
 
-    public bool IsTrue
+    public bool Pressed
     {
         get => CheckButton.ButtonPressed;
         set => CheckButton.ButtonPressed = value;
@@ -72,7 +72,7 @@ public partial class BoolField : HBoxContainer, IField<BoolField>
         field.TitleWidth = TitleWidth;
         field.TooltipText = TooltipText;
         field.UndoRedo = UndoRedo;
-        field.SetPressed(IsTrue);
+        field.SetPressed(Pressed);
         return field;
     }
 

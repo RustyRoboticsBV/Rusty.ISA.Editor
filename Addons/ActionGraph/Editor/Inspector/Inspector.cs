@@ -21,6 +21,7 @@ internal partial class Inspector : ScrollContainer
         Vbox.AddChild(@bool);
 
         BoolField bool2 = @bool.DuplicateField();
+        bool2.TitleText = "Bool2";
         bool2.SetPressed(true);
         Vbox.AddChild(@bool2);
 
@@ -28,8 +29,25 @@ internal partial class Inspector : ScrollContainer
         Vbox.AddChild(num);
 
         NumericField num2 = num.DuplicateField();
+        num2.TitleText = "Num2";
         num2.SetValue(5);
         Vbox.AddChild(num2);
+
+        LineField line = new("Line", "abcdefg");
+        Vbox.AddChild(line);
+
+        LineField line2 = line.DuplicateField();
+        line2.TitleText = "Line2";
+        line2.SetText("cheese");
+        Vbox.AddChild(line2);
+
+        TextField text = new("Text", "ABCDEFG\nHIJKLMNOP");
+        Vbox.AddChild(text);
+
+        TextField text2 = text.DuplicateField();
+        text2.TitleText = "Text2";
+        text2.SetText("asdasdasdasd\nasdasd asdasd");
+        Vbox.AddChild(text2);
 
         ColorField color = new("Color1", Colors.Beige);
         Vbox.AddChild(color);

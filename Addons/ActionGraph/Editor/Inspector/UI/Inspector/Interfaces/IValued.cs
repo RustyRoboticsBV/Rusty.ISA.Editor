@@ -26,13 +26,13 @@ public interface IValued<T> : IValued
     /* Public properties. */
     object IValued.Value
     {
-        get => Value;
+        get => Text;
     }
 
     /// <summary>
     /// The value of this widget.
     /// </summary>
-    public new T Value { get; }
+    public new T Text { get; }
 
     /* Public methods. */
     void IValued.SetValue(object value)

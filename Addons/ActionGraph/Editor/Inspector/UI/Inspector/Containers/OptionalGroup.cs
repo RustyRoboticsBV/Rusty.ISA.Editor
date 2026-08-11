@@ -40,7 +40,7 @@ public partial class OptionalGroup : VBoxContainer, IWidget, IGroup, IValued<boo
         get => Margin.GetThemeConstant("margin_left");
         set => Margin.AddThemeConstantOverride("margin_left", value);
     }
-    public bool Value
+    public bool Text
     {
         get => CheckBox.ButtonPressed;
         set
@@ -98,7 +98,7 @@ public partial class OptionalGroup : VBoxContainer, IWidget, IGroup, IValued<boo
         group.TitleWidth = TitleWidth;
         group.Description = Description;
         group.Indentation = Indentation;
-        group.Value = Value;
+        group.Text = Text;
         foreach (IWidget child in Children)
         {
             group.AddWidget(child.Copy());
@@ -117,14 +117,14 @@ public partial class OptionalGroup : VBoxContainer, IWidget, IGroup, IValued<boo
     {
         Inner.AddChild(widget as Node);
         Children.Add(widget);
-        widget.Visible = Value;
+        widget.Visible = Text;
         widget.Changed += OnChanged;
         OnChanged(widget);
     }
 
     public void SetValue(bool value)
     {
-        Value = value;
+        Text = value;
     }
 
     public void CancelFocus() { }
@@ -145,7 +145,7 @@ public partial class OptionalGroup : VBoxContainer, IWidget, IGroup, IValued<boo
     {
         foreach (IWidget widget in Children)
         {
-            widget.Visible = Value;
+            widget.Visible = Text;
         }
     }
 }
