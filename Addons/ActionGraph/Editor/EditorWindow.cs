@@ -15,6 +15,10 @@ public abstract partial class EditorWindow : VBoxContainer
     internal Graph Graph { get; private set; }
     internal Console Console { get; private set; }
 
+    /* Private properties. */
+    private UndoRedo UndoRedo { get; set; }
+    private bool UndoRedoAllowed { get; set; } = true;
+
     /* Constructors. */
     public EditorWindow()
     {
@@ -42,5 +46,30 @@ public abstract partial class EditorWindow : VBoxContainer
         Console.SizeFlagsVertical = SizeFlags.ExpandFill;
         Console.Font = ConsoleFont;
         AddChild(Console);
+
+        // TODO: temporary undo/redo testing. Remove later.
+        void SetupUndoRedo(UndoRedo undoRedo, Node node)
+        {
+            if (node is LineEdit le)
+            {
+                GD.Print("FOUND LINE EDIT " + le.Name);
+                le.UndoRedo = undoRedo;
+            }
+            foreach (Node child in node.GetChildren())
+            {
+                SetupUndoRedo(undoRedo, child);
+            }
+        }
+        UndoRedo = new();
+        SetupUndoRedo(UndoRedo, this);
+    }
+
+    /* Public methods. */
+    public override void _Process(double delta)
+    {
+        if (UndoRedoUtility.PressedUndo)
+            UndoRedo.Undo();
+        else if (UndoRedoUtility.PressedRedo)
+            UndoRedo.Redo();
     }
 }
