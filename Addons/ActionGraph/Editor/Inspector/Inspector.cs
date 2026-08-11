@@ -20,10 +20,18 @@ internal partial class Inspector : ScrollContainer
         ColorField color = new("Color1", Colors.Beige);
         Vbox.AddChild(color);
 
-        ColorField color2 = color.CopyField();
+        ColorField color2 = color.DuplicateField();
         color2.TitleText = "Color2";
         color2.SetColor(Colors.ForestGreen);
         Vbox.AddChild(color2);
+
+        EnumField @enum = new("Enum", ["A", "B", "C"], 1);
+        Vbox.AddChild(@enum);
+
+        EnumField enum2 = @enum.DuplicateField();
+        enum2.TitleText = "Enum2";
+        enum2.SetSelected(2);
+        Vbox.AddChild(@enum2);
 
         Vbox.AddChild(new CheckBox());
         Vbox.AddChild(new CheckButton());

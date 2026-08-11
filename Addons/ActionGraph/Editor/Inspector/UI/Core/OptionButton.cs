@@ -20,12 +20,58 @@ public sealed partial class OptionButton : Godot.OptionButton
         ItemSelected += OnItemSelected;
     }
 
-    public OptionButton(string[] options) : this()
+    public OptionButton(string[] items) : this()
     {
-        foreach (string option in options)
+        foreach (string item in items)
         {
-            AddItem(option);
+            AddItem(item);
         }
+    }
+
+    /* Public methods. */
+    public void SetItems(string[] items)
+    {
+        while (ItemCount > 0)
+        {
+            RemoveItem(0);
+        }
+        foreach (string item in items)
+        {
+            AddItem(item);
+        }
+    }
+
+    public string[] GetItems()
+    {
+        string[] items = new string[ItemCount];
+        for (int i = 0; i < ItemCount; i++)
+        {
+            items[i] = GetItemText(i);
+        }
+        return items;
+    }
+
+    public new void Select(int index)
+    {
+        Selected = index;
+        LastSelected = index;
+    }
+
+    public void CommitSelect(int index)
+    {
+        GD.Print(LastSelected + "  " + index);
+        if (LastSelected != index)
+        {
+            Record(LastSelected, index);
+            Selected = index;
+            LastSelected = index;
+        }
+    }
+
+    public void CancelSelect()
+    {
+        GetPopup().Hide();
+        ReleaseFocus();
     }
 
     /* Godot overrides. */
@@ -41,15 +87,13 @@ public sealed partial class OptionButton : Godot.OptionButton
                     AcceptEvent();
                 else if (!key.CtrlPressed && key.Keycode == Key.Escape)
                 {
-                    GetPopup().Hide();
-                    ReleaseFocus();
+                    CancelSelect();
                     AcceptEvent();
                 }
             }
             else if (!key.CtrlPressed && key.Keycode == Key.Escape)
             {
-                GetPopup().Hide();
-                ReleaseFocus();
+                CancelSelect();
                 GetViewport().SetInputAsHandled();
             }
         }
@@ -63,7 +107,7 @@ public sealed partial class OptionButton : Godot.OptionButton
 
     private void OnItemSelected(long index)
     {
-        Record(LastSelected, (int)index);
+        CommitSelect((int)index);
         ReleaseFocus();
     }
 

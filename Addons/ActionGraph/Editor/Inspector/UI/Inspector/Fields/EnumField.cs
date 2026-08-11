@@ -6,10 +6,10 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// An enum field.
 /// </summary>
-public partial class EnumField : HBoxContainer, IWidget, IValued<int>
+public partial class EnumField : HBoxContainer, IField<EnumField>
 {
     /* Public properties. */
-    public string Title
+    public string TitleText
     {
         get => Label.Text;
         set => Label.Text = value;
@@ -19,161 +19,86 @@ public partial class EnumField : HBoxContainer, IWidget, IValued<int>
         get => (int)Label.CustomMinimumSize.X;
         set => Label.CustomMinimumSize = new(value, Label.CustomMinimumSize.Y);
     }
-    public string Description
+    public new string TooltipText
     {
-        get => TooltipText;
+        get => base.TooltipText;
         set
         {
-            TooltipText = value;
+            base.TooltipText = value;
             Label.TooltipText = value;
             OptionButton.TooltipText = value;
         }
     }
-    public UndoRedo UndoRedo { get; set; }
+    public UndoRedo UndoRedo
+    {
+        get => OptionButton.UndoRedo;
+        set => OptionButton.UndoRedo = value;
+    }
 
-    public string[] Choices => OptionsCache;
-    public int Value => OptionButton.Selected;
+    public int Selected => OptionButton.Selected;
 
     /* Private methods. */
     private Label Label { get; set; }
     private OptionButton OptionButton { get; set; }
-    private string[] OptionsCache { get; set; } = [];
-    private int OldSelected { get; set; }
-    private bool Cancelled { get; set; }
 
     /* Public events. */
-    public event Action<IWidget> Changed;
+    public event Action<EnumField> SelectedChanged;
 
     /* Constructors. */
     public EnumField()
     {
         Label = new();
-        AddChild(Label);
+        AddChild(Label, false, InternalMode.Front);
         TitleWidth = 160;
 
         OptionButton = new();
-        OptionButton.Selected = -1;
         OptionButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        OptionButton.Pressed += OnDropdownOpened;
-        OptionButton.ItemSelected += OnItemSelected;
-        OptionButton.FocusExited += OnLostFocus;
-        AddChild(OptionButton);
-
-        WidgetRegistry.Add(this);
+        OptionButton.Selected = -1;
+        OptionButton.ItemSelected += (index) => SelectedChanged?.Invoke(this);
+        AddChild(OptionButton, false, InternalMode.Front);
     }
 
-    public EnumField(string[] choices) : this()
+    public EnumField(string[] items) : this()
     {
-        ChangeChoices(choices);
-        if (choices.Length > 0)
-            OptionButton.Selected = 0;
+        OptionButton.SetItems(items);
     }
 
-    public EnumField(string[] choices, int selected) : this(choices)
+    public EnumField(string[] items, int selected) : this(items)
     {
         OptionButton.Selected = selected;
     }
-    
-    ~EnumField()
+
+    public EnumField(string title, string[] items, int selected) : this(items, selected)
     {
-        WidgetRegistry.Remove(this);
+        TitleText = title;
     }
 
     /* Public methods. */
-    public IWidget Copy()
+    public EnumField DuplicateField()
     {
-        EnumField field = new();
-        field.SizeFlagsHorizontal = SizeFlagsHorizontal;
-        field.SizeFlagsVertical = SizeFlagsVertical;
-        field.Title = Title;
+        EnumField field = Duplicate() as EnumField;
+        field.TitleText = TitleText;
         field.TitleWidth = TitleWidth;
-        field.Description = Description;
-        field.ChangeChoices(Choices);
-        field.OptionButton.Selected = Value;
+        field.TooltipText = TooltipText;
         field.UndoRedo = UndoRedo;
-        field.OldSelected = Value;
+        field.SetItems(GetItems());
+        field.OptionButton.Selected = Selected;
         return field;
     }
 
-    public void ExpandFill(bool vertical = false)
-    {
-        SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        if (vertical)
-            SizeFlagsVertical = SizeFlags.ExpandFill;
-    }
+    public void SetItems(string[] items) => OptionButton.SetItems(items);
+    public string[] GetItems() => OptionButton.GetItems();
 
-    public void SetValue(int value)
-    {
-        SetValue(OptionButton.Selected, value);
-    }
-
-    public void CancelFocus()
-    {
-        OptionButton.ReleaseFocus();
-        OptionButton.GetPopup().Hide();
-    }
-
-    /* Private methods. */
     /// <summary>
-    /// Silently change the choices, without changing the selected item index.
+    /// Change the selected item without recorded it in undo/redo.
     /// </summary>
-    private void ChangeChoices(string[] choices)
-    {
-        OptionsCache = choices;
-        OptionButton.Clear();
-        for (int i = 0; i < choices.Length; i++)
-        {
-            OptionButton.AddItem(choices[i]);
-        }
-    }
-
-    private void SetValue(int from, int to)
-    {
-        if (from == to)
-            return;
-
-        string fromName = from >= 0 && from < Choices.Length ? Choices[from] : from.ToString();
-        string toName = to >= 0 && to < Choices.Length ? Choices[to] : to.ToString();
-        UndoRedo?.CreateAction($"Changed color {Title}: {fromName} \u25B6 {toName}");
-
-        UndoRedo?.AddUndoMethod(new Callable(this, nameof(CancelAll)));
-        UndoRedo?.AddUndoProperty(OptionButton, "selected", from);
-        UndoRedo?.AddUndoMethod(new Callable(this, nameof(InvokeChangedEvent)));
-
-        UndoRedo?.AddDoMethod(new Callable(this, nameof(CancelAll)));
-        UndoRedo?.AddDoProperty(OptionButton, "selected", to);
-        UndoRedo?.AddDoMethod(new Callable(this, nameof(InvokeChangedEvent)));
-
-        UndoRedo?.CommitAction(false);
-
-        OptionButton.Selected = to;
-        InvokeChangedEvent();
-    }
-
-    private void CancelAll()
-    {
-        WidgetRegistry.ReleaseFocus();
-    }
-
-    private void OnLostFocus()
-    {
-        Cancelled = true;
-        GetViewport().GuiGetFocusOwner()?.ReleaseFocus();
-        Cancelled = false;
-    }
-
-    private void OnDropdownOpened()
-    {
-        OldSelected = OptionButton.Selected;
-    }
-
-    private void OnItemSelected(long index)
-    {
-        SetValue(OldSelected, (int)index);
-    }
-
-    private void InvokeChangedEvent()
-    {
-        Changed?.Invoke(this);
-    }
+    public void SetSelected(int index) => OptionButton.Select(index);
+    /// <summary>
+    /// Change the selected item and record it in undo/redo.
+    /// </summary>
+    public void CommitSelected(int index) => OptionButton.CommitSelect(index);
+    /// <summary>
+    /// If an edit is in progress, cancel it and revert to the last committed selected item.
+    /// </summary>
+    public void CancelSelected() => OptionButton.CancelSelect();
 }

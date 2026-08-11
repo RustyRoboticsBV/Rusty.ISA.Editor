@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A color field.
 /// </summary>
-public partial class ColorField : HBoxContainer, IField
+public partial class ColorField : HBoxContainer, IField<ColorField>
 {
     /* Public properties. */
     public string TitleText
@@ -42,7 +42,7 @@ public partial class ColorField : HBoxContainer, IField
     private ColorPickerButton ColorPickerButton { get; set; }
 
     /* Public events. */
-    public event Action<ColorField, Color> ColorChanged;
+    public event Action<ColorField> ColorChanged;
 
     /* Constructors. */
     public ColorField()
@@ -52,9 +52,9 @@ public partial class ColorField : HBoxContainer, IField
         TitleWidth = 160;
 
         ColorPickerButton = new();
-        ColorPickerButton.Color = Colors.White;
         ColorPickerButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        ColorPickerButton.ColorChanged += (color) => ColorChanged?.Invoke(this, color);
+        ColorPickerButton.Color = Colors.White;
+        ColorPickerButton.ColorChanged += (color) => ColorChanged?.Invoke(this);
         AddChild(ColorPickerButton, false, InternalMode.Front);
     }
 
@@ -63,7 +63,7 @@ public partial class ColorField : HBoxContainer, IField
     public ColorField(string title, Color color) : this(color) => TitleText = title;
 
     /* Public methods. */
-    public ColorField CopyField()
+    public ColorField DuplicateField()
     {
         ColorField field = Duplicate() as ColorField;
         field.TitleText = TitleText;
@@ -83,7 +83,7 @@ public partial class ColorField : HBoxContainer, IField
     /// </summary>
     public void CommitColor(Color color) => ColorPickerButton.CommitColor(color);
     /// <summary>
-    /// If an edit is in progress, cancel it and revert to the last committed value.
+    /// If an edit is in progress, cancel it and revert to the last committed color.
     /// </summary>
     public void CancelColor() => ColorPickerButton.CancelColor();
 }
