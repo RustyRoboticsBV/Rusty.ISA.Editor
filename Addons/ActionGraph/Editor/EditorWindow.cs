@@ -56,6 +56,8 @@ public abstract partial class EditorWindow : VBoxContainer
                 cb2.UndoRedo = undoRedo;
             else if (node is LineEdit le)
                 le.UndoRedo = undoRedo;
+            else if (node is TextEdit te)
+                te.UndoRedo = undoRedo;
             else if (node is ColorPickerButton cpb)
                 cpb.UndoRedo = undoRedo;
             else if (node is SpinBox sb)

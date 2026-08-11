@@ -16,7 +16,7 @@ public sealed partial class ColorPickerButton : Godot.ColorPickerButton
     /* Constructors. */
     public ColorPickerButton() : base()
     {
-        CustomMinimumSize = new(0, 20);
+        CustomMinimumSize = new(0f, 20f);
         FocusExited += OnFocusExited;
         GetPopup().PopupHide += OnPopupHide;
     }
