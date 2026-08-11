@@ -66,6 +66,8 @@ public abstract partial class EditorWindow : VBoxContainer
                 hs.UndoRedo = undoRedo;
             else if (node is OptionButton ob)
                 ob.UndoRedo = undoRedo;
+            else if (node is IField field)
+                field.UndoRedo = UndoRedo;
             foreach (Node child in node.GetChildren())
             {
                 SetupUndoRedo(undoRedo, child);

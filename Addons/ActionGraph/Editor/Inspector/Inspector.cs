@@ -17,6 +17,14 @@ internal partial class Inspector : ScrollContainer
         Vbox.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         AddChild(Vbox);
 
+        ColorField color = new("Color1", Colors.Beige);
+        Vbox.AddChild(color);
+
+        ColorField color2 = color.CopyField();
+        color2.TitleText = "Color2";
+        color2.SetColor(Colors.ForestGreen);
+        Vbox.AddChild(color2);
+
         Vbox.AddChild(new CheckBox());
         Vbox.AddChild(new CheckButton());
         Vbox.AddChild(new SpinBox());
