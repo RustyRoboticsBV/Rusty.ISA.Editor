@@ -58,20 +58,11 @@ public partial class EnumField : HBoxContainer, IField<EnumField>
         AddChild(OptionButton, false, InternalMode.Front);
     }
 
-    public EnumField(string[] items) : this()
-    {
-        OptionButton.SetItems(items);
-    }
+    public EnumField(string[] items) : this() => OptionButton.SetItems(items);
 
-    public EnumField(string[] items, int selected) : this(items)
-    {
-        OptionButton.Selected = selected;
-    }
+    public EnumField(string[] items, int selected) : this(items) => OptionButton.Selected = selected;
 
-    public EnumField(string title, string[] items, int selected) : this(items, selected)
-    {
-        TitleText = title;
-    }
+    public EnumField(string title, string[] items, int selected) : this(items, selected) => TitleText = title;
 
     /* Public methods. */
     public EnumField DuplicateField()
@@ -90,7 +81,7 @@ public partial class EnumField : HBoxContainer, IField<EnumField>
     public string[] GetItems() => OptionButton.GetItems();
 
     /// <summary>
-    /// Change the selected item without recorded it in undo/redo.
+    /// Change the selected item without recording it in undo/redo.
     /// </summary>
     public void SetSelected(int index) => OptionButton.Select(index);
     /// <summary>

@@ -16,6 +16,13 @@ public sealed partial class CheckButton : Godot.CheckButton
         Pressed += OnPressed;
     }
 
+    /* Public methods. */
+    public void CommitPressed(bool pressed)
+    {
+        if (pressed != ButtonPressed)
+            Record(ButtonPressed, pressed);
+    }
+
     /* Godot overrides. */
     public override void _GuiInput(InputEvent @event)
     {

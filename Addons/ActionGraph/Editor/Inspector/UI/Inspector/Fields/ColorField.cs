@@ -53,6 +53,7 @@ public partial class ColorField : HBoxContainer, IField<ColorField>
 
         ColorPickerButton = new();
         ColorPickerButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        ColorPickerButton.CustomMinimumSize = new(0f, 31f);
         ColorPickerButton.Color = Colors.White;
         ColorPickerButton.ColorChanged += (color) => ColorChanged?.Invoke(this);
         AddChild(ColorPickerButton, false, InternalMode.Front);
@@ -75,7 +76,7 @@ public partial class ColorField : HBoxContainer, IField<ColorField>
     }
 
     /// <summary>
-    /// Change the color without recorded it in undo/redo.
+    /// Change the color without recording it in undo/redo.
     /// </summary>
     public void SetColor(Color color) => ColorPickerButton.SetColor(color);
     /// <summary>

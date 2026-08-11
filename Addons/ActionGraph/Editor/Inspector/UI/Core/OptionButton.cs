@@ -17,6 +17,7 @@ public sealed partial class OptionButton : Godot.OptionButton
     public OptionButton() : base()
     {
         GetPopup().AboutToPopup += OnPopupAboutToPopup;
+        GetPopup().CloseRequested += CancelSelect;
         ItemSelected += OnItemSelected;
     }
 
@@ -59,7 +60,6 @@ public sealed partial class OptionButton : Godot.OptionButton
 
     public void CommitSelect(int index)
     {
-        GD.Print(LastSelected + "  " + index);
         if (LastSelected != index)
         {
             Record(LastSelected, index);
