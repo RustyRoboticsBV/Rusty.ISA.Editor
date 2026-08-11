@@ -45,7 +45,7 @@ public sealed partial class CheckBox : Godot.CheckBox
         if (UndoRedo == null || from == to)
             return;
 
-        UndoRedo.CreateAction($"Changed CheckButton '{Name}': {from} => {to}");
+        UndoRedo.CreateAction($"Changed CheckBox '{Name}': {from} => {to}");
 
         UndoRedo.AddUndoProperty(this, "button_pressed", from);
 

@@ -7,9 +7,17 @@ namespace Rusty.ActionGraph.Editor;
 /// </summary>
 public sealed partial class OptionButton : Godot.OptionButton
 {
+    /* Public properties. */
+    public UndoRedo UndoRedo { get; set; }
+
+    /* Private properties. */
+    private int LastSelected { get; set; }
+
     /* Constructors. */
     public OptionButton() : base()
     {
+        GetPopup().AboutToPopup += OnPopupAboutToPopup;
+        ItemSelected += OnItemSelected;
     }
 
     public OptionButton(string[] options) : this()
@@ -45,5 +53,31 @@ public sealed partial class OptionButton : Godot.OptionButton
                 GetViewport().SetInputAsHandled();
             }
         }
+    }
+
+    /* Private methods. */
+    private void OnPopupAboutToPopup()
+    {
+        LastSelected = Selected;
+    }
+
+    private void OnItemSelected(long index)
+    {
+        Record(LastSelected, (int)index);
+        ReleaseFocus();
+    }
+
+    private void Record(int from, int to)
+    {
+        if (UndoRedo == null || from == to)
+            return;
+
+        UndoRedo.CreateAction($"Changed OptionButton '{Name}': {from} => {to}");
+
+        UndoRedo.AddUndoProperty(this, "selected", from);
+
+        UndoRedo.AddDoProperty(this, "selected", to);
+
+        UndoRedo.CommitAction(false);
     }
 }
