@@ -1,4 +1,5 @@
 ﻿using Godot;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Rusty.ActionGraph.Editor;
 
@@ -7,20 +8,49 @@ namespace Rusty.ActionGraph.Editor;
 /// </summary>
 public sealed partial class SpinBox : Godot.SpinBox
 {
-    /* Private properties. */
-    private double OldValue { get; set; }
+    /* Public properties. */
+    public UndoRedo UndoRedo { get; set; }
 
-    /* Godot overrides. */
-    public override void _Process(double delta)
+    /* Private properties. */
+    private double LastValue { get; set; }
+
+    /* Constructors. */
+    public SpinBox() : base()
     {
-        if (!HasFocus())
-            OldValue = Value;
+        GetLineEdit().FocusEntered += OnFocusEntered;
+        FocusEntered += OnFocusEntered;
+
+        GetLineEdit().FocusExited += OnFocusExited;
+        FocusExited += OnFocusExited;
     }
 
-    public override void _GuiInput(InputEvent @event)
+    /* Public methods. */
+    public new void SetValue(double value)
     {
+        Value = value;
+        LastValue = value;
+    }
+
+    public void CommitValue(double value)
+    {
+        GD.Print("Checking " + value + " against " + LastValue);
+        if (value != LastValue)
+        {
+            Record(LastValue, value);
+            Value = value;
+            LastValue = value;
+        }
+    }
+
+    /* Godot overrides. */
+    public override void _Input(InputEvent @event)
+    {
+        if (!GetLineEdit().HasFocus())
+            return;
+
         if (@event is InputEventKey key)
         {
+            GD.Print("KEY " + key.Keycode);
             if (key.Pressed)
             {
                 if (key.CtrlPressed && key.Keycode == Key.Z)
@@ -29,19 +59,47 @@ public sealed partial class SpinBox : Godot.SpinBox
                     AcceptEvent();
                 else if (!key.CtrlPressed && key.Keycode == Key.Escape)
                 {
-                    Value = OldValue;
+                    GetLineEdit().Text = LastValue.ToString();
+                    GetLineEdit().ReleaseFocus();
+                    ReleaseFocus();
+                    AcceptEvent();
+                }
+                else if (!key.CtrlPressed && key.Keycode == Key.Enter)
+                {
                     GetLineEdit().ReleaseFocus();
                     ReleaseFocus();
                     AcceptEvent();
                 }
             }
-            else if (!key.CtrlPressed && key.Keycode == Key.Escape)
-            {
-                Value = OldValue;
-                GetLineEdit().ReleaseFocus();
-                ReleaseFocus();
-                AcceptEvent();
-            }
         }
+    }
+
+    /* Private methods. */
+    private void OnFocusEntered()
+    {
+        LastValue = Value;
+    }
+
+    private void OnFocusExited()
+    {
+        GD.Print("TEXT " + GetLineEdit().Text);
+        if (double.TryParse(GetLineEdit().Text, out double parsed))
+            CommitValue(parsed);
+        LastValue = Value;
+    }
+
+    private void Record(double from, double to)
+    {
+        GD.Print("HOLY FUCKING SHIT " + from + " => " + to);
+        if (UndoRedo == null || from == to)
+            return;
+
+        UndoRedo.CreateAction($"Changed SpinBox '{Name}': {from} => {to}");
+
+        UndoRedo.AddUndoProperty(this, "value", from);
+
+        UndoRedo.AddDoProperty(this, "value", to);
+
+        UndoRedo.CommitAction(false);
     }
 }

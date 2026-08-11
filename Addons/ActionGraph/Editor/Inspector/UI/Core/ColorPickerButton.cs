@@ -13,17 +13,12 @@ public sealed partial class ColorPickerButton : Godot.ColorPickerButton
     /* Private properties. */
     private Color LastColor { get; set; }
 
-    /* Godot overrides. */
-    public override void _EnterTree()
+    /* Constructors. */
+    public ColorPickerButton() : base()
     {
         CustomMinimumSize = new(0, 20);
+        FocusExited += OnFocusExited;
         GetPopup().PopupHide += OnPopupHide;
-    }
-
-    public override void _Process(double delta)
-    {
-        if (!GetPopup().Visible)
-            LastColor = Color;
     }
 
     /* Public methods. */
@@ -37,13 +32,19 @@ public sealed partial class ColorPickerButton : Godot.ColorPickerButton
     {
         if (color != LastColor)
         {
-            Record(LastColor, Color);
+            Record(LastColor, color);
             Color = color;
             LastColor = color;
         }
     }
 
     /* Godot overrides. */
+    public override void _Process(double delta)
+    {
+        if (!GetPopup().Visible)
+            LastColor = Color;
+    }
+
     public override void _GuiInput(InputEvent @event)
     {
         if (@event is InputEventKey key)

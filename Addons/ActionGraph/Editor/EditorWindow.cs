@@ -54,6 +54,8 @@ public abstract partial class EditorWindow : VBoxContainer
                 le.UndoRedo = undoRedo;
             else if (node is ColorPickerButton cpb)
                 cpb.UndoRedo = undoRedo;
+            else if (node is SpinBox sb)
+                sb.UndoRedo = undoRedo;
             foreach (Node child in node.GetChildren())
             {
                 SetupUndoRedo(undoRedo, child);

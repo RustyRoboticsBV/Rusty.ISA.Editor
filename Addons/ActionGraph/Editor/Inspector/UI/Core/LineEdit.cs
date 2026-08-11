@@ -30,7 +30,7 @@ public sealed partial class LineEdit : Godot.LineEdit
     {
         if (text != LastText)
         {
-            Record(LastText, Text);
+            Record(LastText, text);
             Text = text;
             LastText = text;
         }
@@ -54,6 +54,11 @@ public sealed partial class LineEdit : Godot.LineEdit
             else if (!key.CtrlPressed && key.Keycode == Key.Escape)
             {
                 Text = LastText;
+                ReleaseFocus();
+                AcceptEvent();
+            }
+            else if (!key.CtrlPressed && key.Keycode == Key.Enter)
+            {
                 ReleaseFocus();
                 AcceptEvent();
             }
