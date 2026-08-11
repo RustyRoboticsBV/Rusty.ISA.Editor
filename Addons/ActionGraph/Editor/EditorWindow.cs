@@ -51,10 +51,9 @@ public abstract partial class EditorWindow : VBoxContainer
         void SetupUndoRedo(UndoRedo undoRedo, Node node)
         {
             if (node is LineEdit le)
-            {
-                GD.Print("FOUND LINE EDIT " + le.Name);
                 le.UndoRedo = undoRedo;
-            }
+            else if (node is ColorPickerButton cpb)
+                cpb.UndoRedo = undoRedo;
             foreach (Node child in node.GetChildren())
             {
                 SetupUndoRedo(undoRedo, child);
@@ -67,9 +66,9 @@ public abstract partial class EditorWindow : VBoxContainer
     /* Public methods. */
     public override void _Process(double delta)
     {
-        if (UndoRedoUtility.PressedUndo)
+        if (KeyboardShortcuts.PressedUndo)
             UndoRedo.Undo();
-        else if (UndoRedoUtility.PressedRedo)
+        else if (KeyboardShortcuts.PressedRedo)
             UndoRedo.Redo();
     }
 }

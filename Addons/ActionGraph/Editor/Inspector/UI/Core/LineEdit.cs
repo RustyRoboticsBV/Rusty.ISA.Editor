@@ -55,6 +55,7 @@ public sealed partial class LineEdit : Godot.LineEdit
             {
                 Text = LastText;
                 ReleaseFocus();
+                AcceptEvent();
             }
         }
     }
@@ -62,7 +63,6 @@ public sealed partial class LineEdit : Godot.LineEdit
     /* Private methods. */
     private void OnFocusExited()
     {
-        GD.Print("Release " + Name);
         CommitValue(Text);
     }
 
@@ -70,7 +70,6 @@ public sealed partial class LineEdit : Godot.LineEdit
     {
         if (UndoRedo == null || from == to)
             return;
-        GD.Print($"Changed LineEdit '{Name}': {from} => {to}");
 
         UndoRedo.CreateAction($"Changed LineEdit '{Name}': {from} => {to}");
 

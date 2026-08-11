@@ -7,19 +7,40 @@ namespace Rusty.ActionGraph.Editor;
 /// </summary>
 public sealed partial class ColorPickerButton : Godot.ColorPickerButton
 {
+    /* Public properties. */
+    public UndoRedo UndoRedo { get; set; }
+
     /* Private properties. */
-    private Color OldValue { get; set; }
+    private Color LastColor { get; set; }
 
     /* Godot overrides. */
     public override void _EnterTree()
     {
         CustomMinimumSize = new(0, 20);
+        GetPopup().PopupHide += OnPopupHide;
     }
 
     public override void _Process(double delta)
     {
         if (!GetPopup().Visible)
-            OldValue = Color;
+            LastColor = Color;
+    }
+
+    /* Public methods. */
+    public void SetValue(Color color)
+    {
+        Color = color;
+        LastColor = color;
+    }
+
+    public void CommitValue(Color color)
+    {
+        if (color != LastColor)
+        {
+            Record(LastColor, Color);
+            Color = color;
+            LastColor = color;
+        }
     }
 
     /* Godot overrides. */
@@ -35,7 +56,7 @@ public sealed partial class ColorPickerButton : Godot.ColorPickerButton
                     AcceptEvent();
                 else if (!key.CtrlPressed && key.Keycode == Key.Escape)
                 {
-                    Color = OldValue;
+                    Color = LastColor;
                     GetPopup().Hide();
                     ReleaseFocus();
                     AcceptEvent();
@@ -43,11 +64,40 @@ public sealed partial class ColorPickerButton : Godot.ColorPickerButton
             }
             else if (!key.CtrlPressed && key.Keycode == Key.Escape)
             {
-                Color = OldValue;
+                Color = LastColor;
                 GetPopup().Hide();
                 ReleaseFocus();
                 AcceptEvent();
             }
         }
+    }
+
+    /* Private methods. */
+    private void OnFocusExited()
+    {
+        if (GetPopup().Visible)
+            GetPopup().Hide();
+        CommitValue(Color);
+    }
+
+    private void OnPopupHide()
+    {
+        if (HasFocus())
+            ReleaseFocus();
+        CommitValue(Color);
+    }
+
+    private void Record(Color from, Color to)
+    {
+        if (UndoRedo == null || from == to)
+            return;
+
+        UndoRedo.CreateAction($"Changed ColorPickerButton '{Name}': {from} => {to}");
+
+        UndoRedo.AddUndoProperty(this, "color", from);
+
+        UndoRedo.AddDoProperty(this, "color", to);
+
+        UndoRedo.CommitAction(false);
     }
 }

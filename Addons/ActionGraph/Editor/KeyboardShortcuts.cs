@@ -5,7 +5,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A utility for checking if a undo/redo keyboard shortcut has been pressed.
 /// </summary>
-internal static class UndoRedoUtility
+internal static class KeyboardShortcuts
 {
     /* Public properties. */
     public static bool PressedUndo
