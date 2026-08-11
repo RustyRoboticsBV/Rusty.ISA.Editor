@@ -4,7 +4,7 @@ using System;
 namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
-/// A toggle field.
+/// A boolean button field.
 /// </summary>
 public partial class BoolField : HBoxContainer, IField<BoolField>
 {

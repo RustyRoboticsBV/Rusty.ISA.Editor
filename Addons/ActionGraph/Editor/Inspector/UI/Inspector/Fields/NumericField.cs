@@ -4,7 +4,7 @@ using System;
 namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
-/// A numeric field.
+/// A numeric spin-box field.
 /// </summary>
 public sealed partial class NumericField : HBoxContainer, IField<NumericField>
 {

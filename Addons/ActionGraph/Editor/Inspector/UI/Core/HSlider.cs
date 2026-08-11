@@ -90,8 +90,10 @@ public sealed partial class HSlider : Godot.HSlider
         UndoRedo.CreateAction($"Changed HSlider '{Name}': {from} => {to}");
 
         UndoRedo.AddUndoProperty(this, "value", from);
+        UndoRedo.AddUndoProperty(this, nameof(LastValue), from);
 
         UndoRedo.AddDoProperty(this, "value", to);
+        UndoRedo.AddDoProperty(this, nameof(LastValue), to);
 
         UndoRedo.CommitAction(false);
     }

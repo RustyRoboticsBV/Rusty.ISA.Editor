@@ -33,6 +33,16 @@ internal partial class Inspector : ScrollContainer
         num2.SetValue(5);
         Vbox.AddChild(num2);
 
+        RangeField range = new("Range", 10, 0, 100, 1);
+        Vbox.AddChild(range);
+
+        RangeField range2 = range.DuplicateField();
+        range2.TitleText = "Range2";
+        range2.SetMin(20);
+        range2.SetMax(50);
+        range2.SetValue(25);
+        Vbox.AddChild(range2);
+
         LineField line = new("Line", "abcdefg");
         Vbox.AddChild(line);
 
