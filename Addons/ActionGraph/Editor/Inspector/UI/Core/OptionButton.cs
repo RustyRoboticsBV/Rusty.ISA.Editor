@@ -119,8 +119,10 @@ public sealed partial class OptionButton : Godot.OptionButton
         UndoRedo.CreateAction($"Changed OptionButton '{Name}': {from} => {to}");
 
         UndoRedo.AddUndoProperty(this, "selected", from);
+        UndoRedo.AddUndoProperty(this, nameof(LastSelected), from);
 
         UndoRedo.AddDoProperty(this, "selected", to);
+        UndoRedo.AddDoProperty(this, nameof(LastSelected), to);
 
         UndoRedo.CommitAction(false);
     }

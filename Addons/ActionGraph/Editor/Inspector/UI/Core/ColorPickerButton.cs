@@ -104,8 +104,10 @@ public sealed partial class ColorPickerButton : Godot.ColorPickerButton
         UndoRedo.CreateAction($"Changed ColorPickerButton '{Name}': {from} => {to}");
 
         UndoRedo.AddUndoProperty(this, "color", from);
+        UndoRedo.AddUndoProperty(this, nameof(LastColor), from);
 
         UndoRedo.AddDoProperty(this, "color", to);
+        UndoRedo.AddDoProperty(this, nameof(LastColor), to);
 
         UndoRedo.CommitAction(false);
     }

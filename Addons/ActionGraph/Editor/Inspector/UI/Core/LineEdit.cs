@@ -89,8 +89,10 @@ public sealed partial class LineEdit : Godot.LineEdit
         UndoRedo.CreateAction($"Changed LineEdit '{Name}': {from} => {to}");
 
         UndoRedo.AddUndoProperty(this, "text", from);
+        UndoRedo.AddUndoProperty(this, nameof(LastText), from);
 
         UndoRedo.AddDoProperty(this, "text", to);
+        UndoRedo.AddDoProperty(this, nameof(LastText), to);
 
         UndoRedo.CommitAction(false);
     }

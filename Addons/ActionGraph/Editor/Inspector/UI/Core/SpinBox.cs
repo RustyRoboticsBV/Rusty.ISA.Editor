@@ -102,8 +102,10 @@ public sealed partial class SpinBox : Godot.SpinBox
         UndoRedo.CreateAction($"Changed SpinBox '{Name}': {from} => {to}");
 
         UndoRedo.AddUndoProperty(this, "value", from);
+        UndoRedo.AddUndoProperty(this, nameof(LastValue), from);
 
         UndoRedo.AddDoProperty(this, "value", to);
+        UndoRedo.AddDoProperty(this, nameof(LastValue), to);
 
         UndoRedo.CommitAction(false);
     }
