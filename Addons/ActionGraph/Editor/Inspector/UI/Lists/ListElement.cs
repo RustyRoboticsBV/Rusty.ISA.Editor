@@ -6,11 +6,15 @@ namespace Rusty.ActionGraph.Editor;
 internal sealed partial class ListElement : HBoxContainer
 {
     /* Public properties. */
+    public string TitleText { get; private set; }
     public IField Content { get; private set; }
 
     /* Private properties. */
     private Button DragHandle { get; set; }
-    private VBoxContainer ActionButtons { get; set; }
+    private FoldableHeader Foldable { get; set; }
+    private Button InsertButton { get; set; }
+    private Button DuplicateButton { get; set; }
+    private Button DeleteButton { get; set; }
 
     private bool Hovered { get; set; }
     private bool Dragging { get; set; }
@@ -33,39 +37,56 @@ internal sealed partial class ListElement : HBoxContainer
 
         // Drag handle.
         DragHandle = new Button();
-        DragHandle.CustomMinimumSize = new(32f, 64f);
+        DragHandle.MouseFilter = MouseFilterEnum.Pass;
+        DragHandle.CustomMinimumSize = new(32f, 0f);
         DragHandle.Text = "\u2637";
         DragHandle.TooltipText = "Drag to reorder element up or down.";
         DragHandle.MouseDefaultCursorShape = CursorShape.Drag;
         DragHandle.ButtonDown += OnHandlePressed;
         DragHandle.ButtonUp += OnHandleReleased;
-
         AddChild(DragHandle);
 
+        // Contents container.
+        VBoxContainer contentsContainer = new();
+        contentsContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        AddChild(contentsContainer);
+
+        // Action buttons.
+        HBoxContainer actionButtons = new();
+        actionButtons.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        actionButtons.MouseFilter = MouseFilterEnum.Pass;
+
+        Foldable = new();
+        Foldable.MouseFilter = MouseFilterEnum.Pass;
+        Foldable.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        Foldable.SizeFlagsVertical = SizeFlags.ShrinkCenter;
+        Foldable.CustomMinimumSize = new(0, 31f); 
+        Foldable.Text = "Unnamed Element";
+        Foldable.Pressed += () => content.Visible = Foldable.IsOpen;
+        actionButtons.AddChild(Foldable);
+
+        InsertButton = CreateActionButton("\u2191", "Insert");
+        InsertButton.MouseFilter = MouseFilterEnum.Pass;
+        InsertButton.Pressed += () => PressedInsert?.Invoke(this);
+        actionButtons.AddChild(InsertButton);
+
+        DuplicateButton = CreateActionButton("\u29C9", "Duplicate");
+        DuplicateButton.MouseFilter = MouseFilterEnum.Pass;
+        DuplicateButton.Pressed += () => PressedDuplicate?.Invoke(this);
+        actionButtons.AddChild(DuplicateButton);
+
+        DeleteButton = CreateActionButton("\u00D7", "Delete");
+        DeleteButton.MouseFilter = MouseFilterEnum.Pass;
+        DeleteButton.Pressed += () => PressedDelete?.Invoke(this);
+        actionButtons.AddChild(DeleteButton);
+
         // Contents.
+        contentsContainer.AddChild(actionButtons);
+
         content.MouseFilter = MouseFilterEnum.Pass;
         content.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         content.SizeFlagsVertical = SizeFlags.ShrinkCenter;
-
-        AddChild(content);
-
-        // Action buttons.
-        ActionButtons = new();
-        ActionButtons.MouseFilter = MouseFilterEnum.Pass;
-
-        Button insertButton = CreateActionButton("+", "Insert");
-        insertButton.Pressed += () => PressedInsert?.Invoke(this);
-        ActionButtons.AddChild(insertButton);
-
-        Button duplicateButton = CreateActionButton("\u29C9", "Duplicate");
-        duplicateButton.Pressed += () => PressedDuplicate?.Invoke(this);
-        ActionButtons.AddChild(duplicateButton);
-
-        Button deleteButton = CreateActionButton("\u00D7", "Delete");
-        deleteButton.Pressed += () => PressedDelete?.Invoke(this);
-        ActionButtons.AddChild(deleteButton);
-
-        AddChild(ActionButtons);
+        contentsContainer.AddChild(content);
 
         // Mouse events.
         MouseEntered += OnMouseEntered;
@@ -112,15 +133,17 @@ internal sealed partial class ListElement : HBoxContainer
     private void OnMouseEntered()
     {
         Hovered = true;
-        ActionButtons.Visible = true;
+        InsertButton.Visible = true;
+        DuplicateButton.Visible = true;
+        DeleteButton.Visible = true;
     }
 
     private void OnMouseExited()
     {
         Hovered = false;
-
-        //if (!Dragging)
-        //    ActionButtons.Visible = false;
+        InsertButton.Visible = false;
+        DuplicateButton.Visible = false;
+        DeleteButton.Visible = false;
     }
 
     private void OnHandlePressed()
@@ -132,8 +155,5 @@ internal sealed partial class ListElement : HBoxContainer
     private void OnHandleReleased()
     {
         Dragging = false;
-
-        //if (!Hovered)
-        //    ActionButtons.Visible = false;
     }
 }
