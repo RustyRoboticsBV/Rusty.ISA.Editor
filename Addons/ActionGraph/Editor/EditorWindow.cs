@@ -62,6 +62,8 @@ public abstract partial class EditorWindow : VBoxContainer
                 cpb.UndoRedo = undoRedo;
             else if (node is SpinBox sb)
                 sb.UndoRedo = undoRedo;
+            else if (node is HSlider hs)
+                hs.UndoRedo = undoRedo;
             else if (node is OptionButton ob)
                 ob.UndoRedo = undoRedo;
             foreach (Node child in node.GetChildren())
