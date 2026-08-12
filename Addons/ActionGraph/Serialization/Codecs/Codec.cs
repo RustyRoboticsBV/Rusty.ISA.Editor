@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using System.Xml;
 
@@ -42,50 +41,7 @@ public abstract class Codec
     protected virtual HashSet<string> AllowedChildren { get; } = new();
     protected virtual HashSet<string> AllowedAttributes { get; } = new();
 
-    protected static Dictionary<string, Type> Codecs { get; } = new();
-
     /* Constructors. */
-    static Codec()
-    {
-        Register<FileCodec>(FileCodec.TAG);
-
-        // Metadata.
-        Register<MetaCodec>(MetaCodec.TAG);
-        Register<LangCodec>(LangCodec.TAG);
-
-        // Schema.
-        Register<IdefCodec>(IdefCodec.TAG);
-        Register<PdefCodec>(PdefCodec.TAG);
-
-        Register<NdefCodec>(NdefCodec.TAG);
-
-        Register<FdefCodec>(FdefCodec.TAG);
-        Register<OdefCodec>(OdefCodec.TAG);
-        Register<CdefCodec>(CdefCodec.TAG);
-        Register<TdefCodec>(TdefCodec.TAG);
-        Register<LdefCodec>(LdefCodec.TAG);
-
-        Register<VadefCodec>(VadefCodec.TAG);
-        Register<OadefCodec>(OadefCodec.TAG);
-
-        // Graph.
-        Register<NodeCodec>(NodeCodec.TAG);
-        Register<JointCodec>(JointCodec.TAG);
-        Register<FrameCodec>(FrameCodec.TAG);
-        Register<MemoCodec>(MemoCodec.TAG);
-
-        Register<EdgeCodec>(EdgeCodec.TAG);
-
-        Register<FormCodec>(FormCodec.TAG);
-        Register<OptionCodec>(OptionCodec.TAG);
-        Register<ChoiceCodec>(ChoiceCodec.TAG);
-        Register<TupleCodec>(TupleCodec.TAG);
-        Register<ListCodec>(ListCodec.TAG);
-
-        Register<ArgCodec>(ArgCodec.TAG);
-        Register<OutCodec>(OutCodec.TAG);
-    }
-
     public Codec() { }
 
     public Codec(XmlNode xml)
@@ -98,13 +54,10 @@ public abstract class Codec
         {
             foreach (XmlNode child in xml.ChildNodes)
             {
-                if (child is XmlComment)
+                if (child is not XmlElement)
                     continue;
 
-                string childTag = child.Name;
-                if (!Codecs.ContainsKey(childTag))
-                    throw new InvalidOperationException($"Unknown child type '{childTag}'.");
-                AddChild(Instantiate(Codecs[childTag], child));
+                AddChild(Instantiate(child));
             }
         }
 
@@ -141,14 +94,7 @@ public abstract class Codec
     /// <summary>
     /// Load from an XML node.
     /// </summary>
-    public static Codec Load(XmlNode xml)
-    {
-        if (Codecs.TryGetValue(xml.Name, out Type type))
-            return Instantiate(type, xml);
-        else
-            throw new InvalidOperationException($"Unknown XML child tag '{xml.Name}'.");
-    }
-
+    public static Codec Load(XmlNode xml) => Instantiate(xml);
 
     /// <summary>
     /// Check whether or not an attribute with some name is allowed by this codec.
@@ -217,23 +163,10 @@ public abstract class Codec
         return null;
     }
 
-    /* Protected methods. */
-    /// <summary>
-    /// Instantiate a codec node from a type and XML node.
-    /// </summary>
-    protected static Codec Instantiate(Type type, XmlNode xml)
-    {
-        if (!type.IsAssignableTo(typeof(Codec)))
-            throw new InvalidCastException($"Type {type.Name} is not a codec name.");
-
-        ConstructorInfo ctor = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public, [typeof(XmlNode)]);
-        if (ctor == null)
-            throw new NullReferenceException($"Type {type.Name} has no constructor that takes an {nameof(XmlNode)} argument.");
-
-        return ctor.Invoke([xml]) as Codec;
-    }
-
     /* Private methods. */
+    /// <summary>
+    /// Helper function for ToString.
+    /// </summary>
     private void AppendToString(StringBuilder sb, string prefix, bool last, bool root, bool recurse)
     {
         if (!root)
@@ -287,9 +220,52 @@ public abstract class Codec
             sb.Append("...");
     }
 
-    private static void Register<T>(string tag)
-        where T : Codec
+    /// <summary>
+    /// Instantiate a codec node from its XML element.
+    /// </summary>
+    private static Codec Instantiate(XmlNode xml)
     {
-        Codecs.Add(tag, typeof(T));
+        return xml.Name switch
+        {
+            FileCodec.TAG => new FileCodec(xml),
+
+            // Metadata.
+            MetaCodec.TAG => new MetaCodec(xml),
+            LangCodec.TAG => new LangCodec(xml),
+
+            // Schema.
+            IdefCodec.TAG => new IdefCodec(xml),
+            PdefCodec.TAG => new PdefCodec(xml),
+
+            NdefCodec.TAG => new NdefCodec(xml),
+
+            FdefCodec.TAG => new FdefCodec(xml),
+            OdefCodec.TAG => new OdefCodec(xml),
+            CdefCodec.TAG => new CdefCodec(xml),
+            TdefCodec.TAG => new TdefCodec(xml),
+            LdefCodec.TAG => new LdefCodec(xml),
+
+            VadefCodec.TAG => new VadefCodec(xml),
+            OadefCodec.TAG => new OadefCodec(xml),
+
+            // Graph.
+            NodeCodec.TAG => new NodeCodec(xml),
+            JointCodec.TAG => new JointCodec(xml),
+            FrameCodec.TAG => new FrameCodec(xml),
+            MemoCodec.TAG => new MemoCodec(xml),
+
+            EdgeCodec.TAG => new EdgeCodec(xml),
+
+            FormCodec.TAG => new FormCodec(xml),
+            OptionCodec.TAG => new OptionCodec(xml),
+            ChoiceCodec.TAG => new ChoiceCodec(xml),
+            TupleCodec.TAG => new TupleCodec(xml),
+            ListCodec.TAG => new ListCodec(xml),
+
+            ArgCodec.TAG => new ArgCodec(xml),
+            OutCodec.TAG => new OutCodec(xml),
+
+            _ => throw new InvalidOperationException($"Unknown XML codec '{xml.Name}'.")
+        };
     }
 }
