@@ -16,7 +16,7 @@ internal sealed partial class ListElement : HBoxContainer
         get => Foldable.IsOpen;
         set => Foldable.SetOpen(value);
     }
-    public IField Content { get; private set; }
+    public Control Content { get; private set; }
 
     /* Private properties. */
     private Button DragHandle { get; set; }
@@ -37,7 +37,7 @@ internal sealed partial class ListElement : HBoxContainer
     public event Action<ListElement> MovedDown;
 
     /* Constructors. */
-    public ListElement(IField content)
+    public ListElement(Control content)
     {
         Content = content;
 
@@ -95,19 +95,21 @@ internal sealed partial class ListElement : HBoxContainer
         content.MouseFilter = MouseFilterEnum.Pass;
         content.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         content.SizeFlagsVertical = SizeFlags.ShrinkCenter;
-        contentsContainer.AddChild(content as Control);
+        contentsContainer.AddChild(content);
 
         // Mouse events.
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
     }
 
-    public ListElement(string title, IField content) : this(content) => TitleText = title;
+    public ListElement(string title, Control content) : this(content) => TitleText = title;
 
     /* Public methods. */
     public ListElement DuplicateElement()
     {
-        ListElement copy = new(Content.DuplicateField());
+        ListElement copy = Content is IField field
+            ? new(field.DuplicateField() as Control)
+            : new(Content.Duplicate() as Control);
         copy.TitleText = TitleText;
         copy.FoldoutOpen = FoldoutOpen;
         return copy;

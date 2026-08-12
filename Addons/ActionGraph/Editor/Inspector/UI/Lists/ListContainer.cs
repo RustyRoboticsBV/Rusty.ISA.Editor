@@ -16,7 +16,7 @@ internal sealed partial class ListContainer : VBoxContainer
         set => AddButton.Text = value;
     }
     public string TemplateTitle { get; set; }
-    public IField Template { get; set; }
+    public Control ElementTemplate { get; set; }
 
     /* Private properties. */
     private FoldableHeader Foldable { get; set; }
@@ -27,7 +27,7 @@ internal sealed partial class ListContainer : VBoxContainer
     public ListContainer(string elementTitle, Control elementTemplate)
     {
         TemplateTitle = elementTitle;
-        Template = elementTemplate as IField;
+        ElementTemplate = elementTemplate;
 
         MouseFilter = MouseFilterEnum.Pass;
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
@@ -72,10 +72,10 @@ internal sealed partial class ListContainer : VBoxContainer
     /* Private methods. */
     private ListElement AddElement()
     {
-        IField field = Template.DuplicateField();
-        GD.Print(TemplateTitle);
-        ListElement element = new(TemplateTitle, field);
-        GD.Print(element.TitleText);
+        Control templateCopy = ElementTemplate is IField field
+            ? field.DuplicateField() as Control
+            : ElementTemplate.Duplicate() as Control;
+        ListElement element = new(TemplateTitle, templateCopy);
         AddElement(element);
         return element;
     }
