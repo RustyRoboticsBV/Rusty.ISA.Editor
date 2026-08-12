@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A text area field.
 /// </summary>
-public partial class TextField : VBoxContainer, IField<TextField>
+internal partial class TextField : VBoxContainer, IField<TextField>
 {
     /* Public properties. */
     public string TitleText

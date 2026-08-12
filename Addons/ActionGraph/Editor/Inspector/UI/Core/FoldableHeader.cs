@@ -5,7 +5,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A FoldableHeader that suppresses built-in undo/redo behavior.
 /// </summary>
-public sealed partial class FoldableHeader : LinkButton
+internal sealed partial class FoldableHeader : LinkButton
 {
     /* Public properties. */
     public UndoRedo UndoRedo { get; set; }

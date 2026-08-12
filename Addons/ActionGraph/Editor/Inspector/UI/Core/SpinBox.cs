@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A SpinBox that suppresses built-in undo/redo behavior.
 /// </summary>
-public sealed partial class SpinBox : Godot.SpinBox
+internal sealed partial class SpinBox : Godot.SpinBox
 {
     /* Public properties. */
     public UndoRedo UndoRedo { get; set; }

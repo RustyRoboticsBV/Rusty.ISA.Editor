@@ -1,13 +1,12 @@
 ﻿using Godot;
 using System;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// A HSlider that suppresses built-in undo/redo behavior.
 /// </summary>
-public sealed partial class HSlider : Godot.HSlider
+internal sealed partial class HSlider : Godot.HSlider
 {
     /* Public properties. */
     public UndoRedo UndoRedo { get; set; }

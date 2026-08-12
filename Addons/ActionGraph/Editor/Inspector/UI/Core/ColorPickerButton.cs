@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A ColorPickerButton that suppresses built-in undo/redo behavior.
 /// </summary>
-public sealed partial class ColorPickerButton : Godot.ColorPickerButton
+internal sealed partial class ColorPickerButton : Godot.ColorPickerButton
 {
     /* Public properties. */
     public UndoRedo UndoRedo { get; set; }

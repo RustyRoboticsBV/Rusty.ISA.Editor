@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A boolean button field.
 /// </summary>
-public partial class BoolField : HBoxContainer, IField<BoolField>
+internal partial class BoolField : HBoxContainer, IField<BoolField>
 {
     /* Public properties. */
     public string TitleText

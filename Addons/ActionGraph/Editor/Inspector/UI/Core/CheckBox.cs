@@ -5,7 +5,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A CheckBox that suppresses built-in undo/redo behavior.
 /// </summary>
-public sealed partial class CheckBox : Godot.CheckBox
+internal sealed partial class CheckBox : Godot.CheckBox
 {
     /* Public properties. */
     public UndoRedo UndoRedo { get; set; }

@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A range slider field.
 /// </summary>
-public sealed partial class RangeField : HBoxContainer, IField<RangeField>
+internal sealed partial class RangeField : HBoxContainer, IField<RangeField>
 {
     /* Public properties. */
     public string TitleText

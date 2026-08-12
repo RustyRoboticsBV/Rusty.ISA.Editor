@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A LineEdit that suppresses built-in undo/redo behavior.
 /// </summary>
-public sealed partial class LineEdit : Godot.LineEdit
+internal sealed partial class LineEdit : Godot.LineEdit
 {
     /* Public properties. */
     public UndoRedo UndoRedo { get; set; }

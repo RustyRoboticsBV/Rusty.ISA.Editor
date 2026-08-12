@@ -5,7 +5,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// An OptionButton that suppresses built-in undo/redo behavior.
 /// </summary>
-public sealed partial class OptionButton : Godot.OptionButton
+internal sealed partial class OptionButton : Godot.OptionButton
 {
     /* Public properties. */
     public UndoRedo UndoRedo { get; set; }

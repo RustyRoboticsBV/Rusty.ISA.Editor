@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A text line field.
 /// </summary>
-public partial class LineField : HBoxContainer, IField<LineField>
+internal partial class LineField : HBoxContainer, IField<LineField>
 {
     /* Public properties. */
     public string TitleText

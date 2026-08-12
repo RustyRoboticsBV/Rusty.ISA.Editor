@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A color field.
 /// </summary>
-public partial class ColorField : HBoxContainer, IField<ColorField>
+internal partial class ColorField : HBoxContainer, IField<ColorField>
 {
     /* Public properties. */
     public string TitleText

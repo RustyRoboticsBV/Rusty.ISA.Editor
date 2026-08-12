@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// An enum field.
 /// </summary>
-public partial class EnumField : HBoxContainer, IField<EnumField>
+internal partial class EnumField : HBoxContainer, IField<EnumField>
 {
     /* Public properties. */
     public string TitleText

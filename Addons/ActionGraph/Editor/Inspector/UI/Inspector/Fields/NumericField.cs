@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A numeric spin-box field.
 /// </summary>
-public sealed partial class NumericField : HBoxContainer, IField<NumericField>
+internal sealed partial class NumericField : HBoxContainer, IField<NumericField>
 {
     /* Public properties. */
     public string TitleText

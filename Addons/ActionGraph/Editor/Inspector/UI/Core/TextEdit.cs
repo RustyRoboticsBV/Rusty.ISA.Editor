@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A TextEdit that suppresses built-in undo/redo behavior.
 /// </summary>
-public sealed partial class TextEdit : Godot.TextEdit
+internal sealed partial class TextEdit : Godot.TextEdit
 {
     /* Public properties. */
     public UndoRedo UndoRedo { get; set; }
