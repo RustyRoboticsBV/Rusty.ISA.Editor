@@ -19,6 +19,9 @@ public sealed partial class FoldableHeader : LinkButton
         Pressed += OnPressed;
     }
 
+    /* Public methods. */
+    public void SetOpen(bool value) => IsOpen = value;
+
     /* Godot overrides. */
     public override void _Process(double delta)
     {

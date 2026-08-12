@@ -6,7 +6,16 @@ namespace Rusty.ActionGraph.Editor;
 internal sealed partial class ListElement : HBoxContainer
 {
     /* Public properties. */
-    public string TitleText { get; private set; }
+    public string TitleText
+    {
+        get => Foldable.Text;
+        set => Foldable.Text = value;
+    }
+    public bool FoldoutOpen
+    {
+        get => Foldable.IsOpen;
+        set => Foldable.SetOpen(value);
+    }
     public IField Content { get; private set; }
 
     /* Private properties. */
@@ -28,9 +37,9 @@ internal sealed partial class ListElement : HBoxContainer
     public event Action<ListElement> MovedDown;
 
     /* Constructors. */
-    public ListElement(Control content)
+    public ListElement(IField content)
     {
-        Content = content as IField;
+        Content = content;
 
         MouseFilter = MouseFilterEnum.Pass;
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
@@ -86,11 +95,22 @@ internal sealed partial class ListElement : HBoxContainer
         content.MouseFilter = MouseFilterEnum.Pass;
         content.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         content.SizeFlagsVertical = SizeFlags.ShrinkCenter;
-        contentsContainer.AddChild(content);
+        contentsContainer.AddChild(content as Control);
 
         // Mouse events.
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
+    }
+
+    public ListElement(string title, IField content) : this(content) => TitleText = title;
+
+    /* Public methods. */
+    public ListElement DuplicateElement()
+    {
+        ListElement copy = new(Content.DuplicateField());
+        copy.TitleText = TitleText;
+        copy.FoldoutOpen = FoldoutOpen;
+        return copy;
     }
 
     /* Godot overrides. */
