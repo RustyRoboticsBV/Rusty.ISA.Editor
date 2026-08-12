@@ -20,9 +20,9 @@ public static class Parser
         // Parse DOM.
         foreach (XmlNode node in doc)
         {
-            if (node is XmlElement)
+            if (node is XmlElement element)
             {
-                Codec codec = Codec.Load(node);
+                Codec codec = Codec.Instantiate(element);
                 if (codec is FileCodec file)
                     return file;
                 else

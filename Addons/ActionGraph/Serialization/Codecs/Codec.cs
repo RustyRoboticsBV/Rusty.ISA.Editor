@@ -54,10 +54,8 @@ public abstract class Codec
         {
             foreach (XmlNode child in xml.ChildNodes)
             {
-                if (child is not XmlElement)
-                    continue;
-
-                AddChild(Instantiate(child));
+                if (child is XmlElement element)
+                    AddChild(Instantiate(element));
             }
         }
 
@@ -68,6 +66,55 @@ public abstract class Codec
     }
 
     /* Public methods. */
+    /// <summary>
+    /// Instantiate a codec node from an XML element.
+    /// </summary>
+    public static Codec Instantiate(XmlElement xml)
+    {
+        return xml.Name switch
+        {
+            FileCodec.TAG => new FileCodec(xml),
+
+            // Metadata.
+            MetaCodec.TAG => new MetaCodec(xml),
+            LangCodec.TAG => new LangCodec(xml),
+
+            // Schema.
+            IdefCodec.TAG => new IdefCodec(xml),
+            PdefCodec.TAG => new PdefCodec(xml),
+
+            NdefCodec.TAG => new NdefCodec(xml),
+
+            FdefCodec.TAG => new FdefCodec(xml),
+            OdefCodec.TAG => new OdefCodec(xml),
+            CdefCodec.TAG => new CdefCodec(xml),
+            TdefCodec.TAG => new TdefCodec(xml),
+            LdefCodec.TAG => new LdefCodec(xml),
+
+            VadefCodec.TAG => new VadefCodec(xml),
+            OadefCodec.TAG => new OadefCodec(xml),
+
+            // Graph.
+            NodeCodec.TAG => new NodeCodec(xml),
+            JointCodec.TAG => new JointCodec(xml),
+            FrameCodec.TAG => new FrameCodec(xml),
+            MemoCodec.TAG => new MemoCodec(xml),
+
+            EdgeCodec.TAG => new EdgeCodec(xml),
+
+            FormCodec.TAG => new FormCodec(xml),
+            OptionCodec.TAG => new OptionCodec(xml),
+            ChoiceCodec.TAG => new ChoiceCodec(xml),
+            TupleCodec.TAG => new TupleCodec(xml),
+            ListCodec.TAG => new ListCodec(xml),
+
+            ArgCodec.TAG => new ArgCodec(xml),
+            OutCodec.TAG => new OutCodec(xml),
+
+            _ => throw new InvalidOperationException($"Unknown XML codec '{xml.Name}'.")
+        };
+    }
+
     /// <summary>
     /// Return the string representation of this codec.
     /// </summary>
@@ -90,11 +137,6 @@ public abstract class Codec
         AppendToString(sb, "", true, true, false);
         return sb.ToString();
     }
-
-    /// <summary>
-    /// Load from an XML node.
-    /// </summary>
-    public static Codec Load(XmlNode xml) => Instantiate(xml);
 
     /// <summary>
     /// Check whether or not an attribute with some name is allowed by this codec.
@@ -218,54 +260,5 @@ public abstract class Codec
         }
         else if (Children.Count > 0)
             sb.Append("...");
-    }
-
-    /// <summary>
-    /// Instantiate a codec node from its XML element.
-    /// </summary>
-    private static Codec Instantiate(XmlNode xml)
-    {
-        return xml.Name switch
-        {
-            FileCodec.TAG => new FileCodec(xml),
-
-            // Metadata.
-            MetaCodec.TAG => new MetaCodec(xml),
-            LangCodec.TAG => new LangCodec(xml),
-
-            // Schema.
-            IdefCodec.TAG => new IdefCodec(xml),
-            PdefCodec.TAG => new PdefCodec(xml),
-
-            NdefCodec.TAG => new NdefCodec(xml),
-
-            FdefCodec.TAG => new FdefCodec(xml),
-            OdefCodec.TAG => new OdefCodec(xml),
-            CdefCodec.TAG => new CdefCodec(xml),
-            TdefCodec.TAG => new TdefCodec(xml),
-            LdefCodec.TAG => new LdefCodec(xml),
-
-            VadefCodec.TAG => new VadefCodec(xml),
-            OadefCodec.TAG => new OadefCodec(xml),
-
-            // Graph.
-            NodeCodec.TAG => new NodeCodec(xml),
-            JointCodec.TAG => new JointCodec(xml),
-            FrameCodec.TAG => new FrameCodec(xml),
-            MemoCodec.TAG => new MemoCodec(xml),
-
-            EdgeCodec.TAG => new EdgeCodec(xml),
-
-            FormCodec.TAG => new FormCodec(xml),
-            OptionCodec.TAG => new OptionCodec(xml),
-            ChoiceCodec.TAG => new ChoiceCodec(xml),
-            TupleCodec.TAG => new TupleCodec(xml),
-            ListCodec.TAG => new ListCodec(xml),
-
-            ArgCodec.TAG => new ArgCodec(xml),
-            OutCodec.TAG => new OutCodec(xml),
-
-            _ => throw new InvalidOperationException($"Unknown XML codec '{xml.Name}'.")
-        };
     }
 }
