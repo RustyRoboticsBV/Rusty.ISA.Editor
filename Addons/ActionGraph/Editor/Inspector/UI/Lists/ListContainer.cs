@@ -39,7 +39,7 @@ internal sealed partial class ListContainer : VBoxContainer
         Foldable.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         Foldable.SizeFlagsVertical = SizeFlags.ShrinkCenter;
         Foldable.CustomMinimumSize = new(0, 31f);
-        Foldable.Text = "Unnamed List";
+        Foldable.Text = "";
         AddChild(Foldable);
 
         // Elements container.
@@ -50,9 +50,9 @@ internal sealed partial class ListContainer : VBoxContainer
 
         // Add button.
         AddButton = new();
-        AddButton.Text = "Add Element";
+        AddButton.Text = "Add";
         AddButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        AddButton.Pressed += () => AddElement();
+        AddButton.Pressed += () => CreateElement();
         AddChild(AddButton);
 
         // Set up foldable toggle.
@@ -70,7 +70,7 @@ internal sealed partial class ListContainer : VBoxContainer
     }
 
     /* Private methods. */
-    private ListElement AddElement()
+    private ListElement CreateElement()
     {
         Control templateCopy = ElementTemplate is IField field
             ? field.DuplicateField() as Control
@@ -85,7 +85,7 @@ internal sealed partial class ListContainer : VBoxContainer
         element.PressedInsert += (element) =>
         {
             int index = GetElementIndex(element);
-            ListElement newElement = AddElement();
+            ListElement newElement = CreateElement();
             Elements.MoveChild(newElement, index);
         };
         element.PressedDuplicate += (element) =>

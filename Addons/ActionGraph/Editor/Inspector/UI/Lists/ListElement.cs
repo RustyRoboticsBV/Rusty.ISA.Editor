@@ -25,9 +25,7 @@ internal sealed partial class ListElement : HBoxContainer
     private Button DuplicateButton { get; set; }
     private Button DeleteButton { get; set; }
 
-    private bool Hovered { get; set; }
     private bool Dragging { get; set; }
-    private Vector2 DragStartPosition { get; set; }
 
     /* Public events. */
     public event Action<ListElement> PressedInsert;
@@ -70,7 +68,7 @@ internal sealed partial class ListElement : HBoxContainer
         Foldable.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         Foldable.SizeFlagsVertical = SizeFlags.ShrinkCenter;
         Foldable.CustomMinimumSize = new(0, 31f); 
-        Foldable.Text = "Unnamed Element";
+        Foldable.Text = "";
         Foldable.Pressed += () => content.Visible = Foldable.IsOpen;
         actionButtons.AddChild(Foldable);
 
@@ -127,15 +125,9 @@ internal sealed partial class ListElement : HBoxContainer
             Rect2 bounds = GetGlobalRect();
 
             if (mousePosition.Y < bounds.Position.Y)
-            {
                 MovedUp?.Invoke(this);
-                DragStartPosition = mousePosition;
-            }
             else if (mousePosition.Y > bounds.End.Y)
-            {
                 MovedDown?.Invoke(this);
-                DragStartPosition = mousePosition;
-            }
 
             AcceptEvent();
         }
@@ -154,7 +146,6 @@ internal sealed partial class ListElement : HBoxContainer
 
     private void OnMouseEntered()
     {
-        Hovered = true;
         InsertButton.Visible = true;
         DuplicateButton.Visible = true;
         DeleteButton.Visible = true;
@@ -162,7 +153,6 @@ internal sealed partial class ListElement : HBoxContainer
 
     private void OnMouseExited()
     {
-        Hovered = false;
         InsertButton.Visible = false;
         DuplicateButton.Visible = false;
         DeleteButton.Visible = false;
@@ -171,7 +161,6 @@ internal sealed partial class ListElement : HBoxContainer
     private void OnHandlePressed()
     {
         Dragging = true;
-        DragStartPosition = GetGlobalMousePosition();
     }
 
     private void OnHandleReleased()
