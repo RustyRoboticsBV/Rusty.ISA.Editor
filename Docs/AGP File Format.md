@@ -18,7 +18,7 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 | Description | Root element. |
 | Parent | *(none)* |
 | Children | `meta`, `lang`, `idef`, `ndef`, `node`, `frame`, `joint`, `memo`, `edge` |
-| Attributes | `csum` *(optional)* |
+| Attributes | `editor`, `csum` |
 
 | Attribute | Description |
 |---|---|
@@ -88,7 +88,7 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 | Description | Defines a parameter used by an instruction. |
 | Parent | `idef` |
 | Children | *(none)* |
-| Attributes | `id`, `loc` *(optional)* |
+| Attributes | `id`, `loc` |
 
 | Attribute | Description |
 |---|---|
@@ -236,13 +236,13 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 | Description | An output argument definition. |
 | Parent | `fdef` |
 | Children | *(none)* |
-| Attributes | `id`, `type`, `hidedf` |
+| Attributes | `id`, `type`, `nodflt` |
 
 | Attribute | Description |
 |---|---|
 | `id` | Output argument identifier. |
 | `type` | Identifier of the referenced `pdef`. |
-| `hidedf` | Hide the default output port if present? Defaults to `false`. |
+| `nodflt` | Hide the default output port if present? Defaults to `false`. |
 
 ### Notes
 - A node's default output is hidden if it contains at least one `hidedf` that equals `true`.
@@ -427,7 +427,7 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 | Description | Defines a graph joint. |
 | Parent | `file` |
 | Children | *(none)* |
-| Attributes | `id`, `x`, `y`, `member` |
+| Attributes | `id`, `x`, `y`, `member`, `edge` |
 
 | Attribute | Description |
 |---|---|
