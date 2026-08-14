@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Rusty.ActionGraph.Serialization;
 
 namespace Rusty.ActionGraph.Compilation;
@@ -43,28 +44,17 @@ public static class Compiler
         }
 
         // Find start units.
-        // TODO: while this guarantees all units are visited, it does not guarantee the minimum set.
-        // TODO: replace with SCC-based algorithm.
-        HashSet<Unit> starts = new();
-        HashSet<Unit> visited = new();
-        foreach (var unit in units)
+        List<SCC> sccs = Tarjan.GetSCCs(units.Values.ToArray());
+        List<Unit> starts = new();
+        foreach (SCC scc in sccs)
         {
-            if (unit.Value.From.Count == 0)
-            {
-                starts.Add(unit.Value);
-                MarkVisited(unit.Value, visited);
-            }
-        }
-        foreach (var unit in units)
-        {
-            if (visited.Contains(unit.Value))
-                continue;
-            starts.Add(unit.Value);
-            MarkVisited(unit.Value, visited);
+            Godot.GD.Print("SCC");
+            if (scc.IsStartComponent())
+                starts.Add(scc.GetRepresentativeUnit());
         }
 
         // Determine execution order, insert gotos and insert ends.
-        visited.Clear();
+        HashSet<Unit> visited = new();
         List<Unit> executionOrder = new();
         HashSet<Unit> gotoTargets = new();
         foreach (Unit unit in starts)

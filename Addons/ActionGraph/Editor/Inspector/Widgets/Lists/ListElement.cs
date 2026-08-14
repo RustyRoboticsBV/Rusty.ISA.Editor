@@ -72,7 +72,7 @@ internal sealed partial class ListElement : HBoxContainer
         Foldable.Pressed += () => content.Visible = Foldable.IsOpen;
         actionButtons.AddChild(Foldable);
 
-        InsertButton = CreateActionButton("\u2191", "Insert");
+        InsertButton = CreateActionButton("+\u2191", "Insert");
         InsertButton.MouseFilter = MouseFilterEnum.Pass;
         InsertButton.Pressed += () => PressedInsert?.Invoke(this);
         actionButtons.AddChild(InsertButton);
