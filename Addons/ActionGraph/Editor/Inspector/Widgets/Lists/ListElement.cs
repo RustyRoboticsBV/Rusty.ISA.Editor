@@ -21,14 +21,14 @@ internal sealed partial class ListElement : HBoxContainer
     {
         get
         {
-            if (Content is IField field)
-                return field.UndoRedo;
+            if (Content is IWidget widget)
+                return widget.UndoRedo;
             return null;
         }
         set
         {
-            if (Content is IField field)
-                field.UndoRedo = UndoRedo;
+            if (Content is IWidget widget)
+                widget.UndoRedo = UndoRedo;
         }
     }
 
@@ -119,8 +119,8 @@ internal sealed partial class ListElement : HBoxContainer
     /* Public methods. */
     public ListElement DuplicateElement()
     {
-        ListElement copy = Content is IField field
-            ? new(field.DuplicateField() as Control)
+        ListElement copy = Content is IWidget widget
+            ? new(widget.DuplicateField() as Control)
             : new(Content.Duplicate() as Control);
         copy.TitleText = TitleText;
         copy.FoldoutOpen = FoldoutOpen;

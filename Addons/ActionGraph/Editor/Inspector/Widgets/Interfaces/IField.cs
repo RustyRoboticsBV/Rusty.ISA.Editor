@@ -2,25 +2,36 @@
 
 namespace Rusty.ActionGraph.Editor;
 
-internal interface IField
+internal interface IWidget
 {
     /* Public properties. */
     public Control.MouseFilterEnum MouseFilter { get; set; }
     public Control.SizeFlags SizeFlagsHorizontal { get; set; }
     public Control.SizeFlags SizeFlagsVertical { get; set; }
-
-    public string TitleText { get; set; }
-    public int TitleWidth { get; set; }
+    public bool Visible { get; set; }
     public string TooltipText { get; set; }
+
     public UndoRedo UndoRedo { get; set; }
 
-    public bool Visible { get; set; }
+    /* Public methods. */
+    /// <summary>
+    /// Duplicate this widget.
+    /// </summary>
+    public IWidget DuplicateField();
+}
+
+internal interface IField : IWidget
+{
+    /* Public properties. */
+    public string TitleText { get; set; }
+    public int TitleWidth { get; set; }
     
     /* Public methods. */
+    IWidget IWidget.DuplicateField() => DuplicateField();
     /// <summary>
     /// Duplicate this field.
     /// </summary>
-    public IField DuplicateField();
+    public new IField DuplicateField();
 }
 
 internal interface IField<T> : IField
