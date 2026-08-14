@@ -1,0 +1,14 @@
+[remap]
+
+importer="rusty_robotics_bv.action_graph.program_importer"
+type="Resource"
+uid="uid://bxcf3pn2epq1k"
+path="res://.godot/imported/KitchenSink.agp-db0a7aed124b90b660624834f2926218.res"
+
+[deps]
+
+source_file="res://KitchenSink.agp"
+dest_files=["res://.godot/imported/KitchenSink.agp-db0a7aed124b90b660624834f2926218.res"]
+
+[params]
+

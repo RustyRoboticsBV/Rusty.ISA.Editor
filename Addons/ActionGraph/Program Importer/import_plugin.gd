@@ -29,7 +29,7 @@ func _get_priority() -> float:
 	return 1.0;
 
 func _get_recognized_extensions():
-	return ["agxp"];
+	return ["agp"];
 
 func _get_save_extension():
 	return "res";

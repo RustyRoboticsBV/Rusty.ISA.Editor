@@ -30,7 +30,4 @@ ActionGraph is built around a set of core concepts, grouped into three layers.
   - **Memos**: An editor sticky note.
 
 ### The Importer
-A series of import plugins.
-- **Program loader**: takes the `.agxp` files created by the graph editor, and converts them into executable programs.
-- **Node definition loader**: loads `.agxn` files and converts them to a node definition.
-- **Instruction definition loader**: loads `.agxi` files and converts them to an instruction definition.
+Takes the `.agp` files created by the graph editor, and converts them into executable programs.

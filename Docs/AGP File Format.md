@@ -1,5 +1,5 @@
-# AGXP File Format
-The **AGXP** (*ActionGraph XML Program*) file format is used to store the graphs created in the editor. It uses the extension `.agxp` and is based on the XML format. Each file describes a single program graph, containing all of its elements and edges as well as metadata and schema (node and instruction definitions).
+# AGP File Format
+The **AGP** (*ActionGraph Program*) file format is used to store the graphs created in the editor. It uses the extension `.agp` and is based on the XML format. Each file describes a single program graph, containing all of its elements and edges as well as metadata and schema (node and instruction definitions).
 
 ## General Rules
 - The file root is always the `file` element.
