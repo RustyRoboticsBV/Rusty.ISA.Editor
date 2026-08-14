@@ -53,17 +53,17 @@ internal static class Compiler
         // Determine execution order, insert gotos and insert ends.
         HashSet<Unit> visited = new();
         List<Unit> executionOrder = new();
-        HashSet<Unit> gotoTargets = new();
+        HashSet<Unit> jumpTargets = new();
         foreach (Unit unit in starts)
         {
-            Linearize(unit, visited, executionOrder, gotoTargets);
+            Linearize(unit, visited, executionOrder, jumpTargets);
         }
 
-        // Generate a label for each goto target.
+        // Generate a label for each jump target.
         Labels labels = [];
         int nextLabel = 0;
 
-        foreach (Unit target in gotoTargets)
+        foreach (Unit target in jumpTargets)
         {
             labels[target] = "L_" + nextLabel.ToString();
             nextLabel++;
@@ -107,29 +107,9 @@ internal static class Compiler
 
     /* Private methods. */
     /// <summary>
-    /// Recursively mark all units reachable from one unit as reachable. 
+    /// Recursively linearize a subgraph: determine the execution order, insert gotos & ends, and find jump targets.
     /// </summary>
-    private static void MarkVisited(Unit current, HashSet<Unit> marked)
-    {
-        if (current == null)
-            return;
-        if (marked.Contains(current))
-            return;
-
-        marked.Add(current);
-        if (current is NodeUnit node)
-        {
-            foreach (Unit output in node.To)
-            {
-                MarkVisited(output, marked);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Recursively linearize a subgraph: determine the execution order, insert gotos & ends, and find label targets.
-    /// </summary>
-    private static void Linearize(Unit unit, HashSet<Unit> visited, List<Unit> executionOrder, HashSet<Unit> labelTargets)
+    private static void Linearize(Unit unit, HashSet<Unit> visited, List<Unit> executionOrder, HashSet<Unit> jumpTargets)
     {
         // Register unit as visited.
         if (!visited.Add(unit))
@@ -155,8 +135,8 @@ internal static class Compiler
                     // Insert goto if necessary.
                     else if (visited.Contains(node.To[i]))
                     {
-                        // Register as label target.
-                        labelTargets.Add(node.To[i]);
+                        // Register as jump target.
+                        jumpTargets.Add(node.To[i]);
 
                         // Insert goto.
                         GotoUnit gto = new();
@@ -165,11 +145,11 @@ internal static class Compiler
                     }
 
                     // Continue with output unit.
-                    Linearize(node.To[i], visited, executionOrder, labelTargets);
+                    Linearize(node.To[i], visited, executionOrder, jumpTargets);
 
-                    // Register as label target if parameter output.
+                    // Register as jump target if parameter output.
                     if (i > 0 || (i == 0 && node.OutputData.HideDefaultOutput))
-                        labelTargets.Add(node.To[i]);
+                        jumpTargets.Add(node.To[i]);
                 }
                 break;
 
@@ -317,23 +297,6 @@ internal static class Compiler
     }
 
     /// <summary>
-    /// Compile metadata.
-    /// </summary>
-    private static Metadata CompileMetadata(FileCodec file)
-    {
-        Metadata metadata = new();
-        if (file == null)
-            return metadata;
-
-        foreach (Codec child in file.Children)
-        {
-            if (child is MetaCodec data)
-                metadata.AddValue(data.GetAttribute(Codec.ID), data.GetAttribute(Codec.Value));
-        }
-        return metadata;
-    }
-
-    /// <summary>
     /// Compile an instruction set.
     /// </summary>
     private static InstructionSet CompileInstructionSet(FileCodec file)
@@ -374,5 +337,22 @@ internal static class Compiler
 
         // Create definition.
         return new(opcode, parameters.ToArray(), exec);
+    }
+
+    /// <summary>
+    /// Compile metadata.
+    /// </summary>
+    private static Metadata CompileMetadata(FileCodec file)
+    {
+        Metadata metadata = new();
+        if (file == null)
+            return metadata;
+
+        foreach (Codec child in file.Children)
+        {
+            if (child is MetaCodec data)
+                metadata.AddValue(data.GetAttribute(Codec.ID), data.GetAttribute(Codec.Value));
+        }
+        return metadata;
     }
 }
