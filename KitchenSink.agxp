@@ -127,6 +127,7 @@
         x="400"
         y="300"
         member="mainFrame"
+        edge="edge1"
     />
 
 
@@ -273,21 +274,15 @@
         id="edge1"
         from="nodeAdd"
         port="0"
-        to="join1"
-    />
-
-    <edge
-        id="edge2"
-        from="join1"
-        port="0"
         to="nodePrint"
     />
 
+
     <edge
-        id="edge3"
+        id="edge2"
         from="nodeNested"
         port="0"
-        to="join1"
+        to="nodePrint"
     />
 
 

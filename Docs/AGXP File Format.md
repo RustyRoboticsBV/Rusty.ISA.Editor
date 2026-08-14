@@ -434,6 +434,7 @@ The **AGXP** (*ActionGraph XML Program*) file format is used to store the graphs
 | `x` | X position. Defaults to `0`. |
 | `y` | Y position. Defaults to `0`. |
 | `member` | Containing frame identifier. Optional. |
+| `edge` | Associated edge identifier. |
 
 ---
 
@@ -469,6 +470,6 @@ The **AGXP** (*ActionGraph XML Program*) file format is used to store the graphs
 | Attribute | Description |
 |---|---|
 | `id` | Edge identifier. |
-| `from` | Source node or joint identifier. |
+| `from` | Source node identifier. |
 | `port` | Source output port index. |
-| `to` | Target node or joint identifier. |
+| `to` | Target node identifier. |

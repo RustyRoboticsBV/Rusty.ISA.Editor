@@ -74,7 +74,6 @@
 			</tuple>
 		</list>
 	</node>
-	<joint id="J1" x="200" y="200"/>
-	<edge id="E1" from="N1" port="0" to="J1"/>
-	<edge id="E2" from="J1" port="0" to="N1"/>
+	<joint id="J1" x="200" y="200" member="F1" edge="E1"/>
+	<edge id="E1" from="N1" port="0" to="N1"/>
 </file>

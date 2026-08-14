@@ -12,15 +12,13 @@ public static class Compiler
     /* Public methods. */
     public static InstructionProgram Compile(FileCodec file)
     {
-        // Create units for nodes & joints.
+        // Create units for nodes.
         Dictionary<string, Unit> units = new();
         foreach (Codec element in file.Children)
         {
             string id = element.GetAttribute(Codec.ID);
             if (element is NodeCodec node)
                 units.Add(id, new NodeUnit(file, node));
-            else if (element is JointCodec joint)
-                units.Add(id, new JointUnit(joint));
         }
 
         // Connect units according to graph edges.
@@ -38,8 +36,6 @@ public static class Compiler
 
                 if (fromUnit is NodeUnit node)
                     node.ConnectTo(portIndex, toUnit);
-                else if (fromUnit is JointUnit joint)
-                    joint.ConnectTo(toUnit);
             }
         }
 
@@ -86,9 +82,6 @@ public static class Compiler
                 case GotoUnit gto:
                     unitInstructions.Add(new GotoInstruction(labels[gto.To]));
                     break;
-                case JointUnit:
-                    unitInstructions.Add(new DummyInstruction());
-                    break;
                 case NodeUnit node:
                     CompileNode(node, file, unitInstructions, labels);
                     break;
@@ -129,8 +122,6 @@ public static class Compiler
                 MarkVisited(output, marked);
             }
         }
-        else if (current is JointUnit joint)
-            MarkVisited(joint.To, marked);
     }
 
     /// <summary>
@@ -149,28 +140,6 @@ public static class Compiler
         {
             case EndUnit:
             case GotoUnit:
-                break;
-
-            case JointUnit joint:
-
-                // Insert end if necessary.
-                if (joint.To == null)
-                    joint.ConnectTo(new EndUnit());
-
-                // Insert goto if necessary.
-                else if (visited.Contains(joint.To))
-                {
-                    // Register as label target.
-                    labelTargets.Add(joint.To);
-
-                    // Insert goto.
-                    GotoUnit gto = new();
-                    gto.ConnectTo(joint.To);
-                    joint.ConnectTo(gto);
-                }
-
-                // Continue with output unit.
-                Linearize(joint.To, visited, executionOrder, labelTargets);
                 break;
 
             case NodeUnit node:

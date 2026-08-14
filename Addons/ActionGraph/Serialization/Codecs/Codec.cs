@@ -27,6 +27,7 @@ public abstract class Codec
     public const string Color = "color";
     public const string Index = "index";
     public const string NoDefault = "nodflt";
+    public const string Edge = "edge";
     public const string From = "from";
     public const string Port = "port";
     public const string To = "to";

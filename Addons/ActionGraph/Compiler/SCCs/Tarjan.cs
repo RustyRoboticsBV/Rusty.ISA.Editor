@@ -59,8 +59,8 @@ internal static class Tarjan
                     Examine(unit, to, data);
                 }
                 break;
-            case MonoUnit mono:
-                Examine(unit, mono.To, data);
+            case GotoUnit gto:
+                Examine(unit, gto.To, data);
                 break;
         }
 

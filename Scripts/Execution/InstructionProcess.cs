@@ -126,8 +126,8 @@ public partial class InstructionProcess : Node
         // Execute instruction.
         switch (instruction)
         {
-            case GotoInstruction @goto:
-                Goto(@goto.TargetLabel);
+            case GotoInstruction gto:
+                Goto(gto.TargetLabel);
                 break;
             case EndInstruction:
                 Stop();
