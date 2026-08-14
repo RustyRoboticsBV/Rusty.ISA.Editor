@@ -3,7 +3,10 @@ using System;
 
 namespace Rusty.ActionGraph.Editor;
 
-internal sealed partial class ListElement : HBoxContainer
+/// <summary>
+/// An element of a list widget.
+/// </summary>
+internal sealed partial class ListElement : HBoxContainer, IWidget
 {
     /* Public properties. */
     public string TitleText
@@ -117,7 +120,9 @@ internal sealed partial class ListElement : HBoxContainer
     public ListElement(string title, Control content) : this(content) => TitleText = title;
 
     /* Public methods. */
-    public ListElement DuplicateElement()
+    IWidget IWidget.DuplicateField() => DuplicateField();
+
+    public ListElement DuplicateField()
     {
         ListElement copy = Content is IWidget widget
             ? new(widget.DuplicateField() as Control)

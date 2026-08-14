@@ -2,6 +2,9 @@
 
 namespace Rusty.ActionGraph.Editor;
 
+/// <summary>
+/// A list widget.
+/// </summary>
 internal sealed partial class ListWidget : VBoxContainer, IWidget
 {
     /* Public properties. */
@@ -54,7 +57,7 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
         {
             if (child is ListElement element)
             {
-                copy.AddElement(element.DuplicateElement());
+                copy.AddElement(element.DuplicateField());
             }
         }
         return copy;
@@ -82,7 +85,7 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
         element.PressedDuplicate += (element) =>
         {
             int index = GetElementIndex(element);
-            ListElement newElement = element.DuplicateElement();
+            ListElement newElement = element.DuplicateField();
             AddElement(newElement);
             Elements.MoveChild(newElement, index);
         };

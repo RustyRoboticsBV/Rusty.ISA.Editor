@@ -20,6 +20,7 @@ internal sealed partial class HSlider : Godot.HSlider
     /* Constructors. */
     public HSlider() : base()
     {
+        Scrollable = false;
         DragStarted += OnDragStarted;
         DragEnded += OnDragEnded;
     }
