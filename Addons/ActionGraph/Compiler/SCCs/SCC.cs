@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Compilation;
 /// <summary>
 /// A strongly-connected component inside of a directed graph of compiler units.
 /// </summary>
-internal class SCC
+internal sealed class SCC
 {
     /* Public properties. */
     public HashSet<Unit> Units { get; set; } = new();

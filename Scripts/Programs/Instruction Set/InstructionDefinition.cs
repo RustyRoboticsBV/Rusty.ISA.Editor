@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Rusty.ActionGraph;
 
@@ -34,9 +35,22 @@ public sealed partial class InstructionDefinition : Resource
         Opcode = opcode;
         Parameters = parameters;
         ExecutionHandler = executionHandler;
+        ResourceName = ToString();
     }
 
     /* Public methods. */
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        foreach (string parameter in Parameters)
+        {
+            if (sb.Length > 0)
+                sb.Append(", ");
+            sb.Append(parameter);
+        }
+        return Opcode + "(" + sb + ")";
+    }
+
     /// <summary>
     /// Find the index of a parameter. Returns -1 if the parameter does not exist.
     /// </summary>

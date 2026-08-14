@@ -9,7 +9,7 @@ namespace Rusty.ActionGraph;
 public sealed partial class DummyInstruction : Instruction
 {
     /* Constructors. */
-    public DummyInstruction() { }
+    public DummyInstruction() => ResourceName = ToString();
 
     /* Public methods. */
     public override string ToString()

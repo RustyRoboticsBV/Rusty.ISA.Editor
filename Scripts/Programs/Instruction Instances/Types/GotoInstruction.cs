@@ -17,6 +17,7 @@ public sealed partial class GotoInstruction : Instruction
     public GotoInstruction(string targetLabel)
     {
         TargetLabel = targetLabel;
+        ResourceName = ToString();
     }
 
     /* Public methods. */

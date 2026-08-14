@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Rusty.ActionGraph.Serialization;
 
 namespace Rusty.ActionGraph.Compilation;
 
 using Labels = Dictionary<Unit, string>;
 
-public static class Compiler
+/// <summary>
+/// A utility that takes a FileCodec and compiles it into an InstructionProgram.
+/// </summary>
+internal static class Compiler
 {
     /* Public methods. */
     public static InstructionProgram Compile(FileCodec file)
@@ -40,7 +42,7 @@ public static class Compiler
         }
 
         // Find start units.
-        List<SCC> sccs = Tarjan.GetSCCs(units.Values.ToArray());
+        List<SCC> sccs = Tarjan.GetSCCs(units.Values);
         List<Unit> starts = new();
         foreach (SCC scc in sccs)
         {

@@ -7,7 +7,7 @@ namespace Rusty.ActionGraph.Serialization;
 /// <summary>
 /// The result of counting the outputs of a node codec.
 /// </summary>
-internal class OutputCountResult
+internal sealed class OutputCountResult
 {
     /* Public properties. */
     public static OutputCountResult Default => new();

@@ -27,7 +27,7 @@ internal static class Tarjan
     /// <summary>
     /// Get the strongly-connected components of a graph.
     /// </summary>
-    public static List<SCC> GetSCCs(Unit[] units)
+    public static List<SCC> GetSCCs(IEnumerable<Unit> units)
     {
         Data data = new();
         foreach (Unit unit in units)

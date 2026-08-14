@@ -3,7 +3,7 @@ namespace Rusty.ActionGraph.Serialization;
 /// <summary>
 /// A OadefCodec and OutCodec pair representing an argument output port.
 /// </summary>
-internal class OutputPortInfo
+internal sealed class OutputPortInfo
 {
     /* Public properties. */
     public PdefCodec Parameter { get; private set; }

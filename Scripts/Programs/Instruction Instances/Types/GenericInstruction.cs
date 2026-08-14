@@ -19,6 +19,7 @@ public sealed partial class GenericInstruction : Instruction
     {
         Opcode = opcode;
         Arguments = arguments;
+        ResourceName = ToString();
     }
 
     /* Public methods. */

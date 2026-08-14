@@ -3,7 +3,7 @@
 namespace Rusty.ActionGraph.Compilation;
 
 /// <summary>
-/// A compiler unit.
+/// A base class for compiler units (the compiler representation for graphs).
 /// </summary>
 internal abstract class Unit
 {
