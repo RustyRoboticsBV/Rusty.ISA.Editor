@@ -2,19 +2,9 @@
 
 namespace Rusty.ActionGraph.Editor;
 
-internal sealed partial class ListContainer : VBoxContainer, IField
+internal sealed partial class ListWidget : VBoxContainer, IWidget
 {
     /* Public properties. */
-    public string TitleText
-    {
-        get => Foldable.Text;
-        set => Foldable.Text = value;
-    }
-    public int TitleWidth
-    {
-        get => (int)Foldable.CustomMinimumSize.X;
-        set => Foldable.CustomMinimumSize = new(value, Foldable.CustomMinimumSize.Y);
-    }
     public string AddButtonText
     {
         get => AddButton.Text;
@@ -25,28 +15,17 @@ internal sealed partial class ListContainer : VBoxContainer, IField
     public UndoRedo UndoRedo { get; set; }
 
     /* Private properties. */
-    private FoldableHeader Foldable { get; set; }
     private VBoxContainer Elements { get; set; }
     private Button AddButton { get; set; }
 
     /* Constructors. */
-    public ListContainer(string elementTitle, Control elementTemplate)
+    public ListWidget(string elementTitle, Control elementTemplate, string addButtonText)
     {
         TemplateTitle = elementTitle;
         ElementTemplate = elementTemplate;
 
         MouseFilter = MouseFilterEnum.Pass;
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
-
-        // Foldable header.
-        Foldable = new();
-        Foldable.Name = "Foldable";
-        Foldable.MouseFilter = MouseFilterEnum.Pass;
-        Foldable.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        Foldable.SizeFlagsVertical = SizeFlags.ShrinkCenter;
-        Foldable.CustomMinimumSize = new(0, 31f);
-        Foldable.Text = "";
-        AddChild(Foldable);
 
         // Elements container.
         Elements = new();
@@ -60,31 +39,16 @@ internal sealed partial class ListContainer : VBoxContainer, IField
         AddButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         AddButton.Pressed += () => CreateElement();
         AddChild(AddButton);
-
-        // Set up foldable toggle.
-        Foldable.Pressed += () =>
-        {
-            Elements.Visible = Foldable.IsOpen;
-            AddButton.Visible = Foldable.IsOpen;
-        };
-    }
-
-    public ListContainer(string listTitle, string elementTitle, Control elementTemplate, string addButtonText) : this(elementTitle, elementTemplate)
-    {
-        TitleText = listTitle;
-        AddButtonText = addButtonText;
     }
 
     /* Public methods. */
-    IField IField.DuplicateField() => DuplicateField();
+    IWidget IWidget.DuplicateField() => DuplicateField();
 
-    public ListContainer DuplicateField()
+    public ListWidget DuplicateField()
     {
-        ListContainer copy = new(TitleText, TemplateTitle, ElementTemplate, AddButtonText);
+        ListWidget copy = new(TemplateTitle, ElementTemplate, AddButtonText);
         copy.SizeFlagsHorizontal = SizeFlagsHorizontal;
         copy.SizeFlagsVertical = SizeFlagsVertical;
-        copy.TitleWidth = TitleWidth;
-        copy.Foldable.SetOpen(Foldable.IsOpen);
         copy.UndoRedo = UndoRedo;
         foreach (Control child in Elements.GetChildren())
         {
@@ -99,8 +63,8 @@ internal sealed partial class ListContainer : VBoxContainer, IField
     /* Private methods. */
     private ListElement CreateElement()
     {
-        Control templateCopy = ElementTemplate is IField field
-            ? field.DuplicateField() as Control
+        Control templateCopy = ElementTemplate is IWidget widget
+            ? widget.DuplicateField() as Control
             : ElementTemplate.Duplicate() as Control;
         ListElement element = new(TemplateTitle, templateCopy);
         AddElement(element);

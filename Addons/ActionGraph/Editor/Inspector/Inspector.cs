@@ -82,10 +82,10 @@ internal partial class Inspector : ScrollContainer
         enum2.SetSelected(2);
         VBox.AddChild(@enum2);
 
-        ListContainer list = new("List", "Enum Element", enum2, "Add Enum Element");
+        ListWidget list = new("Enum Element", enum2, "Add Enum Element");
         VBox.AddChild(list);
 
-        ListContainer listList = new("ListList", "Nested List", list.DuplicateField(), "Add Nested");
+        ListWidget listList = new("Nested List", list.DuplicateField(), "Add Nested");
         VBox.AddChild(listList);
     }
 
