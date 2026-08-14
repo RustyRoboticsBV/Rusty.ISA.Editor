@@ -1,4 +1,6 @@
 using Godot;
+using Godot.Collections;
+using System.Collections.Generic;
 
 namespace Rusty.ActionGraph;
 
@@ -8,14 +10,27 @@ namespace Rusty.ActionGraph;
 [GlobalClass]
 public sealed partial class InstructionSet : Resource
 {
+    /* Private properties. */
+    [Export] Array<InstructionDefinition> Definitions { get; set; } = [];
+
     /* Public properties. */
-    // TODO: make private so that this class is immutable, and expose indexer + count property.
-    [Export] public InstructionDefinition[] Definitions { get; private set; }
+    public int Count => Definitions.Count;
+    
+    /* Public indexers. */
+    public InstructionDefinition this[int index] => Definitions[index];
 
     /* Constructors. */
-    public InstructionSet() : this([]) { }
+    public InstructionSet() { }
 
-    public InstructionSet(InstructionDefinition[] definitions) => Definitions = definitions;
+    public InstructionSet(InstructionDefinition[] definitions) => Definitions = new(definitions);
+
+    public InstructionSet(List<InstructionDefinition> definitions)
+    {
+        foreach (InstructionDefinition definition in definitions)
+        {
+            Definitions.Add(definition);
+        }
+    }
 
     /* Public methods. */
     /// <summary>

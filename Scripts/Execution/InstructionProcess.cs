@@ -58,8 +58,9 @@ public partial class InstructionProcess : Node
 
         // Find execution handlers.
         ExecutionHandlers.Clear();
-        foreach (InstructionDefinition definition in program.InstructionSet.Definitions)
+        for (int i = 0; i < program.InstructionSet.Count; i++)
         {
+            InstructionDefinition definition = program.InstructionSet[i];
             ExecutionHandlers.Add(definition.Opcode, FindExecutionHandler(definition.ExecutionHandler));
         }
     }

@@ -313,7 +313,7 @@ internal static class Compiler
         }
 
         // Create instruction set.
-        return new(definitions.ToArray());
+        return new(definitions);
     }
 
     /// <summary>
