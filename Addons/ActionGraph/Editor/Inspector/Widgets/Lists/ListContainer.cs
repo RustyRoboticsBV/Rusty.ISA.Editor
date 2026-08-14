@@ -2,13 +2,18 @@
 
 namespace Rusty.ActionGraph.Editor;
 
-internal sealed partial class ListContainer : VBoxContainer
+internal sealed partial class ListContainer : VBoxContainer, IField
 {
     /* Public properties. */
     public string TitleText
     {
         get => Foldable.Text;
         set => Foldable.Text = value;
+    }
+    public int TitleWidth
+    {
+        get => (int)Foldable.CustomMinimumSize.X;
+        set => Foldable.CustomMinimumSize = new(value, Foldable.CustomMinimumSize.Y);
     }
     public string AddButtonText
     {
@@ -17,6 +22,7 @@ internal sealed partial class ListContainer : VBoxContainer
     }
     public string TemplateTitle { get; set; }
     public Control ElementTemplate { get; set; }
+    public UndoRedo UndoRedo { get; set; }
 
     /* Private properties. */
     private FoldableHeader Foldable { get; set; }
@@ -67,6 +73,27 @@ internal sealed partial class ListContainer : VBoxContainer
     {
         TitleText = listTitle;
         AddButtonText = addButtonText;
+    }
+
+    /* Public methods. */
+    IField IField.DuplicateField() => DuplicateField();
+
+    public ListContainer DuplicateField()
+    {
+        ListContainer copy = new(TitleText, TemplateTitle, ElementTemplate, AddButtonText);
+        copy.SizeFlagsHorizontal = SizeFlagsHorizontal;
+        copy.SizeFlagsVertical = SizeFlagsVertical;
+        copy.TitleWidth = TitleWidth;
+        copy.Foldable.SetOpen(Foldable.IsOpen);
+        copy.UndoRedo = UndoRedo;
+        foreach (Control child in Elements.GetChildren())
+        {
+            if (child is ListElement element)
+            {
+                copy.AddElement(element.DuplicateElement());
+            }
+        }
+        return copy;
     }
 
     /* Private methods. */

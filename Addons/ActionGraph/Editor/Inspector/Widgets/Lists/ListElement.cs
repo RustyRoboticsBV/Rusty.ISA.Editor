@@ -17,6 +17,20 @@ internal sealed partial class ListElement : HBoxContainer
         set => Foldable.SetOpen(value);
     }
     public Control Content { get; private set; }
+    public UndoRedo UndoRedo
+    {
+        get
+        {
+            if (Content is IField field)
+                return field.UndoRedo;
+            return null;
+        }
+        set
+        {
+            if (Content is IField field)
+                field.UndoRedo = UndoRedo;
+        }
+    }
 
     /* Private properties. */
     private Button DragHandle { get; set; }
