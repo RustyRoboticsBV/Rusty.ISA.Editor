@@ -22,6 +22,7 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 
 | Attribute | Description |
 |---|---|
+| `editor` | The ID of the ActionGraph-based editor that created this graph. |
 | `csum` | File checksum. |
 
 ---

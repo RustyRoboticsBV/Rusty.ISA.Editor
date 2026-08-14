@@ -15,7 +15,7 @@ public sealed class FileCodec : Codec
         IdefCodec.TAG, NdefCodec.TAG,
         NodeCodec.TAG, JointCodec.TAG, FrameCodec.TAG, MemoCodec.TAG, EdgeCodec.TAG
     ];
-    protected override HashSet<string> AllowedAttributes => [Checksum];
+    protected override HashSet<string> AllowedAttributes => [Editor, Checksum];
 
     /* Constructors. */
     public FileCodec(XmlNode xml) : base(xml) { }

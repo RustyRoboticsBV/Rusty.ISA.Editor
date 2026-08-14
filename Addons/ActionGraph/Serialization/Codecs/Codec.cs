@@ -11,6 +11,7 @@ namespace Rusty.ActionGraph.Serialization;
 public abstract class Codec
 {
     /* Constants. */
+    public const string Editor = "editor";
     public const string Checksum = "csum";
     public const string ID = "id";
     public const string Value = "value";
