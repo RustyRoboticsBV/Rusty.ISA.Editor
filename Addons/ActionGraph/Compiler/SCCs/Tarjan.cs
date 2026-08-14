@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Rusty.ActionGraph.Compilation;
 
 /// <summary>
-/// A utility class for Tarjan's algorithm for finding strongly-connected components.
+/// A utility class that implements Tarjan's algorithm for finding strongly-connected components.
 /// </summary>
 internal static class Tarjan
 {
@@ -12,9 +12,9 @@ internal static class Tarjan
     /// <summary>
     /// The data used during the algorithm.
     /// </summary>
-    private class Memory
+    private class Data
     {
-        public List<SCC> output = new();
+        public List<SCC> result = new();
 
         public Stack<Unit> stack = new();
         public Dictionary<Unit, int> indices = new();
@@ -29,26 +29,26 @@ internal static class Tarjan
     /// </summary>
     public static List<SCC> GetSCCs(Unit[] units)
     {
-        Memory memory = new();
+        Data data = new();
         foreach (Unit unit in units)
         {
-            if (!memory.indices.ContainsKey(unit))
-                StrongConnect(unit, memory);
+            if (!data.indices.ContainsKey(unit))
+                StrongConnect(unit, data);
         }
-        return memory.output;
+        return data.result;
     }
 
     /* Private methods. */
-    private static void StrongConnect(Unit unit, Memory memory)
+    private static void StrongConnect(Unit unit, Data data)
     {
         // Set up index and initial low-link index.
-        memory.indices[unit] = memory.nextIndex;
-        memory.lowLink[unit] = memory.nextIndex;
-        memory.nextIndex++;
+        data.indices[unit] = data.nextIndex;
+        data.lowLink[unit] = data.nextIndex;
+        data.nextIndex++;
 
         // Push to stack.
-        memory.stack.Push(unit);
-        memory.onStack.Add(unit);
+        data.stack.Push(unit);
+        data.onStack.Add(unit);
 
         // Examine successors of the unit.
         switch (unit)
@@ -56,43 +56,44 @@ internal static class Tarjan
             case NodeUnit node:
                 foreach (Unit to in node.To)
                 {
-                    Examine(unit, to, memory);
+                    Examine(unit, to, data);
                 }
                 break;
             case MonoUnit mono:
-                Examine(unit, mono.To, memory);
+                Examine(unit, mono.To, data);
                 break;
         }
 
         // If the unit was a root node, pop the stack and generate an SCC.
-        if (memory.lowLink[unit] == memory.indices[unit])
+        if (data.lowLink[unit] == data.indices[unit])
         {
             SCC scc = new();
-            Unit top = null;
-            while (memory.stack.Count > 0 && top != unit)
+            Unit top;
+            do
             {
-                top = memory.stack.Pop();
-                memory.onStack.Remove(top);
+                top = data.stack.Pop();
+                data.onStack.Remove(top);
                 scc.AddUnit(top);
             }
-            memory.output.Add(scc);
+            while (top != unit);
+            data.result.Add(scc);
         }
     }
 
-    private static void Examine(Unit from, Unit to, Memory memory)
+    private static void Examine(Unit from, Unit to, Data data)
     {
         if (to == null)
             return;
 
         // Case 1: the successor has not yet been visited.
-        if (!memory.indices.ContainsKey(to))
+        if (!data.indices.ContainsKey(to))
         {
-            StrongConnect(to, memory);
-            memory.lowLink[from] = Math.Min(memory.lowLink[from], memory.lowLink[to]);
+            StrongConnect(to, data);
+            data.lowLink[from] = Math.Min(data.lowLink[from], data.lowLink[to]);
         }
 
         // Case 2: the successor has been visited already.
-        else if (memory.onStack.Contains(to))
-            memory.lowLink[from] = Math.Min(memory.lowLink[from], memory.indices[to]);
+        else if (data.onStack.Contains(to))
+            data.lowLink[from] = Math.Min(data.lowLink[from], data.indices[to]);
     }
 }

@@ -48,7 +48,6 @@ public static class Compiler
         List<Unit> starts = new();
         foreach (SCC scc in sccs)
         {
-            Godot.GD.Print("SCC");
             if (scc.IsStartComponent())
                 starts.Add(scc.GetRepresentativeUnit());
         }
