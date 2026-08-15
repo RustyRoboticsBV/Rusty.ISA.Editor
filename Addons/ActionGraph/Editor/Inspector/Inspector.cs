@@ -82,8 +82,11 @@ internal partial class Inspector : ScrollContainer
         enum2.SetSelected(2);
         VBox.AddChild(@enum2);
 
-        OptionWidget option = new(false, "Option", enum2.DuplicateWidget());
+        OptionWidget option = new("Option", enum2.DuplicateWidget(), false);
         VBox.AddChild(option);
+
+        ChoiceWidget choice = new("Choice", new() { { "Enum", @enum.DuplicateWidget() }, { "Color", color.DuplicateWidget() }, { "Option", option.DuplicateWidget() } }, 1);
+        VBox.AddChild(choice);
 
         ListWidget list = new("Enum Element", enum2, "Add Enum Element");
         VBox.AddChild(list);

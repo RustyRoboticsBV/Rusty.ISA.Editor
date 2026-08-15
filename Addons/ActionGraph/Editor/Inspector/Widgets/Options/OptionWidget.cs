@@ -8,7 +8,11 @@ namespace Rusty.ActionGraph.Editor;
 internal sealed partial class OptionWidget : VBoxContainer, IWidget
 {
     /* Public properties. */
-    public string TitleText { get; set; }
+    public string TitleText
+    {
+        get => Label.Text;
+        set => Label.Text = value;
+    }
     public bool Enabled => CheckBox.ButtonPressed;
     public Control Optional { get; private set; }
     public int Indentation
@@ -19,7 +23,12 @@ internal sealed partial class OptionWidget : VBoxContainer, IWidget
     public UndoRedo UndoRedo
     {
         get => CheckBox.UndoRedo;
-        set => CheckBox.UndoRedo = value;
+        set
+        {
+            CheckBox.UndoRedo = value;
+            if (Optional is IWidget widget)
+                widget.UndoRedo = value;
+        }
     }
 
     /* Private properties. */
@@ -28,9 +37,8 @@ internal sealed partial class OptionWidget : VBoxContainer, IWidget
     private MarginContainer Margin { get; set; }
 
     /* Constructors. */
-    public OptionWidget(bool enabled, string titleText, Control optional)
+    public OptionWidget(string titleText, Control optional, bool enabled)
     {
-        TitleText = titleText;
         MouseFilter = MouseFilterEnum.Pass;
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
@@ -66,9 +74,10 @@ internal sealed partial class OptionWidget : VBoxContainer, IWidget
             ? widget.DuplicateWidget() as Control
             : Optional.Duplicate() as Control;
 
-        OptionWidget copy = new(Enabled, TitleText, optional);
+        OptionWidget copy = new(TitleText, optional, Enabled);
         copy.SizeFlagsHorizontal = SizeFlagsHorizontal;
         copy.SizeFlagsVertical = SizeFlagsVertical;
+        copy.Indentation = Indentation;
         copy.UndoRedo = UndoRedo;
 
         return copy;
