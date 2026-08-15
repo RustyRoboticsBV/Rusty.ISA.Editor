@@ -120,12 +120,12 @@ internal sealed partial class ListElement : HBoxContainer, IWidget
     public ListElement(string title, Control content) : this(content) => TitleText = title;
 
     /* Public methods. */
-    IWidget IWidget.DuplicateField() => DuplicateField();
+    IWidget IWidget.DuplicateWidget() => DuplicateWidget();
 
-    public ListElement DuplicateField()
+    public ListElement DuplicateWidget()
     {
         ListElement copy = Content is IWidget widget
-            ? new(widget.DuplicateField() as Control)
+            ? new(widget.DuplicateWidget() as Control)
             : new(Content.Duplicate() as Control);
         copy.TitleText = TitleText;
         copy.FoldoutOpen = FoldoutOpen;

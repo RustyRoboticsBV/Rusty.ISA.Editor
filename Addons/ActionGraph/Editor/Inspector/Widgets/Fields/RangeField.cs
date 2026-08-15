@@ -90,7 +90,7 @@ internal sealed partial class RangeField : HBoxContainer, IField<RangeField>
         => TitleText = title;
 
     /* Public methods. */
-    public RangeField DuplicateField()
+    public RangeField DuplicateWidget()
     {
         RangeField field = Duplicate() as RangeField;
         field.TitleText = TitleText;

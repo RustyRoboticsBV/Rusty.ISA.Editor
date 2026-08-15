@@ -65,7 +65,7 @@ internal partial class EnumField : HBoxContainer, IField<EnumField>
     public EnumField(string title, string[] items, int selected) : this(items, selected) => TitleText = title;
 
     /* Public methods. */
-    public EnumField DuplicateField()
+    public EnumField DuplicateWidget()
     {
         EnumField field = Duplicate() as EnumField;
         field.TitleText = TitleText;

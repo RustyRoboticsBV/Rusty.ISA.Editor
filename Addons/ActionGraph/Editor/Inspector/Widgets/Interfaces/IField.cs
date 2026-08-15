@@ -1,24 +1,4 @@
-﻿using Godot;
-
-namespace Rusty.ActionGraph.Editor;
-
-internal interface IWidget
-{
-    /* Public properties. */
-    public Control.MouseFilterEnum MouseFilter { get; set; }
-    public Control.SizeFlags SizeFlagsHorizontal { get; set; }
-    public Control.SizeFlags SizeFlagsVertical { get; set; }
-    public bool Visible { get; set; }
-    public string TooltipText { get; set; }
-
-    public UndoRedo UndoRedo { get; set; }
-
-    /* Public methods. */
-    /// <summary>
-    /// Duplicate this widget.
-    /// </summary>
-    public IWidget DuplicateField();
-}
+﻿namespace Rusty.ActionGraph.Editor;
 
 internal interface IField : IWidget
 {
@@ -27,21 +7,23 @@ internal interface IField : IWidget
     public int TitleWidth { get; set; }
     
     /* Public methods. */
-    IWidget IWidget.DuplicateField() => DuplicateField();
+    IWidget IWidget.DuplicateWidget() => DuplicateWidget();
     /// <summary>
     /// Duplicate this field.
     /// </summary>
-    public new IField DuplicateField();
+    public new IField DuplicateWidget();
 }
 
-internal interface IField<T> : IField
+internal interface IField<T> : IField, IWidget<T>
     where T : IField
 {
     /* Public methods. */
-    IField IField.DuplicateField() => DuplicateField();
+    IField IField.DuplicateWidget() => DuplicateWidget();
+    IWidget IWidget.DuplicateWidget() => DuplicateWidget();
+    T IWidget<T>.DuplicateWidget() => DuplicateWidget();
 
     /// <summary>
     /// Duplicate this field.
     /// </summary>
-    public new T DuplicateField();
+    public new T DuplicateWidget();
 }

@@ -65,7 +65,7 @@ internal partial class BoolField : HBoxContainer, IField<BoolField>
     public BoolField(string title, bool pressed) : this(pressed) => TitleText = title;
 
     /* Public methods. */
-    public BoolField DuplicateField()
+    public BoolField DuplicateWidget()
     {
         BoolField field = Duplicate() as BoolField;
         field.TitleText = TitleText;

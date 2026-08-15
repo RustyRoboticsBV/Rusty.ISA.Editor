@@ -64,7 +64,7 @@ internal partial class ColorField : HBoxContainer, IField<ColorField>
     public ColorField(string title, Color color) : this(color) => TitleText = title;
 
     /* Public methods. */
-    public ColorField DuplicateField()
+    public ColorField DuplicateWidget()
     {
         ColorField field = Duplicate() as ColorField;
         field.TitleText = TitleText;

@@ -45,9 +45,9 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
     }
 
     /* Public methods. */
-    IWidget IWidget.DuplicateField() => DuplicateField();
+    IWidget IWidget.DuplicateWidget() => DuplicateWidget();
 
-    public ListWidget DuplicateField()
+    public ListWidget DuplicateWidget()
     {
         ListWidget copy = new(TemplateTitle, ElementTemplate, AddButtonText);
         copy.SizeFlagsHorizontal = SizeFlagsHorizontal;
@@ -57,7 +57,7 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
         {
             if (child is ListElement element)
             {
-                copy.AddElement(element.DuplicateField());
+                copy.AddElement(element.DuplicateWidget());
             }
         }
         return copy;
@@ -67,7 +67,7 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
     private ListElement CreateElement()
     {
         Control templateCopy = ElementTemplate is IWidget widget
-            ? widget.DuplicateField() as Control
+            ? widget.DuplicateWidget() as Control
             : ElementTemplate.Duplicate() as Control;
         ListElement element = new(TemplateTitle, templateCopy);
         AddElement(element);
@@ -85,7 +85,7 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
         element.PressedDuplicate += (element) =>
         {
             int index = GetElementIndex(element);
-            ListElement newElement = element.DuplicateField();
+            ListElement newElement = element.DuplicateWidget();
             AddElement(newElement);
             Elements.MoveChild(newElement, index);
         };

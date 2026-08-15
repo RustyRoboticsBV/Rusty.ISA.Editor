@@ -27,7 +27,7 @@ internal partial class Inspector : ScrollContainer
         BoolField @bool = new("Bool", false);
         VBox.AddChild(@bool);
 
-        BoolField bool2 = @bool.DuplicateField();
+        BoolField bool2 = @bool.DuplicateWidget();
         bool2.TitleText = "Bool2";
         bool2.SetPressed(true);
         VBox.AddChild(@bool2);
@@ -35,7 +35,7 @@ internal partial class Inspector : ScrollContainer
         NumericField num = new("Num", 10, 0, 100, 0.1);
         VBox.AddChild(num);
 
-        NumericField num2 = num.DuplicateField();
+        NumericField num2 = num.DuplicateWidget();
         num2.TitleText = "Num2";
         num2.SetValue(5);
         VBox.AddChild(num2);
@@ -43,7 +43,7 @@ internal partial class Inspector : ScrollContainer
         RangeField range = new("Range", 10, 0, 100, 1);
         VBox.AddChild(range);
 
-        RangeField range2 = range.DuplicateField();
+        RangeField range2 = range.DuplicateWidget();
         range2.TitleText = "Range2";
         range2.SetMin(20);
         range2.SetMax(50);
@@ -53,7 +53,7 @@ internal partial class Inspector : ScrollContainer
         LineField line = new("Line", "abcdefg");
         VBox.AddChild(line);
 
-        LineField line2 = line.DuplicateField();
+        LineField line2 = line.DuplicateWidget();
         line2.TitleText = "Line2";
         line2.SetText("cheese");
         VBox.AddChild(line2);
@@ -61,7 +61,7 @@ internal partial class Inspector : ScrollContainer
         TextField text = new("Text", "ABCDEFG\nHIJKLMNOP");
         VBox.AddChild(text);
 
-        TextField text2 = text.DuplicateField();
+        TextField text2 = text.DuplicateWidget();
         text2.TitleText = "Text2";
         text2.SetText("asdasdasdasd\nasdasd asdasd");
         VBox.AddChild(text2);
@@ -69,7 +69,7 @@ internal partial class Inspector : ScrollContainer
         ColorField color = new("Color1", Colors.Beige);
         VBox.AddChild(color);
 
-        ColorField color2 = color.DuplicateField();
+        ColorField color2 = color.DuplicateWidget();
         color2.TitleText = "Color2";
         color2.SetColor(Colors.ForestGreen);
         VBox.AddChild(color2);
@@ -77,15 +77,18 @@ internal partial class Inspector : ScrollContainer
         EnumField @enum = new("Enum", ["A", "B", "C"], 1);
         VBox.AddChild(@enum);
 
-        EnumField enum2 = @enum.DuplicateField();
+        EnumField enum2 = @enum.DuplicateWidget();
         enum2.TitleText = "Enum2";
         enum2.SetSelected(2);
         VBox.AddChild(@enum2);
 
+        OptionWidget option = new(false, "Option", enum2.DuplicateWidget());
+        VBox.AddChild(option);
+
         ListWidget list = new("Enum Element", enum2, "Add Enum Element");
         VBox.AddChild(list);
 
-        ListWidget listList = new("Nested List", list.DuplicateField(), "Add Nested");
+        ListWidget listList = new("Nested List", list.DuplicateWidget(), "Add Nested");
         VBox.AddChild(listList);
     }
 

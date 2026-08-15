@@ -245,7 +245,7 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 | `nodflt` | Hide the default output port if present? Defaults to `false`. |
 
 ### Notes
-- A node's default output is hidden if it contains at least one `hidedf` that equals `true`.
+- A node's default output is hidden if it contains at least one `nodflt` that equals `true`.
 ---
 
 # Graph Elements

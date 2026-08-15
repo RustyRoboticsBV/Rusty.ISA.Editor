@@ -62,7 +62,7 @@ internal partial class LineField : HBoxContainer, IField<LineField>
     public LineField(string title, string text) : this(text) => TitleText = title;
 
     /* Public methods. */
-    public LineField DuplicateField()
+    public LineField DuplicateWidget()
     {
         LineField field = Duplicate() as LineField;
         field.TooltipText = TooltipText;

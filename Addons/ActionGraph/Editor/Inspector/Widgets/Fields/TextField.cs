@@ -64,7 +64,7 @@ internal partial class TextField : VBoxContainer, IField<TextField>
     public TextField(string title, string text) : this(text) => TitleText = title;
 
     /* Public methods. */
-    public TextField DuplicateField()
+    public TextField DuplicateWidget()
     {
         TextField field = Duplicate() as TextField;
         field.TitleText = TitleText;

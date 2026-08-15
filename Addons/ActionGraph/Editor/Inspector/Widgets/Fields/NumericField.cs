@@ -86,7 +86,7 @@ internal sealed partial class NumericField : HBoxContainer, IField<NumericField>
     }
 
     /* Public methods. */
-    public NumericField DuplicateField()
+    public NumericField DuplicateWidget()
     {
         NumericField field = Duplicate() as NumericField;
         field.TitleText = TitleText;
