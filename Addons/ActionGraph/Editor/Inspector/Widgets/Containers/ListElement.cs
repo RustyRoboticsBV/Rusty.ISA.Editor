@@ -9,16 +9,6 @@ namespace Rusty.ActionGraph.Editor;
 internal sealed partial class ListElement : HBoxContainer, IWidget
 {
     /* Public properties. */
-    public string TitleText
-    {
-        get => Foldable.Text;
-        set => Foldable.Text = value;
-    }
-    public bool FoldoutOpen
-    {
-        get => Foldable.IsOpen;
-        set => Foldable.SetOpen(value);
-    }
     public Control Content { get; private set; }
     public UndoRedo UndoRedo
     {
@@ -37,7 +27,6 @@ internal sealed partial class ListElement : HBoxContainer, IWidget
 
     /* Private properties. */
     private Button DragHandle { get; set; }
-    private FoldableHeader Foldable { get; set; }
     private Button InsertButton { get; set; }
     private Button DuplicateButton { get; set; }
     private Button DeleteButton { get; set; }
@@ -70,54 +59,38 @@ internal sealed partial class ListElement : HBoxContainer, IWidget
         DragHandle.ButtonUp += OnHandleReleased;
         AddChild(DragHandle);
 
-        // Contents container.
-        VBoxContainer contentsContainer = new();
-        contentsContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        AddChild(contentsContainer);
-
         // Action buttons.
-        HBoxContainer actionButtons = new();
-        actionButtons.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        VBoxContainer actionButtons = new();
+        actionButtons.SizeFlagsVertical = SizeFlags.ExpandFill;
         actionButtons.MouseFilter = MouseFilterEnum.Pass;
-
-        Foldable = new();
-        Foldable.MouseFilter = MouseFilterEnum.Pass;
-        Foldable.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        Foldable.SizeFlagsVertical = SizeFlags.ShrinkCenter;
-        Foldable.CustomMinimumSize = new(0, 31f); 
-        Foldable.Text = "";
-        Foldable.Pressed += () => content.Visible = Foldable.IsOpen;
-        actionButtons.AddChild(Foldable);
+        AddChild(actionButtons);
 
         InsertButton = CreateActionButton("+\u2191", "Insert");
+        InsertButton.SizeFlagsVertical = SizeFlags.ExpandFill;
         InsertButton.MouseFilter = MouseFilterEnum.Pass;
         InsertButton.Pressed += () => PressedInsert?.Invoke(this);
         actionButtons.AddChild(InsertButton);
 
         DuplicateButton = CreateActionButton("\u29C9", "Duplicate");
+        DuplicateButton.SizeFlagsVertical = SizeFlags.ExpandFill;
         DuplicateButton.MouseFilter = MouseFilterEnum.Pass;
         DuplicateButton.Pressed += () => PressedDuplicate?.Invoke(this);
         actionButtons.AddChild(DuplicateButton);
 
         DeleteButton = CreateActionButton("\u00D7", "Delete");
+        DeleteButton.SizeFlagsVertical = SizeFlags.ExpandFill;
         DeleteButton.MouseFilter = MouseFilterEnum.Pass;
         DeleteButton.Pressed += () => PressedDelete?.Invoke(this);
         actionButtons.AddChild(DeleteButton);
 
-        // Contents.
-        contentsContainer.AddChild(actionButtons);
-
+        // Contents..
         content.MouseFilter = MouseFilterEnum.Pass;
         content.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         content.SizeFlagsVertical = SizeFlags.ShrinkCenter;
-        contentsContainer.AddChild(content);
-
-        // Mouse events.
-        MouseEntered += OnMouseEntered;
-        MouseExited += OnMouseExited;
+        AddChild(content);
     }
 
-    public ListElement(string title, Control content) : this(content) => TitleText = title;
+    public ListElement(string title, Control content) : this(content) { }
 
     /* Public methods. */
     IWidget IWidget.DuplicateWidget() => DuplicateWidget();
@@ -127,8 +100,7 @@ internal sealed partial class ListElement : HBoxContainer, IWidget
         ListElement copy = Content is IWidget widget
             ? new(widget.DuplicateWidget() as Control)
             : new(Content.Duplicate() as Control);
-        copy.TitleText = TitleText;
-        copy.FoldoutOpen = FoldoutOpen;
+
         return copy;
     }
 
@@ -161,20 +133,6 @@ internal sealed partial class ListElement : HBoxContainer, IWidget
         button.CustomMinimumSize = new Vector2(28, 0);
         button.MouseDefaultCursorShape = CursorShape.PointingHand;
         return button;
-    }
-
-    private void OnMouseEntered()
-    {
-        InsertButton.Visible = true;
-        DuplicateButton.Visible = true;
-        DeleteButton.Visible = true;
-    }
-
-    private void OnMouseExited()
-    {
-        InsertButton.Visible = false;
-        DuplicateButton.Visible = false;
-        DeleteButton.Visible = false;
     }
 
     private void OnHandlePressed()
