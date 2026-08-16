@@ -8,6 +8,11 @@ namespace Rusty.ActionGraph.Editor;
 internal sealed partial class ListWidget : VBoxContainer, IWidget
 {
     /* Public properties. */
+    public string TitleText
+    {
+        get => Label.Text;
+        set => Label.Text = value;
+    }
     public string AddButtonText
     {
         get => AddButton.Text;
@@ -30,18 +35,24 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
     }
 
     /* Private properties. */
+    private Label Label { get; set; }
     private VBoxContainer Elements { get; set; }
     private Button AddButton { get; set; }
     private UndoRedo _UndoRedo { get; set; }
 
     /* Constructors. */
-    public ListWidget(string elementTitle, Control elementTemplate, string addButtonText)
+    public ListWidget(string titleText, string elementTitle, Control elementTemplate, string addButtonText)
     {
         TemplateTitle = elementTitle;
         ElementTemplate = elementTemplate;
 
         MouseFilter = MouseFilterEnum.Pass;
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
+        // Title.
+        Label = new();
+        Label.Text = titleText;
+        AddChild(Label);
 
         // Elements container.
         Elements = new();
@@ -62,7 +73,7 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
 
     public ListWidget DuplicateWidget()
     {
-        ListWidget copy = new(TemplateTitle, ElementTemplate, AddButtonText);
+        ListWidget copy = new(TitleText, TemplateTitle, ElementTemplate, AddButtonText);
         copy.SizeFlagsHorizontal = SizeFlagsHorizontal;
         copy.SizeFlagsVertical = SizeFlagsVertical;
         foreach (Control child in Elements.GetChildren())
@@ -100,7 +111,7 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
             int index = GetElementIndex(element);
             ListElement newElement = element.DuplicateWidget();
             AddElement(newElement);
-            Elements.MoveChild(newElement, index);
+            Elements.MoveChild(newElement, index + 1);
         };
         element.PressedDelete += Elements.RemoveChild;
         element.MovedUp += (element) =>

@@ -92,13 +92,13 @@ internal partial class Inspector : ScrollContainer
         label.Text = "TUPLE";
         VBox.AddChild(label);
 
-        TupleWidget tuple = new([option.DuplicateWidget(), choice.DuplicateWidget()]);
+        TupleWidget tuple = new("Tuple", [option.DuplicateWidget(), choice.DuplicateWidget()]);
         VBox.AddChild(tuple);
 
-        ListWidget list = new("Tuple Element", tuple.DuplicateWidget(), "Add Tuple");
+        ListWidget list = new("List", "Tuple Element", tuple.DuplicateWidget(), "Add Tuple");
         VBox.AddChild(list);
 
-        ListWidget listList = new("Nested List", list.DuplicateWidget(), "Add Nested");
+        ListWidget listList = new("Nested List", "Nested List", list.DuplicateWidget(), "Add Nested");
         VBox.AddChild(listList);
     }
 

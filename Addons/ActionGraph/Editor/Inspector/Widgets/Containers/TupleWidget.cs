@@ -8,6 +8,11 @@ namespace Rusty.ActionGraph.Editor;
 internal sealed partial class TupleWidget : VBoxContainer, IWidget
 {
     /* Public properties. */
+    public string TitleText
+    {
+        get => Label.Text;
+        set => Label.Text = value;
+    } 
     public Control[] Elements { get; private set; }
     public UndoRedo UndoRedo
     {
@@ -30,11 +35,18 @@ internal sealed partial class TupleWidget : VBoxContainer, IWidget
         }
     }
 
+    /* Private properties. */
+    private Label Label { get; set; }
+
     /* Constructors. */
-    public TupleWidget(Control[] elements)
+    public TupleWidget(string titleText, Control[] elements)
     {
         MouseFilter = MouseFilterEnum.Pass;
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
+
+        Label = new();
+        Label.Text = titleText;
+        AddChild(Label);
 
         Elements = elements;
         foreach (Control element in Elements)
@@ -57,7 +69,7 @@ internal sealed partial class TupleWidget : VBoxContainer, IWidget
             elements[i] = element;
         }
 
-        TupleWidget copy = new(elements);
+        TupleWidget copy = new(TitleText, elements);
         copy.MouseFilter = MouseFilter;
         copy.SizeFlagsHorizontal = SizeFlagsHorizontal;
         copy.SizeFlagsVertical = SizeFlagsVertical;
