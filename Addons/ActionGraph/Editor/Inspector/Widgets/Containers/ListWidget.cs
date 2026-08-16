@@ -15,11 +15,24 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
     }
     public string TemplateTitle { get; set; }
     public Control ElementTemplate { get; set; }
-    public UndoRedo UndoRedo { get; set; }
+    public UndoRedo UndoRedo
+    {
+        get => _UndoRedo;
+        set
+        {
+            _UndoRedo = value;
+            foreach (Node child in Elements.GetChildren())
+            {
+                if (child is IWidget widget)
+                    widget.UndoRedo = value;
+            }
+        }
+    }
 
     /* Private properties. */
     private VBoxContainer Elements { get; set; }
     private Button AddButton { get; set; }
+    private UndoRedo _UndoRedo { get; set; }
 
     /* Constructors. */
     public ListWidget(string elementTitle, Control elementTemplate, string addButtonText)
@@ -52,7 +65,6 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
         ListWidget copy = new(TemplateTitle, ElementTemplate, AddButtonText);
         copy.SizeFlagsHorizontal = SizeFlagsHorizontal;
         copy.SizeFlagsVertical = SizeFlagsVertical;
-        copy.UndoRedo = UndoRedo;
         foreach (Control child in Elements.GetChildren())
         {
             if (child is ListElement element)
@@ -60,6 +72,7 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
                 copy.AddElement(element.DuplicateWidget());
             }
         }
+        copy.UndoRedo = UndoRedo;
         return copy;
     }
 
@@ -102,6 +115,7 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
             if (index < Elements.GetChildCount() - 1)
                 Elements.MoveChild(element, index + 1);
         };
+        element.UndoRedo = UndoRedo;
         Elements.AddChild(element);
     }
 

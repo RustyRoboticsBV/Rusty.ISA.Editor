@@ -31,7 +31,7 @@ internal sealed partial class ListElement : HBoxContainer, IWidget
         set
         {
             if (Content is IWidget widget)
-                widget.UndoRedo = UndoRedo;
+                widget.UndoRedo = value;
         }
     }
 

@@ -50,24 +50,11 @@ public abstract partial class EditorWindow : VBoxContainer
         // TODO: temporary undo/redo testing. Remove later.
         void SetupUndoRedo(UndoRedo undoRedo, Node node)
         {
-            if (node is CheckBox cb)
-                cb.UndoRedo = undoRedo;
-            else if (node is CheckButton cb2)
-                cb2.UndoRedo = undoRedo;
-            else if (node is LineEdit le)
-                le.UndoRedo = undoRedo;
-            else if (node is TextEdit te)
-                te.UndoRedo = undoRedo;
-            else if (node is ColorPickerButton cpb)
-                cpb.UndoRedo = undoRedo;
-            else if (node is SpinBox sb)
-                sb.UndoRedo = undoRedo;
-            else if (node is HSlider hs)
-                hs.UndoRedo = undoRedo;
-            else if (node is OptionButton ob)
-                ob.UndoRedo = undoRedo;
-            else if (node is IWidget widget)
+            if (node is IWidget widget)
+            {
                 widget.UndoRedo = UndoRedo;
+                return;
+            }
             foreach (Node child in node.GetChildren())
             {
                 SetupUndoRedo(undoRedo, child);

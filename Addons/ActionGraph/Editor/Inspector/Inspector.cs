@@ -88,7 +88,14 @@ internal partial class Inspector : ScrollContainer
         ChoiceWidget choice = new("Choice", new() { { "Enum", @enum.DuplicateWidget() }, { "Color", color.DuplicateWidget() }, { "Option", option.DuplicateWidget() } }, 1);
         VBox.AddChild(choice);
 
-        ListWidget list = new("Enum Element", enum2, "Add Enum Element");
+        Label label = new();
+        label.Text = "TUPLE";
+        VBox.AddChild(label);
+
+        TupleWidget tuple = new([option.DuplicateWidget(), choice.DuplicateWidget()]);
+        VBox.AddChild(tuple);
+
+        ListWidget list = new("Tuple Element", tuple.DuplicateWidget(), "Add Tuple");
         VBox.AddChild(list);
 
         ListWidget listList = new("Nested List", list.DuplicateWidget(), "Add Nested");
