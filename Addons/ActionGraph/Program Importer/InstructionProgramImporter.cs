@@ -1,5 +1,5 @@
 using Godot;
-using Rusty.ActionGraph.Compilation;
+using Rusty.ActionGraph.CodeGen;
 using Rusty.ActionGraph.Serialization;
 
 namespace Rusty.ActionGraph.ImportPlugins;
@@ -19,7 +19,7 @@ public abstract partial class InstructionProgramImporter : Node
         FileCodec codec = Parser.Parse(xml);
 
         // Compile the codec into a program.
-        InstructionProgram program = Compiler.Compile(codec);
+        InstructionProgram program = CodeGenerator.Generate(codec);
         return program;
     }
 }

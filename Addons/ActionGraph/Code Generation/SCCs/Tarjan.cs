@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rusty.ActionGraph.Compilation;
+namespace Rusty.ActionGraph.CodeGen;
 
 /// <summary>
 /// A utility class that implements Tarjan's algorithm for finding strongly-connected components.

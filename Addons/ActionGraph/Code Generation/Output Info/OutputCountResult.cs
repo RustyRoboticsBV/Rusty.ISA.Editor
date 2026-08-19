@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Rusty.ActionGraph.Serialization;
 
-namespace Rusty.ActionGraph.Serialization;
+namespace Rusty.ActionGraph.CodeGen;
 
 /// <summary>
 /// The result of counting the outputs of a node codec.

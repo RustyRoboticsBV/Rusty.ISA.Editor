@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using Rusty.ActionGraph.Serialization;
 
-namespace Rusty.ActionGraph.Compilation;
+namespace Rusty.ActionGraph.CodeGen;
 
 using Labels = Dictionary<Unit, string>;
 
 /// <summary>
-/// A utility that takes a FileCodec and compiles it into an InstructionProgram.
+/// A utility that takes a file codec and converts it into an instruction program.
 /// </summary>
-internal static class Compiler
+internal static class CodeGenerator
 {
     /* Public methods. */
-    public static InstructionProgram Compile(FileCodec file)
+    /// <summary>
+    /// Convert a file codec into an instruction program.
+    /// </summary>
+    public static InstructionProgram Generate(FileCodec file)
     {
         // Create units for nodes.
         Dictionary<string, Unit> units = new();

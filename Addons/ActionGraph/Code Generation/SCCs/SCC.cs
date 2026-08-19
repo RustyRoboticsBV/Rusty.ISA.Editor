@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rusty.ActionGraph.Compilation;
+namespace Rusty.ActionGraph.CodeGen;
 
 /// <summary>
 /// A strongly-connected component inside of a directed graph of compiler units.

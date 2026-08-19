@@ -1,4 +1,4 @@
-﻿namespace Rusty.ActionGraph.Compilation;
+﻿namespace Rusty.ActionGraph.CodeGen;
 
 /// <summary>
 /// A compiler unit representing an empty output port.

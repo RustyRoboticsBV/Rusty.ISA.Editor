@@ -1,4 +1,6 @@
-namespace Rusty.ActionGraph.Serialization;
+using Rusty.ActionGraph.Serialization;
+
+namespace Rusty.ActionGraph.CodeGen;
 
 /// <summary>
 /// A OadefCodec and OutCodec pair representing an argument output port.

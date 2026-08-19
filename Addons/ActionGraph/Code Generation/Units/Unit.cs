@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Rusty.ActionGraph.Compilation;
+namespace Rusty.ActionGraph.CodeGen;
 
 /// <summary>
 /// A base class for compiler units (the compiler representation for graphs).
