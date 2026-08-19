@@ -1,11 +1,12 @@
 ﻿using Godot;
+using System;
 
 namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// A tuple widget.
 /// </summary>
-internal sealed partial class TupleWidget : VBoxContainer, IWidget
+internal sealed partial class TupleWidget : VBoxContainer, IWidget<TupleWidget>
 {
     /* Public properties. */
     public string TitleText
@@ -38,6 +39,9 @@ internal sealed partial class TupleWidget : VBoxContainer, IWidget
     /* Private properties. */
     private Label Label { get; set; }
 
+    /* Public methods. */
+    public event Action StateChanged;
+
     /* Constructors. */
     public TupleWidget(string titleText, Control[] elements)
     {
@@ -52,6 +56,9 @@ internal sealed partial class TupleWidget : VBoxContainer, IWidget
         foreach (Control element in Elements)
         {
             AddChild(element);
+
+            if (element is IWidget widget)
+                widget.StateChanged += () => StateChanged?.Invoke();
         }
     }
 

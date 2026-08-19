@@ -47,7 +47,7 @@ internal sealed partial class RangeField : HBoxContainer, IField<RangeField>
     private SpinBox SpinBox { get; set; }
 
     /* Public events. */
-    public event Action<RangeField> ValueChanged;
+    public event Action StateChanged;
 
     /* Constructors. */
     public RangeField()
@@ -63,7 +63,7 @@ internal sealed partial class RangeField : HBoxContainer, IField<RangeField>
         {
             if (SpinBox.Value != value)
                 SpinBox.SetValue(value);
-            ValueChanged?.Invoke(this);
+            StateChanged?.Invoke();
         };
         AddChild(Slider, false, InternalMode.Front);
 

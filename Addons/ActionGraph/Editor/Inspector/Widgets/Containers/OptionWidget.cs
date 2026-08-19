@@ -1,11 +1,12 @@
 ﻿using Godot;
+using System;
 
 namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// An option widget.
 /// </summary>
-internal sealed partial class OptionWidget : VBoxContainer, IWidget
+internal sealed partial class OptionWidget : VBoxContainer, IWidget<OptionWidget>
 {
     /* Public properties. */
     public string TitleText
@@ -36,6 +37,9 @@ internal sealed partial class OptionWidget : VBoxContainer, IWidget
     private Label Label { get; set; }
     private MarginContainer Margin { get; set; }
 
+    /* Public methods. */
+    public event Action StateChanged;
+
     /* Constructors. */
     public OptionWidget(string titleText, Control optional, bool enabled)
     {
@@ -48,6 +52,8 @@ internal sealed partial class OptionWidget : VBoxContainer, IWidget
 
         CheckBox = new();
         CheckBox.ButtonPressed = enabled;
+        CheckBox.Pressed += () => StateChanged?.Invoke();
+        CheckBox.Toggled += (toggledOn) => StateChanged?.Invoke();
         hbox.AddChild(CheckBox);
 
         Label = new();
@@ -63,6 +69,9 @@ internal sealed partial class OptionWidget : VBoxContainer, IWidget
 
         Optional = optional;
         Margin.AddChild(optional);
+
+        if (Optional is IWidget widget)
+            widget.StateChanged += () => StateChanged?.Invoke();
     }
 
     /* Public methods. */

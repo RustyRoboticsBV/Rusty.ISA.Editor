@@ -42,7 +42,7 @@ internal partial class TextField : VBoxContainer, IField<TextField>
     private TextEdit TextEdit { get; set; }
 
     /* Public events. */
-    public event Action<TextField> TextChanged;
+    public event Action StateChanged;
 
     /* Constructors. */
     public TextField()
@@ -55,7 +55,7 @@ internal partial class TextField : VBoxContainer, IField<TextField>
         TextEdit = new();
         TextEdit.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         TextEdit.CustomMinimumSize = new(0f, 100f);
-        TextEdit.TextChanged += () => TextChanged?.Invoke(this);
+        TextEdit.TextChanged += () => StateChanged?.Invoke();
         AddChild(TextEdit, false, InternalMode.Front);
     }
 

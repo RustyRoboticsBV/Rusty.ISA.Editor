@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// An element of a list widget.
 /// </summary>
-internal sealed partial class ListElement : HBoxContainer, IWidget
+internal sealed partial class ListElement : HBoxContainer, IWidget<ListElement>
 {
     /* Public properties. */
     public Control Content { get; private set; }
@@ -34,6 +34,8 @@ internal sealed partial class ListElement : HBoxContainer, IWidget
     private bool Dragging { get; set; }
 
     /* Public events. */
+    public event Action StateChanged;
+
     public event Action<ListElement> PressedInsert;
     public event Action<ListElement> PressedDuplicate;
     public event Action<ListElement> PressedDelete;
@@ -55,8 +57,8 @@ internal sealed partial class ListElement : HBoxContainer, IWidget
         DragHandle.Text = "\u2637";
         DragHandle.TooltipText = "Drag to reorder element up or down.";
         DragHandle.MouseDefaultCursorShape = CursorShape.Drag;
-        DragHandle.ButtonDown += OnHandlePressed;
-        DragHandle.ButtonUp += OnHandleReleased;
+        DragHandle.ButtonDown += () => Dragging = true;
+        DragHandle.ButtonUp += () => Dragging = false;
         AddChild(DragHandle);
 
         // Action buttons.
@@ -83,11 +85,14 @@ internal sealed partial class ListElement : HBoxContainer, IWidget
         DeleteButton.Pressed += () => PressedDelete?.Invoke(this);
         actionButtons.AddChild(DeleteButton);
 
-        // Contents..
+        // Contents.
         content.MouseFilter = MouseFilterEnum.Pass;
         content.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         content.SizeFlagsVertical = SizeFlags.ShrinkCenter;
         AddChild(content);
+
+        if (content is IWidget widget)
+            widget.StateChanged += () => StateChanged?.Invoke();
     }
 
     public ListElement(string title, Control content) : this(content) { }
@@ -133,15 +138,5 @@ internal sealed partial class ListElement : HBoxContainer, IWidget
         button.CustomMinimumSize = new Vector2(28, 0);
         button.MouseDefaultCursorShape = CursorShape.PointingHand;
         return button;
-    }
-
-    private void OnHandlePressed()
-    {
-        Dragging = true;
-    }
-
-    private void OnHandleReleased()
-    {
-        Dragging = false;
     }
 }

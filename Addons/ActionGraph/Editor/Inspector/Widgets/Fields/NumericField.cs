@@ -46,7 +46,7 @@ internal sealed partial class NumericField : HBoxContainer, IField<NumericField>
     private SpinBox SpinBox { get; set; }
 
     /* Public events. */
-    public event Action<NumericField> ValueChanged;
+    public event Action StateChanged;
 
     /* Constructors. */
     public NumericField()
@@ -58,7 +58,7 @@ internal sealed partial class NumericField : HBoxContainer, IField<NumericField>
         SpinBox = new();
         SpinBox.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         SpinBox.CustomMinimumSize = new(0, 31);
-        SpinBox.ValueChanged += (value) => ValueChanged?.Invoke(this);
+        SpinBox.ValueChanged += (value) => StateChanged?.Invoke();
         AddChild(SpinBox, false, InternalMode.Front);
     }
 

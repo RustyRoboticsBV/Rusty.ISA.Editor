@@ -42,7 +42,7 @@ internal partial class ColorField : HBoxContainer, IField<ColorField>
     private ColorPickerButton ColorPickerButton { get; set; }
 
     /* Public events. */
-    public event Action<ColorField> ColorChanged;
+    public event Action StateChanged;
 
     /* Constructors. */
     public ColorField()
@@ -55,7 +55,7 @@ internal partial class ColorField : HBoxContainer, IField<ColorField>
         ColorPickerButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         ColorPickerButton.CustomMinimumSize = new(0f, 31f);
         ColorPickerButton.Color = Colors.White;
-        ColorPickerButton.ColorChanged += (color) => ColorChanged?.Invoke(this);
+        ColorPickerButton.ColorChanged += (color) => StateChanged?.Invoke();
         AddChild(ColorPickerButton, false, InternalMode.Front);
     }
 

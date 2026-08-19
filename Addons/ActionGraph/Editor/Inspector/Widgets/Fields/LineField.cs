@@ -42,7 +42,7 @@ internal partial class LineField : HBoxContainer, IField<LineField>
     private LineEdit LineEdit { get; set; }
 
     /* Public events. */
-    public event Action<LineField> TextChanged;
+    public event Action StateChanged;
 
     /* Constructors. */
     public LineField()
@@ -53,7 +53,7 @@ internal partial class LineField : HBoxContainer, IField<LineField>
 
         LineEdit = new();
         LineEdit.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        LineEdit.TextChanged += (text) => TextChanged?.Invoke(this);
+        LineEdit.TextChanged += (text) => StateChanged?.Invoke();
         AddChild(LineEdit, false, InternalMode.Front);
     }
 

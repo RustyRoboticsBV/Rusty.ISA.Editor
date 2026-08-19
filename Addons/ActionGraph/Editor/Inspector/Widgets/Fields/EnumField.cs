@@ -42,7 +42,7 @@ internal partial class EnumField : HBoxContainer, IField<EnumField>
     private OptionButton OptionButton { get; set; }
 
     /* Public events. */
-    public event Action<EnumField> SelectedChanged;
+    public event Action StateChanged;
 
     /* Constructors. */
     public EnumField()
@@ -54,7 +54,7 @@ internal partial class EnumField : HBoxContainer, IField<EnumField>
         OptionButton = new();
         OptionButton.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         OptionButton.Selected = -1;
-        OptionButton.ItemSelected += (index) => SelectedChanged?.Invoke(this);
+        OptionButton.ItemSelected += (index) => StateChanged?.Invoke();
         AddChild(OptionButton, false, InternalMode.Front);
     }
 

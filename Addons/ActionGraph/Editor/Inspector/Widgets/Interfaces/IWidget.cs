@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System;
 
 namespace Rusty.ActionGraph.Editor;
 
@@ -12,6 +13,12 @@ internal interface IWidget
     public string TooltipText { get; set; }
 
     public UndoRedo UndoRedo { get; set; }
+
+    /* Public methods. */
+    /// <summary>
+    /// Gets invoked when the widget's state is changed.
+    /// </summary>
+    public event Action StateChanged;
 
     /* Public methods. */
     /// <summary>

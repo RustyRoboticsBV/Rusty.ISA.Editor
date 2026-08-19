@@ -1,11 +1,12 @@
 ﻿using Godot;
+using System;
 
 namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// A list widget.
 /// </summary>
-internal sealed partial class ListWidget : VBoxContainer, IWidget
+internal sealed partial class ListWidget : VBoxContainer, IWidget<ListWidget>
 {
     /* Public properties. */
     public string TitleText
@@ -39,6 +40,9 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
     private VBoxContainer Elements { get; set; }
     private Button AddButton { get; set; }
     private UndoRedo _UndoRedo { get; set; }
+
+    /* Public methods. */
+    public event Action StateChanged;
 
     /* Constructors. */
     public ListWidget(string titleText, string elementTitle, Control elementTemplate, string addButtonText)
@@ -79,9 +83,7 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
         foreach (Control child in Elements.GetChildren())
         {
             if (child is ListElement element)
-            {
                 copy.AddElement(element.DuplicateWidget());
-            }
         }
         copy.UndoRedo = UndoRedo;
         return copy;
@@ -100,6 +102,8 @@ internal sealed partial class ListWidget : VBoxContainer, IWidget
 
     private void AddElement(ListElement element)
     {
+        element.StateChanged += () => StateChanged?.Invoke();
+
         element.PressedInsert += (element) =>
         {
             int index = GetElementIndex(element);

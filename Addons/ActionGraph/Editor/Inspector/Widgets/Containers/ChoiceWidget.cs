@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +8,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A choice widget.
 /// </summary>
-internal sealed partial class ChoiceWidget : VBoxContainer, IWidget
+internal sealed partial class ChoiceWidget : VBoxContainer, IWidget<ChoiceWidget>
 {
     /* Public properties. */
     public string TitleText
@@ -40,6 +41,9 @@ internal sealed partial class ChoiceWidget : VBoxContainer, IWidget
     private MarginContainer Margin { get; set; }
     private Control[] Items { get; set; }
 
+    /* Public methods. */
+    public event Action StateChanged;
+
     /* Constructors. */
     public ChoiceWidget(string titleText, Dictionary<string, Control> choices, int selected)
     {
@@ -49,6 +53,7 @@ internal sealed partial class ChoiceWidget : VBoxContainer, IWidget
         // Add option button.
         Enum = new(titleText, choices.Keys.ToArray(), selected);
         Enum.Name = "EnumField";
+        Enum.StateChanged += () => StateChanged?.Invoke(); 
         AddChild(Enum);
 
         // Add items.
@@ -60,8 +65,11 @@ internal sealed partial class ChoiceWidget : VBoxContainer, IWidget
         Items = choices.Values.ToArray();
         for (int i = 0; i < Items.Length; i++)
         {
-            Margin.AddChild(Items[i]);
             Items[i].Visible = selected == i;
+            Margin.AddChild(Items[i]);
+
+            if (Items[i] is IWidget widget)
+                widget.StateChanged += () => StateChanged?.Invoke();
         }
     }
 

@@ -45,8 +45,8 @@ internal partial class BoolField : HBoxContainer, IField<BoolField>
     private Label Label { get; set; }
     private CheckButton CheckButton { get; set; }
 
-    /* Public events. */
-    public event Action<BoolField> Toggled;
+    /* Public methods. */
+    public event Action StateChanged;
 
     /* Constructors. */
     public BoolField()
@@ -56,7 +56,7 @@ internal partial class BoolField : HBoxContainer, IField<BoolField>
         TitleWidth = 160;
 
         CheckButton = new();
-        CheckButton.Pressed += () => Toggled?.Invoke(this);
+        CheckButton.Pressed += () => StateChanged?.Invoke();
         AddChild(CheckButton, false, InternalMode.Front);
     }
 
