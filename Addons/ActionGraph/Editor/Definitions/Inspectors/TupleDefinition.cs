@@ -12,8 +12,8 @@ public sealed partial class TupleDefinition : InspectorDefinition
     public InspectorDefinition[] Elements { get; private set; } = [];
 
     /* Constructors. */
-    public TupleDefinition(string title, string description, InspectorDefinition[] elements)
-        : base(title, description)
+    public TupleDefinition(string id, string title, string description, InspectorDefinition[] elements)
+        : base(id, title, description)
     {
         Elements = elements;
     }

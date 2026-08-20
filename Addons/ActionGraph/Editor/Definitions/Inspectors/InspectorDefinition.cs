@@ -6,5 +6,5 @@
 public abstract partial class InspectorDefinition : EditorDefinition
 {
     /* Constructors. */
-    public InspectorDefinition(string title, string definition) : base(title, definition) { }
+    public InspectorDefinition(string id, string title, string definition) : base(id, title, definition) { }
 }

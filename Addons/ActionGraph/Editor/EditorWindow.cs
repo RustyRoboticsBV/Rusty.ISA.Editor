@@ -64,12 +64,18 @@ public abstract partial class EditorWindow : VBoxContainer
         SetupUndoRedo(UndoRedo, this);
     }
 
-    /* Public methods. */
+    /* Godot overrides. */
     public override void _Process(double delta)
     {
         if (KeyboardShortcuts.PressedUndo)
             UndoRedo.Undo();
         else if (KeyboardShortcuts.PressedRedo)
             UndoRedo.Redo();
+    }
+
+    /* Public methods. */
+    public void AddNodeDefinition(NodeDefinition node)
+    {
+        Graph.RegisterDefinition(node);
     }
 }

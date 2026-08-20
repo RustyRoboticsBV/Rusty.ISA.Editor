@@ -43,15 +43,22 @@ internal sealed partial class TupleWidget : VBoxContainer, IWidget<TupleWidget>
     public event Action StateChanged;
 
     /* Constructors. */
-    public TupleWidget(string titleText, Control[] elements)
+    public TupleWidget()
     {
         MouseFilter = MouseFilterEnum.Pass;
         SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
         Label = new();
-        Label.Text = titleText;
+        Label.Name = "Title";
         AddChild(Label);
+    }
 
+    public TupleWidget(string titleText, Control[] elements) : this()
+    {
+        // set title text.
+        TitleText = titleText;
+
+        // Add elements.
         Elements = elements;
         foreach (Control element in Elements)
         {

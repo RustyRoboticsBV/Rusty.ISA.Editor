@@ -22,9 +22,10 @@ public abstract partial class EditorDefinition : Resource
     public string Description { get; private set; } = "";
 
     /* Constructors. */
-    public EditorDefinition(string title, string definition)
+    public EditorDefinition(string id, string title, string description)
     {
+        ID = id;
         Title = title;
-        Description = definition;
+        Description = description;
     }
 }

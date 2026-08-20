@@ -37,7 +37,12 @@ internal partial class Graph : GraphEdit
     /// </summary>
     public Vector2 GetCoordinate(Vector2 globalPosition) => (globalPosition - GlobalPosition + ScrollOffset) / Zoom;
 
-    public Joint AddJoint(Vector2 position)
+    public void RegisterDefinition(NodeDefinition definition)
+    {
+        ContextMenu.AddNode(definition);
+    }
+
+    public Joint CreateJoint(Vector2 position)
     {
         Joint joint = new();
         joint.Name = "Joint" + Joints.Count;
@@ -47,7 +52,7 @@ internal partial class Graph : GraphEdit
         return joint;
     }
 
-    public Memo AddMemo(Vector2 position)
+    public Memo CreateMemo(Vector2 position)
     {
         Memo memo = new();
         memo.Name = "Memo" + Memos.Count;
@@ -57,7 +62,7 @@ internal partial class Graph : GraphEdit
         return memo;
     }
 
-    public Edge AddEdge(Vector2 start, Vector2 end)
+    public Edge CreateEdge(Vector2 start, Vector2 end)
     {
         Edge edge = new();
         edge.Name = "Edge" + Edges.Count;
@@ -72,13 +77,13 @@ internal partial class Graph : GraphEdit
     /* Godot overrides. */
     public override void _EnterTree()
     {
-        Joint joint = AddJoint(new Vector2(200, 200));
+        Joint joint = CreateJoint(new Vector2(200, 200));
 
-        Memo memo = AddMemo(new Vector2(100, 100));
+        Memo memo = CreateMemo(new Vector2(100, 100));
         memo.Text = "ABCDEFG";
 
-        AddJoint(Vector2.Zero);
-        AddEdge(new(100, 100), new(200, 1000));
+        CreateJoint(Vector2.Zero);
+        CreateEdge(new(100, 100), new(200, 1000));
     }
 
     public override void _GuiInput(InputEvent @event)
@@ -100,13 +105,13 @@ internal partial class Graph : GraphEdit
         edge.End = position - edge.Position;
 
         // Add joint.
-        Joint joint = AddJoint(position - Joint.RADIUS * Vector2.One);
+        Joint joint = CreateJoint(position - Joint.RADIUS * Vector2.One);
 
         // Create second edge.
-        AddEdge(position, end);
+        CreateEdge(position, end);
     }
 
-    private void OnContextMenuNodeSelected(int index)
+    private void OnContextMenuNodeSelected(NodeDefinition index)
     {
         GD.Print("Node " + index);
     }

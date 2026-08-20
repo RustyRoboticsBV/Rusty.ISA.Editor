@@ -1,18 +1,21 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
 /// The context menu used for creating new graph elements.
 /// </summary>
-internal partial class ContextMenu : PopupMenu
+internal sealed partial class ContextMenu : PopupMenu
 {
     /* Private methods. */
     private PopupMenu NodesMenu { get; set; }
+    private Dictionary<string, NodeSubMenu> Categories { get; } = new();
+    private Dictionary<(string, int), NodeDefinition> NodeDefinitions { get; } = new();
 
     /* Public events. */
-    public event Action<int> NodeSelected;
+    public event Action<NodeDefinition> NodeSelected;
     public event Action MemoSelected;
     public event Action FrameSelected;
 
@@ -25,40 +28,34 @@ internal partial class ContextMenu : PopupMenu
         // Add built-in items.
         AddSeparator("Add Element");
 
-        NodesMenu = new();
-        NodesMenu.AddSeparator("Nodes");
-        NodesMenu.IdPressed += OnNodeSelected;
-        AddSubmenuNodeItem("Nodes", NodesMenu);
+        Texture2D textureMemo = GD.Load<Texture2D>($"{scriptDir}/Icons/Memo.svg");
+        AddIconItem(textureMemo, "Sticky Note");
 
         Texture2D textureFrame = GD.Load<Texture2D>($"{scriptDir}/Icons/Frame.svg");
         AddIconItem(textureFrame, "Frame");
 
-        Texture2D textureMemo = GD.Load<Texture2D>($"{scriptDir}/Icons/Memo.svg");
-        AddIconItem(textureMemo, "Sticky Note");
-
-        IdPressed += OnItemSelected;
+        IdPressed += (long id) =>
+        {
+            if (id == 1)
+                MemoSelected?.Invoke();
+            else if (id == 2)
+                FrameSelected?.Invoke();
+        };
     }
 
     /* Public methods. */
-    /// <summary>
-    /// Add a node item to the context menu.
-    /// </summary>
-    public void AddNode(Texture2D icon, string label)
+    public void AddNode(NodeDefinition definition)
     {
-        NodesMenu.AddIconItem(icon, label);
-    }
+        // Add category.
+        if (!Categories.ContainsKey(definition.Category))
+        {
+            NodeSubMenu submenu = new(definition.Category);
+            submenu.NodeSelected += (node) => NodeSelected?.Invoke(node);
+            Categories[definition.Category] = submenu;
+            AddSubmenuNodeItem(definition.Category, submenu);
+        }
 
-    /* Private methods. */
-    private void OnItemSelected(long id)
-    {
-        if (id == 2)
-            FrameSelected?.Invoke();
-        else if (id == 3)
-            MemoSelected?.Invoke();
-    }
-
-    private void OnNodeSelected(long id)
-    {
-        NodeSelected?.Invoke(NodesMenu.GetItemIndex((int)id) - 1);
+        // Add item.
+        Categories[definition.Category].AddNode(definition);
     }
 }

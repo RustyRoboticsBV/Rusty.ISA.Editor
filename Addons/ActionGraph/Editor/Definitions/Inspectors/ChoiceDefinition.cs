@@ -16,8 +16,8 @@ public sealed partial class ChoiceDefinition : InspectorDefinition
     public int Selected { get; private set; }
 
     /* Constructors. */
-    public ChoiceDefinition(string title, string description, InspectorDefinition[] choices, int selected)
-        : base(title, description)
+    public ChoiceDefinition(string id, string title, string description, InspectorDefinition[] choices, int selected)
+        : base(id, title, description)
     {
         Choices = choices;
         Selected = selected;

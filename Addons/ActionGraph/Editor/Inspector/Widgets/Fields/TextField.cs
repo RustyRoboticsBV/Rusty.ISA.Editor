@@ -63,6 +63,11 @@ internal partial class TextField : VBoxContainer, IField<TextField>
 
     public TextField(string title, string text) : this(text) => TitleText = title;
 
+    public TextField(string title, string text, int lines) : this(title, text)
+    {
+        TextEdit.CustomMinimumSize = new(0f, 20 * lines);
+    }
+
     /* Public methods. */
     public TextField DuplicateWidget()
     {

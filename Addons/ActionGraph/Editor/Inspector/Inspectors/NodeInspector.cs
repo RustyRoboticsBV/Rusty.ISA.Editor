@@ -6,22 +6,32 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A node inspector.
 /// </summary>
-internal sealed partial class NodeInspector : MarginContainer, IInspector<NodeInspector>
+internal sealed partial class NodeInspector : VBoxContainer, IInspector<NodeInspector>
 {
     /* Public properties. */
     public NodeDefinition Definition { get; private set; }
     public TupleWidget Node { get; private set; }
+    public string StartName => StartOption.Enabled ? Start.Text : null;
     public UndoRedo UndoRedo
     {
         get => Node.UndoRedo;
         set => Node.UndoRedo = value;
     }
 
+    /* Private properties. */
+    private OptionWidget StartOption { get; set; }
+    private LineField Start { get; set; }
+
     /* Public events. */
     public event Action StateChanged;
 
     /* Constructors. */
-    private NodeInspector() { }
+    private NodeInspector()
+    {
+        StartOption = new("Is Start Node", Start, false);
+        StartOption.Name = "Start?";
+        AddChild(StartOption);
+    }
 
     public NodeInspector(NodeDefinition definition)
     {

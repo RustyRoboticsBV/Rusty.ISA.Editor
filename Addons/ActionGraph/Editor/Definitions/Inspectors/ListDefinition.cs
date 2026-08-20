@@ -16,8 +16,8 @@ public sealed partial class ListDefinition : InspectorDefinition
     public string AddButtonText { get; private set; } = "";
 
     /* Constructors. */
-    public ListDefinition(string title, string description, InspectorDefinition type, string addButtonText)
-        : base(title, description)
+    public ListDefinition(string id, string title, string description, InspectorDefinition type, string addButtonText)
+        : base(id, title, description)
     {
         Type = type;
         AddButtonText = addButtonText;

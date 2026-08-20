@@ -16,8 +16,8 @@ public sealed partial class OptionDefinition : InspectorDefinition
     public bool Enabled { get; private set; }
 
     /* Constructors. */
-    public OptionDefinition(string title, string description, InspectorDefinition optional, bool enabled)
-        : base(title, description)
+    public OptionDefinition(string id, string title, string description, InspectorDefinition optional, bool enabled)
+        : base(id, title, description)
     {
         Optional = optional;
         Enabled = enabled;

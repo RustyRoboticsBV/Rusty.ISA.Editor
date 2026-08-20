@@ -9,6 +9,10 @@ public sealed partial class NodeDefinition : EditorDefinition
 {
     /* Public properties. */
     /// <summary>
+    /// The icon of the node.
+    /// </summary>
+    public Texture2D Icon { get; private set; }
+    /// <summary>
     /// The category of the node.
     /// </summary>
     public string Category { get; private set; } = "";
@@ -22,9 +26,11 @@ public sealed partial class NodeDefinition : EditorDefinition
     public InspectorDefinition[] Inspectors { get; private set; } = [];
 
     /* Constructors. */
-    public NodeDefinition(string title, string description, string category, Color color, InspectorDefinition[] inspectors)
-        : base(title, description)
+    public NodeDefinition(string id, string title, string description, Texture2D icon, string category, Color color,
+        InspectorDefinition[] inspectors)
+        : base(id, title, description)
     {
+        Icon = icon;
         Category = category;
         Color = color;
         Inspectors = inspectors;

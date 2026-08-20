@@ -12,7 +12,8 @@ public sealed partial class FormDefinition : InspectorDefinition
     public InstructionDefinition Definition { get; private set; }
 
     /* Constructors. */
-    public FormDefinition(string title, string description, InstructionDefinition definition) : base(title, description)
+    public FormDefinition(string id, string title, string description, InstructionDefinition definition)
+        : base(id, title, description)
     {
         Definition = definition;
     }
