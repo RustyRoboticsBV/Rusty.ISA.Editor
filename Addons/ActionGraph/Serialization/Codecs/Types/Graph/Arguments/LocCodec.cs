@@ -3,16 +3,15 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-internal sealed class ArgCodec : Codec
+internal sealed class LocCodec : Codec
 {
     /* Constants. */
-    public const string TAG = "arg";
+    public const string TAG = "loc";
     public override string Tag => TAG;
 
     /* Public properties. */
     protected override HashSet<string> AllowedAttributes => [Type, Value];
-    protected override HashSet<string> AllowedChildren => [LocCodec.TAG];
 
     /* Constructors. */
-    public ArgCodec(XmlNode xml) : base(xml) { }
+    public LocCodec(XmlNode xml) : base(xml) { }
 }

@@ -111,6 +111,7 @@ internal abstract class Codec
             ListCodec.TAG => new ListCodec(xml),
 
             ArgCodec.TAG => new ArgCodec(xml),
+            LocCodec.TAG => new LocCodec(xml),
             OutCodec.TAG => new OutCodec(xml),
 
             _ => throw new InvalidOperationException($"Unknown XML codec '{xml.Name}'.")

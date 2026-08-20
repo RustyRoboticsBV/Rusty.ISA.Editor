@@ -298,13 +298,31 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 |---|---|
 | Description | A value argument. |
 | Parent | `form` |
-| Children | *(none)* |
+| Children | `loc` |
 | Attributes | `type`, `value` |
 
 | Attribute | Description |
 |---|---|
 | `type` | Referenced `vadef` identifier. |
 | `value` | Argument value string. |
+
+---
+
+
+
+## `loc`
+
+| Property | Value |
+|---|---|
+| Description | A localized argument value. |
+| Parent | `arg` |
+| Children | *(none)* |
+| Attributes | `type`, `value` |
+
+| Attribute | Description |
+|---|---|
+| `type` | Referenced `lang` definition. |
+| `value` | The value of the parent `arg` when localized to this language. |
 
 ---
 
