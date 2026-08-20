@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Serialization;
 /// <summary>
 /// A utility for parsing strings of XML as FileCodec objects.
 /// </summary>
-public static class Parser
+internal static class Parser
 {
     /// <summary>
     /// Parse a string of XML as a FileCodec.

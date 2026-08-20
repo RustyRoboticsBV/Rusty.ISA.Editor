@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed class JointCodec : Codec
+internal sealed class JointCodec : Codec
 {
     /* Constants. */
     public const string TAG = "joint";

@@ -8,7 +8,7 @@ namespace Rusty.ActionGraph.Serialization;
 /// <summary>
 /// A serializer codec.
 /// </summary>
-public abstract class Codec
+internal abstract class Codec
 {
     /* Constants. */
     public const string Editor = "editor";

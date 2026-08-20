@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Serialization;
 /// <summary>
 /// A codec representing a language definition.
 /// </summary>
-public sealed class LangCodec : Codec
+internal sealed class LangCodec : Codec
 {
     /* Constants. */
     public const string TAG = "lang";

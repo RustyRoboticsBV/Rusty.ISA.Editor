@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Serialization;
 /// <summary>
 /// A codec representing a metadata record.
 /// </summary>
-public sealed class MetaCodec : Codec
+internal sealed class MetaCodec : Codec
 {
     /* Constants. */
     public const string TAG = "meta";

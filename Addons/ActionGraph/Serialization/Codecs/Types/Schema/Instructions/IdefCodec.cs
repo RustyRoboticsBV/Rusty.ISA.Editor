@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed class IdefCodec : Codec
+internal sealed class IdefCodec : Codec
 {
     /* Constants. */
     public const string TAG = "idef";

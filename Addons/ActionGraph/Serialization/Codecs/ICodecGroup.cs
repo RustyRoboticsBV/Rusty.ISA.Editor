@@ -3,9 +3,9 @@ using System.Collections.Generic;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A codec node.
+/// A codec that represents a group of child codecs.
 /// </summary>
-public interface ICodecGroup<T>
+internal interface ICodecGroup<T>
     where T : Codec
 {
     /* Public properties. */

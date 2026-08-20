@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed class OutCodec : Codec
+internal sealed class OutCodec : Codec
 {
     /* Constants. */
     public const string TAG = "out";

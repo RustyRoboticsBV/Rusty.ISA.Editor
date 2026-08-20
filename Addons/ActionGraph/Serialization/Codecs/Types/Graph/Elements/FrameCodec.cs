@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public sealed class FrameCodec : Codec
+internal sealed class FrameCodec : Codec
 {
     /* Constants. */
     public const string TAG = "frame";

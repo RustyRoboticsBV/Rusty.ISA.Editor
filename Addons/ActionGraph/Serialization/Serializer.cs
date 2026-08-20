@@ -8,7 +8,7 @@ namespace Rusty.ActionGraph.Serialization;
 /// <summary>
 /// A utility for serializing FileCodec objects to XML.
 /// </summary>
-public static class Serializer
+internal static class Serializer
 {
     /// <summary>
     /// Serialize a FileCodec to a string of XML.
