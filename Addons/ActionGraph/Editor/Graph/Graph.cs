@@ -9,20 +9,23 @@ namespace Rusty.ActionGraph.Editor;
 internal partial class Graph : GraphEdit
 {
     /* Public properties. */
+    public Array<Node> Nodes { get; } = new();
     public Array<Joint> Joints { get; } = new();
     public Array<Memo> Memos { get; } = new();
+    public Array<Frame> Frames { get; } = new();
     public Array<Edge> Edges { get; } = new();
 
     /* Private properties. */
     private ContextMenu ContextMenu { get; set; }
+    private Vector2 SpawnPosition { get; set; }
 
     /* Constructors. */
     public Graph()
     {
         ContextMenu = new();
-        ContextMenu.NodeSelected += OnContextMenuNodeSelected;
-        ContextMenu.FrameSelected += OnContextMenuFrameSelected;
-        ContextMenu.MemoSelected += OnContextMenuMemoSelected;
+        ContextMenu.NodeSelected += (definition) => CreateNode(SpawnPosition, definition);
+        ContextMenu.FrameSelected += () => {};
+        ContextMenu.MemoSelected += () => CreateMemo(SpawnPosition);
         AddChild(ContextMenu);
         ContextMenu.Hide();
     }
@@ -40,6 +43,16 @@ internal partial class Graph : GraphEdit
     public void RegisterDefinition(NodeDefinition definition)
     {
         ContextMenu.AddNode(definition);
+    }
+
+    public GraphNode CreateNode(Vector2 position, NodeDefinition definition)
+    {
+        GraphNode node = new(definition);
+        node.Name = "Node" + definition.ID + Joints.Count;
+        node.PositionOffset = position;
+        Nodes.Add(node);
+        AddChild(node);
+        return node;
     }
 
     public Joint CreateJoint(Vector2 position)
@@ -92,6 +105,7 @@ internal partial class Graph : GraphEdit
         {
             ContextMenu.Position = (Vector2I)GetGlobalMousePosition();
             ContextMenu.Show();
+            SpawnPosition = GetMouseCoordinate();
         }
     }
 
@@ -111,9 +125,9 @@ internal partial class Graph : GraphEdit
         CreateEdge(position, end);
     }
 
-    private void OnContextMenuNodeSelected(NodeDefinition index)
+    private void OnContextMenuNodeSelected(NodeDefinition definition)
     {
-        GD.Print("Node " + index);
+        
     }
 
     private void OnContextMenuFrameSelected()

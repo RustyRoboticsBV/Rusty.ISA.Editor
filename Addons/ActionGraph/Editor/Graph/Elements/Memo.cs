@@ -31,7 +31,7 @@ public sealed partial class Memo : GraphElement
         panel.AddChild(margin);
 
         Label = new();
-        Label.Text = "New Node";
+        Label.Text = "New Note";
         Label.Modulate = Colors.Green;
         margin.AddChild(Label);
 

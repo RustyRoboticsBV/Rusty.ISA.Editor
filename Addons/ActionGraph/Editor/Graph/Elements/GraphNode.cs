@@ -22,8 +22,8 @@ public sealed partial class GraphNode : GraphElement
     private TextureRect Icon { get; set; }
     private VBoxContainer Vbox { get; set; }
 
-    /* Godot overrides. */
-    public override void _EnterTree()
+    /* Constructors. */
+    public GraphNode()
     {
         PanelContainer panel = new();
         panel.MouseFilter = MouseFilterEnum.Ignore;
@@ -61,5 +61,11 @@ public sealed partial class GraphNode : GraphElement
         Vbox.AddChild(new PortPair(true));
 
         CustomMinimumSize = new(80f, 60f);
+    }
+
+    public GraphNode(NodeDefinition definition) : this()
+    {
+        Icon.Texture = definition.Icon;
+        TitleLabel.Text = definition.Title;
     }
 }
