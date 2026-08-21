@@ -102,7 +102,7 @@ internal sealed class OutputCountResult
         int count = Math.Min(fdef.Children.Count, form.Children.Count);
         for (int i = 0; i < count; i++)
         {
-            if (fdef.Children[i] is OadefCodec oadef && form.Children[i] is OutCodec output)
+            if (fdef.Children[i] is JdefCodec oadef && form.Children[i] is OutCodec output)
             {
                 PdefCodec parameter = idef.FindPdef(oadef.GetAttribute(Codec.Type));
 

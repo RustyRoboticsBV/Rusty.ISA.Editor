@@ -3,16 +3,16 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-internal sealed class OadefCodec : Codec
+internal sealed class VdefCodec : Codec
 {
     /* Constants. */
-    public const string TAG = "oadef";
+    public const string TAG = "vdef";
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID, Type, NoDefault];
+    protected override HashSet<string> AllowedAttributes => [ID, Type];
     protected override HashSet<string> AllowedChildren => [];
 
     /* Constructors. */
-    public OadefCodec(XmlNode xml) : base(xml) { }
+    public VdefCodec(XmlNode xml) : base(xml) { }
 }

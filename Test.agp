@@ -30,20 +30,20 @@
 				<cdef id="c1">
 					<odef id="o1">
 						<fdef type="i1" id="f1">
-							<vadef id="va1" type="p1"/>
+							<vdef id="va1" type="p1"/>
 						</fdef>
 					</odef>
 					<odef id="o2">
 						<fdef type="i2" id="f2">
-							<vadef id="va2" type="p2"/>
-							<oadef id="oa3" type="p3" nodflt="false"/>
+							<vdef id="va2" type="p2"/>
+							<jdef id="oa3" type="p3" nodflt="false"/>
 						</fdef>
 					</odef>
 					<odef id="o3">
 						<fdef type="i3" id="f3">
-							<oadef id="oa4" type="p4" nodflt="false"/>
-							<vadef id="va5" type="p5"/>
-							<oadef id="oa6" type="p6" nodflt="true"/>
+							<jdef id="oa4" type="p4" nodflt="false"/>
+							<vdef id="va5" type="p5"/>
+							<jdef id="oa6" type="p6" nodflt="true"/>
 						</fdef>
 					</odef>
 				</cdef>

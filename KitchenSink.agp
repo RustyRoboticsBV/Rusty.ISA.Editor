@@ -28,16 +28,16 @@
         <!-- Simple option -->
         <odef id="mode">
             <fdef id="modeForm" type="print">
-                <vadef id="modeText" type="text"/>
+                <vdef id="modeText" type="text"/>
             </fdef>
         </odef>
 
         <!-- Choice -->
         <cdef id="operation">
             <fdef id="addChoiceForm" type="add">
-                <vadef id="addLeft" type="left"/>
-                <vadef id="addRight" type="right"/>
-                <oadef id="addOutput" type="result"/>
+                <vdef id="addLeft" type="left"/>
+                <vdef id="addRight" type="right"/>
+                <jdef id="addOutput" type="result"/>
             </fdef>
 
             <odef id="subtractOption"/>
@@ -47,7 +47,7 @@
         <!-- Tuple -->
         <tdef id="position">
             <fdef id="tupleForm" type="print">
-                <vadef id="tupleText" type="text"/>
+                <vdef id="tupleText" type="text"/>
             </fdef>
 
             <odef id="xValue"/>
@@ -58,7 +58,7 @@
         <!-- List -->
         <ldef id="items">
             <fdef id="itemForm" type="print">
-                <vadef id="itemText" type="text"/>
+                <vdef id="itemText" type="text"/>
             </fdef>
         </ldef>
 
@@ -77,10 +77,10 @@
 
         <fdef id="calculateForm" type="add">
 
-            <vadef id="a" type="left"/>
-            <vadef id="b" type="right"/>
+            <vdef id="a" type="left"/>
+            <vdef id="b" type="right"/>
 
-            <oadef id="out" type="result" nodflt="true"/>
+            <jdef id="out" type="result" nodflt="true"/>
 
         </fdef>
 
@@ -92,7 +92,7 @@
     <ndef id="displayNode">
 
         <fdef id="displayForm" type="print">
-            <vadef id="displayText" type="text"/>
+            <vdef id="displayText" type="text"/>
         </fdef>
 
     </ndef>

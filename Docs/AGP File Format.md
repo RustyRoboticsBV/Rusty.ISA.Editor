@@ -199,7 +199,7 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 |---|---|
 | Description | Defines a form, the editor representation of a single instruction. |
 | Parent | `ndef`, `odef`, `cdef`, `tdef`, `ldef` |
-| Children | `vadef`, `oadef` |
+| Children | `vdef`, `jdef` |
 | Attributes | `id`, `type` |
 
 | Attribute | Description |
@@ -213,7 +213,7 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 
 ---
 
-## `vadef`
+## `vdef`
 
 | Property | Value |
 |---|---|
@@ -229,11 +229,11 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 
 ---
 
-## `oadef`
+## `jdef`
 
 | Property | Value |
 |---|---|
-| Description | An output argument definition. |
+| Description | An output argument definition. Creates an output port on the containing node. |
 | Parent | `fdef` |
 | Children | *(none)* |
 | Attributes | `id`, `type`, `nodflt` |
@@ -303,7 +303,7 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 
 | Attribute | Description |
 |---|---|
-| `type` | Referenced `vadef` identifier. |
+| `type` | Referenced `vdef` identifier. |
 | `value` | Argument value string. |
 
 ---
@@ -337,7 +337,7 @@ The **AGP** (*ActionGraph Program*) file format is used to store the graphs crea
 
 | Attribute | Description |
 |---|---|
-| `type` | Referenced `oadef` identifier. |
+| `type` | Referenced `jdef` identifier. |
 
 ---
 

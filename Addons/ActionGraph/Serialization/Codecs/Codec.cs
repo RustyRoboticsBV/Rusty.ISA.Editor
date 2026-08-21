@@ -93,8 +93,8 @@ internal abstract class Codec
             TdefCodec.TAG => new TdefCodec(xml),
             LdefCodec.TAG => new LdefCodec(xml),
 
-            VadefCodec.TAG => new VadefCodec(xml),
-            OadefCodec.TAG => new OadefCodec(xml),
+            VdefCodec.TAG => new VdefCodec(xml),
+            JdefCodec.TAG => new JdefCodec(xml),
 
             // Graph.
             NodeCodec.TAG => new NodeCodec(xml),

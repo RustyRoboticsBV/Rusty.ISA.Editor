@@ -9,11 +9,11 @@ internal sealed class OutputPortInfo
 {
     /* Public properties. */
     public PdefCodec Parameter { get; private set; }
-    public OadefCodec Definition { get; private set; }
+    public JdefCodec Definition { get; private set; }
     public OutCodec Instance { get; private set; }
 
     /* Constructors. */
-    public OutputPortInfo(PdefCodec parameter, OadefCodec definition, OutCodec instance)
+    public OutputPortInfo(PdefCodec parameter, JdefCodec definition, OutCodec instance)
     {
         Parameter = parameter;
         Definition = definition;

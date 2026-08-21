@@ -11,7 +11,7 @@ internal sealed class FdefCodec : InspectorDefinitionCodec
 
     /* Public properties. */
     protected override HashSet<string> AllowedAttributes => [ID, Type];
-    protected override HashSet<string> AllowedChildren => [VadefCodec.TAG, OadefCodec.TAG];
+    protected override HashSet<string> AllowedChildren => [VdefCodec.TAG, JdefCodec.TAG];
 
     /* Constructors. */
     public FdefCodec(XmlNode xml) : base(xml) { }
