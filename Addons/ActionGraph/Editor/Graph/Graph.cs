@@ -4,7 +4,7 @@ using Godot.Collections;
 namespace Rusty.ActionGraph.Editor;
 
 /// <summary>
-/// A graph editor joint, used to split up edges.
+/// An editor graph.
 /// </summary>
 internal partial class Graph : GraphEdit
 {
@@ -24,30 +24,37 @@ internal partial class Graph : GraphEdit
     {
         ContextMenu = new();
         ContextMenu.NodeSelected += (definition) => CreateNode(SpawnPosition, definition);
-        ContextMenu.FrameSelected += () => {};
+        ContextMenu.FrameSelected += () => CreateFrame(SpawnPosition);
         ContextMenu.MemoSelected += () => CreateMemo(SpawnPosition);
         AddChild(ContextMenu);
         ContextMenu.Hide();
     }
 
     /* Public methods. */
+    // Coordinates.
     /// <summary>
     /// Get the graph coordinate corresponding to the current mouse position.
     /// </summary>
     public Vector2 GetMouseCoordinate() => GetCoordinate(GetGlobalMousePosition());
+
     /// <summary>
     /// Get the graph coordinate corresponding to the current mouse position.
     /// </summary>
     public Vector2 GetCoordinate(Vector2 globalPosition) => (globalPosition - GlobalPosition + ScrollOffset) / Zoom;
 
-    public void RegisterDefinition(NodeDefinition definition)
-    {
-        ContextMenu.AddNode(definition);
-    }
+    // Registration.
+    /// <summary>
+    /// Add a new node type to the editor.
+    /// </summary>
+    public void RegisterDefinition(NodeDefinition definition) => ContextMenu.AddNode(definition);
 
+    // Element creation.
+    /// <summary>
+    /// Instantiate a node of some type.
+    /// </summary>
     public GraphNode CreateNode(Vector2 position, NodeDefinition definition)
     {
-        GraphNode node = new(definition);
+        GraphNode node = new();
         node.Name = "Node" + definition.ID + Joints.Count;
         node.PositionOffset = position;
         Nodes.Add(node);
@@ -55,6 +62,9 @@ internal partial class Graph : GraphEdit
         return node;
     }
 
+    /// <summary>
+    /// Instantiate a joint.
+    /// </summary>
     public Joint CreateJoint(Vector2 position)
     {
         Joint joint = new();
@@ -65,6 +75,9 @@ internal partial class Graph : GraphEdit
         return joint;
     }
 
+    /// <summary>
+    /// Instantiate a memo.
+    /// </summary>
     public Memo CreateMemo(Vector2 position)
     {
         Memo memo = new();
@@ -75,13 +88,29 @@ internal partial class Graph : GraphEdit
         return memo;
     }
 
+    /// <summary>
+    /// Instantiate a frame.
+    /// </summary>
+    public Frame CreateFrame(Vector2 position)
+    {
+        Frame frame = new();
+        frame.Name = "Frame" + Frames.Count;
+        frame.PositionOffset = position;
+        Frames.Add(frame);
+        AddChild(frame);
+        return frame;
+    }
+
+    /// <summary>
+    /// Instantiate an edge.
+    /// </summary>
     public Edge CreateEdge(Vector2 start, Vector2 end)
     {
         Edge edge = new();
         edge.Name = "Edge" + Edges.Count;
         edge.PositionOffset = start;
         edge.End = end - start;
-        edge.Clicked += OnEdgeClicked;
+        edge.Clicked += SplitEdge;
         Edges.Add(edge);
         AddChild(edge);
         return edge;
@@ -110,7 +139,7 @@ internal partial class Graph : GraphEdit
     }
 
     /* Private methods. */
-    private void OnEdgeClicked(Edge edge, Vector2 position)
+    private void SplitEdge(Edge edge, Vector2 position)
     {
         Vector2 start = edge.PositionOffset;
         Vector2 end = edge.PositionOffset + edge.End;
@@ -123,20 +152,5 @@ internal partial class Graph : GraphEdit
 
         // Create second edge.
         CreateEdge(position, end);
-    }
-
-    private void OnContextMenuNodeSelected(NodeDefinition definition)
-    {
-        
-    }
-
-    private void OnContextMenuFrameSelected()
-    {
-        GD.Print("Frame");
-    }
-
-    private void OnContextMenuMemoSelected()
-    {
-        GD.Print("Memo");
     }
 }
