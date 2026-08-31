@@ -1,5 +1,6 @@
 ﻿using Godot;
 using Godot.Collections;
+using System;
 
 namespace Rusty.ActionGraph.Editor;
 
@@ -15,20 +16,11 @@ internal sealed partial class Graph : GraphEdit
     public Array<Frame> Frames { get; } = new();
     public Array<Edge> Edges { get; } = new();
 
-    /* Private properties. */
-    private ContextMenu ContextMenu { get; set; }
-    private Vector2 SpawnPosition { get; set; }
-
-    /* Constructors. */
-    public Graph()
-    {
-        ContextMenu = new();
-        ContextMenu.NodeSelected += (definition) => CreateNode(SpawnPosition, definition);
-        ContextMenu.FrameSelected += () => CreateFrame(SpawnPosition);
-        ContextMenu.MemoSelected += () => CreateMemo(SpawnPosition);
-        AddChild(ContextMenu);
-        ContextMenu.Hide();
-    }
+    /* Public events. */
+    /// <summary>
+    /// An event that gets invoked whenever the graph is right-clicked.
+    /// </summary>
+    public event Action<Vector2> RightClicked;
 
     /* Public methods. */
     // Coordinates.
@@ -42,13 +34,7 @@ internal sealed partial class Graph : GraphEdit
     /// </summary>
     public Vector2 GetCoordinate(Vector2 globalPosition) => (globalPosition - GlobalPosition + ScrollOffset) / Zoom;
 
-    // Registration.
-    /// <summary>
-    /// Add a new node type to the editor.
-    /// </summary>
-    public void RegisterDefinition(NodeDefinition definition) => ContextMenu.AddNode(definition);
-
-    // Element creation.
+    // Nodes.
     /// <summary>
     /// Instantiate a node of some type.
     /// </summary>
@@ -57,11 +43,29 @@ internal sealed partial class Graph : GraphEdit
         GraphNode node = new();
         node.Name = "Node" + definition.ID + Joints.Count;
         node.PositionOffset = position;
-        Nodes.Add(node);
-        AddChild(node);
+        AddNode(node);
         return node;
     }
 
+    /// <summary>
+    /// Add a node to the graph.
+    /// </summary>
+    public void AddNode(GraphNode node)
+    {
+        Nodes.Add(node);
+        AddChild(node);
+    }
+
+    /// <summary>
+    /// Remove a node from the graph.
+    /// </summary>
+    public void RemoveNode(GraphNode node)
+    {
+        Nodes.Remove(node);
+        RemoveChild(node);
+    }
+
+    // Joints.
     /// <summary>
     /// Instantiate a joint.
     /// </summary>
@@ -75,6 +79,7 @@ internal sealed partial class Graph : GraphEdit
         return joint;
     }
 
+    // Memos.
     /// <summary>
     /// Instantiate a memo.
     /// </summary>
@@ -88,6 +93,7 @@ internal sealed partial class Graph : GraphEdit
         return memo;
     }
 
+    // Frames.
     /// <summary>
     /// Instantiate a frame.
     /// </summary>
@@ -101,6 +107,7 @@ internal sealed partial class Graph : GraphEdit
         return frame;
     }
 
+    // Edges.
     /// <summary>
     /// Instantiate an edge.
     /// </summary>
@@ -131,11 +138,7 @@ internal sealed partial class Graph : GraphEdit
     public override void _GuiInput(InputEvent @event)
     {
         if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Right)
-        {
-            ContextMenu.Position = (Vector2I)GetGlobalMousePosition();
-            ContextMenu.Show();
-            SpawnPosition = GetMouseCoordinate();
-        }
+            RightClicked?.Invoke(GetMouseCoordinate());
     }
 
     /* Private methods. */

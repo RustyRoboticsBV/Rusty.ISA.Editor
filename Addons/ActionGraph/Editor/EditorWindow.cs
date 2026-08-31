@@ -10,12 +10,14 @@ public abstract partial class EditorWindow : VBoxContainer
     /* Public properties. */
     [Export] public Font ConsoleFont { get; set; }
 
-    /* Internal properties. */
-    internal Inspector Inspector { get; private set; }
-    internal Graph Graph { get; private set; }
-    internal Console Console { get; private set; }
-
     /* Private properties. */
+    private Inspector Inspector { get; set; }
+    private Graph Graph { get; set; }
+    private Console Console { get; set; }
+    private ContextMenu ContextMenu { get; set; }
+
+    private Vector2 SpawnPosition { get; set; }
+
     private UndoRedo UndoRedo { get; set; }
     private bool UndoRedoAllowed { get; set; } = true;
 
@@ -44,6 +46,12 @@ public abstract partial class EditorWindow : VBoxContainer
         Graph.Name = "Graph";
         Graph.AnchorBottom = 1;
         Graph.AnchorRight = 1;
+        Graph.RightClicked += (coord) =>
+        {
+            SpawnPosition = coord;
+            ContextMenu.Show();
+            ContextMenu.Position = (Vector2I)GetGlobalMousePosition();
+        };
         graphContainer.AddChild(Graph);
 
         MouseLabel mouseLabel = new();
@@ -61,6 +69,15 @@ public abstract partial class EditorWindow : VBoxContainer
         Console.SizeFlagsVertical = SizeFlags.ExpandFill;
         Console.Font = ConsoleFont;
         AddChild(Console);
+
+        ContextMenu = new();
+        ContextMenu.Name = "ContextMenu";
+        ContextMenu.NodeSelected += (definition) => Graph.CreateNode(SpawnPosition, definition);
+        ContextMenu.FrameSelected += () => Graph.CreateFrame(SpawnPosition);
+        ContextMenu.MemoSelected += () => Graph.CreateMemo(SpawnPosition);
+        AddChild(ContextMenu);
+        ContextMenu.Hide();
+
 
         // TODO: temporary undo/redo testing. Remove later.
         void SetupUndoRedo(UndoRedo undoRedo, Node node)
@@ -83,7 +100,7 @@ public abstract partial class EditorWindow : VBoxContainer
     /// <summary>
     /// Add a new node type to the editor.
     /// </summary>
-    public void AddNodeDefinition(NodeDefinition node) => Graph.RegisterDefinition(node);
+    public void AddNodeDefinition(NodeDefinition node) => ContextMenu.AddNode(node);
 
     /* Godot overrides. */
     public override void _Process(double delta)

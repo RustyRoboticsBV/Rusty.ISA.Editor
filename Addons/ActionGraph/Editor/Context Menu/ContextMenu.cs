@@ -12,7 +12,6 @@ internal sealed partial class ContextMenu : PopupMenu
     /* Private methods. */
     private PopupMenu NodesMenu { get; set; }
     private Dictionary<string, NodeSubMenu> Categories { get; } = new();
-    private Dictionary<(string, int), NodeDefinition> NodeDefinitions { get; } = new();
 
     /* Public events. */
     public event Action<NodeDefinition> NodeSelected;

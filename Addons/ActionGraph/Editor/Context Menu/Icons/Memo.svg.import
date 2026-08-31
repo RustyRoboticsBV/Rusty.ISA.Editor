@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d2o5giuy56djw"
-path="res://.godot/imported/Memo.svg-425113f77d78bda2b12eea25559f71f6.ctex"
+path="res://.godot/imported/Memo.svg-ccc416fb9b7e5637e0b00cc21e74e402.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Addons/ActionGraph/Editor/Graph/Context Menu/Icons/Memo.svg"
-dest_files=["res://.godot/imported/Memo.svg-425113f77d78bda2b12eea25559f71f6.ctex"]
+source_file="res://Addons/ActionGraph/Editor/Context Menu/Icons/Memo.svg"
+dest_files=["res://.godot/imported/Memo.svg-ccc416fb9b7e5637e0b00cc21e74e402.ctex"]
 
 [params]
 
