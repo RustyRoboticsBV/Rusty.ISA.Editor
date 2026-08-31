@@ -34,11 +34,26 @@ public abstract partial class EditorWindow : VBoxContainer
         Inspector.SizeFlagsVertical = SizeFlags.ExpandFill;
         hbox.AddChild(Inspector);
 
+        Control graphContainer = new();
+        graphContainer.Name = "GraphContainer";
+        graphContainer.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        graphContainer.SizeFlagsVertical = SizeFlags.ExpandFill;
+        hbox.AddChild(graphContainer);
+
         Graph = new();
         Graph.Name = "Graph";
-        Graph.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-        Graph.SizeFlagsVertical = SizeFlags.ExpandFill;
-        hbox.AddChild(Graph);
+        Graph.AnchorBottom = 1;
+        Graph.AnchorRight = 1;
+        graphContainer.AddChild(Graph);
+
+        MouseLabel mouseLabel = new();
+        mouseLabel.Name = "MouseLabel";
+        mouseLabel.Graph = Graph;
+        mouseLabel.AnchorRight = 1;
+        mouseLabel.AnchorTop = 1;
+        mouseLabel.AnchorBottom = 1;
+        mouseLabel.Position = new(8, -36);
+        graphContainer.AddChild(mouseLabel);
 
         Console = new();
         Console.Name = "Console";
