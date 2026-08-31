@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// An editor graph.
 /// </summary>
-internal partial class Graph : GraphEdit
+internal sealed partial class Graph : GraphEdit
 {
     /* Public properties. */
     public Array<Node> Nodes { get; } = new();

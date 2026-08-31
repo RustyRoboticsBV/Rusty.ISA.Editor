@@ -5,7 +5,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A container for an output port and an associated label.
 /// </summary>
-internal partial class OutputPort : HBoxContainer
+internal sealed partial class OutputPortContainer : HBoxContainer
 {
     /* Public properties. */
     public string LabelText
@@ -29,7 +29,7 @@ internal partial class OutputPort : HBoxContainer
     private Port Output { get; set; }
 
     /* Constructors. */
-    public OutputPort()
+    public OutputPortContainer()
     {
         Label = new();
         Label.Name = "Output Port Label";

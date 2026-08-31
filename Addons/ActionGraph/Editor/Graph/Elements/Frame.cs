@@ -2,7 +2,9 @@ using Godot;
 
 namespace Rusty.ActionGraph.Editor;
 
-[GlobalClass]
+/// <summary>
+/// A frame graph element, which can contain other elements.
+/// </summary>
 public sealed partial class Frame : GraphElement
 {
     private PanelContainer panel;

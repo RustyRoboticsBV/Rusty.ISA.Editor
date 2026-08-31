@@ -5,7 +5,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A container for an input port and an associated label.
 /// </summary>
-internal partial class InputPort : HBoxContainer
+internal sealed partial class InputPortContainer : HBoxContainer
 {
     /* Public properties. */
     public string LabelText
@@ -29,7 +29,7 @@ internal partial class InputPort : HBoxContainer
     private Port Input { get; set; }
 
     /* Constructors. */
-    public InputPort()
+    public InputPortContainer()
     {
         Control anchor = new();
         anchor.Name = "Input Port Anchor";

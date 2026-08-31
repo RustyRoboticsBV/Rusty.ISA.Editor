@@ -2,7 +2,7 @@ using Godot;
 
 namespace Rusty.ActionGraph.Editor;
 
-public partial class Port : Panel
+public sealed partial class Port : Panel
 {
     private StyleBoxFlat StyleBox { get; set; }
 

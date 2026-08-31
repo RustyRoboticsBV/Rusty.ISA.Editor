@@ -35,8 +35,8 @@ public sealed partial class GraphNode : GraphElement
     private VBoxContainer OutputContainer { get; set; }
     private Label Preview { get; set; }
 
-    private InputPort Input { get; } = new();
-    private List<OutputPort> Outputs { get; } = new();
+    private InputPortContainer Input { get; } = new();
+    private List<OutputPortContainer> Outputs { get; } = new();
 
     /* Constructors. */
     public GraphNode()
@@ -97,7 +97,7 @@ public sealed partial class GraphNode : GraphElement
         OutputContainer.Name = "Outputs";
         portContainer.AddChild(OutputContainer);
 
-        InputPort input = new();
+        InputPortContainer input = new();
         input.Name = "Input";
         input.SizeFlagsVertical = SizeFlags.ShrinkBegin;
         inputContainer.AddChild(input);
@@ -125,7 +125,7 @@ public sealed partial class GraphNode : GraphElement
     /// </summary>
     public void AddOutputPort()
     {
-        OutputPort output = new();
+        OutputPortContainer output = new();
         Outputs.Add(output);
         OutputContainer.AddChild(output);
     }
