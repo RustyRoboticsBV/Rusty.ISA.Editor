@@ -24,6 +24,13 @@ public abstract partial class EditorWindow : VBoxContainer
     /* Constructors. */
     public EditorWindow()
     {
+        MenuBar menuBar = new();
+        menuBar.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        AddChild(menuBar);
+
+        HSeparator separator = new();
+        AddChild(separator);
+
         HBoxContainer hbox = new();
         hbox.Name = "Inspector+Graph";
         hbox.SizeFlagsHorizontal = SizeFlags.ExpandFill;
