@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A graph editor edge.
 /// </summary>
-public partial class Edge : GraphElement
+internal sealed partial class Edge : GraphElement
 {
     /* Private constants. */
     private const float LINE_WIDTH = 3.0f;

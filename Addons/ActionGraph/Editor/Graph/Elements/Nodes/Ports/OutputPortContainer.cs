@@ -52,7 +52,7 @@ internal sealed partial class OutputPortContainer : HBoxContainer
         Output.Name = "Output Port";
         Output.Position = new(-8f, 5f);
         Output.Size = new(14, 14);
-        Output.EdgeColor = Colors.Azure;
+        Output.Color = Colors.Azure;
         anchor.AddChild(Output);
     }
 }

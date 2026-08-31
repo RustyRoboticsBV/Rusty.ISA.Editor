@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// The inspector window.
 /// </summary>
-internal partial class Inspector : ScrollContainer
+internal sealed partial class Inspector : ScrollContainer
 {
     public List<Panel> Panels { get; } = new();
     private VBoxContainer VBox { get; set; }

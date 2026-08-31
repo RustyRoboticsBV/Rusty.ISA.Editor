@@ -2,16 +2,27 @@ using Godot;
 
 namespace Rusty.ActionGraph.Editor;
 
-public sealed partial class Port : Panel
+/// <summary>
+/// An input or output port.
+/// </summary>1
+internal sealed partial class Port : Panel
 {
-    private StyleBoxFlat StyleBox { get; set; }
+    /* Public properties. */
+    /// <summary>
+    /// Whether or not this port can be the start point of an edge.
+    /// </summary>
+    public bool Draggable { get; set; }
 
-    public Color EdgeColor
+    public Color Color
     {
         get => StyleBox.BorderColor;
         set => StyleBox.BorderColor = value;
     }
 
+    /* Private properties. */
+    private StyleBoxFlat StyleBox { get; set; }
+
+    /* Constructors. */
     public Port()
     {
         StyleBox = new();
@@ -20,6 +31,7 @@ public sealed partial class Port : Panel
         AddThemeStyleboxOverride("panel", StyleBox);
     }
 
+    /* Godot overrides. */
     public override void _Process(double delta)
     {
         int cornerRadius = (int)(Mathf.Min(Size.X, Size.Y) / 2f);

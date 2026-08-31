@@ -2,7 +2,10 @@
 
 namespace Rusty.ActionGraph.Editor;
 
-public static class ConsoleColors
+/// <summary>
+/// The default colors used by the console window.
+/// </summary>
+internal static class ConsoleColors
 {
     /* Public properties. */
     public static Color Background => new(0.5f, 0.5f, 0.5f);

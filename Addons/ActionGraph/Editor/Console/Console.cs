@@ -3,7 +3,10 @@ using System.Collections.Generic;
 
 namespace Rusty.ActionGraph.Editor;
 
-public partial class Console : MarginContainer
+/// <summary>
+/// A console editor window.
+/// </summary>
+internal sealed partial class Console : MarginContainer
 {
     /* Public methods. */
     public Font Font { get; set; }

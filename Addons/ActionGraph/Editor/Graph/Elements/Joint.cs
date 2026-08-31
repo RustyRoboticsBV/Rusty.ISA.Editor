@@ -5,7 +5,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A graph editor joint, used to split up edges.
 /// </summary>
-public partial class Joint : GraphElement
+internal sealed partial class Joint : GraphElement
 {
     /* Public constants. */
     public static float RADIUS = 5f;

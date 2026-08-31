@@ -41,7 +41,7 @@ internal sealed partial class InputPortContainer : HBoxContainer
         Input.Name = "Input Port";
         Input.Position = new(-8f, 5f);
         Input.Size = new(14, 14);
-        Input.EdgeColor = Colors.Azure;
+        Input.Color = Colors.Azure;
         anchor.AddChild(Input);
 
         Control separator = new();

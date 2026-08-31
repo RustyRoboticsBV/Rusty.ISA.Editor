@@ -5,7 +5,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A foldout label that reacts to mouse input events.
 /// </summary>
-public partial class Foldout : HBoxContainer
+internal sealed partial class Foldout : HBoxContainer
 {
     /* Public properties. */
     public bool IsOpen { get; set; }

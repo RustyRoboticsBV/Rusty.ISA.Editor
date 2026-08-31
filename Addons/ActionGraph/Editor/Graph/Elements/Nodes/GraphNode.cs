@@ -3,7 +3,10 @@ using System.Collections.Generic;
 
 namespace Rusty.ActionGraph.Editor;
 
-public sealed partial class GraphNode : GraphElement
+/// <summary>
+/// A generic graph node element.
+/// </summary>
+internal sealed partial class GraphNode : GraphElement
 {
     /* Public properties. */
     public string HeaderText

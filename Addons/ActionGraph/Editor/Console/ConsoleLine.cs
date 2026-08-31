@@ -2,7 +2,10 @@
 
 namespace Rusty.ActionGraph.Editor;
 
-public partial class ConsoleLine : MarginContainer
+/// <summary>
+/// A single console line.
+/// </summary>
+internal sealed partial class ConsoleLine : MarginContainer
 {
     /* Public methods. */
     public string LabelText { get; set; } = "";

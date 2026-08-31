@@ -5,7 +5,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A bezier curve.
 /// </summary>
-internal class BezierCurve
+internal sealed class BezierCurve
 {
     /* Public properties. */
     public Vector2 Start { get; set; }

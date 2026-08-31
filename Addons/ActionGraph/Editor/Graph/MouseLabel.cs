@@ -2,11 +2,15 @@
 
 namespace Rusty.ActionGraph.Editor;
 
-[GlobalClass]
-internal partial class MouseLabel : Label
+/// <summary>
+/// A label that displays the mouse position relative to the graph.
+/// </summary>
+internal sealed partial class MouseLabel : Label
 {
+    /* Public properties. */
     [Export] public Graph Graph { get; set; }
 
+    /* Godot overrides. */
     public override void _Process(double delta)
     {
         if (Graph == null)

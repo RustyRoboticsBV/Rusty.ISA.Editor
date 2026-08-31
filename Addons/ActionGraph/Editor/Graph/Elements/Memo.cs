@@ -5,7 +5,7 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A sticky note graph element, used for annotating graphs with commentary.
 /// </summary>
-public sealed partial class Memo : GraphElement
+internal sealed partial class Memo : GraphElement
 {
     /* Public properties. */
     public string Text

@@ -5,39 +5,42 @@ namespace Rusty.ActionGraph.Editor;
 /// <summary>
 /// A frame graph element, which can contain other elements.
 /// </summary>
-public sealed partial class Frame : GraphElement
+internal sealed partial class Frame : GraphElement
 {
-    private PanelContainer panel;
-    private Label label;
+    /* Private properties. */
+    private PanelContainer Panel { get; set; }
+    private Label Label { get; set; }
 
-    private StyleBoxFlat normalStyle;
-    private StyleBoxFlat selectedStyle;
+    private StyleBoxFlat NormalStyle { get; set; }
+    private StyleBoxFlat SelectedStyle { get; set; }
 
-    public override void _Ready()
+    /* Constructors. */
+    public Frame()
     {
-        panel = new();
-        panel.MouseFilter = MouseFilterEnum.Ignore;
-        panel.AnchorRight = 1.0f;
-        panel.AnchorBottom = 1.0f;
-        AddChild(panel);
+        Panel = new();
+        Panel.MouseFilter = MouseFilterEnum.Ignore;
+        Panel.AnchorRight = 1.0f;
+        Panel.AnchorBottom = 1.0f;
+        AddChild(Panel);
 
-        normalStyle = PanelUtility.GetStyleBox(
+        NormalStyle = PanelUtility.GetStyleBox(
             new Color(0.15f, 0.15f, 0.15f), 4, 4, 4, 4,
             new Color(0.3f, 0.3f, 0.3f), 1, 1, 1, 1
         );
-        selectedStyle = PanelUtility.GetStyleBox(
+        SelectedStyle = PanelUtility.GetStyleBox(
             new Color(0.15f, 0.15f, 0.15f), 4, 4, 4, 4,
             Colors.DodgerBlue, 2, 2, 2, 2
         );
-        PanelUtility.SetPanelStyle(panel, normalStyle);
+        PanelUtility.SetPanelStyle(Panel, NormalStyle);
 
-        label = new();
-        label.Text = "New ID";
-        panel.AddChild(label);
+        Label = new();
+        Label.Text = "New ID";
+        Panel.AddChild(Label);
     }
 
+    /* Godot overrides. */
     public override void _Process(double delta)
     {
-        PanelUtility.SetPanelStyle(panel, Selected ? selectedStyle : normalStyle);
+        PanelUtility.SetPanelStyle(Panel, Selected ? SelectedStyle : NormalStyle);
     }
 }
