@@ -124,17 +124,6 @@ internal sealed partial class Graph : GraphEdit
     }
 
     /* Godot overrides. */
-    public override void _EnterTree()
-    {
-        Joint joint = CreateJoint(new Vector2(200, 200));
-
-        Memo memo = CreateMemo(new Vector2(100, 100));
-        memo.Text = "ABCDEFG";
-
-        CreateJoint(Vector2.Zero);
-        CreateEdge(new(100, 100), new(200, 1000));
-    }
-
     public override void _GuiInput(InputEvent @event)
     {
         if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Right)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -17,9 +16,7 @@ internal static class Serializer
     {
         // Compute checksum.
         MD5 md5 = MD5.Create();
-        Hash(file, md5);
-        byte[] hashBytes = md5.TransformFinalBlock([], 0, 0);
-        string hashHex = Convert.ToHexString(md5.Hash);
+        string hashHex = Hasher.Hash(file, md5);
         file.SetAttribute(Codec.Checksum, hashHex);
 
         // Serialize.
@@ -33,55 +30,6 @@ internal static class Serializer
     }
 
     /* Private methods. */
-    /// <summary>
-    /// Compute the checksum of this node and its child nodes.
-    /// </summary>
-    private static void Hash(Codec codec, HashAlgorithm hash)
-    {
-        // Hash start tag.
-        Hash(hash, "<");
-        Hash(hash, codec.Tag);
-
-        foreach (var attribute in codec.Attributes)
-        {
-            if (attribute.Key == Codec.Checksum)
-                continue;
-
-            Hash(hash, " ");
-            Hash(hash, attribute.Key);
-            Hash(hash, "=\"");
-            Hash(hash, attribute.Value);
-            Hash(hash, "\"");
-        }
-
-        Hash(hash, ">");
-
-        // Hash contents.
-        if (codec.Children.Count == 0)
-            Hash(hash, codec.InnerText);
-        else
-        {
-            foreach (Codec child in codec.Children)
-            {
-                Hash(child, hash);
-            }
-        }
-
-        // Hash end tag.
-        Hash(hash, "</");
-        Hash(hash, codec.Tag);
-        Hash(hash, ">");
-    }
-
-    /// <summary>
-    /// Compute the checksum of a string.
-    /// </summary>
-    private static void Hash(HashAlgorithm hash, string str)
-    {
-        byte[] bytes = Encoding.UTF8.GetBytes(str);
-        hash.TransformBlock(bytes, 0, bytes.Length, null, 0);
-    }
-
     /// <summary>
     /// Convert this node to XML.
     /// </summary>

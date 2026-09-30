@@ -53,6 +53,7 @@ public abstract partial class EditorWindow : VBoxContainer
         Graph.Name = "Graph";
         Graph.AnchorBottom = 1;
         Graph.AnchorRight = 1;
+        Graph.MinimapEnabled = false;
         Graph.RightClicked += (coord) =>
         {
             SpawnPosition = coord;
@@ -85,22 +86,7 @@ public abstract partial class EditorWindow : VBoxContainer
         AddChild(ContextMenu);
         ContextMenu.Hide();
 
-
-        // TODO: temporary undo/redo testing. Remove later.
-        void SetupUndoRedo(UndoRedo undoRedo, Node node)
-        {
-            if (node is IWidget widget)
-            {
-                widget.UndoRedo = UndoRedo;
-                return;
-            }
-            foreach (Node child in node.GetChildren())
-            {
-                SetupUndoRedo(undoRedo, child);
-            }
-        }
         UndoRedo = new();
-        SetupUndoRedo(UndoRedo, this);
     }
 
     /* Public methods. */
