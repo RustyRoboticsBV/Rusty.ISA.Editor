@@ -6,7 +6,7 @@ namespace Rusty.ActionGraph.Serialization;
 /// <summary>
 /// A utility for parsing strings of XML as FileCodec objects.
 /// </summary>
-internal static class Parser
+internal static class XmlParser
 {
     /// <summary>
     /// Parse a string of XML as a FileCodec.
@@ -22,7 +22,7 @@ internal static class Parser
         {
             if (node is XmlElement element)
             {
-                Codec codec = Codecs.Instantiate(element);
+                Codec codec = CodecFromXml(element);
                 if (codec is FileCodec file)
                     return file;
                 else
@@ -30,5 +30,24 @@ internal static class Parser
             }
         }
         throw new FormatException("Empty XML file!");
+    }
+
+    /* Private methods. */
+    private static Codec CodecFromXml(XmlElement xml)
+    {
+        Codec codec = Codecs.Instantiate(xml.Name);
+
+        foreach (XmlNode child in xml.ChildNodes)
+        {
+            if (child is XmlElement element)
+                codec.AddChild(CodecFromXml(element));
+        }
+
+        foreach (XmlAttribute attribute in xml.Attributes)
+        {
+            codec.SetAttribute(attribute.Name, attribute.Value);
+        }
+
+        return codec;
     }
 }

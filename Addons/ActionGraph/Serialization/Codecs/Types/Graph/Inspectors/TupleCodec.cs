@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -15,6 +14,4 @@ internal sealed class TupleCodec : InspectorCodec, ICodecGroup<InspectorCodec>
 
     /* Constructors. */
     public TupleCodec() : base() { }
-
-    public TupleCodec(XmlNode xml) : base(xml) { }
 }

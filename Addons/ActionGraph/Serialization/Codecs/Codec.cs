@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -21,23 +20,6 @@ internal abstract class Codec
     /* Constructors. */
     public Codec() { }
 
-    public Codec(XmlNode xml)
-    {
-        if (xml.ChildNodes.Count > 0)
-        {
-            foreach (XmlNode child in xml.ChildNodes)
-            {
-                if (child is XmlElement element)
-                    AddChild(Codecs.Instantiate(element));
-            }
-        }
-
-        foreach (XmlAttribute attribute in xml.Attributes)
-        {
-            Attributes.TryAdd(attribute.Name, attribute.Value);
-        }
-    }
-
     /* Public methods. */
     public override string ToString() => CodecPrinter.ToString(this, false);
 
@@ -50,6 +32,16 @@ internal abstract class Codec
     /// Check whether or not an attribute with some name is allowed by this codec.
     /// </summary>
     public bool AllowsAttribute(string name) => AllowedAttributes.Contains(name);
+
+    /// <summary>
+    /// Get the index of an attribute.
+    /// </summary>
+    public int GetAttributeIndex(string name) => AllowedAttributes.IndexOf(name);
+
+    /// <summary>
+    /// Get the attribute name corresponding to some index.
+    /// </summary>
+    public string GetAttributeFromIndex(int index) => AllowedAttributes[index];
 
     /// <summary>
     /// Set an attribute's value.
@@ -80,16 +72,6 @@ internal abstract class Codec
     /// Check whether or not a child with some tag is allowed by this codec.
     /// </summary>
     public bool AllowsChild(string tag) => AllowedChildren.Contains(tag);
-
-    /// <summary>
-    /// Get the index of an attribute.
-    /// </summary>
-    public int GetAttributeIndex(string name) => AllowedAttributes.IndexOf(name);
-
-    /// <summary>
-    /// Get the attribute name corresponding to some index.
-    /// </summary>
-    public string GetAttributeFromIndex(int index) => AllowedAttributes[index];
 
     /// <summary>
     /// Add a node of some type.

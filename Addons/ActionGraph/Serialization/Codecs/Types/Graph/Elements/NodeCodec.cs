@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -20,6 +19,4 @@ internal sealed class NodeCodec : Codec, ICodecGroup<InspectorCodec>
 
     /* Constructors. */
     public NodeCodec() : base() { }
-
-    public NodeCodec(XmlNode xml) : base(xml) { }
 }

@@ -16,7 +16,7 @@ public abstract partial class InstructionProgramImporter : Node
     public static InstructionProgram Import(string xml)
     {
         // Parse the XML as a codec.
-        FileCodec codec = Parser.Parse(xml);
+        FileCodec codec = Serialization.XmlParser.Parse(xml);
 
         // Compile the codec into a program.
         InstructionProgram program = CodeGenerator.Generate(codec);

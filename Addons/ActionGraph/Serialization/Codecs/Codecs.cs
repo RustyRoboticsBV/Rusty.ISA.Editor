@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -37,9 +36,7 @@ internal static class Codecs
     private static List<string> Tags = null;
     private static Dictionary<string, int> Indices = null;
     private static Dictionary<Type, string> TypeTags = null;
-
     private static List<ConstructorInfo> Ctors = null;
-    private static List<ConstructorInfo> CtorsXml = null;
 
     /* Public methods. */
     public static int GetIndex(string tag) => Indices[tag];
@@ -54,26 +51,26 @@ internal static class Codecs
     /// <summary>
     /// Instantiate a codec node.
     /// </summary>
-    public static Codec Instantiate(int index)
+    public static Codec Instantiate(string tag)
     {
-        if (Tags == null)
+        if (Tags == null || Indices == null || TypeTags == null || Ctors == null)
             Register();
 
-        return (Codec)Ctors[index].Invoke([]);
+        if (!Indices.TryGetValue(tag, out int index))
+            throw new InvalidOperationException($"Unknown codec '{tag}'.");
+
+        return Instantiate(index);
     }
 
     /// <summary>
-    /// Instantiate a codec node from an XML element.
+    /// Instantiate a codec node.
     /// </summary>
-    public static Codec Instantiate(XmlElement xml)
+    public static Codec Instantiate(int index)
     {
-        if (Tags == null || Indices == null || TypeTags == null || Ctors == null || CtorsXml == null)
+        if (Tags == null || Indices == null || TypeTags == null || Ctors == null)
             Register();
 
-        if (!Indices.TryGetValue(xml.Name, out int index))
-            throw new InvalidOperationException($"Unknown codec '{xml.Name}'.");
-
-        return (Codec)CtorsXml[index].Invoke([xml]);
+        return (Codec)Ctors[index].Invoke([]);
     }
 
     /* Private methods. */
@@ -83,7 +80,6 @@ internal static class Codecs
         Indices = new();
         TypeTags = new();
         Ctors = new();
-        CtorsXml = new();
 
         Register<FileCodec>(FileCodec.TAG);
 
@@ -134,7 +130,6 @@ internal static class Codecs
         Indices.Add(tag, index);
         TypeTags.Add(typeof(T), tag);
         Ctors.Add(GetCtor(typeof(T), []));
-        CtorsXml.Add(GetCtor(typeof(T), [typeof(XmlElement)]));
     }
 
     private static ConstructorInfo GetCtor(Type type, Type[] args)

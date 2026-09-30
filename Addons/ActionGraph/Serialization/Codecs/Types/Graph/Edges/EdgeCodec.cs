@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -10,10 +9,11 @@ internal sealed class EdgeCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.From, Codecs.Port, Codecs.To];
+    protected override List<string> AllowedAttributes => [
+        Codecs.ID,
+        Codecs.From, Codecs.Port, Codecs.To
+    ];
 
     /* Constructors. */
     public EdgeCodec() : base() { }
-
-    public EdgeCodec(XmlNode xml) : base(xml) { }
 }

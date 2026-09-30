@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -17,6 +16,4 @@ internal sealed class MetaCodec : Codec
 
     /* Constructors. */
     public MetaCodec() : base() { }
-
-    public MetaCodec(XmlNode xml) : base(xml) { }
 }

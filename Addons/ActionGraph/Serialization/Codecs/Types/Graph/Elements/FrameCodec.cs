@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -18,6 +17,4 @@ internal sealed class FrameCodec : Codec
 
     /* Constructors. */
     public FrameCodec() : base() { }
-
-    public FrameCodec(XmlNode xml) : base(xml) { }
 }

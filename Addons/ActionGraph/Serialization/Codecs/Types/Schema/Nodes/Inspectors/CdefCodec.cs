@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -15,6 +14,4 @@ internal sealed class CdefCodec : InspectorDefinitionCodec, ICodecGroup<Inspecto
 
     /* Constructors. */
     public CdefCodec() : base() { }
-
-    public CdefCodec(XmlNode xml) : base(xml) { }
 }

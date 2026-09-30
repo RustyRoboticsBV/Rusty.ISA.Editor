@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -15,8 +14,6 @@ internal sealed class IdefCodec : Codec
 
     /* Constructors. */
     public IdefCodec() : base() { }
-
-    public IdefCodec(XmlNode xml) : base(xml) { }
 
     /* Public methods. */
     /// <summary>

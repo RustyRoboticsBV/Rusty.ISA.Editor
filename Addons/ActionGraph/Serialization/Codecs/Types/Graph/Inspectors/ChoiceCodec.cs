@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -15,6 +14,4 @@ internal sealed class ChoiceCodec : InspectorCodec, ICodecGroup<InspectorCodec>
 
     /* Constructors. */
     public ChoiceCodec() : base() { }
-
-    public ChoiceCodec(XmlNode xml) : base(xml) { }
 }

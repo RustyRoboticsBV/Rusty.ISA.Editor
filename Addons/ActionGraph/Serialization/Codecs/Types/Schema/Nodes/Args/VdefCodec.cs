@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -11,10 +10,7 @@ internal sealed class VdefCodec : Codec
 
     /* Public properties. */
     protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Type];
-    protected override List<string> AllowedChildren => [];
 
     /* Constructors. */
     public VdefCodec() : base() { }
-
-    public VdefCodec(XmlNode xml) : base(xml) { }
 }

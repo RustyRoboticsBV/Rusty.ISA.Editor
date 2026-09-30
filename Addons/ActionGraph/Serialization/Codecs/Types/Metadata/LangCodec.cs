@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -17,6 +16,4 @@ internal sealed class LangCodec : Codec
 
     /* Constructors. */
     public LangCodec() : base() { }
-
-    public LangCodec(XmlNode xml) : base(xml) { }
 }
