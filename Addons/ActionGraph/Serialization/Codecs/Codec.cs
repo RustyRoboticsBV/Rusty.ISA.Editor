@@ -39,6 +39,8 @@ internal abstract class Codec
     }
 
     /* Public methods. */
+    public override string ToString() => CodecPrinter.ToString(this, false);
+
     /// <summary>
     /// Check whether or not this codec supports attributes.
     /// </summary>

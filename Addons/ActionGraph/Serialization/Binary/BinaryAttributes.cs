@@ -52,8 +52,10 @@ public struct BinaryAttributes
         byte mask = 0;
         for (int i = 0; i < 8; i++)
         {
-            Bitmask.SetBit(mask, i, this[i] != null);
+            mask = Bitmask.SetBit(mask, i, this[i] != null);
+            Godot.GD.Print(i + " - " + (this[i] != null));
         }
+        Godot.GD.Print("result: " + mask);
         return mask;
     }
 }

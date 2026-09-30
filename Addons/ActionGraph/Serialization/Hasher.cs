@@ -16,9 +16,8 @@ internal static class Hasher
     public static string Hash(Codec codec, HashAlgorithm hash)
     {
         Hash(hash, codec);
-        byte[] hashBytes = hash.TransformFinalBlock([], 0, 0);
-        string hashHex = Convert.ToHexString(hash.Hash);
-        return hashHex;
+        hash.TransformFinalBlock([], 0, 0);
+        return Convert.ToHexString(hash.Hash);
     }
 
     /* Private methods. */

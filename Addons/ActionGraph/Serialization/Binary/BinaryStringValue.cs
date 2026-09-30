@@ -7,7 +7,7 @@ internal static class BinaryStringValue
     /* Public methods. */
     public static byte[] Encode(string str)
     {
-        byte[] value = Encoding.ASCII.GetBytes(str);
+        byte[] value = Encoding.ASCII.GetBytes(str ?? "");
         byte[] size = Uleb128.Encode(value.Length);
 
         return ArrayMerger.Merge(size, value);
