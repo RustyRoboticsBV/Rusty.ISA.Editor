@@ -3,7 +3,10 @@ using System.Collections.Generic;
 
 namespace Rusty.ActionGraph.Serialization;
 
-public static class Uleb128
+/// <summary>
+/// A utility for encoding integers in unsigned LEB128.
+/// </summary>
+internal static class Uleb128
 {
     public static byte[] Encode(int value)
     {
@@ -11,7 +14,6 @@ public static class Uleb128
             throw new ArgumentOutOfRangeException(nameof(value), "ULEB128 values must be non-negative.");
 
         List<byte> bytes = new(5);
-
         uint remaining = (uint)value;
 
         do

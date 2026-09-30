@@ -2,7 +2,7 @@
 
 namespace Rusty.ActionGraph.Serialization;
 
-public struct BinaryAttributes
+internal struct BinaryAttributes
 {
     /* Fields. */
     private string _0;
