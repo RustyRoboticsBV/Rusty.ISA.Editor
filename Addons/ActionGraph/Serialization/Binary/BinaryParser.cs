@@ -11,8 +11,7 @@ internal static class BinaryParser
 {
     /* Constants. */
     private static readonly byte[] MAGIC = Encoding.ASCII.GetBytes("\0BINAGP\0");
-
-    private const string VERSION = "0.1";
+    private const string VERSION = "1.0";
 
     /* Public methods. */
     /// <summary>
@@ -23,7 +22,7 @@ internal static class BinaryParser
         if (data == null)
             throw new ArgumentNullException(nameof(data));
 
-        using MemoryStream stream = new(data, writable: false);
+        using MemoryStream stream = new(data, false);
         using BinaryReader reader = new(stream);
 
         ReadMagic(reader);
@@ -32,7 +31,7 @@ internal static class BinaryParser
         Codec codec = ReadCodec(reader);
 
         if (codec is not FileCodec file)
-            throw new FormatException($"Expected root codec to be 'file', got '{codec.Tag}'.");
+            throw new FormatException($"Expected root codec to be '{FileCodec.TAG}', got '{codec.Tag}'.");
 
         if (stream.Position != stream.Length)
             throw new FormatException($"Trailing data after root codec at offset {stream.Position}.");
@@ -57,7 +56,7 @@ internal static class BinaryParser
         string version = ReadString(reader);
 
         if (version != VERSION)
-            throw new FormatException($"Unsupported AGP binary version '{version}'. Expected '{VERSION}'.");
+            throw new FormatException($"Unsupported AGP binary version '{version}', eexpected '{VERSION}'.");
     }
 
     private static Codec ReadCodec(BinaryReader reader)
@@ -130,15 +129,12 @@ internal static class BinaryParser
     private static string ReadString(BinaryReader reader)
     {
         int length = ReadUleb128(reader);
-
         if (length < 0)
             throw new FormatException("Negative string length.");
-
         if (length > reader.BaseStream.Length - reader.BaseStream.Position)
             throw new EndOfStreamException($"String of {length} bytes exceeds remaining data.");
 
         byte[] bytes = reader.ReadBytes(length);
-
         if (bytes.Length != length)
             throw new EndOfStreamException("Unexpected end of stream while reading string.");
 

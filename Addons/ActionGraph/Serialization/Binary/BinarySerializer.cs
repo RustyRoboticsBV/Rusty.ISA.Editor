@@ -10,6 +10,10 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal static class BinarySerializer
 {
+    /* Constants. */
+    private static readonly byte[] MAGIC = Encoding.ASCII.GetBytes("\0BINAGP\0");
+    private const string VERSION = "1.0";
+
     /// <summary>
     /// Serialize a FileCodec to a string of XML.
     /// </summary>
@@ -24,8 +28,8 @@ internal static class BinarySerializer
         MemoryStream stream = new();
         BinaryWriter writer = new(stream);
 
-        writer.Write(Encoding.ASCII.GetBytes("\0BINAGP\0"));
-        writer.Write(BinaryStringValue.Encode("0.1"));
+        writer.Write(MAGIC);
+        writer.Write(BinaryStringValue.Encode(VERSION));
         WriteCodec(writer, file);
 
         writer.Close();
@@ -70,7 +74,7 @@ internal static class BinarySerializer
             foreach (Codec child in codec.Children)
             {
                 if (!codec.AllowsChild(child.Tag))
-                    throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow child elements with xml tag '{child.Tag}'.");
+                    throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow child elements with tag '{child.Tag}'.");
                 WriteCodec(writer, child);
             }
         }

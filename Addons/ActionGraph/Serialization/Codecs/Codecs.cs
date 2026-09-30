@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
@@ -74,7 +73,6 @@ internal static class Codecs
         if (!Indices.TryGetValue(xml.Name, out int index))
             throw new InvalidOperationException($"Unknown codec '{xml.Name}'.");
 
-        Godot.GD.Print(index);
         return (Codec)CtorsXml[index].Invoke([xml]);
     }
 
