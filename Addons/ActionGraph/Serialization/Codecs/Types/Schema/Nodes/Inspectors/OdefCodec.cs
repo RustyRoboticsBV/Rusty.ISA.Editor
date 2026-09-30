@@ -10,9 +10,11 @@ internal sealed partial class OdefCodec : InspectorDefinitionCodec, ICodecGroup<
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID];
-    protected override HashSet<string> AllowedChildren => [FdefCodec.TAG, TAG, CdefCodec.TAG, TdefCodec.TAG, LdefCodec.TAG];
+    protected override List<string> AllowedAttributes => [Codecs.ID];
+    protected override List<string> AllowedChildren => [FdefCodec.TAG, TAG, CdefCodec.TAG, TdefCodec.TAG, LdefCodec.TAG];
 
     /* Constructors. */
+    public OdefCodec() : base() { }
+
     public OdefCodec(XmlNode xml) : base(xml) { }
 }

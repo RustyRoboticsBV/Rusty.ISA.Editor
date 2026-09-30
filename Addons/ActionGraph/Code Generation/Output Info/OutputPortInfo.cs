@@ -23,8 +23,8 @@ internal sealed class OutputPortInfo
     /* Public methods. */
     public override string ToString()
     {
-        return Parameter.GetAttribute(Codec.ID)
-            + " / " + Definition.GetAttribute(Codec.ID)
-            + ": \"" + Instance.GetAttribute(Codec.Value) + '"';
+        return Parameter.GetAttribute(Codecs.ID)
+            + " / " + Definition.GetAttribute(Codecs.ID)
+            + ": \"" + Instance.GetAttribute(Codecs.Value) + '"';
     }
 }

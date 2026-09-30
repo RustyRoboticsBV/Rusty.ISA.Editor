@@ -22,7 +22,7 @@ internal static class Parser
         {
             if (node is XmlElement element)
             {
-                Codec codec = Codec.Instantiate(element);
+                Codec codec = Codecs.Instantiate(element);
                 if (codec is FileCodec file)
                     return file;
                 else

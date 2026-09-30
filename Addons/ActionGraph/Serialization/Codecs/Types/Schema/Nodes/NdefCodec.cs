@@ -10,9 +10,11 @@ internal sealed class NdefCodec : Codec, ICodecGroup<InspectorDefinitionCodec>
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID];
-    protected override HashSet<string> AllowedChildren => [FdefCodec.TAG, OdefCodec.TAG, CdefCodec.TAG, TdefCodec.TAG, LdefCodec.TAG];
+    protected override List<string> AllowedAttributes => [Codecs.ID];
+    protected override List<string> AllowedChildren => [FdefCodec.TAG, OdefCodec.TAG, CdefCodec.TAG, TdefCodec.TAG, LdefCodec.TAG];
 
     /* Constructors. */
+    public NdefCodec() : base() { }
+
     public NdefCodec(XmlNode xml) : base(xml) { }
 }

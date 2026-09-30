@@ -22,7 +22,7 @@ internal sealed class OutputCountResult
     public OutputCountResult(FileCodec file, Codec node)
     {
         // Find the ndef.
-        string nodeType = node.GetAttribute(Codec.Type);
+        string nodeType = node.GetAttribute(Codecs.Type);
         NdefCodec ndef = file.FindNdef(nodeType);
 
         // Search for outputs.
@@ -81,7 +81,7 @@ internal sealed class OutputCountResult
             for (int i = 0; i < inspector.Children.Count; i++)
             {
                 Codec child = inspector.Children[i];
-                string type = child.GetAttribute(Codec.Type);
+                string type = child.GetAttribute(Codecs.Type);
                 InspectorDefinitionCodec childDefinition = collection.Find(type);
                 if (childDefinition == null)
                     throw new NullReferenceException($"Cannot find definition '{type}' in '{definition.ToString(true)}'.");
@@ -96,7 +96,7 @@ internal sealed class OutputCountResult
     private void Search(FileCodec file, FdefCodec fdef, FormCodec form)
     {
         // Find the idef.
-        IdefCodec idef = file.FindIdef(fdef.GetAttribute(Codec.Type));
+        IdefCodec idef = file.FindIdef(fdef.GetAttribute(Codecs.Type));
 
         // Parallel-search arguments.
         int count = Math.Min(fdef.Children.Count, form.Children.Count);
@@ -104,11 +104,11 @@ internal sealed class OutputCountResult
         {
             if (fdef.Children[i] is JdefCodec oadef && form.Children[i] is OutCodec output)
             {
-                PdefCodec parameter = idef.FindPdef(oadef.GetAttribute(Codec.Type));
+                PdefCodec parameter = idef.FindPdef(oadef.GetAttribute(Codecs.Type));
 
                 Arguments.Add(new OutputPortInfo(parameter, oadef, output));
 
-                if (oadef.GetAttribute(Codec.NoDefault).ToLower() == "true")
+                if (oadef.GetAttribute(Codecs.NoDefault).ToLower() == "true")
                     HideDefaultOutput = true;
             }
         }

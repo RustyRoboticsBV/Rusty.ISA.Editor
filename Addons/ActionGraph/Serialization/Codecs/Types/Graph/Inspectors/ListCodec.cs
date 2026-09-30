@@ -10,9 +10,11 @@ internal sealed class ListCodec : InspectorCodec, ICodecGroup<InspectorCodec>
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [Type];
-    protected override HashSet<string> AllowedChildren => [FormCodec.TAG, OptionCodec.TAG, ChoiceCodec.TAG, TupleCodec.TAG, TAG];
+    protected override List<string> AllowedAttributes => [Codecs.Type];
+    protected override List<string> AllowedChildren => [FormCodec.TAG, OptionCodec.TAG, ChoiceCodec.TAG, TupleCodec.TAG, TAG];
 
     /* Constructors. */
+    public ListCodec() : base() { }
+
     public ListCodec(XmlNode xml) : base(xml) { }
 }

@@ -10,10 +10,12 @@ internal sealed class IdefCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID, Exec];
-    protected override HashSet<string> AllowedChildren => [PdefCodec.TAG];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Exec];
+    protected override List<string> AllowedChildren => [PdefCodec.TAG];
 
     /* Constructors. */
+    public IdefCodec() : base() { }
+
     public IdefCodec(XmlNode xml) : base(xml) { }
 
     /* Public methods. */
@@ -24,7 +26,7 @@ internal sealed class IdefCodec : Codec
     {
         foreach (Codec child in Children)
         {
-            if (child is PdefCodec pdef && pdef.GetAttribute(ID) == id)
+            if (child is PdefCodec pdef && pdef.GetAttribute(Codecs.ID) == id)
                 return pdef;
         }
         return null;

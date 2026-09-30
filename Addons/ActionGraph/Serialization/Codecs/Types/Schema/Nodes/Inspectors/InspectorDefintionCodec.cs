@@ -8,5 +8,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal abstract partial class InspectorDefinitionCodec : Codec
 {
     /* Constructors. */
+    public InspectorDefinitionCodec() : base() { }
+
     public InspectorDefinitionCodec(XmlNode xml) : base(xml) { }
 }

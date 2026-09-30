@@ -10,29 +10,6 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal abstract class Codec
 {
-    /* Constants. */
-    public const string Editor = "editor";
-    public const string Checksum = "csum";
-    public const string ID = "id";
-    public const string Value = "value";
-    public const string Exec = "exec";
-    public const string Localizable = "loc";
-    public const string Type = "type";
-    public const string X = "x";
-    public const string Y = "y";
-    public const string Width = "width";
-    public const string Height = "height";
-    public const string Member = "member";
-    public const string Start = "start";
-    public const string Text = "text";
-    public const string Color = "color";
-    public const string Index = "index";
-    public const string NoDefault = "nodflt";
-    public const string Edge = "edge";
-    public const string From = "from";
-    public const string Port = "port";
-    public const string To = "to";
-
     /* Public properties. */
     public abstract string Tag { get; }
     public string InnerText { get; set; } = "";
@@ -40,8 +17,8 @@ internal abstract class Codec
     public Dictionary<string, string> Attributes { get; } = new();
 
     /* Protected properties. */
-    protected virtual HashSet<string> AllowedChildren { get; } = new();
-    protected virtual HashSet<string> AllowedAttributes { get; } = new();
+    protected virtual List<string> AllowedChildren { get; } = new();
+    protected virtual List<string> AllowedAttributes { get; } = new();
 
     /* Constructors. */
     public Codec() { }
@@ -57,7 +34,7 @@ internal abstract class Codec
             foreach (XmlNode child in xml.ChildNodes)
             {
                 if (child is XmlElement element)
-                    AddChild(Instantiate(element));
+                    AddChild(Codecs.Instantiate(element));
             }
         }
 
@@ -68,56 +45,6 @@ internal abstract class Codec
     }
 
     /* Public methods. */
-    /// <summary>
-    /// Instantiate a codec node from an XML element.
-    /// </summary>
-    public static Codec Instantiate(XmlElement xml)
-    {
-        return xml.Name switch
-        {
-            FileCodec.TAG => new FileCodec(xml),
-
-            // Metadata.
-            MetaCodec.TAG => new MetaCodec(xml),
-            LangCodec.TAG => new LangCodec(xml),
-
-            // Schema.
-            IdefCodec.TAG => new IdefCodec(xml),
-            PdefCodec.TAG => new PdefCodec(xml),
-
-            NdefCodec.TAG => new NdefCodec(xml),
-
-            FdefCodec.TAG => new FdefCodec(xml),
-            OdefCodec.TAG => new OdefCodec(xml),
-            CdefCodec.TAG => new CdefCodec(xml),
-            TdefCodec.TAG => new TdefCodec(xml),
-            LdefCodec.TAG => new LdefCodec(xml),
-
-            VdefCodec.TAG => new VdefCodec(xml),
-            JdefCodec.TAG => new JdefCodec(xml),
-
-            // Graph.
-            NodeCodec.TAG => new NodeCodec(xml),
-            JointCodec.TAG => new JointCodec(xml),
-            FrameCodec.TAG => new FrameCodec(xml),
-            MemoCodec.TAG => new MemoCodec(xml),
-
-            EdgeCodec.TAG => new EdgeCodec(xml),
-
-            FormCodec.TAG => new FormCodec(xml),
-            OptionCodec.TAG => new OptionCodec(xml),
-            ChoiceCodec.TAG => new ChoiceCodec(xml),
-            TupleCodec.TAG => new TupleCodec(xml),
-            ListCodec.TAG => new ListCodec(xml),
-
-            ArgCodec.TAG => new ArgCodec(xml),
-            LocCodec.TAG => new LocCodec(xml),
-            OutCodec.TAG => new OutCodec(xml),
-
-            _ => throw new InvalidOperationException($"Unknown XML codec '{xml.Name}'.")
-        };
-    }
-
     /// <summary>
     /// Return the string representation of this codec.
     /// </summary>
@@ -140,6 +67,11 @@ internal abstract class Codec
         AppendToString(sb, "", true, true, false);
         return sb.ToString();
     }
+
+    /// <summary>
+    /// Check whether or not this codec supports attributes.
+    /// </summary>
+    public bool AllowsAttributes() => AllowedAttributes.Count > 0;
 
     /// <summary>
     /// Check whether or not an attribute with some name is allowed by this codec.
@@ -167,9 +99,24 @@ internal abstract class Codec
     }
 
     /// <summary>
+    /// Check whether or not this codec supports children.
+    /// </summary>
+    public bool AllowsChildren() => AllowedChildren.Count > 0;
+
+    /// <summary>
     /// Check whether or not a child with some tag is allowed by this codec.
     /// </summary>
     public bool AllowsChild(string tag) => AllowedChildren.Contains(tag);
+
+    /// <summary>
+    /// Get the index of an attribute.
+    /// </summary>
+    public int GetAttributeIndex(string name) => AllowedAttributes.IndexOf(name);
+
+    /// <summary>
+    /// Get the attribute name corresponding to some index.
+    /// </summary>
+    public string GetAttributeFromIndex(int index) => AllowedAttributes[index];
 
     /// <summary>
     /// Add a node of some type.

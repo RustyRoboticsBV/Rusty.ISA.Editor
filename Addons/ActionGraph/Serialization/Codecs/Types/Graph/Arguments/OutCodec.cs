@@ -10,8 +10,10 @@ internal sealed class OutCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [Type];
+    protected override List<string> AllowedAttributes => [Codecs.Type];
 
     /* Constructors. */
+    public OutCodec() : base() { }
+
     public OutCodec(XmlNode xml) : base(xml) { }
 }

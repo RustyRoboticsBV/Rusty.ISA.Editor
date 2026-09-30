@@ -17,7 +17,7 @@ internal static class Serializer
         // Compute checksum.
         MD5 md5 = MD5.Create();
         string hashHex = Hasher.Hash(file, md5);
-        file.SetAttribute(Codec.Checksum, hashHex);
+        file.SetAttribute(Codecs.Checksum, hashHex);
 
         // Serialize.
         string text = SerializeCodec(file);

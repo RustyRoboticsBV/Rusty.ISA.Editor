@@ -10,9 +10,11 @@ internal sealed class FormCodec : InspectorCodec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [Type];
-    protected override HashSet<string> AllowedChildren => [ArgCodec.TAG, OutCodec.TAG];
+    protected override List<string> AllowedAttributes => [Codecs.Type];
+    protected override List<string> AllowedChildren => [ArgCodec.TAG, OutCodec.TAG];
 
     /* Constructors. */
+    public FormCodec() : base() { }
+
     public FormCodec(XmlNode xml) : base(xml) { }
 }

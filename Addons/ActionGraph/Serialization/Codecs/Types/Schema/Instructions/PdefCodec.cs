@@ -10,9 +10,11 @@ internal sealed class PdefCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID, Localizable];
-    protected override HashSet<string> AllowedChildren => [];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Localizable];
+    protected override List<string> AllowedChildren => [];
 
     /* Constructors. */
+    public PdefCodec() : base() { }
+
     public PdefCodec(XmlNode xml) : base(xml) { }
 }

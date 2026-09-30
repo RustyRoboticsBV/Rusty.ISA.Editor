@@ -33,7 +33,7 @@ internal static class Hasher
 
         foreach (var attribute in codec.Attributes)
         {
-            if (attribute.Key == Codec.Checksum)
+            if (attribute.Key == Codecs.Checksum)
                 continue;
 
             Hash(hash, " ");

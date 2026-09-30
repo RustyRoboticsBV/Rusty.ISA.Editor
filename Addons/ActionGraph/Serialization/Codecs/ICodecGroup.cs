@@ -19,7 +19,7 @@ internal interface ICodecGroup<T>
     {
         foreach (Codec child in Children)
         {
-            if (child is T typed && typed.GetAttribute(Codec.ID) == id)
+            if (child is T typed && typed.GetAttribute(Codecs.ID) == id)
                 return typed;
         }
         return null;

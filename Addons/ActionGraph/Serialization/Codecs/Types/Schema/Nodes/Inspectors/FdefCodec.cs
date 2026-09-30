@@ -10,9 +10,11 @@ internal sealed class FdefCodec : InspectorDefinitionCodec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID, Type];
-    protected override HashSet<string> AllowedChildren => [VdefCodec.TAG, JdefCodec.TAG];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Type];
+    protected override List<string> AllowedChildren => [VdefCodec.TAG, JdefCodec.TAG];
 
     /* Constructors. */
+    public FdefCodec() : base() { }
+
     public FdefCodec(XmlNode xml) : base(xml) { }
 }

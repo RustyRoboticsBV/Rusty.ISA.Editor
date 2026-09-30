@@ -10,14 +10,16 @@ internal sealed class FileCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedChildren => [
+    protected override List<string> AllowedAttributes => [Codecs.Editor, Codecs.Checksum];
+    protected override List<string> AllowedChildren => [
         MetaCodec.TAG, LangCodec.TAG,
         IdefCodec.TAG, NdefCodec.TAG,
         NodeCodec.TAG, JointCodec.TAG, FrameCodec.TAG, MemoCodec.TAG, EdgeCodec.TAG
     ];
-    protected override HashSet<string> AllowedAttributes => [Editor, Checksum];
 
     /* Constructors. */
+    public FileCodec() : base() { }
+
     public FileCodec(XmlNode xml) : base(xml) { }
 
     /* Public methods. */
@@ -28,7 +30,7 @@ internal sealed class FileCodec : Codec
     {
         foreach (Codec child in Children)
         {
-            if (child is IdefCodec idef && idef.GetAttribute(ID) == id)
+            if (child is IdefCodec idef && idef.GetAttribute(Codecs.ID) == id)
                 return idef;
         }
         return null;
@@ -41,7 +43,7 @@ internal sealed class FileCodec : Codec
     {
         foreach (Codec child in Children)
         {
-            if (child is NdefCodec ndef && ndef.GetAttribute(ID) == id)
+            if (child is NdefCodec ndef && ndef.GetAttribute(Codecs.ID) == id)
                 return ndef;
         }
         return null;

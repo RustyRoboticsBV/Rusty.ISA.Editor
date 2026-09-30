@@ -10,9 +10,11 @@ internal sealed class VdefCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID, Type];
-    protected override HashSet<string> AllowedChildren => [];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Type];
+    protected override List<string> AllowedChildren => [];
 
     /* Constructors. */
+    public VdefCodec() : base() { }
+
     public VdefCodec(XmlNode xml) : base(xml) { }
 }

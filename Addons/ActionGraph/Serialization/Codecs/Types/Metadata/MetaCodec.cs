@@ -13,8 +13,10 @@ internal sealed class MetaCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID, Value];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Value];
 
     /* Constructors. */
+    public MetaCodec() : base() { }
+
     public MetaCodec(XmlNode xml) : base(xml) { }
 }

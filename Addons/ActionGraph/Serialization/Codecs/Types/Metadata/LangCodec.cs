@@ -13,8 +13,10 @@ internal sealed class LangCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override HashSet<string> AllowedAttributes => [ID];
+    protected override List<string> AllowedAttributes => [Codecs.ID];
 
     /* Constructors. */
+    public LangCodec() : base() { }
+
     public LangCodec(XmlNode xml) : base(xml) { }
 }
