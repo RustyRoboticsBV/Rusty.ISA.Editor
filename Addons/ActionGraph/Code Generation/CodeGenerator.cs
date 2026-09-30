@@ -213,7 +213,8 @@ internal static class CodeGenerator
                 CompileList(node, ldef, list, instructions, labels, ref handledOutputArgs);
                 break;
             default:
-                throw new InvalidOperationException($"Invalid coded pair: '{current?.ToString(true) ?? "null"}' and '{currentDefinition?.ToString(true) ?? "null"}'.");
+                throw new InvalidOperationException($"Invalid coded pair: '{CodecPrinter.ToString(current, true)
+                    ?? "null"}' and '{CodecPrinter.ToString(currentDefinition, true) ?? "null"}'.");
         }
     }
 

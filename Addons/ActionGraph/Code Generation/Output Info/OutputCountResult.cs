@@ -84,7 +84,7 @@ internal sealed class OutputCountResult
                 string type = child.GetAttribute(Codecs.Type);
                 InspectorDefinitionCodec childDefinition = collection.Find(type);
                 if (childDefinition == null)
-                    throw new NullReferenceException($"Cannot find definition '{type}' in '{definition.ToString(true)}'.");
+                    throw new NullReferenceException($"Cannot find definition '{type}' in '{CodecPrinter.ToString(definition, true)}'.");
                 Search(file, childDefinition, child);
             }
         }

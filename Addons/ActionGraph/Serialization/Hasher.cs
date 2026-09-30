@@ -46,9 +46,7 @@ internal static class Hasher
         Hash(hash, ">");
 
         // Hash contents.
-        if (codec.Children.Count == 0)
-            Hash(hash, codec.InnerText);
-        else
+        if (codec.Children.Count > 0)
         {
             foreach (Codec child in codec.Children)
             {

@@ -35,7 +35,7 @@ internal sealed class NodeUnit : Unit
     }
 
     /* Public methods. */
-    public override string ToString() => (Codec?.ToString(true) ?? "") + " " + OutputData.ToString();
+    public override string ToString() => (CodecPrinter.ToString(Codec, true) ?? "") + " " + OutputData.ToString();
 
     /// <summary>
     /// Connect an output port

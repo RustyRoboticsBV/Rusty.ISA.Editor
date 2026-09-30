@@ -78,17 +78,7 @@ internal static class Serializer
             xml.Append(codec.Tag);
             xml.Append(">");
         }
-        else if (codec.InnerText.Length > 0)
-        {
-            xml.Append(">");
-
-            xml.Append(codec.InnerText);
-
-            xml.Append("</");
-            xml.Append(codec.Tag);
-            xml.Append(">");
-        }
-        else if (children.Length == 0 && codec.InnerText.Length == 0)
+        else
             xml.Append("/>");
 
         return xml.ToString();
