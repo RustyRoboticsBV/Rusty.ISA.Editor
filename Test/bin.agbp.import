@@ -1,0 +1,14 @@
+[remap]
+
+importer="rusty_robotics_bv.action_graph.program_importer"
+type="Resource"
+uid="uid://c8od0uoylf1we"
+path="res://.godot/imported/bin.agbp-28aa922f2a45308b29bbcee528657ebf.res"
+
+[deps]
+
+source_file="res://Test/bin.agbp"
+dest_files=["res://.godot/imported/bin.agbp-28aa922f2a45308b29bbcee528657ebf.res"]
+
+[params]
+

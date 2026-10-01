@@ -11,20 +11,20 @@ namespace Rusty.ActionGraph.ImportPlugins;
 public abstract partial class InstructionProgramImporter : Node
 {
     //// <summary>
-    /// Load a file as a InstructionProgram resource.
+    /// Load a file as an InstructionProgram resource.
     /// </summary>
     public static InstructionProgram Import(string path)
     {
-        if (path.EndsWith(".bagp"))
+        if (path.EndsWith(".agbp"))
             return ImportBinary(FileAccess.GetFileAsBytes(path));
-        else if (path.EndsWith(".agp"))
+        else if (path.EndsWith(".agxp"))
             return ImportXml(FileAccess.GetFileAsString(path));
         else
             throw new System.IO.FileLoadException($"Invalid file extension for file at: {path}");
     }
 
     /// <summary>
-    /// Load a string of binary AGP as a InstructionProgram resource.
+    /// Load a string of bytes as an InstructionProgram resource.
     /// </summary>
     public static InstructionProgram ImportBinary(byte[] bytes)
     {
@@ -37,7 +37,7 @@ public abstract partial class InstructionProgramImporter : Node
     }
 
     /// <summary>
-    /// Load a string of XML as a InstructionProgram resource.
+    /// Load a string of XML as an InstructionProgram resource.
     /// </summary>
     public static InstructionProgram ImportXml(string text)
     {

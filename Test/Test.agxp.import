@@ -1,0 +1,14 @@
+[remap]
+
+importer="rusty_robotics_bv.action_graph.program_importer"
+type="Resource"
+uid="uid://ctv7vwowvc532"
+path="res://.godot/imported/Test.agxp-d709a3192f7073357c1d03f7aeef5036.res"
+
+[deps]
+
+source_file="res://Test/Test.agxp"
+dest_files=["res://.godot/imported/Test.agxp-d709a3192f7073357c1d03f7aeef5036.res"]
+
+[params]
+
