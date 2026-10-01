@@ -29,7 +29,7 @@ func _get_priority() -> float:
 	return 1.0;
 
 func _get_recognized_extensions():
-	return ["agp"];
+	return ["agp", "bagp"];
 
 func _get_save_extension():
 	return "res";
@@ -41,11 +41,6 @@ func _get_resource_type():
 	return "Resource";
 
 func _import(source_file, save_path, _options, _r_platform_variants, _r_gen_files):
-	var file := FileAccess.open(source_file, FileAccess.READ);
-	if file == null:
-		return FileAccess.get_open_error();
-	
-	var text := file.get_as_text();
-	var resource : Resource = InstructionProgramImporter.Import(text);
+	var resource : Resource = InstructionProgramImporter.Import(source_file);
 	var error = ResourceSaver.save(resource, "%s.res" % save_path);
 	return error;

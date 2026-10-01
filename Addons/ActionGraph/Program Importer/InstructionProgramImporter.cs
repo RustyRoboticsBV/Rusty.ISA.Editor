@@ -10,13 +10,39 @@ namespace Rusty.ActionGraph.ImportPlugins;
 [GlobalClass]
 public abstract partial class InstructionProgramImporter : Node
 {
+    //// <summary>
+    /// Load a file as a InstructionProgram resource.
+    /// </summary>
+    public static InstructionProgram Import(string path)
+    {
+        if (path.EndsWith(".bagp"))
+            return ImportBinary(FileAccess.GetFileAsBytes(path));
+        else if (path.EndsWith(".agp"))
+            return ImportXml(FileAccess.GetFileAsString(path));
+        else
+            throw new System.IO.FileLoadException($"Invalid file extension for file at: {path}");
+    }
+
+    /// <summary>
+    /// Load a string of binary AGP as a InstructionProgram resource.
+    /// </summary>
+    public static InstructionProgram ImportBinary(byte[] bytes)
+    {
+        // Parse the file as a codec.
+        FileCodec codec = BinaryParser.Parse(bytes);
+
+        // Compile the codec into a program.
+        InstructionProgram program = CodeGenerator.Generate(codec);
+        return program;
+    }
+
     /// <summary>
     /// Load a string of XML as a InstructionProgram resource.
     /// </summary>
-    public static InstructionProgram Import(string xml)
+    public static InstructionProgram ImportXml(string text)
     {
         // Parse the XML as a codec.
-        FileCodec codec = Serialization.XmlParser.Parse(xml);
+        FileCodec codec = Serialization.XmlParser.Parse(text);
 
         // Compile the codec into a program.
         InstructionProgram program = CodeGenerator.Generate(codec);

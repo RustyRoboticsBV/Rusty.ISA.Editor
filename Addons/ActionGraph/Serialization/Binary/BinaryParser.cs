@@ -10,10 +10,18 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class BinaryParser
 {
     /* Constants. */
-    private static readonly byte[] MAGIC = Encoding.ASCII.GetBytes("\0BINAGP\0");
+    private static readonly byte[] MAGIC = Encoding.UTF8.GetBytes("\0BINAGP\0");
     private const string VERSION = "1.0";
 
     /* Public methods. */
+    /// <summary>
+    /// Parse an entire binary AGP file.
+    /// </summary>
+    public static FileCodec Parse(string path)
+    {
+        return Parse(File.ReadAllBytes(path));
+    }
+
     /// <summary>
     /// Parse an entire binary AGP file.
     /// </summary>
@@ -56,7 +64,7 @@ internal static class BinaryParser
         string version = ReadString(reader);
 
         if (version != VERSION)
-            throw new FormatException($"Unsupported AGP binary version '{version}', eexpected '{VERSION}'.");
+            throw new FormatException($"Unsupported AGP binary version '{version}', expected '{VERSION}'.");
     }
 
     private static Codec ReadCodec(BinaryReader reader)
@@ -138,7 +146,7 @@ internal static class BinaryParser
         if (bytes.Length != length)
             throw new EndOfStreamException("Unexpected end of stream while reading string.");
 
-        return Encoding.ASCII.GetString(bytes);
+        return Encoding.UTF8.GetString(bytes);
     }
 
     private static int ReadUleb128(BinaryReader reader)

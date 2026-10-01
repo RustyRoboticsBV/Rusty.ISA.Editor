@@ -11,7 +11,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class BinarySerializer
 {
     /* Constants. */
-    private static readonly byte[] MAGIC = Encoding.ASCII.GetBytes("\0BINAGP\0");
+    private static readonly byte[] MAGIC = Encoding.UTF8.GetBytes("\0BINAGP\0");
     private const string VERSION = "1.0";
 
     /// <summary>
