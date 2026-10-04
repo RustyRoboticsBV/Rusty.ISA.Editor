@@ -4,6 +4,9 @@ namespace Rusty.ActionGraph.Serialization;
 
 internal struct BinaryAttributes
 {
+    /* Public constants. */
+    public const int Size = 8;
+
     /* Fields. */
     private string _0;
     private string _1;
@@ -50,7 +53,7 @@ internal struct BinaryAttributes
     public byte GetBitmask()
     {
         byte mask = 0;
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < Size; i++)
         {
             mask = Bitmask.SetBit(mask, i, this[i] != null);
         }

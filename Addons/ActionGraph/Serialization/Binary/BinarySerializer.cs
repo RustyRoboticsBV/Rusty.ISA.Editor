@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -20,9 +21,7 @@ internal static class BinarySerializer
     public static byte[] Serialize(FileCodec file)
     {
         // Compute checksum.
-        MD5 md5 = MD5.Create();
-        string hashHex = Hasher.Hash(file, md5);
-        file.SetAttribute(Codecs.Checksum, hashHex);
+        Hasher.StoreHash(file, MD5.Create());
 
         // Serialize.
         MemoryStream stream = new();
@@ -43,7 +42,11 @@ internal static class BinarySerializer
     private static void WriteCodec(BinaryWriter writer, Codec codec)
     {
         // Handle tag.
-        writer.Write((byte)Codecs.GetIndex(codec));
+        int tagIndex = Codecs.GetIndex(codec);
+        if (tagIndex == -1)
+            throw new ArgumentException($"Unknown codec '{codec.GetType().Name}'.");
+
+        writer.Write((byte)tagIndex);
 
         // Handle attributes.
         if (codec.AllowsAttributes())
@@ -51,16 +54,16 @@ internal static class BinarySerializer
             BinaryAttributes attributes = new();
             foreach (var attr in codec.Attributes)
             {
-                int index = codec.GetAttributeIndex(attr.Key);
-                if (index == -1)
+                int attrIndex = codec.GetAttributeIndex(attr.Key);
+                if (attrIndex == -1)
                     throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow name {attr.Key}.");
 
-                if (attributes[index] == null)
-                    attributes[index] = attr.Value;
+                if (attributes[attrIndex] == null)
+                    attributes[attrIndex] = attr.Value;
             }
 
             writer.Write(attributes.GetBitmask());
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < BinaryAttributes.Size; i++)
             {
                 if (attributes[i] != null)
                     writer.Write(BinaryStringValue.Encode(attributes[i]));

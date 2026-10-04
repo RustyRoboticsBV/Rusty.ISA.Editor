@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
@@ -15,90 +16,56 @@ internal static class XmlSerializer
     public static string Serialize(FileCodec file)
     {
         // Compute checksum.
-        MD5 md5 = MD5.Create();
-        string hashHex = Hasher.Hash(file, md5);
-        file.SetAttribute(Codecs.Checksum, hashHex);
+        Hasher.StoreHash(file, MD5.Create());
 
         // Serialize.
-        string text = SerializeCodec(file);
-        text = InsertComment(text, "Metadata", [MetaCodec.TAG]);
-        text = InsertComment(text, "Schema", [IdefCodec.TAG, NdefCodec.TAG]);
-        text = InsertComment(text, "Graph", [NodeCodec.TAG, JointCodec.TAG, FrameCodec.TAG, MemoCodec.TAG, EdgeCodec.TAG]);
-        return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-            + "<!-- Generator: ActionGraph Editor -->\n\n"
-            + text;
+        XmlWriterSettings settings = new()
+        {
+            Indent = true,
+            Encoding = new UTF8Encoding(false),
+            OmitXmlDeclaration = false
+        };
+
+        StringBuilder output = new();
+        using (var writer = XmlWriter.Create(output, settings))
+        {
+            SerializeCodec(file, writer);
+            writer.Flush();
+        }
+
+        return output.ToString();
     }
 
     /* Private methods. */
     /// <summary>
     /// Convert this node to XML.
     /// </summary>
-    private static string SerializeCodec(Codec codec)
+    private static void SerializeCodec(Codec codec, XmlWriter writer)
     {
-        // Handle attributes.
-        StringBuilder attributes = new();
-        foreach (var attr in codec.Attributes)
-        {
-            if (!codec.AllowsAttribute(attr.Key))
-                throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow name {attr.Key}.");
+        // Handle start tag.
+        writer.WriteStartElement(codec.Tag);
 
-            attributes.Append(' ');
-            attributes.Append(attr.Key);
-            attributes.Append("=\"");
-            attributes.Append(attr.Value);
-            attributes.Append('"');
+        // Handle attributes.
+        foreach (var attribute in codec.Attributes)
+        {
+            if (!codec.AllowsAttribute(attribute.Key))
+                throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow name {attribute.Key}.");
+
+            writer.WriteStartAttribute(attribute.Key);
+            writer.WriteValue(attribute.Value);
+            writer.WriteEndAttribute();
         }
 
         // Handle children.
-        StringBuilder children = new();
         foreach (Codec child in codec.Children)
         {
             if (!codec.AllowsChild(child.Tag))
                 throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow child elements with xml tag '{child.Tag}'.");
 
-            if (children.Length > 0)
-                children.Append('\n');
-            children.Append(SerializeCodec(child));
+            SerializeCodec(child, writer);
         }
 
-        // Build XML.
-        StringBuilder xml = new();
-        xml.Append('<');
-        xml.Append(codec.Tag);
-        xml.Append(attributes.ToString());
-
-        if (children.Length > 0)
-        {
-            xml.Append(">");
-
-            xml.Append("\n\t");
-            xml.Append(children.ToString().Replace("\n", "\n\t"));
-
-            xml.Append("\n</");
-            xml.Append(codec.Tag);
-            xml.Append(">");
-        }
-        else
-            xml.Append("/>");
-
-        return xml.ToString();
-    }
-
-    /// <summary>
-    /// Insert an XML comment before a block of XM elements and return the result.
-    /// </summary>
-    private static string InsertComment(string text, string comment, string[] tags)
-    {
-        int index = -1;
-        foreach (string tag in tags)
-        {
-            int index2 = text.IndexOf($"<{tag}");
-            if (index == -1 || index2 < index)
-                index = index2;
-        }
-        if (index >= 0)
-            return text.Insert(index, $"\n\t<!-- {comment} -->\n\t");
-        else
-            return text;
+        // Handle end tag.
+        writer.WriteEndElement();
     }
 }
