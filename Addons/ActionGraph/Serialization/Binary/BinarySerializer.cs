@@ -1,8 +1,9 @@
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Rusty.ActionGraph.Serialization;
+namespace Rusty.ActionGraph.Serialization.Binary;
 
 /// <summary>
 /// A utility for serializing FileCodec objects to binary.
@@ -10,8 +11,8 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class BinarySerializer
 {
     /* Constants. */
-    private static readonly byte[] MAGIC = Encoding.UTF8.GetBytes("\0BINAGP\0");
-    private const string VERSION = "1.0";
+    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes("\0BINAGP\0");
+    private const string Version = "1.0";
 
     /// <summary>
     /// Serialize a FileCodec to a string of XML.
@@ -25,8 +26,8 @@ internal static class BinarySerializer
         MemoryStream stream = new();
         BinaryWriter writer = new(stream);
 
-        writer.Write(MAGIC);
-        writer.Write(BinaryStringValue.Encode(VERSION));
+        writer.Write(MagicBytes);
+        WriteString(writer, Version);
         WriteCodec(writer, file);
 
         writer.Close();
@@ -39,13 +40,13 @@ internal static class BinarySerializer
     /// </summary>
     private static void WriteCodec(BinaryWriter writer, Codec codec)
     {
-        // Handle tag.
+        // Write tag index.
         writer.Write((byte)Codecs.GetIndex(codec));
 
-        // Handle attributes.
+        // Write attributes.
         if (codec.AllowsAttributes())
         {
-            BinaryAttributes attributes = new();
+            AttributeMask attributes = new();
             foreach (var attribute in codec.Attributes)
             {
                 int index = codec.GetAttributeIndex(attribute.Key);
@@ -54,21 +55,47 @@ internal static class BinarySerializer
             }
 
             writer.Write(attributes.GetBitmask());
-            for (int i = 0; i < BinaryAttributes.Size; i++)
+            for (int i = 0; i < AttributeMask.Size; i++)
             {
                 if (attributes[i] != null)
-                    writer.Write(BinaryStringValue.Encode(attributes[i]));
+                    WriteString(writer, attributes[i]);
             }
         }
 
         // Handle children.
         if (codec.AllowsChildren())
         {
-            writer.Write(Uleb128.Encode(codec.Children.Count));
+            WriteUint(writer, codec.Children.Count);
             foreach (Codec child in codec.Children)
             {
                 WriteCodec(writer, child);
             }
         }
+    }
+
+    private static void WriteString(BinaryWriter writer, string str)
+    {
+        byte[] value = Encoding.UTF8.GetBytes(str ?? "");
+        WriteUint(writer, value.Length);
+        writer.Write(value);
+    }
+
+    private static void WriteUint(BinaryWriter writer, int value)
+    {
+        if (value < 0)
+            throw new ArgumentOutOfRangeException(nameof(value), "ULEB128 values must be non-negative.");
+
+        uint remaining = (uint)value;
+        do
+        {
+            byte current = (byte)(remaining & 0x7F);
+            remaining >>= 7;
+
+            if (remaining != 0)
+                current |= 0x80;
+
+            writer.Write(current);
+        }
+        while (remaining != 0);
     }
 }

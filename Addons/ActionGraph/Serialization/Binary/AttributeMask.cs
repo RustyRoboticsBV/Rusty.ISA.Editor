@@ -1,8 +1,11 @@
 ﻿using System;
 
-namespace Rusty.ActionGraph.Serialization;
+namespace Rusty.ActionGraph.Serialization.Binary;
 
-internal struct BinaryAttributes
+/// <summary>
+/// A mask of codec attributes.
+/// </summary>
+internal struct AttributeMask
 {
     /* Public constants. */
     public const int Size = 8;
@@ -50,13 +53,22 @@ internal struct BinaryAttributes
     }
 
     /* Public methods. */
+    public static bool GetBit(byte mask, int bit) => (mask & (1 << bit)) != 0;
+
     public byte GetBitmask()
     {
         byte mask = 0;
         for (int i = 0; i < Size; i++)
         {
-            mask = Bitmask.SetBit(mask, i, this[i] != null);
+            mask = SetBit(mask, i, this[i] != null);
         }
         return mask;
+    }
+
+    /* Private methods. */
+    private static byte SetBit(byte mask, int bit, bool value)
+    {
+        byte flag = (byte)(1 << bit);
+        return (byte)(value ? mask | flag : mask & ~flag);
     }
 }

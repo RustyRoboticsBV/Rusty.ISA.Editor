@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Rusty.ActionGraph.Serialization;
+namespace Rusty.ActionGraph.Serialization.Binary;
 
 /// <summary>
 /// A utility for parsing binary files as FileCodec objects.
@@ -10,8 +10,8 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class BinaryParser
 {
     /* Constants. */
-    private static readonly byte[] MAGIC = Encoding.UTF8.GetBytes("\0BINAGP\0");
-    private const string VERSION = "1.0";
+    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes("\0BINAGP\0");
+    private const string Version = "1.0";
 
     /* Public methods. */
     /// <summary>
@@ -42,7 +42,7 @@ internal static class BinaryParser
             throw new FormatException($"Expected root codec to be '{FileCodec.TAG}', got '{codec.Tag}'.");
 
         if (stream.Position != stream.Length)
-            throw new FormatException($"Trailing data after root codec at offset {stream.Position}.");
+            throw new FormatException($"Trailing data after file codec at offset {stream.Position}.");
 
         return file;
     }
@@ -50,11 +50,11 @@ internal static class BinaryParser
     /* Private methods. */
     private static void ReadMagic(BinaryReader reader)
     {
-        byte[] magic = ReadExactly(reader, MAGIC.Length);
+        byte[] magic = ReadBytes(reader, MagicBytes.Length);
 
-        for (int i = 0; i < MAGIC.Length; i++)
+        for (int i = 0; i < MagicBytes.Length; i++)
         {
-            if (magic[i] != MAGIC[i])
+            if (magic[i] != MagicBytes[i])
                 throw new FormatException("Invalid magic header.");
         }
     }
@@ -63,8 +63,8 @@ internal static class BinaryParser
     {
         string version = ReadString(reader);
 
-        if (version != VERSION)
-            throw new FormatException($"Unsupported version '{version}', expected '{VERSION}'.");
+        if (version != Version)
+            throw new FormatException($"Unsupported version '{version}', expected '{Version}'.");
     }
 
     private static Codec ReadCodec(BinaryReader reader)
@@ -94,23 +94,13 @@ internal static class BinaryParser
             return;
 
         byte mask = reader.ReadByte();
-
-        for (int i = 0; i < BinaryAttributes.Size; i++)
+        for (int i = 0; i < AttributeMask.Size; i++)
         {
-            if (!Bitmask.GetBit(mask, i))
+            if (!AttributeMask.GetBit(mask, i))
                 continue;
 
+            string name = codec.GetAttributeNameFromIndex(i);
             string value = ReadString(reader);
-
-            string name;
-            try
-            {
-                name = codec.GetAttributeFromIndex(i);
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                throw new FormatException($"Codec '{codec.Tag}' contains an invalid attribute bit {i}.", ex);
-            }
 
             codec.SetAttribute(name, value);
         }
@@ -121,7 +111,7 @@ internal static class BinaryParser
         if (!codec.AllowsChildren())
             return;
 
-        int count = ReadUleb128(reader);
+        int count = ReadUint(reader);
 
         for (int i = 0; i < count; i++)
         {
@@ -132,7 +122,7 @@ internal static class BinaryParser
 
     private static string ReadString(BinaryReader reader)
     {
-        int length = ReadUleb128(reader);
+        int length = ReadUint(reader);
         if (length < 0)
             throw new FormatException("Negative string length.");
         if (length > reader.BaseStream.Length - reader.BaseStream.Position)
@@ -145,7 +135,7 @@ internal static class BinaryParser
         return Encoding.UTF8.GetString(bytes);
     }
 
-    private static int ReadUleb128(BinaryReader reader)
+    private static int ReadUint(BinaryReader reader)
     {
         uint result = 0;
         int shift = 0;
@@ -168,7 +158,7 @@ internal static class BinaryParser
         throw new FormatException("Invalid ULEB128 sequence.");
     }
 
-    private static byte[] ReadExactly(BinaryReader reader, int count)
+    private static byte[] ReadBytes(BinaryReader reader, int count)
     {
         byte[] bytes = reader.ReadBytes(count);
 

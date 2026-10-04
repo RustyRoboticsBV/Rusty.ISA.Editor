@@ -1,6 +1,7 @@
 using Godot;
 using Rusty.ActionGraph.CodeGen;
 using Rusty.ActionGraph.Serialization;
+using Rusty.ActionGraph.Serialization.Binary;
 
 namespace Rusty.ActionGraph.ImportPlugins;
 

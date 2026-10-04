@@ -41,7 +41,15 @@ internal abstract class Codec
     /// <summary>
     /// Get the attribute name corresponding to an attribute index.
     /// </summary>
-    public string GetAttributeFromIndex(int index) => AllowedAttributes[index];
+    public string GetAttributeNameFromIndex(int index)
+    {
+        if (index < 0 || index >= AllowedAttributes.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index), $"Codec '{GetType().Name}' does not have an attribute with "
+                + $"index {index}.");
+        }
+        return AllowedAttributes[index];
+    }
 
     /// <summary>
     /// Set an attribute's value.
@@ -79,7 +87,10 @@ internal abstract class Codec
     public void AddChild(Codec node)
     {
         if (!AllowsChild(node.Tag))
-            throw new InvalidOperationException($"Codec '{GetType().Name}' cannot have a child with tag '{node.GetType().Name}'.");
+        {
+            throw new InvalidOperationException($"Codec '{GetType().Name}' cannot have a child with tag "
+                + $"'{node.GetType().Name}'.");
+        }
         Children.Add(node);
     }
 
