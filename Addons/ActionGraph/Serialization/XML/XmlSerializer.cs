@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -48,9 +47,6 @@ internal static class XmlSerializer
         // Handle attributes.
         foreach (var attribute in codec.Attributes)
         {
-            if (!codec.AllowsAttribute(attribute.Key))
-                throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow name {attribute.Key}.");
-
             writer.WriteStartAttribute(attribute.Key);
             writer.WriteValue(attribute.Value);
             writer.WriteEndAttribute();
@@ -59,9 +55,6 @@ internal static class XmlSerializer
         // Handle children.
         foreach (Codec child in codec.Children)
         {
-            if (!codec.AllowsChild(child.Tag))
-                throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow child elements with xml tag '{child.Tag}'.");
-
             SerializeCodec(child, writer);
         }
 

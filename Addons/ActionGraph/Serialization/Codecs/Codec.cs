@@ -39,7 +39,7 @@ internal abstract class Codec
     public int GetAttributeIndex(string name) => AllowedAttributes.IndexOf(name);
 
     /// <summary>
-    /// Get the attribute name corresponding to some index.
+    /// Get the attribute name corresponding to an attribute index.
     /// </summary>
     public string GetAttributeFromIndex(int index) => AllowedAttributes[index];
 

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -42,24 +40,17 @@ internal static class BinarySerializer
     private static void WriteCodec(BinaryWriter writer, Codec codec)
     {
         // Handle tag.
-        int tagIndex = Codecs.GetIndex(codec);
-        if (tagIndex == -1)
-            throw new ArgumentException($"Unknown codec '{codec.GetType().Name}'.");
-
-        writer.Write((byte)tagIndex);
+        writer.Write((byte)Codecs.GetIndex(codec));
 
         // Handle attributes.
         if (codec.AllowsAttributes())
         {
             BinaryAttributes attributes = new();
-            foreach (var attr in codec.Attributes)
+            foreach (var attribute in codec.Attributes)
             {
-                int attrIndex = codec.GetAttributeIndex(attr.Key);
-                if (attrIndex == -1)
-                    throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow name {attr.Key}.");
-
-                if (attributes[attrIndex] == null)
-                    attributes[attrIndex] = attr.Value;
+                int index = codec.GetAttributeIndex(attribute.Key);
+                if (attributes[index] == null)
+                    attributes[index] = attribute.Value;
             }
 
             writer.Write(attributes.GetBitmask());
@@ -76,8 +67,6 @@ internal static class BinarySerializer
             writer.Write(Uleb128.Encode(codec.Children.Count));
             foreach (Codec child in codec.Children)
             {
-                if (!codec.AllowsChild(child.Tag))
-                    throw new KeyNotFoundException($"Codec '{codec.GetType().Name}' does not allow child elements with tag '{child.Tag}'.");
                 WriteCodec(writer, child);
             }
         }

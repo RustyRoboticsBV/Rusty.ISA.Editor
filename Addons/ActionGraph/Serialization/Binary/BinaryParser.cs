@@ -5,7 +5,7 @@ using System.Text;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A utility for parsing binary AGP as FileCodec objects.
+/// A utility for parsing binary files as FileCodec objects.
 /// </summary>
 internal static class BinaryParser
 {
@@ -15,7 +15,7 @@ internal static class BinaryParser
 
     /* Public methods. */
     /// <summary>
-    /// Parse an entire binary AGP file.
+    /// Parse an entire binary file.
     /// </summary>
     public static FileCodec Parse(string path)
     {
@@ -23,7 +23,7 @@ internal static class BinaryParser
     }
 
     /// <summary>
-    /// Parse an entire binary AGP file.
+    /// Parse an entire binary file.
     /// </summary>
     public static FileCodec Parse(byte[] data)
     {
@@ -55,7 +55,7 @@ internal static class BinaryParser
         for (int i = 0; i < MAGIC.Length; i++)
         {
             if (magic[i] != MAGIC[i])
-                throw new FormatException("Invalid AGP binary header.");
+                throw new FormatException("Invalid magic header.");
         }
     }
 
@@ -64,7 +64,7 @@ internal static class BinaryParser
         string version = ReadString(reader);
 
         if (version != VERSION)
-            throw new FormatException($"Unsupported AGP binary version '{version}', expected '{VERSION}'.");
+            throw new FormatException($"Unsupported version '{version}', expected '{VERSION}'.");
     }
 
     private static Codec ReadCodec(BinaryReader reader)
@@ -95,7 +95,7 @@ internal static class BinaryParser
 
         byte mask = reader.ReadByte();
 
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < BinaryAttributes.Size; i++)
         {
             if (!Bitmask.GetBit(mask, i))
                 continue;
@@ -126,11 +126,7 @@ internal static class BinaryParser
         for (int i = 0; i < count; i++)
         {
             Codec child = ReadCodec(reader);
-
-            if (!codec.AllowsChild(child.Tag))
-                throw new FormatException($"Codec '{codec.Tag}' cannot contain child '{child.Tag}'.");
-
-            codec.Children.Add(child);
+            codec.AddChild(child);
         }
     }
 
