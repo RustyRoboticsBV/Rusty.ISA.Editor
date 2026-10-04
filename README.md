@@ -35,8 +35,10 @@ The framework is built around a set of core concepts, grouped into three layers.
 Users can create new nodes, frames and memos using the right-click **context menu**, and they can alter the state of selected nodes, frames and memos in the **inspector** window.
 
 ### The Importer
-An import plugin that takes the `.agp` files created by the graph editor and converts them into executable program resources.
+An import plugin that takes the files created by the graph editor and converts them into executable program resources.
 
 ## Documentation
 View the following docs for more information:
-- [Graph file format](<Docs/AGP File Format.md>)
+- Graph file formats:
+  - [XML-based](<Docs/AGXP File Format.md>)
+  - [Binary](<Docs/AGBP File Format.md>)
