@@ -43,7 +43,14 @@ internal static class Hasher
         Hash(hash, codec.Tag, buffer);
 
         // Hash attributes.
-        Hash(hash, codec.Attributes.Count, buffer);
+        int count = 0;
+        foreach (var attribute in codec.Attributes)
+        {
+            if (attribute.Key != Codecs.Checksum)
+                count++;
+        }
+        Hash(hash, count, buffer);
+
         foreach (var attribute in codec.Attributes)
         {
             if (attribute.Key == Codecs.Checksum)
