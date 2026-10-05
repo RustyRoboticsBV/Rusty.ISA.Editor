@@ -11,7 +11,7 @@ namespace Rusty.ActionGraph.Serialization.Binary;
 internal static class BinarySerializer
 {
     /* Constants. */
-    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes("\0BINAGP\0");
+    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes("\0\0AGBP\0\0");
     private const string Version = "1.0";
 
     /// <summary>
@@ -50,8 +50,7 @@ internal static class BinarySerializer
             foreach (var attribute in codec.Attributes)
             {
                 int index = codec.GetAttributeIndex(attribute.Key);
-                if (attributes[index] == null)
-                    attributes[index] = attribute.Value;
+                attributes[index] = attribute.Value;
             }
 
             writer.Write(attributes.GetBitmask());

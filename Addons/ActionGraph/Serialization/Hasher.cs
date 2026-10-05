@@ -26,7 +26,6 @@ internal static class Hasher
     /// </summary>
     public static string Hash(Codec codec, HashAlgorithm hash)
     {
-        hash.Clear();
         Hash(hash, codec, [0x00, 0x00, 0x00, 0x00]);
         hash.TransformFinalBlock([], 0, 0);
         return Convert.ToHexString(hash.Hash);

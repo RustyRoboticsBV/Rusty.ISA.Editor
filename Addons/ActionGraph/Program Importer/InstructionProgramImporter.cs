@@ -45,6 +45,11 @@ public abstract partial class InstructionProgramImporter : Node
         // Parse the XML as a codec.
         FileCodec codec = Serialization.XmlParser.Parse(text);
 
+        var b = BinarySerializer.Serialize(codec);
+        var f = System.IO.File.Create("Test/bin.agbp");
+        f.Write(b);
+        f.Close();
+
         // Compile the codec into a program.
         InstructionProgram program = CodeGenerator.Generate(codec);
         return program;
