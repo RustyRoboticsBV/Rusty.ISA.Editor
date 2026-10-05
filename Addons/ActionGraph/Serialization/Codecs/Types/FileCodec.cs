@@ -9,7 +9,7 @@ internal sealed class FileCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override List<string> AllowedAttributes => [Codecs.Editor, Codecs.Checksum];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Editor, Codecs.Checksum];
     protected override List<string> AllowedChildren => [
         MetaCodec.TAG, LangCodec.TAG,
         IdefCodec.TAG, NdefCodec.TAG,

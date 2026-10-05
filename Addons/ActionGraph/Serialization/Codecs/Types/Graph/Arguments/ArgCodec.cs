@@ -9,7 +9,7 @@ internal sealed class ArgCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override List<string> AllowedAttributes => [Codecs.Type, Codecs.Value];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Type, Codecs.Value];
     protected override List<string> AllowedChildren => [LocCodec.TAG];
 
     /* Constructors. */

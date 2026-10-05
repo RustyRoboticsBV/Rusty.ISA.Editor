@@ -9,7 +9,7 @@ internal sealed class OptionCodec : InspectorCodec, ICodecGroup<InspectorCodec>
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override List<string> AllowedAttributes => [Codecs.Type];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Type];
     protected override List<string> AllowedChildren => [FormCodec.TAG, TAG, ChoiceCodec.TAG, TupleCodec.TAG, ListCodec.TAG];
 
     /* Constructors. */

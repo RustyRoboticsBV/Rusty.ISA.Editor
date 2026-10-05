@@ -9,7 +9,7 @@ internal sealed class OutCodec : Codec
     public override string Tag => TAG;
 
     /* Public properties. */
-    protected override List<string> AllowedAttributes => [Codecs.Type];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Type];
 
     /* Constructors. */
     public OutCodec() : base() { }
