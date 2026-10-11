@@ -1,3 +1,4 @@
+using Godot;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -47,13 +48,58 @@ internal static class BinarySerializer
         for (int i = 0; i < codec.AllowedAttributeCount; i++)
         {
             string name = codec.GetAttributeNameFromIndex(i);
-            WriteString(writer, codec.GetAttribute(name));
+            string value = codec.GetAttribute(name);
+            switch (name)
+            {
+                case Codecs.Localizable:
+                case Codecs.NoDefault:
+                    if (bool.TryParse(value, out bool boolValue))
+                        WriteBool(writer, boolValue);
+                    else
+                        WriteBool(writer, false);
+                    break;
+
+                case Codecs.X:
+                case Codecs.Y:
+                    if (int.TryParse(value, out int intValue))
+                        WriteInt(writer, intValue);
+                    else
+                        WriteInt(writer, 0);
+                    break;
+
+                case Codecs.Width:
+                case Codecs.Height:
+                case Codecs.Index:
+                case Codecs.Port:
+                    if (uint.TryParse(value, out uint uintValue))
+                        WriteUint(writer, uintValue);
+                    else
+                        WriteUint(writer, 0);
+                    break;
+
+                case Codecs.Color:
+                    Color colorValue;
+                    try
+                    {
+                        colorValue = Color.FromHtml(value);
+                    }
+                    catch
+                    {
+                        colorValue = Colors.Transparent;
+                    }
+                    WriteColor(writer, colorValue);
+                    break;
+
+                default:
+                    WriteString(writer, codec.GetAttribute(name));
+                    break;
+            }
         }
 
         // Handle children.
         if (codec.AllowsChildren())
         {
-            WriteUint(writer, codec.Children.Count);
+            WriteUint(writer, (uint)codec.Children.Count);
             foreach (Codec child in codec.Children)
             {
                 WriteCodec(writer, child);
@@ -61,29 +107,41 @@ internal static class BinarySerializer
         }
     }
 
-    private static void WriteString(BinaryWriter writer, string str)
+    /// <summary>
+    /// Write a boolean to binary, 0x01 for true and 0x00 for false.
+    /// </summary>
+    private static void WriteBool(BinaryWriter writer, bool value)
     {
-        // Write length.
-        WriteUint(writer, Encoding.UTF8.GetByteCount(str));
-
-        // Write string in UTF-8 encoding.
-        Encoder encoder = Encoding.UTF8.GetEncoder();
-        Span<byte> buffer = stackalloc byte[512];
-        int charOffset = 0;
-        while (charOffset < str.Length)
-        {
-            encoder.Convert(str.AsSpan(charOffset), buffer, true, out int charsUsed, out int bytesUsed, out _);
-            writer.Write(buffer.Slice(0, bytesUsed));
-            charOffset += charsUsed;
-        }
+        writer.Write((byte)(value ? 0x01 : 0x00));
     }
 
-    private static void WriteUint(BinaryWriter writer, int value)
+    /// <summary>
+    /// Write a signed integer to binary, using SLEB128 encoding.
+    /// </summary>
+    private static void WriteInt(BinaryWriter writer, int value)
     {
-        if (value < 0)
-            throw new ArgumentOutOfRangeException(nameof(value), "ULEB128 values must be non-negative.");
+        int remaining = value;
+        bool more;
+        do
+        {
+            byte current = (byte)(remaining & 0x7F);
+            remaining >>= 7;
 
-        uint remaining = (uint)value;
+            more = !((remaining == 0 && (current & 0x40) == 0) || (remaining == -1 && (current & 0x40) != 0));
+            if (more)
+                current |= 0x80;
+
+            writer.Write(current);
+        }
+        while (more);
+    }
+
+    /// <summary>
+    /// Write an unsigned integer to binary, using ULEB128 encoding.
+    /// </summary>
+    private static void WriteUint(BinaryWriter writer, uint value)
+    {
+        uint remaining = value;
         do
         {
             byte current = (byte)(remaining & 0x7F);
@@ -97,11 +155,27 @@ internal static class BinarySerializer
         while (remaining != 0);
     }
 
-    private static void WriteColor(BinaryWriter writer, byte r, byte g, byte b, byte a)
+    /// <summary>
+    /// Write a string to binary, using ULEB128 length-prefixed UTF-8 encoding.
+    /// </summary>
+    private static void WriteString(BinaryWriter writer, string str)
     {
-        writer.Write(r);
-        writer.Write(g);
-        writer.Write(b);
-        writer.Write(a);
+        if (str == null)
+            throw new ArgumentNullException(nameof(str));
+
+        byte[] bytes = Encoding.UTF8.GetBytes(str);
+        WriteUint(writer, (uint)bytes.Length);
+        writer.Write(bytes);
+    }
+
+    /// <summary>
+    /// Write a color to binary, using RGBA8 encoding.
+    /// </summary>
+    private static void WriteColor(BinaryWriter writer, Color color)
+    {
+        writer.Write(color.R8);
+        writer.Write(color.G8);
+        writer.Write(color.B8);
+        writer.Write(color.A8);
     }
 }

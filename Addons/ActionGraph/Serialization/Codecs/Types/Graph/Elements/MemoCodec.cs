@@ -11,7 +11,8 @@ internal sealed class MemoCodec : Codec
     /* Public properties. */
     protected override List<string> AllowedAttributes => [
         Codecs.ID,
-        Codecs.X, Codecs.Y, Codecs.Member,
+        Codecs.X, Codecs.Y, Codecs.Width, Codecs.Height, Codecs.Folded,
+        Codecs.Member,
         Codecs.Text, Codecs.Color
     ];
 

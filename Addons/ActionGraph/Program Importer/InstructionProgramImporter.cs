@@ -1,5 +1,6 @@
 using Godot;
 using Rusty.ActionGraph.CodeGen;
+using Rusty.ActionGraph.Documentation;
 using Rusty.ActionGraph.Serialization;
 using Rusty.ActionGraph.Serialization.Binary;
 
@@ -49,6 +50,8 @@ public abstract partial class InstructionProgramImporter : Node
         var f = System.IO.File.Create("Test/bin.agbp");
         f.Write(b);
         f.Close();
+
+        DocsGen.WriteToFile("Test/docs.md");
 
         // Compile the codec into a program.
         InstructionProgram program = CodeGenerator.Generate(codec);

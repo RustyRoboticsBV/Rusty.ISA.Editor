@@ -21,6 +21,7 @@ internal static class Codecs
     public const string Y = "y";
     public const string Width = "width";
     public const string Height = "height";
+    public const string Folded = "folded";
     public const string Member = "member";
     public const string Start = "start";
     public const string Text = "text";
@@ -32,6 +33,16 @@ internal static class Codecs
     public const string Port = "port";
     public const string To = "to";
 
+    /* Public properties. */
+    public static int TagCount
+    {
+        get
+        {
+            Initialize();
+            return Tags.Count;
+        }
+    }
+
     /* Private properties. */
     private static List<string> Tags = null;
     private static Dictionary<string, int> Indices = null;
@@ -39,22 +50,37 @@ internal static class Codecs
     private static List<ConstructorInfo> Ctors = null;
 
     /* Public methods. */
-    public static int GetIndex(string tag) => Indices[tag];
+    public static int GetIndex(string tag)
+    {
+        Initialize();
+        return Indices[tag];
+    }
     public static int GetIndex(Codec codec) => GetIndex(codec.GetType());
     public static int GetIndex<T>() => GetIndex(GetTag<T>());
     public static int GetIndex(Type type) => GetIndex(GetTag(type));
 
-    public static string GetTag(int index) => Tags[index];
-    public static string GetTag<T>() => TypeTags[typeof(T)];
-    public static string GetTag(Type type) => TypeTags[type];
+    public static string GetTag(int index)
+    {
+        Initialize();
+        return Tags[index];
+    }
+    public static string GetTag<T>()
+    {
+        Initialize();
+        return TypeTags[typeof(T)];
+    }
+    public static string GetTag(Type type)
+    {
+        Initialize();
+        return TypeTags[type];
+    }
 
     /// <summary>
     /// Instantiate a codec node.
     /// </summary>
     public static Codec Instantiate(string tag)
     {
-        if (Tags == null || Indices == null || TypeTags == null || Ctors == null)
-            Register();
+        Initialize();
 
         if (!Indices.TryGetValue(tag, out int index))
             throw new InvalidOperationException($"Unknown codec '{tag}'.");
@@ -67,15 +93,16 @@ internal static class Codecs
     /// </summary>
     public static Codec Instantiate(int index)
     {
-        if (Tags == null || Indices == null || TypeTags == null || Ctors == null)
-            Register();
-
+        Initialize();
         return (Codec)Ctors[index].Invoke([]);
     }
 
     /* Private methods. */
-    private static void Register()
+    private static void Initialize()
     {
+        if (Tags != null && Indices != null && TypeTags != null && Ctors != null)
+            return;
+
         Tags = new();
         Indices = new();
         TypeTags = new();

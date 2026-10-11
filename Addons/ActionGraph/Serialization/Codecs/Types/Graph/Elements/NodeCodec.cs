@@ -11,7 +11,8 @@ internal sealed class NodeCodec : Codec, ICodecGroup<InspectorCodec>
     /* Public properties. */
     protected override List<string> AllowedAttributes => [
         Codecs.ID, Codecs.Type,
-        Codecs.X, Codecs.Y, Codecs.Member, Codecs.Start
+        Codecs.X, Codecs.Y, Codecs.Width, Codecs.Height, Codecs.Folded,
+        Codecs.Member, Codecs.Start
     ];
     protected override List<string> AllowedChildren => [
         FormCodec.TAG, OptionCodec.TAG, ChoiceCodec.TAG, TupleCodec.TAG, ListCodec.TAG
