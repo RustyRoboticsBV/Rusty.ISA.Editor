@@ -11,7 +11,7 @@ namespace Rusty.ActionGraph.Serialization.Binary;
 internal static class BinarySerializer
 {
     /* Constants. */
-    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes("\0\0AGBP\0\0");
+    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes("AGBP\0\0\0\0");
     private const string Version = "1.0";
 
     /// <summary>
@@ -44,21 +44,10 @@ internal static class BinarySerializer
         writer.Write((byte)Codecs.GetIndex(codec));
 
         // Write attributes.
-        if (codec.AllowsAttributes())
+        for (int i = 0; i < codec.AllowedAttributeCount; i++)
         {
-            AttributeMask attributes = new();
-            foreach (var attribute in codec.Attributes)
-            {
-                int index = codec.GetAttributeIndex(attribute.Key);
-                attributes[index] = attribute.Value;
-            }
-
-            writer.Write(attributes.GetBitmask());
-            for (int i = 0; i < AttributeMask.Size; i++)
-            {
-                if (attributes[i] != null)
-                    WriteString(writer, attributes[i]);
-            }
+            string name = codec.GetAttributeNameFromIndex(i);
+            WriteString(writer, codec.GetAttribute(name));
         }
 
         // Handle children.
@@ -74,9 +63,19 @@ internal static class BinarySerializer
 
     private static void WriteString(BinaryWriter writer, string str)
     {
-        byte[] value = Encoding.UTF8.GetBytes(str ?? "");
-        WriteUint(writer, value.Length);
-        writer.Write(value);
+        // Write length.
+        WriteUint(writer, Encoding.UTF8.GetByteCount(str));
+
+        // Write string in UTF-8 encoding.
+        Encoder encoder = Encoding.UTF8.GetEncoder();
+        Span<byte> buffer = stackalloc byte[512];
+        int charOffset = 0;
+        while (charOffset < str.Length)
+        {
+            encoder.Convert(str.AsSpan(charOffset), buffer, true, out int charsUsed, out int bytesUsed, out _);
+            writer.Write(buffer.Slice(0, bytesUsed));
+            charOffset += charsUsed;
+        }
     }
 
     private static void WriteUint(BinaryWriter writer, int value)
@@ -96,5 +95,13 @@ internal static class BinarySerializer
             writer.Write(current);
         }
         while (remaining != 0);
+    }
+
+    private static void WriteColor(BinaryWriter writer, byte r, byte g, byte b, byte a)
+    {
+        writer.Write(r);
+        writer.Write(g);
+        writer.Write(b);
+        writer.Write(a);
     }
 }

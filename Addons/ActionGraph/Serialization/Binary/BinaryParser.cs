@@ -10,7 +10,7 @@ namespace Rusty.ActionGraph.Serialization.Binary;
 internal static class BinaryParser
 {
     /* Constants. */
-    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes("\0\0AGBP\0\0");
+    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes("AGBP\0\0\0\0");
     private const string Version = "1.0";
 
     /* Public methods. */
@@ -93,12 +93,8 @@ internal static class BinaryParser
         if (!codec.AllowsAttributes())
             return;
 
-        byte mask = reader.ReadByte();
-        for (int i = 0; i < AttributeMask.Size; i++)
+        for (int i = 0; i < codec.AllowedAttributeCount; i++)
         {
-            if (!AttributeMask.GetBit(mask, i))
-                continue;
-
             string name = codec.GetAttributeNameFromIndex(i);
             string value = ReadString(reader);
 
@@ -112,7 +108,6 @@ internal static class BinaryParser
             return;
 
         int count = ReadUint(reader);
-
         for (int i = 0; i < count; i++)
         {
             Codec child = ReadCodec(reader);

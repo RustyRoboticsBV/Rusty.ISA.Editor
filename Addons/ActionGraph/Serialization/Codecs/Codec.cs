@@ -12,6 +12,7 @@ internal abstract class Codec
     public abstract string Tag { get; }
     public List<Codec> Children { get; } = new();
     public Dictionary<string, string> Attributes { get; } = new();
+    public int AllowedAttributeCount => AllowedAttributes.Count;
 
     /* Protected properties. */
     protected virtual List<string> AllowedChildren { get; } = new();
