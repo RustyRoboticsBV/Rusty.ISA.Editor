@@ -17,3 +17,4 @@ mono_crash.*.json
 # Visual studio
 *.sln
 *.csproj
+.vs/*
