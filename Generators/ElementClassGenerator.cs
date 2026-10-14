@@ -5,57 +5,76 @@ public class ElementClassGenerator
 {
     public static string Generate(Schema schema, Element element)
     {
-        string inherit = element.Inherits != "none" ? ClassName(element.Inherits) : "Codec";
-        string group = CheckGroup(schema, element);
-        string groupInterface = group != "none" ? $", ICodecGroup<{ClassName(group)}>" : "";
         StringBuilder sb = new();
+
+        // Header.
         sb.AppendLine("// THIS IS A GENERATED SCRIPT FILE! IT SHOULD NOT BE EDITED MANUALLY!");
         sb.AppendLine();
-        sb.AppendLine("using System.Collections.Generic;");
+        sb.AppendLine("using System;");
         sb.AppendLine();
         sb.AppendLine("namespace Rusty.ActionGraph.Serialization;");
         sb.AppendLine();
-        sb.AppendLine($"internal sealed internal class {ClassName(element.Name)} : {inherit}{groupInterface}");
+
+        // Start of class.
+        string inherit = element.Inherits != "none" ? ClassName(element.Inherits) : "Codec";
+        string group = CheckGroup(schema, element);
+        string groupInterface = group != "none" ? $", ICodecGroup<{ClassName(group)}>" : "";
+
+        sb.AppendLine($"internal sealed class {ClassName(element.Name)} : {inherit}{groupInterface}");
         sb.AppendLine("{");
+
+        // Attribute properties.
         sb.AppendLine("    /* Public properties. */");
         foreach (Attribute attribute in element.Attributes)
         {
-            sb.AppendLine($"    public {GetType(attribute.ValueType, attribute.RefType)} {CamelCase(attribute.Name)}");
-            sb.AppendLine("    {");
-            if (attribute.ValueType == ValueType.Bool)
+            string type = GetType(attribute.ValueType, attribute.RefType);
+            if (attribute.Description.Length > 0)
             {
-                sb.AppendLine($"        get => bool.TryParse(GetAttribute(\"{attribute.Name}\"), out bool result) ? result : false;");
-                sb.AppendLine($"        set => SetAttribute(\"{attribute.Name}\", value.ToString());");
+                sb.AppendLine("    /// <summary>");
+                sb.AppendLine("    /// " + attribute.Description);
+                sb.AppendLine("    /// </summary>");
             }
-            else if (attribute.ValueType == ValueType.Int)
-            {
-                sb.AppendLine($"        get => int.TryParse(GetAttribute(\"{attribute.Name}\"), out int result) ? result : 0;");
-                sb.AppendLine($"        set => SetAttribute(\"{attribute.Name}\", value.ToString());");
-            }
-            else if (attribute.ValueType == ValueType.Uint)
-            {
-                sb.AppendLine($"        get => uint.TryParse(GetAttribute(\"{attribute.Name}\"), out uint result) ? result : 0;");
-                sb.AppendLine($"        set => SetAttribute(\"{attribute.Name}\", value.ToString());");
-            }
-            else if (attribute.ValueType == ValueType.Color)
-            {
-                sb.AppendLine($"        get => Godot.Color.FromHtml(GetAttribute(\"{attribute.Name}\"));");
-                sb.AppendLine($"        set => SetAttribute(\"{attribute.Name}\", value.ToHtml());");
-            }
-            else if (attribute.ValueType == ValueType.String || attribute.ValueType == ValueType.Ref)
-            {
-                sb.AppendLine($"        get => GetAttribute(\"{attribute.Name}\");");
-                sb.AppendLine($"        set => SetAttribute(\"{attribute.Name}\", value);");
-            }
-            sb.AppendLine("    }");
+            sb.AppendLine($"    public {type} {CamelCase(attribute.Name)}" + " { get; set; }");
         }
+
+        // Attribute getter.
+        sb.AppendLine();
+        sb.AppendLine("    /* Public methods. */");
+        sb.AppendLine("    public override object GetAttribute(int index) => index switch");
+        sb.AppendLine("    {");
+        for (int i = 0; i < element.Attributes.Count; i++)
+        {
+            var attribute = element.Attributes[i];
+            sb.AppendLine($"        {i} => {CamelCase(attribute.Name)},");
+        }
+        sb.AppendLine($"        _ => throw new ArgumentOutOfRangeException(nameof(index))");
+        sb.AppendLine("    };");
+        sb.AppendLine();
+
+        // Attribute setter.
+        sb.AppendLine("    public override void SetAttribute(int index, object value)");
+        sb.AppendLine("    {");
+        sb.AppendLine("        switch (index)");
+        sb.AppendLine("        {");
+        for (int i = 0; i < element.Attributes.Count; i++)
+        {
+            var attribute = element.Attributes[i];
+            string type = GetType(attribute.ValueType, attribute.RefType);
+            sb.AppendLine($"            case {i}: {CamelCase(attribute.Name)} = ({type})value; break;");
+        }
+        sb.AppendLine($"            default: throw new ArgumentOutOfRangeException(nameof(index));");
+        sb.AppendLine("        }");
+        sb.AppendLine("    }");
+
+        // End of class.
         sb.AppendLine("}");
 
+        // Godot using.
         string str = sb.ToString();
         if (str.Contains("Godot."))
             str = str
                 .Replace("Godot.", "")
-                .Replace("using System.Collections.Generic;", "using Godot;\nusing System.Collections.Generic;");
+                .Replace("using System;", "using Godot;\nusing System;");
 
         return str;
     }

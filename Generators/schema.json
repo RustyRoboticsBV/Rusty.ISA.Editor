@@ -7,7 +7,7 @@
          "argument"
     ],
     "element_types": {
-        "file_root": {
+        "file": {
             "description": "The root element.",
             "inherits_abstract": "none",
             "attributes": {
