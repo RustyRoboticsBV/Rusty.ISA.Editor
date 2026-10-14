@@ -1,0 +1,732 @@
+{
+    "schema_version": "1.0.0",
+    "abstract_types": [
+         "inspector_definition",
+         "inspector",
+         "argument_definition",
+         "argument"
+    ],
+    "element_types": {
+        "file_root": {
+            "description": "The root element.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "editor": {
+                    "description": "The name of the editor that generated the file.",
+                    "value_type": "string"
+                },
+                "schema_version": {
+                    "description": "The ActionGraph file tree schema version.",
+                    "value_type": "string"
+                },
+                "format_version": {
+                    "description": "The file format version.",
+                    "value_type": "string"
+                },
+                "checksum": {
+                    "description": "The checksum of the file.",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": [
+                "metadata",
+                "language_definition",
+                "instruction_definition",
+                "node_definition",
+                "node",
+                "frame",
+                "memo",
+                "joint",
+                "edge"
+            ],
+            "allow_multiple_children": true
+        },
+        "metadata": {
+            "description": "A metadata entry.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "value": {
+                    "description": "The metadata value.",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": []
+        },
+        "language_definition": {
+            "description": "A localization language definition.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": []
+        },
+        "instruction_definition": {
+            "description": "An instruction definition.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "execution_handler": {
+                    "description": "The name of the class responsible for executing this instruction.",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": [
+                "parameter_definition"
+            ],
+            "allow_multiple_children": true
+        },
+        "parameter_definition": {
+            "description": "An instruction parameter definition.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "localizable": {
+                    "description": "Whether or not this parameter can be localized.",
+                    "value_type": "bool"
+                }
+            },
+            "allowed_children": []
+        },
+        "node_definition": {
+            "description": "A graph node definition.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": [
+                "form_definition",
+                "option_definition",
+                "choice_definition",
+                "tuple_definition",
+                "list_definition"
+            ],
+            "allow_multiple_children": true
+        },
+        "form_definition": {
+            "description": "An instruction inspector definition.",
+            "inherits_abstract": "inspector_definition",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "instruction": {
+                    "description": "",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": [
+                "field_definition",
+                "output_definition"
+            ],
+            "allow_multiple_children": true
+        },
+        "option_definition": {
+            "description": "An option (toggle) inspector definition.",
+            "inherits_abstract": "inspector_definition",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": [
+                "form_definition",
+                "option_definition",
+                "choice_definition",
+                "tuple_definition",
+                "list_definition"
+            ],
+            "allow_multiple_children": false
+        },
+        "choice_definition": {
+            "description": "A choice (dropdown) inspector definition.",
+            "inherits_abstract": "inspector_definition",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": [
+                "form_definition",
+                "option_definition",
+                "choice_definition",
+                "tuple_definition",
+                "list_definition"
+            ],
+            "allow_multiple_children": true
+        },
+        "tuple_definition": {
+            "description": "A tuple (group) inspector definition.",
+            "inherits_abstract": "inspector_definition",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": [
+                "form_definition",
+                "option_definition",
+                "choice_definition",
+                "tuple_definition",
+                "list_definition"
+            ],
+            "allow_multiple_children": true
+        },
+        "list_definition": {
+            "description": "A list inspector definition.",
+            "inherits_abstract": "inspector_definition",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": [
+                "form_definition",
+                "option_definition",
+                "choice_definition",
+                "tuple_definition",
+                "list_definition"
+            ],
+            "allow_multiple_children": false
+        },
+        "field_definition": {
+            "description": "A parameter field inspector definition.",
+            "inherits_abstract": "argument_definition",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "parameter": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["parameter_definition"]
+                }
+            },
+            "allowed_children": []
+        },
+        "output_definition": {
+            "description": "An output port definition.",
+            "inherits_abstract": "argument_definition",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "parameter": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["parameter_definition"]
+                },
+                "remove_default_output": {
+                    "description": "",
+                    "value_type": "bool"
+                }
+            },
+            "allowed_children": []
+        },
+        "node": {
+            "description": "An editor node.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "definition": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["node_definition"]
+                },
+                "x": {
+                    "description": "",
+                    "value_type": "int"
+                },
+                "y": {
+                    "description": "",
+                    "value_type": "int"
+                },
+                "width": {
+                    "description": "",
+                    "value_type": "uint"
+                },
+                "height": {
+                    "description": "",
+                    "value_type": "uint"
+                },
+                "folded": {
+                    "description": "",
+                    "value_type": "bool"
+                },
+                "parent_frame": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["frame"]
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                },
+                "start_point_name": {
+                    "description": "",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": [
+                "form",
+                "option",
+                "choice",
+                "tuple",
+                "list"
+            ],
+            "allow_multiple_children": true
+        },
+        "memo": {
+            "description": "An editor sticky note.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "x": {
+                    "description": "",
+                    "value_type": "int"
+                },
+                "y": {
+                    "description": "",
+                    "value_type": "int"
+                },
+                "width": {
+                    "description": "",
+                    "value_type": "uint"
+                },
+                "height": {
+                    "description": "",
+                    "value_type": "uint"
+                },
+                "folded": {
+                    "description": "",
+                    "value_type": "bool"
+                },
+                "parent_frame": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["frame"]
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": []
+        },
+        "frame": {
+            "description": "An editor graph element group.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "x": {
+                    "description": "",
+                    "value_type": "int"
+                },
+                "y": {
+                    "description": "",
+                    "value_type": "int"
+                },
+                "width": {
+                    "description": "",
+                    "value_type": "uint"
+                },
+                "height": {
+                    "description": "",
+                    "value_type": "uint"
+                },
+                "folded": {
+                    "description": "",
+                    "value_type": "bool"
+                },
+                "parent_frame": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["frame"]
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": []
+        },
+        "joint": {
+            "description": "An visual edge joint.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "edge": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["edge"]
+                },
+                "x": {
+                    "description": "",
+                    "value_type": "int"
+                },
+                "y": {
+                    "description": "",
+                    "value_type": "int"
+                },
+                "size": {
+                    "description": "",
+                    "value_type": "uint"
+                },
+                "parent_frame": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["frame"]
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": []
+        },
+        "edge": {
+            "description": "An edge on the graph.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "from": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["edge"]
+                },
+                "port": {
+                    "description": "",
+                    "value_type": "uint"
+                },
+                "to": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["edge"]
+                },
+                "thickness": {
+                    "description": "",
+                    "value_type": "uint"
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": []
+        },
+        "form": {
+            "description": "An instruction form inspector.",
+            "inherits_abstract": "inspector",
+            "collection_type": "argument",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "definition": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["form_definition"]
+                },
+                "folded": {
+                    "description": "",
+                    "value_type": "bool"
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": [
+                "field",
+                "output"
+            ],
+            "allow_multiple_children": true
+        },
+        "option": {
+            "description": "An option (toggle) inspector.",
+            "inherits_abstract": "inspector",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "definition": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["option_definition"]
+                },
+                "folded": {
+                    "description": "",
+                    "value_type": "bool"
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": [
+                "form",
+                "option",
+                "choice",
+                "tuple",
+                "list"
+            ],
+            "allow_multiple_children": false
+        },
+        "choice": {
+            "description": "A choice (dropdown) inspector.",
+            "inherits_abstract": "inspector",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "definition": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["choice_definition"]
+                },
+                "selected": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["form", "option", "choice", "tuple", "list"]
+                },
+                "folded": {
+                    "description": "",
+                    "value_type": "bool"
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": [
+                "form",
+                "option",
+                "choice",
+                "tuple",
+                "list"
+            ],
+            "allow_multiple_children": false
+        },
+        "tuple": {
+            "description": "A tuple (group) inspector.",
+            "inherits_abstract": "inspector",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "definition": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["tuple_definition"]
+                },
+                "folded": {
+                    "description": "",
+                    "value_type": "bool"
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": [
+                "form",
+                "option",
+                "choice",
+                "tuple",
+                "list"
+            ],
+            "allow_multiple_children": true
+        },
+        "list": {
+            "description": "A list inspector.",
+            "inherits_abstract": "inspector",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "definition": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["list_definition"]
+                },
+                "folded": {
+                    "description": "",
+                    "value_type": "bool"
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": [
+                "form",
+                "option",
+                "choice",
+                "tuple",
+                "list"
+            ],
+            "allow_multiple_children": true
+        },
+        "field": {
+            "description": "A parameter field inspector, containing a (non-localized) parameter value.",
+            "inherits_abstract": "argument",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "definition": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["field_definition"]
+                },
+                "value": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": [
+                "localized_value"
+            ],
+            "allow_multiple_children": true
+        },
+        "output": {
+            "description": "A flow-control output port.",
+            "inherits_abstract": "argument",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "definition": {
+                    "description": "",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["output_definition"]
+                },
+                "text": {
+                    "description": "",
+                    "value_type": "string"
+                },
+                "color": {
+                    "description": "",
+                    "value_type": "color"
+                }
+            },
+            "allowed_children": []
+        },
+        "localized_value": {
+            "description": "A field's value when localized to a specific language.",
+            "inherits_abstract": "none",
+            "attributes": {
+                "id": {
+                    "description": "A unique identifier.",
+                    "value_type": "string"
+                },
+                "definition": {
+                    "description": "The localization language ID.",
+                    "value_type": "ref",
+                    "allowed_ref_types": ["language_definition"]
+                },
+                "value": {
+                    "description": "",
+                    "value_type": "string"
+                }
+            },
+            "allowed_children": []
+        }
+    }
+}
