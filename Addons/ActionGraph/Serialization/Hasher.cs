@@ -38,8 +38,8 @@ internal static class Hasher
     private static void Hash(HashAlgorithm hash, Codec codec, byte[] buffer)
     {
         // Hash tag.
-        Hash(hash, codec.Tag.Length, buffer);
-        Hash(hash, codec.Tag, buffer);
+        Hash(hash, codec.Name.Length, buffer);
+        Hash(hash, codec.Name, buffer);
 
         // Hash attributes.
         int count = 0;

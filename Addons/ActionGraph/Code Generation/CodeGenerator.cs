@@ -168,7 +168,7 @@ internal static class CodeGenerator
     {
         // Find node definition.
         NodeCodec node = unit.Codec;
-        NdefCodec ndef = file.FindNdef(node.GetAttribute(Codecs.Type));
+        NdefCodec ndef = file.FindNdef(node.GetAttribute(Codecs.Definition));
 
         // Compile contents.
         int handledOutputArgs = 0;
@@ -192,7 +192,7 @@ internal static class CodeGenerator
     private static void CompileInspector(NodeUnit node, Codec parentDefinition, Codec parent, InspectorCodec current, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
         // Find child definition.
-        string currentType = current.GetAttribute(Codecs.Type);
+        string currentType = current.GetAttribute(Codecs.Definition);
         Codec currentDefinition = parentDefinition.FindChildWithAttribute(Codecs.ID, currentType);
 
         switch (currentDefinition, current)
@@ -226,7 +226,7 @@ internal static class CodeGenerator
         InspectorCodec child = option.GetFirstChild<InspectorCodec>();
         if (child != null)
         {
-            string childType = child.GetAttribute(Codecs.Type);
+            string childType = child.GetAttribute(Codecs.Definition);
             CompileInspector(node, odef, option, child, instructions, labels, ref handledOutputArgs);
         }
     }
@@ -237,7 +237,7 @@ internal static class CodeGenerator
     private static void CompileChoice(NodeUnit node, CdefCodec cdef, ChoiceCodec choice, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
         InspectorCodec child = choice.GetFirstChild<InspectorCodec>();
-        string childType = child.GetAttribute(Codecs.Type);
+        string childType = child.GetAttribute(Codecs.Definition);
         CompileInspector(node, cdef, choice, child, instructions, labels, ref handledOutputArgs);
     }
 
@@ -250,7 +250,7 @@ internal static class CodeGenerator
         {
             if (element is InspectorCodec child)
             {
-                string childType = element.GetAttribute(Codecs.Type);
+                string childType = element.GetAttribute(Codecs.Definition);
                 CompileInspector(node, tdef, tuple, child, instructions, labels, ref handledOutputArgs);
             }
         }
@@ -265,7 +265,7 @@ internal static class CodeGenerator
         {
             if (element is InspectorCodec child)
             {
-                string childType = element.GetAttribute(Codecs.Type);
+                string childType = element.GetAttribute(Codecs.Definition);
                 CompileInspector(node, ldef, list, child, instructions, labels, ref handledOutputArgs);
             }
         }
@@ -276,7 +276,7 @@ internal static class CodeGenerator
     /// </summary>
     private static void CompileForm(NodeUnit node, FdefCodec fdef, FormCodec form, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
-        string opcode = fdef.GetAttribute(Codecs.Type);
+        string opcode = fdef.GetAttribute(Codecs.Definition);
         List<string> arguments = new();
         foreach (Codec child in form.Children)
         {
@@ -329,7 +329,7 @@ internal static class CodeGenerator
         string opcode = idef.GetAttribute(Codecs.ID);
 
         // Read execution handler.
-        string exec = idef.GetAttribute(Codecs.Exec);
+        string exec = idef.GetAttribute(Codecs.ExecutionHandler);
 
         // Read parameters.
         List<string> parameters = new();

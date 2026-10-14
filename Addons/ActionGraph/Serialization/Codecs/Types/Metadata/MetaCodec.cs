@@ -9,7 +9,7 @@ internal sealed class MetaCodec : Codec
 {
     /* Constants. */
     public const string TAG = "meta";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
     protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Value];

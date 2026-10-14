@@ -6,7 +6,7 @@ internal sealed class PdefCodec : Codec
 {
     /* Constants. */
     public const string TAG = "pdef";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
     protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Localizable];

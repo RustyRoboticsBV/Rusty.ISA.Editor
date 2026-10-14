@@ -42,7 +42,7 @@ internal static class XmlSerializer
     private static void SerializeCodec(Codec codec, XmlWriter writer)
     {
         // Handle start tag.
-        writer.WriteStartElement(codec.Tag);
+        writer.WriteStartElement(codec.Name);
 
         // Handle attributes.
         foreach (var attribute in codec.Attributes)

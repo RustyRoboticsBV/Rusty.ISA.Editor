@@ -6,7 +6,7 @@ internal sealed class NdefCodec : Codec, ICodecGroup<InspectorDefinitionCodec>
 {
     /* Constants. */
     public const string TAG = "ndef";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
     protected override List<string> AllowedAttributes => [Codecs.ID];

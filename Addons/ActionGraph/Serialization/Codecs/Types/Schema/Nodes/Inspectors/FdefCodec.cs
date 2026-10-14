@@ -6,10 +6,10 @@ internal sealed class FdefCodec : InspectorDefinitionCodec
 {
     /* Constants. */
     public const string TAG = "fdef";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
-    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Type];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Definition];
     protected override List<string> AllowedChildren => [VdefCodec.TAG, JdefCodec.TAG];
 
     /* Constructors. */

@@ -6,13 +6,13 @@ internal sealed class NodeCodec : Codec, ICodecGroup<InspectorCodec>
 {
     /* Constants. */
     public const string TAG = "node";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
     protected override List<string> AllowedAttributes => [
-        Codecs.ID, Codecs.Type,
+        Codecs.ID, Codecs.Definition,
         Codecs.X, Codecs.Y, Codecs.Width, Codecs.Height, Codecs.Folded,
-        Codecs.Member, Codecs.Start
+        Codecs.ParentFrame, Codecs.Start
     ];
     protected override List<string> AllowedChildren => [
         FormCodec.TAG, OptionCodec.TAG, ChoiceCodec.TAG, TupleCodec.TAG, ListCodec.TAG

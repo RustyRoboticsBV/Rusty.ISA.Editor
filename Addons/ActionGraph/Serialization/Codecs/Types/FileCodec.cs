@@ -6,7 +6,7 @@ internal sealed class FileCodec : Codec
 {
     /* Constants. */
     public const string TAG = "file";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
     protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Editor, Codecs.Checksum];

@@ -6,10 +6,10 @@ internal sealed class ChoiceCodec : InspectorCodec, ICodecGroup<InspectorCodec>
 {
     /* Constants. */
     public const string TAG = "choice";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
-    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Type, Codecs.Index];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Definition, Codecs.Index];
     protected override List<string> AllowedChildren => [FormCodec.TAG, OptionCodec.TAG, TAG, TupleCodec.TAG, ListCodec.TAG];
 
     /* Constructors. */

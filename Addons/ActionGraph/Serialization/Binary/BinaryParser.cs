@@ -39,7 +39,7 @@ internal static class BinaryParser
         Codec codec = ReadCodec(reader);
 
         if (codec is not FileCodec file)
-            throw new FormatException($"Expected root codec to be '{FileCodec.TAG}', got '{codec.Tag}'.");
+            throw new FormatException($"Expected root codec to be '{FileCodec.TAG}', got '{codec.Name}'.");
 
         if (stream.Position != stream.Length)
             throw new FormatException($"Trailing data after file codec at offset {stream.Position}.");

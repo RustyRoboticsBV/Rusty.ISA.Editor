@@ -9,10 +9,11 @@ namespace Rusty.ActionGraph.Serialization;
 internal abstract class Codec
 {
     /* Public properties. */
-    public abstract string Tag { get; }
+    public abstract string Name { get; }
     public List<Codec> Children { get; } = new();
     public Dictionary<string, string> Attributes { get; } = new();
     public int AllowedAttributeCount => AllowedAttributes.Count;
+    public int AllowedChildCount => AllowedChildren.Count;
 
     /* Protected properties. */
     protected virtual List<string> AllowedChildren { get; } = new();
@@ -78,25 +79,25 @@ internal abstract class Codec
     public bool AllowsChildren() => AllowedChildren.Count > 0;
 
     /// <summary>
-    /// Check whether or not a child with some tag is allowed by this codec.
+    /// Check whether or not a child with some name is allowed by this codec.
     /// </summary>
-    public bool AllowsChild(string tag) => AllowedChildren.Contains(tag);
+    public bool AllowsChild(string name) => AllowedChildren.Contains(name);
 
     /// <summary>
     /// Add a node of some type.
     /// </summary>
     public void AddChild(Codec node)
     {
-        if (!AllowsChild(node.Tag))
+        if (!AllowsChild(node.Name))
         {
-            throw new InvalidOperationException($"Codec '{GetType().Name}' cannot have a child with tag "
+            throw new InvalidOperationException($"Codec '{GetType().Name}' cannot have a child with name "
                 + $"'{node.GetType().Name}'.");
         }
         Children.Add(node);
     }
 
     /// <summary>
-    /// Get the first child node with some tag. Returns null if the child does not exist.
+    /// Get the first child node with some name. Returns null if the child does not exist.
     /// </summary>
     public T GetFirstChild<T>()
         where T : Codec
@@ -107,6 +108,16 @@ internal abstract class Codec
                 return typed;
         }
         return null;
+    }
+
+    /// <summary>
+    /// Get the allowed child codec name corresponding to an index.
+    /// </summary>
+    public string GetAllowedChildName(int index)
+    {
+        if (index < 0 || index >= AllowedChildren.Count)
+            throw new ArgumentOutOfRangeException(nameof(index));
+        return AllowedChildren[index];
     }
 
     /// <summary>

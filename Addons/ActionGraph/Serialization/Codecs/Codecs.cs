@@ -10,19 +10,19 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class Codecs
 {
     /* Constants. */
+    public const string ID = "id";
     public const string Editor = "editor";
     public const string Checksum = "csum";
-    public const string ID = "id";
     public const string Value = "value";
-    public const string Exec = "exec";
+    public const string ExecutionHandler = "exec";
     public const string Localizable = "loc";
-    public const string Type = "type";
+    public const string Definition = "type";
     public const string X = "x";
     public const string Y = "y";
     public const string Width = "width";
     public const string Height = "height";
     public const string Folded = "folded";
-    public const string Member = "member";
+    public const string ParentFrame = "member";
     public const string Start = "start";
     public const string Text = "text";
     public const string Color = "color";
@@ -34,35 +34,35 @@ internal static class Codecs
     public const string To = "to";
 
     /* Public properties. */
-    public static int TagCount
+    public static int Count
     {
         get
         {
             Initialize();
-            return Tags.Count;
+            return Names.Count;
         }
     }
 
     /* Private properties. */
-    private static List<string> Tags = null;
+    private static List<string> Names = null;
     private static Dictionary<string, int> Indices = null;
     private static Dictionary<Type, string> TypeTags = null;
     private static List<ConstructorInfo> Ctors = null;
 
     /* Public methods. */
-    public static int GetIndex(string tag)
+    public static int GetIndex(string name)
     {
         Initialize();
-        return Indices[tag];
+        return Indices[name];
     }
     public static int GetIndex(Codec codec) => GetIndex(codec.GetType());
     public static int GetIndex<T>() => GetIndex(GetTag<T>());
     public static int GetIndex(Type type) => GetIndex(GetTag(type));
 
-    public static string GetTag(int index)
+    public static string GetName(int index)
     {
         Initialize();
-        return Tags[index];
+        return Names[index];
     }
     public static string GetTag<T>()
     {
@@ -76,18 +76,42 @@ internal static class Codecs
     }
 
     /// <summary>
+    /// Get the documented type of an attribute.
+    /// </summary>
+    public static AttributeType GetAttributeType(string attribute)
+    {
+        return attribute switch
+        {
+            Localizable or
+            NoDefault or
+            Folded => AttributeType.Bool,
+
+            X or
+            Y => AttributeType.Int,
+
+            Width or
+            Height or
+            Index or
+            Port => AttributeType.Uint,
+
+            Color => AttributeType.Color,
+
+            _ => AttributeType.String
+        };
+    }
+
+    /// <summary>
     /// Instantiate a codec node.
     /// </summary>
-    public static Codec Instantiate(string tag)
+    public static Codec Instantiate(string name)
     {
         Initialize();
 
-        if (!Indices.TryGetValue(tag, out int index))
-            throw new InvalidOperationException($"Unknown codec '{tag}'.");
+        if (!Indices.TryGetValue(name, out int index))
+            throw new InvalidOperationException($"Unknown codec '{name}'.");
 
         return Instantiate(index);
     }
-
     /// <summary>
     /// Instantiate a codec node.
     /// </summary>
@@ -100,10 +124,10 @@ internal static class Codecs
     /* Private methods. */
     private static void Initialize()
     {
-        if (Tags != null && Indices != null && TypeTags != null && Ctors != null)
+        if (Names != null && Indices != null && TypeTags != null && Ctors != null)
             return;
 
-        Tags = new();
+        Names = new();
         Indices = new();
         TypeTags = new();
         Ctors = new();
@@ -145,17 +169,17 @@ internal static class Codecs
         Register<OutCodec>(OutCodec.TAG);
     }
 
-    private static void Register<T>(string tag)
+    private static void Register<T>(string name)
         where T : Codec
     {
-        int index = Tags.Count;
+        int index = Names.Count;
 
-        if (Indices.ContainsKey(tag))
-            throw new InvalidOperationException($"A codec is already registered for tag '{tag}'.");
+        if (Indices.ContainsKey(name))
+            throw new InvalidOperationException($"A codec is already registered for tag '{name}'.");
 
-        Tags.Add(tag);
-        Indices.Add(tag, index);
-        TypeTags.Add(typeof(T), tag);
+        Names.Add(name);
+        Indices.Add(name, index);
+        TypeTags.Add(typeof(T), name);
         Ctors.Add(GetCtor(typeof(T), []));
     }
 

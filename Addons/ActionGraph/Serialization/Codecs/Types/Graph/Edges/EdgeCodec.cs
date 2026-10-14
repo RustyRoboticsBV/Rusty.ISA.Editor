@@ -6,7 +6,7 @@ internal sealed class EdgeCodec : Codec
 {
     /* Constants. */
     public const string TAG = "edge";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
     protected override List<string> AllowedAttributes => [

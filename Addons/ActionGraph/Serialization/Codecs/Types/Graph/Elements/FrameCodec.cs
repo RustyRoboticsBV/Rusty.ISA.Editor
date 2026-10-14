@@ -6,13 +6,13 @@ internal sealed class FrameCodec : Codec
 {
     /* Constants. */
     public const string TAG = "frame";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
     protected override List<string> AllowedAttributes => [
         Codecs.ID,
         Codecs.X, Codecs.Y, Codecs.Width, Codecs.Height, Codecs.Folded,
-        Codecs.Member, Codecs.Text, Codecs.Color
+        Codecs.ParentFrame, Codecs.Text, Codecs.Color
     ];
 
     /* Constructors. */

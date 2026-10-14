@@ -6,7 +6,7 @@ internal sealed partial class OdefCodec : InspectorDefinitionCodec, ICodecGroup<
 {
     /* Constants. */
     public const string TAG = "odef";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
     protected override List<string> AllowedAttributes => [Codecs.ID];

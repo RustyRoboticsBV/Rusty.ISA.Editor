@@ -43,7 +43,7 @@ internal static class CodecPrinter
             sb.Append(last ? "\u2514\u2500" : "\u251C\u2500");
         }
 
-        sb.Append(codec.Tag);
+        sb.Append(codec.Name);
 
         if (codec.Attributes.Count > 0)
         {

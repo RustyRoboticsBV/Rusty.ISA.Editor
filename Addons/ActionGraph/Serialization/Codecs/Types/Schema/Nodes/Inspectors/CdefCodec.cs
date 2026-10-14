@@ -6,7 +6,7 @@ internal sealed class CdefCodec : InspectorDefinitionCodec, ICodecGroup<Inspecto
 {
     /* Constants. */
     public const string TAG = "cdef";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
     protected override List<string> AllowedAttributes => [Codecs.ID];

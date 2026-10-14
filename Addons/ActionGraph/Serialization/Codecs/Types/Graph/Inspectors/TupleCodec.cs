@@ -6,10 +6,10 @@ internal sealed class TupleCodec : InspectorCodec, ICodecGroup<InspectorCodec>
 {
     /* Constants. */
     public const string TAG = "tuple";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
-    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Type];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Definition];
     protected override List<string> AllowedChildren => [FormCodec.TAG, OptionCodec.TAG, ChoiceCodec.TAG, TAG, ListCodec.TAG];
 
     /* Constructors. */

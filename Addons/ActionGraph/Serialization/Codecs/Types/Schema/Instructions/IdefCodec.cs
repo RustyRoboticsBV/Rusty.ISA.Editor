@@ -6,10 +6,10 @@ internal sealed class IdefCodec : Codec
 {
     /* Constants. */
     public const string TAG = "idef";
-    public override string Tag => TAG;
+    public override string Name => TAG;
 
     /* Public properties. */
-    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.Exec];
+    protected override List<string> AllowedAttributes => [Codecs.ID, Codecs.ExecutionHandler];
     protected override List<string> AllowedChildren => [PdefCodec.TAG];
 
     /* Constructors. */
