@@ -87,16 +87,24 @@ public class Element
 
 public class Schema
 {
+    public string Version {get; set; }
+    public List<string> Abstracts { get; } = new();
     public List<Element> Elements { get; } = new();
 
     public Schema(string json)
     {
         JsonDocument doc = JsonDocument.Parse(json);
         JsonElement root = doc.RootElement;
-        JsonElement version = root.GetProperty("schema_version");
-        JsonElement abstracts = root.GetProperty("abstract_types");
-        JsonElement elements = root.GetProperty("element_types");
 
+        Version = root.GetProperty("schema_version").GetString();
+
+        JsonElement abstracts = root.GetProperty("abstract_types");
+        foreach (var obj in abstracts.EnumerateArray())
+        {
+            Abstracts.Add(obj.GetString());
+        }
+
+        JsonElement elements = root.GetProperty("element_types");
         foreach (var obj in elements.EnumerateObject())
         {
             Element element = new();
