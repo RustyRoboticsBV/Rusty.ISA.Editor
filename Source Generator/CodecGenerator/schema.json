@@ -224,7 +224,7 @@
                 "parameter": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["parameter_definition"]
+                    "ref_type": "parameter_definition"
                 }
             },
             "allowed_children": []
@@ -240,7 +240,7 @@
                 "parameter": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["parameter_definition"]
+                    "ref_type": "parameter_definition"
                 },
                 "remove_default_output": {
                     "description": "",
@@ -260,7 +260,7 @@
                 "definition": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["node_definition"]
+                    "ref_type": "node_definition"
                 },
                 "x": {
                     "description": "",
@@ -285,7 +285,7 @@
                 "parent_frame": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["frame"]
+                    "ref_type": "frame"
                 },
                 "text": {
                     "description": "",
@@ -340,7 +340,7 @@
                 "parent_frame": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["frame"]
+                    "ref_type": "frame"
                 },
                 "text": {
                     "description": "",
@@ -384,7 +384,7 @@
                 "parent_frame": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["frame"]
+                    "ref_type": "frame"
                 },
                 "text": {
                     "description": "",
@@ -408,7 +408,7 @@
                 "edge": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["edge"]
+                    "ref_type": "edge"
                 },
                 "x": {
                     "description": "",
@@ -425,7 +425,7 @@
                 "parent_frame": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["frame"]
+                    "ref_type": "frame"
                 },
                 "text": {
                     "description": "",
@@ -449,7 +449,7 @@
                 "from": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["edge"]
+                    "ref_type": "edge"
                 },
                 "port": {
                     "description": "",
@@ -458,7 +458,7 @@
                 "to": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["edge"]
+                    "ref_type": "edge"
                 },
                 "thickness": {
                     "description": "",
@@ -487,7 +487,7 @@
                 "definition": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["form_definition"]
+                    "ref_type": "form_definition"
                 },
                 "folded": {
                     "description": "",
@@ -519,7 +519,7 @@
                 "definition": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["option_definition"]
+                    "ref_type": "option_definition"
                 },
                 "folded": {
                     "description": "",
@@ -554,12 +554,12 @@
                 "definition": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["choice_definition"]
+                    "ref_type": "choice_definition"
                 },
                 "selected": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["form", "option", "choice", "tuple", "list"]
+                    "ref_type": "inspector"
                 },
                 "folded": {
                     "description": "",
@@ -594,7 +594,7 @@
                 "definition": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["tuple_definition"]
+                    "ref_type": "tuple_definition"
                 },
                 "folded": {
                     "description": "",
@@ -629,7 +629,7 @@
                 "definition": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["list_definition"]
+                    "ref_type": "list_definition"
                 },
                 "folded": {
                     "description": "",
@@ -664,7 +664,7 @@
                 "definition": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["field_definition"]
+                    "ref_type": "field_definition"
                 },
                 "value": {
                     "description": "",
@@ -695,7 +695,7 @@
                 "definition": {
                     "description": "",
                     "value_type": "ref",
-                    "allowed_ref_types": ["output_definition"]
+                    "ref_type": "output_definition"
                 },
                 "text": {
                     "description": "",
@@ -719,7 +719,7 @@
                 "definition": {
                     "description": "The localization language ID.",
                     "value_type": "ref",
-                    "allowed_ref_types": ["language_definition"]
+                    "ref_type": "language_definition"
                 },
                 "value": {
                     "description": "",

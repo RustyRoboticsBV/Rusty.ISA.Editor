@@ -3,7 +3,7 @@
 ### `0x00 (file)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `0 (0x00)` |
+| Index | 0 (`0x00`) |
 | Name | `file` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>editor</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x02</code></td><td><code>csum</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -12,7 +12,7 @@
 ### `0x01 (meta)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `1 (0x01)` |
+| Index | 1 (`0x01`) |
 | Name | `meta` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>value</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -21,7 +21,7 @@
 ### `0x02 (lang)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `2 (0x02)` |
+| Index | 2 (`0x02`) |
 | Name | `lang` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -30,7 +30,7 @@
 ### `0x03 (idef)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `3 (0x03)` |
+| Index | 3 (`0x03`) |
 | Name | `idef` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>exec</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -39,7 +39,7 @@
 ### `0x04 (pdef)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `4 (0x04)` |
+| Index | 4 (`0x04`) |
 | Name | `pdef` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>loc</code></td><td><code>bool</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -48,7 +48,7 @@
 ### `0x05 (ndef)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `5 (0x05)` |
+| Index | 5 (`0x05`) |
 | Name | `ndef` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -57,7 +57,7 @@
 ### `0x06 (fdef)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `6 (0x06)` |
+| Index | 6 (`0x06`) |
 | Name | `fdef` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -66,7 +66,7 @@
 ### `0x07 (odef)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `7 (0x07)` |
+| Index | 7 (`0x07`) |
 | Name | `odef` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -75,7 +75,7 @@
 ### `0x08 (cdef)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `8 (0x08)` |
+| Index | 8 (`0x08`) |
 | Name | `cdef` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -84,7 +84,7 @@
 ### `0x09 (tdef)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `9 (0x09)` |
+| Index | 9 (`0x09`) |
 | Name | `tdef` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -93,7 +93,7 @@
 ### `0x0A (ldef)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `10 (0x0A)` |
+| Index | 10 (`0x0A`) |
 | Name | `ldef` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -102,7 +102,7 @@
 ### `0x0B (vdef)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `11 (0x0B)` |
+| Index | 11 (`0x0B`) |
 | Name | `vdef` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -111,7 +111,7 @@
 ### `0x0C (jdef)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `12 (0x0C)` |
+| Index | 12 (`0x0C`) |
 | Name | `jdef` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x02</code></td><td><code>nodflt</code></td><td><code>bool</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -120,7 +120,7 @@
 ### `0x0D (node)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `13 (0x0D)` |
+| Index | 13 (`0x0D`) |
 | Name | `node` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x02</code></td><td><code>x</code></td><td><code>int</code></td><td><code>?????</code></td></tr><tr><td><code>0x03</code></td><td><code>y</code></td><td><code>int</code></td><td><code>?????</code></td></tr><tr><td><code>0x04</code></td><td><code>width</code></td><td><code>uint</code></td><td><code>?????</code></td></tr><tr><td><code>0x05</code></td><td><code>height</code></td><td><code>uint</code></td><td><code>?????</code></td></tr><tr><td><code>0x06</code></td><td><code>folded</code></td><td><code>bool</code></td><td><code>?????</code></td></tr><tr><td><code>0x07</code></td><td><code>member</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x08</code></td><td><code>start</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -129,7 +129,7 @@
 ### `0x0E (joint)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `14 (0x0E)` |
+| Index | 14 (`0x0E`) |
 | Name | `joint` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>x</code></td><td><code>int</code></td><td><code>?????</code></td></tr><tr><td><code>0x02</code></td><td><code>y</code></td><td><code>int</code></td><td><code>?????</code></td></tr><tr><td><code>0x03</code></td><td><code>member</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x04</code></td><td><code>edge</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -138,7 +138,7 @@
 ### `0x0F (frame)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `15 (0x0F)` |
+| Index | 15 (`0x0F`) |
 | Name | `frame` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>x</code></td><td><code>int</code></td><td><code>?????</code></td></tr><tr><td><code>0x02</code></td><td><code>y</code></td><td><code>int</code></td><td><code>?????</code></td></tr><tr><td><code>0x03</code></td><td><code>width</code></td><td><code>uint</code></td><td><code>?????</code></td></tr><tr><td><code>0x04</code></td><td><code>height</code></td><td><code>uint</code></td><td><code>?????</code></td></tr><tr><td><code>0x05</code></td><td><code>folded</code></td><td><code>bool</code></td><td><code>?????</code></td></tr><tr><td><code>0x06</code></td><td><code>member</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x07</code></td><td><code>text</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x08</code></td><td><code>color</code></td><td><code>color</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -147,7 +147,7 @@
 ### `0x10 (memo)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `16 (0x10)` |
+| Index | 16 (`0x10`) |
 | Name | `memo` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>x</code></td><td><code>int</code></td><td><code>?????</code></td></tr><tr><td><code>0x02</code></td><td><code>y</code></td><td><code>int</code></td><td><code>?????</code></td></tr><tr><td><code>0x03</code></td><td><code>width</code></td><td><code>uint</code></td><td><code>?????</code></td></tr><tr><td><code>0x04</code></td><td><code>height</code></td><td><code>uint</code></td><td><code>?????</code></td></tr><tr><td><code>0x05</code></td><td><code>folded</code></td><td><code>bool</code></td><td><code>?????</code></td></tr><tr><td><code>0x06</code></td><td><code>member</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x07</code></td><td><code>text</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x08</code></td><td><code>color</code></td><td><code>color</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -156,7 +156,7 @@
 ### `0x11 (edge)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `17 (0x11)` |
+| Index | 17 (`0x11`) |
 | Name | `edge` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>from</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x02</code></td><td><code>port</code></td><td><code>uint</code></td><td><code>?????</code></td></tr><tr><td><code>0x03</code></td><td><code>to</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -165,7 +165,7 @@
 ### `0x12 (form)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `18 (0x12)` |
+| Index | 18 (`0x12`) |
 | Name | `form` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -174,7 +174,7 @@
 ### `0x13 (option)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `19 (0x13)` |
+| Index | 19 (`0x13`) |
 | Name | `option` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -183,7 +183,7 @@
 ### `0x14 (choice)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `20 (0x14)` |
+| Index | 20 (`0x14`) |
 | Name | `choice` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x02</code></td><td><code>index</code></td><td><code>uint</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -192,7 +192,7 @@
 ### `0x15 (tuple)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `21 (0x15)` |
+| Index | 21 (`0x15`) |
 | Name | `tuple` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -201,7 +201,7 @@
 ### `0x16 (list)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `22 (0x16)` |
+| Index | 22 (`0x16`) |
 | Name | `list` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -210,7 +210,7 @@
 ### `0x17 (arg)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `23 (0x17)` |
+| Index | 23 (`0x17`) |
 | Name | `arg` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x02</code></td><td><code>value</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -219,7 +219,7 @@
 ### `0x18 (loc)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `24 (0x18)` |
+| Index | 24 (`0x18`) |
 | Name | `loc` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x02</code></td><td><code>value</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
@@ -228,7 +228,7 @@
 ### `0x19 (out)`
 | Property | Value(s) |
 | --- | --- |
-| Index | `25 (0x19)` |
+| Index | 25 (`0x19`) |
 | Name | `out` |
 | Description | .................... |
 | Attributes | <table><thead><tr><th>Hex</th><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>0x00</code></td><td><code>id</code></td><td><code>string</code></td><td><code>?????</code></td></tr><tr><td><code>0x01</code></td><td><code>type</code></td><td><code>string</code></td><td><code>?????</code></td></tr></tbody></table> |
