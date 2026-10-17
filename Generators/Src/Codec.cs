@@ -11,7 +11,7 @@ public abstract class Codec
     /// <summary>
     /// The identifier of this codec.
     /// </summary>
-    public virtual string ID { get; set; }
+    public string ID { get; set; }
 
     /// <summary>
     /// The number of attributes.
@@ -26,6 +26,8 @@ public abstract class Codec
     protected List<Codec> Children { get; } = new();
 
     /* Public methods. */
+    public override string ToString() => CodecPrinter.ToString(this, false);
+
     /// <summary>
     /// Get an attribute value.
     /// </summary>

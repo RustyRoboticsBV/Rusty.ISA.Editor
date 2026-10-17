@@ -1,31 +1,13 @@
 ﻿using System.Text;
 
-public class AbstractClassGenerator
+internal static class NameUtility
 {
-    public static string Generate(Schema schema, string name)
-    {
-        StringBuilder sb = new();
-
-        // Header.
-        sb.AppendLine("// THIS IS A GENERATED SCRIPT FILE! IT SHOULD NOT BE EDITED MANUALLY!");
-        sb.AppendLine();
-        sb.AppendLine("namespace Rusty.ActionGraph.Serialization;");
-        sb.AppendLine();
-
-        // Class.
-        sb.AppendLine($"internal abstract class {ClassName(name)} : Codec");
-        sb.AppendLine("{");
-        sb.AppendLine("}");
-
-        return sb.ToString();
-    }
-
-    private static string ClassName(string elementName)
+    public static string GetCodecName(string elementName)
     {
         return $"{CamelCase(elementName)}Codec";
     }
 
-    private static string CamelCase(string snake_case)
+    public static string CamelCase(string snake_case)
     {
         StringBuilder sb = new();
         for (int i = 0; i < snake_case.Length; i++)

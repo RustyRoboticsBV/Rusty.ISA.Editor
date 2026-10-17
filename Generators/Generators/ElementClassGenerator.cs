@@ -16,11 +16,18 @@ public class ElementClassGenerator
         sb.AppendLine();
 
         // Start of class.
-        string inherit = element.Inherits != "none" ? ClassName(element.Inherits) : "Codec";
+        string inherit = element.Inherits != "none" ? NameUtility.GetCodecName(element.Inherits) : "Codec";
         string group = CheckGroup(schema, element);
-        string groupInterface = group != "none" ? $", ICodecGroup<{ClassName(group)}>" : "";
+        string groupInterface = group != "none" ? $", ICodecGroup<{NameUtility.GetCodecName(group)}>" : "";
 
-        sb.AppendLine($"internal sealed class {ClassName(element.Name)} : {inherit}{groupInterface}");
+        if (element.Description != "")
+        {
+            sb.AppendLine("/// <summary>");
+            sb.AppendLine($"/// {element.Description}");
+            sb.AppendLine("/// </summary>");
+        }
+
+        sb.AppendLine($"internal sealed class {NameUtility.GetCodecName(element.Name)} : {inherit}{groupInterface}");
         sb.AppendLine("{");
 
         // Attribute properties.
@@ -31,7 +38,9 @@ public class ElementClassGenerator
 
         foreach (Attribute attribute in element.Attributes)
         {
-            string id = CamelCase(attribute.Name);
+            if (attribute.Name == "id")
+                continue;
+            string id = NameUtility.CamelCase(attribute.Name);
             string type = GetType(attribute.ValueType, attribute.RefType);
             if (attribute.Description.Length > 0)
             {
@@ -39,7 +48,7 @@ public class ElementClassGenerator
                 sb.AppendLine("    /// " + attribute.Description);
                 sb.AppendLine("    /// </summary>");
             }
-            sb.AppendLine($"    public {(id == "ID" ? "override " : "")}{type} {id}" + " { get; set; }");
+            sb.AppendLine($"    public {type} {id}" + " { get; set; }");
         }
 
         // Attribute getter.
@@ -50,7 +59,7 @@ public class ElementClassGenerator
         for (int i = 0; i < element.Attributes.Count; i++)
         {
             var attribute = element.Attributes[i];
-            sb.AppendLine($"        {i} => {CamelCase(attribute.Name)},");
+            sb.AppendLine($"        {i} => {NameUtility.CamelCase(attribute.Name)},");
         }
         sb.AppendLine($"        _ => throw new ArgumentOutOfRangeException(nameof(index))");
         sb.AppendLine("    };");
@@ -65,7 +74,7 @@ public class ElementClassGenerator
         {
             var attribute = element.Attributes[i];
             string type = GetType(attribute.ValueType, attribute.RefType);
-            sb.AppendLine($"            case {i}: {CamelCase(attribute.Name)} = ({type})value; break;");
+            sb.AppendLine($"            case {i}: {NameUtility.CamelCase(attribute.Name)} = ({type})value; break;");
         }
         sb.AppendLine($"            default: throw new ArgumentOutOfRangeException(nameof(index));");
         sb.AppendLine("        }");
@@ -85,7 +94,7 @@ public class ElementClassGenerator
                     sb.Append("\n          ");
                 if (i > 0)
                     sb.Append(" || ");
-                sb.Append($"child is {ClassName(element.Children[i])}");
+                sb.Append($"child is {NameUtility.GetCodecName(element.Children[i])}");
             }
             sb.AppendLine("))");
             sb.AppendLine("        {");
@@ -102,6 +111,22 @@ public class ElementClassGenerator
         }
         sb.AppendLine("    }");
 
+        // Find method.
+        if (group != "none")
+        {
+            string returnType = NameUtility.GetCodecName(group);
+            sb.AppendLine();
+            sb.AppendLine($"    public {returnType} FindChild(string id)");
+            sb.AppendLine("    {");
+            sb.AppendLine("        for (int i = 0; i < ChildCount; i++)");
+            sb.AppendLine("        {");
+            sb.AppendLine($"            if (Children[i] is {returnType} typed && typed.ID == id)");
+            sb.AppendLine("                return typed;");
+            sb.AppendLine("        }");
+            sb.AppendLine("        return null;");
+            sb.AppendLine("    }");
+        }
+
         // End of class.
         sb.AppendLine("}");
 
@@ -113,33 +138,6 @@ public class ElementClassGenerator
                 .Replace("using System;", "using Godot;\nusing System;");
 
         return str;
-    }
-
-    private static string ClassName(string elementName)
-    {
-        return $"{CamelCase(elementName)}Codec";
-    }
-
-    private static string CamelCase(string snake_case)
-    {
-        StringBuilder sb = new();
-        for (int i = 0; i < snake_case.Length; i++)
-        {
-            if (i == 0)
-                sb.Append(snake_case[0].ToString().ToUpperInvariant());
-            else if (i < snake_case.Length - 1 && snake_case[i] == '_')
-            {
-                sb.Append(snake_case[i + 1].ToString().ToUpperInvariant());
-                i++;
-            }
-            else
-                sb.Append(snake_case[i]);
-        }
-        string name = sb.ToString();
-        if (name == "Id")
-            return "ID";
-        else
-            return name;
     }
 
     private static string CheckGroup(Schema schema, Element element)
@@ -176,31 +174,4 @@ public class ElementClassGenerator
                 throw new Exception();
         }
     }
-
-    private string ICodecGroup = 
-"""
-/// <summary>
-/// A codec that represents a group of child codecs.
-/// </summary>
-internal interface ICodecGroup<CodecT>
-    where CodecT : Codec
-    {
-        /* Public properties. */
-        public List<Codec> Children { get; }
-
-        /* Public methods. */
-        /// <summary>
-        /// Try to find a child codec of some type with an ID. Returns null if the child codec cannot be found.
-        /// </summary>
-        public CodecT Find(string id)
-        {
-            foreach (Codec child in Children)
-            {
-                if (child is CodecT typed && typed.GetAttribute([[ID]]) == id)
-                    return typed;
-            }
-            return null;
-        }
-    }
-""";
 }
