@@ -1,30 +1,52 @@
-﻿using System.Text;
-
-public class AbstractClassGenerator : ClassGenerator
+﻿public class AbstractClassGenerator : ClassGenerator
 {
     public static string Generate(Schema schema, Abstract @abstract)
     {
-        CodeWriter w = new();
-
-        /*// Header.
-        w.Line(Notice);
-        w.Line();
-        w.Line(Namespace);
-        w.Line();
+        bool needsGodot = false;
 
         // Class.
-        w.OpenBlock($"internal abstract class {NameUtility.GetCodecName(@abstract.Name)} : Codec");
+        Class @class = new()
+        {
+            Access = AccessType.Internal,
+            Modifier = ModifierType.Abstract,
+            Name = NameUtility.GetCodecName(@abstract.Name),
+            Base = "Codec"
+        };
 
         // Properties.
-        w.MultilineComment("Public properties.");
         foreach (var attribute in @abstract.Attributes)
         {
             if (!schema.HasSharedAttribute(attribute))
-                w.Property(TypeUtility.GetType(attribute.ValueType), NameUtility.CamelCase(attribute.Name), "abstract");
+            {
+                if (attribute.ValueType == ValueType.Color)
+                    needsGodot = true;
+
+                @class.Members.Add(new Property()
+                {
+                    Modifier = ModifierType.Abstract,
+                    Type = TypeUtility.GetType(attribute.ValueType),
+                    Name = NameUtility.CamelCase(attribute.Name),
+                    Getter = new(),
+                    Setter = new()
+                });
+            }
         }
 
-        // End of class.
-        w.CloseBlock();*/
+        if (@class.Members.Count > 0)
+            @class.Members.Insert(0, new MultilineComment("Public properties."));
+
+        CodeWriter w = new();
+        w.Line(Notice);
+        w.Line();
+        if (needsGodot)
+        {
+            w.Line("using Godot;");
+            w.Line();
+        }
+        w.Line(Namespace);
+        w.Line();
+        w.Line();
+        @class.Generate(w);
 
         return w.ToString();
     }

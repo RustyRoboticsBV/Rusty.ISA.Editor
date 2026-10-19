@@ -10,4 +10,8 @@
     <None Include="Src\ICodecGroup.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Generators\Framework\Generators\Methods\" />
+  </ItemGroup>
+
 </Project>

@@ -15,7 +15,7 @@ internal class TypeUtility
             case ValueType.String:
                 return "string";
             case ValueType.Color:
-                return "Godot.Color";
+                return "Color";
             case ValueType.Ref:
                 return "string";
             default:

@@ -7,8 +7,8 @@ public sealed class Property : Generator
 {
     public Access Access { get; set; } = new();
     public Modifier Modifier { get; set; } = new();
-    public string Type { get; set; }
-    public string Name { get; set; }
+    public Id Type { get; set; }
+    public Id Name { get; set; }
     public Getter Getter { get; set; }
     public Setter Setter { get; set; }
 
@@ -18,12 +18,13 @@ public sealed class Property : Generator
             w.Space();
         if (Modifier.Generate(w))
             w.Space();
-        w.Append(Type);
+        Type.Generate(w);
         w.Space();
-        w.Append(Name);
+        Name.Generate(w);
 
         bool lambda = !(Getter != null && Setter != null) && (Getter?.SingleLine == true || Setter?.SingleLine == true);
-        bool block = Getter != null && Setter != null || Getter?.SingleLine == false || Setter?.SingleLine == false;
+        bool block = Getter != null && Setter != null && Getter.Implementation != null && Setter.Implementation != null
+            || Getter?.SingleLine == false || Setter?.SingleLine == false;
 
         if (block)
         {
@@ -36,7 +37,10 @@ public sealed class Property : Generator
         if (Getter != null && Setter != null)
         {
             Getter.Generate(w);
-            w.Line();
+            if (block)
+                w.Line();
+            else
+                w.Space();
             Setter.Generate(w);
         }
         else if (Getter != null)
@@ -60,7 +64,6 @@ public sealed class Property : Generator
         {
             w.Append(" => ");
             accessor.Implementation.Generate(w);
-            w.Append(';');
         }
         else
             accessor.Generate(w);

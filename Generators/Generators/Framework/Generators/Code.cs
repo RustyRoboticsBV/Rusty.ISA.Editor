@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// A generic code generator.
 /// </summary>
-public sealed class Code : Implementation
+public sealed class Code : Statement
 {
     public override bool SingleLine => !CodeString.Contains('\n');
     public string CodeString { get; set; }

@@ -3,9 +3,8 @@
 /// </summary>
 public abstract class Function : Generator
 {
+    public Statement Implementation { get; set; }
     public bool SingleLine => Implementation == null || Implementation.SingleLine;
-
-    public Implementation Implementation { get; set; }
 
     public override bool Generate(CodeWriter w)
     {
@@ -18,13 +17,16 @@ public abstract class Function : Generator
         {
             GenerateHeader(w);
             w.Append(" => ");
-            Implementation.Generate(w);
-            w.Append(';');
+            if (Implementation is Return @return)
+                @return.GenerateImplicit(w);
+            else
+                Implementation.Generate(w);
         }
         else
         {
             GenerateHeader(w);
             w.OpenBlock();
+            w.Line();
             Implementation.Generate(w);
             w.CloseBlock();
         }
