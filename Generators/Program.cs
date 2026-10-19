@@ -45,55 +45,6 @@ Write(target_folder, "ICodecGroup", File.ReadAllText(src_path + "ICodecGroup.cs"
 // Generate binary serializer.
 string binSerializerSkeleton = File.ReadAllText(src_path + "BinarySerializer.txt");
 
-// 
-
-Property prop = new()
-{
-    Type = "int",
-    Name = "Cheese",
-    Getter = new() { Implementation = (Return)(Int)5 }
-};
-Property prop2 = new()
-{
-    Type = "int",
-    Name = "Cheese2",
-    Getter = new() { Implementation = new Block((Comment)"e", (Return)(Int)15) }
-};
-Property prop3 = new()
-{
-    Type = "int",
-    Name = "Cheese3",
-    Getter = new() { Implementation = (Return)(Int)25 },
-    Setter = new() { Implementation = new Assign("e", (Int)25) }
-};
-Property prop4 = new()
-{
-    Type = "int",
-    Name = "Cheese4",
-    Setter = new() { Implementation = new Assign("e", (Int)35) }
-};
-Property prop5 = new()
-{
-    Type = "int",
-    Name = "Cheese5",
-    Setter = new() { Implementation = new Block((Comment)"e", new Assign("e", (Int)45)) }
-};
-Property prop6 = new()
-{
-    Access = AccessType.Internal,
-    Modifier = ModifierType.Virtual,
-    Type = "int",
-    Name = "Cheese6",
-    Getter = new() { Implementation = new Block((Comment)"e", (Return)(Int)15) },
-    Setter = new() { Implementation = new Block((Comment)"e", new Assign("e", AssignOperator.Add, (Int)45)) }
-};
-Console.WriteLine(prop);
-Console.WriteLine(prop2);
-Console.WriteLine(prop3);
-Console.WriteLine(prop4);
-Console.WriteLine(prop5);
-Console.WriteLine(prop6);
-
 // Write to file method.
 static void Write(string folder, string name, string code)
 {

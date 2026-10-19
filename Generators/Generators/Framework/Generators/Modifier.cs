@@ -1,4 +1,4 @@
-﻿public enum ModifierType { None, Abstract, Virtual, Override, SealedOverride, Static, New, NewVirtual, NewAbstract, NewStatic };
+﻿public enum ModifierType { None, Abstract, Virtual, Override, Sealed, SealedOverride, Static, New, NewVirtual, NewAbstract, NewStatic };
 
 /// <summary>
 /// A modifier keyword generator.
@@ -21,6 +21,9 @@ public sealed class Modifier : Generator
                 return true;
             case ModifierType.Override:
                 w.Append("override");
+                return true;
+            case ModifierType.Sealed:
+                w.Append("sealed");
                 return true;
             case ModifierType.SealedOverride:
                 w.Append("sealed override");

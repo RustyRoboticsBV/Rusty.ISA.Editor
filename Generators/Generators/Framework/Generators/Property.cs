@@ -5,6 +5,7 @@
 /// </summary>
 public sealed class Property : Generator
 {
+    public Summary Summary { get; set; }
     public Access Access { get; set; } = new();
     public Modifier Modifier { get; set; } = new();
     public Id Type { get; set; }
@@ -14,6 +15,12 @@ public sealed class Property : Generator
 
     public override bool Generate(CodeWriter w)
     {
+        if (Summary != null)
+        {
+            Summary.Generate(w);
+            w.Line();
+        }
+
         if (Access.Generate(w))
             w.Space();
         if (Modifier.Generate(w))
@@ -63,7 +70,10 @@ public sealed class Property : Generator
         if (lambda)
         {
             w.Append(" => ");
-            accessor.Implementation.Generate(w);
+            if (accessor.Implementation is Return @return)
+                @return.GenerateImplicit(w);
+            else
+                accessor.Implementation.Generate(w);
         }
         else
             accessor.Generate(w);

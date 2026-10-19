@@ -3,11 +3,18 @@
 /// </summary>
 public abstract class Function : Generator
 {
+    public Summary Summary { get; set; }
     public Statement Implementation { get; set; }
-    public bool SingleLine => Implementation == null || Implementation.SingleLine;
+    public bool SingleLine => Summary == null && (Implementation == null || Implementation.SingleLine);
 
-    public override bool Generate(CodeWriter w)
+    public sealed override bool Generate(CodeWriter w)
     {
+        if (Summary != null)
+        {
+            Summary.Generate(w);
+            w.Line();
+        }
+
         if (Implementation == null)
         {
             GenerateHeader(w);

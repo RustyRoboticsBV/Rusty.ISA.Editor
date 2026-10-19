@@ -23,7 +23,7 @@ public sealed class Summary : Statement
             w.Line("/// ");
             w.Append(lines[i]);
         }
-        w.Append("/// </summary>");
+        w.Line("/// </summary>");
 
         return true;
     }

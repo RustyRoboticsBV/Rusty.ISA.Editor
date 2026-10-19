@@ -5,6 +5,7 @@
 /// </summary>
 public sealed class Class : Generator
 {
+    public Summary Summary { get; set; }
     public Access Access { get; set; } = new();
     public Modifier Modifier { get; set; } = new();
     public Id Name { get; set; }
@@ -14,6 +15,12 @@ public sealed class Class : Generator
 
     public override bool Generate(CodeWriter w)
     {
+        if (Summary != null)
+        {
+            Summary.Generate(w);
+            w.Line();
+        }
+
         if (Access.Generate(w))
             w.Space();
         if (Modifier.Generate(w))

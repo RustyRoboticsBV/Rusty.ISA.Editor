@@ -1,102 +1,182 @@
-﻿public class ElementClassGenerator : ClassGenerator
+﻿using System;
+using System.Text;
+
+public class ElementClassGenerator : ClassGenerator
 {
     public static string Generate(Schema schema, Element element)
     {
-        CodeWriter w = new();
+        bool needsGodot = false;
 
-        /*// Header.
+        // Class header.
+        Class @class = new()
+        {
+            Access = AccessType.Internal,
+            Modifier = ModifierType.Sealed,
+            Name = NameUtility.GetCodecName(element.Name)
+        };
+
+        if (element.Description != "")
+            @class.Summary = element.Description;
+
+        if (element.Inherits != null)
+            @class.Base = NameUtility.GetCodecName(element.Inherits.Name);
+        else
+            @class.Base = "Codec";
+
+        string group = CheckGroup(schema, element);
+        if (group != null)
+            @class.Interfaces.Add($"ICodecGroup<{NameUtility.GetCodecName(group)}>");
+
+
+        // Properties.
+        @class.Members.Add(new MultilineComment("Public properties."));
+
+        // Attribute count property.
+        @class.Members.Add(new Property()
+        {
+            Modifier = ModifierType.Override,
+            Type = "int",
+            Name = "AttributeCount",
+            Getter = new()
+            {
+                Implementation = (Return)(Int)element.Attributes.Count
+            }
+        });
+
+        // Attribute properties.
+        if (element.Attributes.Count > 0)
+            @class.Members.Add(new Empty());
+
+        foreach (Attribute attribute in element.Attributes)
+        {
+            if (attribute.ValueType == ValueType.Color)
+                needsGodot = true;
+
+            // Create property.
+            Property property = new()
+            {
+                Name = NameUtility.CamelCase(attribute.Name),
+                Type = TypeUtility.GetType(attribute.ValueType),
+                Getter = new(),
+                Setter = new()
+            };
+
+            // Attribute description.
+            if (attribute.Description.Length > 0)
+                property.Summary = attribute.Description;
+
+            // Shared attribute?
+            if (schema.HasSharedAttribute(attribute) || (element.Inherits?.HasAttribute(attribute) ?? false))
+                property.Modifier = ModifierType.Override;
+
+            // Add to class.
+            @class.Members.Add(property);
+        }
+
+
+        // Methods.
+        @class.Members.Add(new Empty());
+        @class.Members.Add(new MultilineComment("Public methods."));
+
+        // GetAttribute method.
+        Switch getterSwitch = new((Id)"index");
+        for (int i = 0; i < element.Attributes.Count; i++)
+        {
+            getterSwitch.Cases.Add(new Case((Int)i, (Return)(Id)NameUtility.CamelCase(element.Attributes[i].Name)));
+        }
+        getterSwitch.Default = new(new Throw("ArgumentOutOfRangeException", (Id)"nameof(index)"));
+
+        Method getter = new()
+        {
+            Modifier = ModifierType.Override,
+            ReturnType = "object",
+            Name = "GetAttribute",
+            Parameters = [new("int", "index")],
+            Implementation = getterSwitch
+        };
+
+        @class.Members.Add(getter);
+
+        // SetAttribute method.
+        Switch setterSwitch = new((Id)"index");
+        for (int i = 0; i < element.Attributes.Count; i++)
+        {
+            setterSwitch.Cases.Add(new Case(
+                (Int)i,
+                new Assign(
+                    (Id)NameUtility.CamelCase(element.Attributes[i].Name),
+                    new Cast(TypeUtility.GetType(element.Attributes[i].ValueType), (Id)"value")
+                )
+            ));
+        }
+        setterSwitch.Default = new(new Throw("ArgumentOutOfRangeException", (Id)"nameof(index)"));
+
+        Method setter = new()
+        {
+            Modifier = ModifierType.Override,
+            ReturnType = "void",
+            Name = "SetAttribute",
+            Parameters = [new("int", "index"), new("object", "value")],
+            Implementation = setterSwitch
+        };
+
+        @class.Members.Add(new Empty());
+        @class.Members.Add(setter);
+
+        // AddChild method.
+        Block addChildBlock = new();
+        if (element.Children.Count > 0)
+        {
+            StringBuilder sb = new();
+            sb.Append("if (!(");
+            for (int i = 0; i < element.Children.Count; i++)
+            {
+                if (i > 0 && i % 2 == 0)
+                    sb.Append("\n  ");
+                if (i > 0)
+                    sb.Append(" || ");
+                sb.Append($"child is {NameUtility.GetCodecName(element.Children[i])}");
+            }
+            sb.Append("\n))");
+            addChildBlock.Statements.Add((Code)sb.ToString());
+
+            sb.Clear();
+            sb.Append("throw new ArgumentException(");
+            sb.Append("\n    $\"Codec '{GetType().Name}' does not allow children of type '{child.GetType().Name}'.\",");
+            sb.Append("\n    nameof(child)");
+            sb.Append("\n);");
+            sb.Append("\nChildren.Add(child);");
+            addChildBlock.Statements.Add((Code)sb.ToString());
+        }
+        else
+            addChildBlock.Statements.Add(new Throw("InvalidOperationException", (IString)"Codec '{GetType().Name}' does not allow any children."));
+
+        Method addChild = new()
+        {
+            Modifier = ModifierType.Override,
+            ReturnType = "void",
+            Name = "AddChild",
+            Parameters = [new("Codec", "child")],
+            Implementation = addChildBlock
+        };
+
+        @class.Members.Add(new Empty());
+        @class.Members.Add(addChild);
+
+
+        // Generate code.
+        CodeWriter w = new();
         w.Line(Notice);
         w.Line();
+        if (needsGodot)
+            w.Line("using Godot;");
         w.Line("using System;");
         w.Line();
         w.Line(Namespace);
         w.Line();
-
-        // Start of class.
-        string inherit = element.Inherits != null ? NameUtility.GetCodecName(element.Inherits.Name) : "Codec";
-        string group = CheckGroup(schema, element);
-        string groupInterface = group != "none" ? $", ICodecGroup<{NameUtility.GetCodecName(group)}>" : "";
-
-        if (element.Description != "")
-            w.Summary(element.Description);
-        w.OpenBlock($"internal sealed class {NameUtility.GetCodecName(element.Name)} : {inherit}{groupInterface}");
-
-        // Properties.
-        w.MultilineComment("Public properties.");
-
-        // Attribute count.
-        w.Line($"public override int AttributeCount => {element.Attributes.Count};");
         w.Line();
-
-        // Attribute properties.
-        foreach (Attribute attribute in element.Attributes)
-        {
-            string id = NameUtility.CamelCase(attribute.Name);
-            string type = TypeUtility.GetType(attribute.ValueType);
-            if (attribute.Description.Length > 0)
-                w.Summary(attribute.Description);
-
-            if (schema.HasSharedAttribute(attribute) || element.Inherits != null && element.Inherits.HasAttribute(attribute))
-                w.Property(type, id, "override");
-            else
-                w.Property(type, id);
-        }
-
-        // Methods.
-        w.Line();
-        w.MultilineComment("Public methods.");
-
-        // Attribute getter.
-        w.OpenBlock("public override object GetAttribute(int index) => index switch");
-        for (int i = 0; i < element.Attributes.Count; i++)
-        {
-            var attribute = element.Attributes[i];
-            w.Line($"{i} => {NameUtility.CamelCase(attribute.Name)},");
-        }
-        w.Line($"_ => throw new ArgumentOutOfRangeException(nameof(index))");
-        w.CloseBlock(";");
-        w.Line();
-
-        // Attribute setter.
-        w.OpenBlock("public override void SetAttribute(int index, object value)");
-        w.OpenBlock("switch (index)");
-        for (int i = 0; i < element.Attributes.Count; i++)
-        {
-            var attribute = element.Attributes[i];
-            string type = TypeUtility.GetType(attribute.ValueType);
-            w.Line($"case {i}: {NameUtility.CamelCase(attribute.Name)} = ({type})value; break;");
-        }
-        w.Line($"default: throw new ArgumentOutOfRangeException(nameof(index));");
-        w.CloseBlock();
-        w.CloseBlock();
-        w.Line();
-
-        // Add child method.
-        w.OpenBlock("public override void AddChild(Codec child)");
-
-        if (element.Children.Count > 0)
-        {
-            w.Line("if (!(");
-            for (int i = 0; i < element.Children.Count; i++)
-            {
-                if (i > 0 && i % 2 == 0)
-                    w.IndentedLine();
-                if (i > 0)
-                    w.Append(" || ");
-                w.Append($"child is {NameUtility.GetCodecName(element.Children[i])}");
-            }
-            w.Line("))");
-            w.OpenBlock();
-            w.Line("throw new ArgumentException(");
-            w.IndentedLine("$\"Codec '{GetType().Name}' does not allow children of type '{child.GetType().Name}'.\",");
-            w.IndentedLine("nameof(child)");
-            w.Line(");");
-            w.Line("Children.Add(child);");
-        }
-        else
-            w.Line("throw new InvalidOperationException($\"Codec '{GetType().Name}' does not allow any children.\");");
-        w.CloseBlock();
-
+        @class.Generate(w);
+        /*
         // Find method.
         if (group != "none")
         {
@@ -115,14 +195,7 @@
         // End of class.
         w.CloseBlock(); */
 
-        // Godot using.
-        string str = w.ToString();
-        if (str.Contains("Godot."))
-            str = str
-                .Replace("Godot.", "")
-                .Replace("using System;", "using Godot;\nusing System;");
-
-        return str;
+        return w.ToString();
     }
 
     private static string CheckGroup(Schema schema, Element element)
@@ -134,8 +207,8 @@
             if (inherits == null)
                 inherits = found.Inherits;
             else if (inherits != found.Inherits)
-                return "none";
+                return null;
         }
-        return inherits?.Name ?? "none";
+        return inherits?.Name;
     }
 }

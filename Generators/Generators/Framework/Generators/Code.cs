@@ -8,6 +8,8 @@ public sealed class Code : Statement
 
     public Code(string code) => CodeString = code;
 
+    public static implicit operator Code(string code) => new Code(code);
+
     public override bool Generate(CodeWriter w)
     {
         if (SingleLine)

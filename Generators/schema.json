@@ -131,7 +131,7 @@
           "value_type": "string"
         },
         "instruction_definition": {
-          "description": "The id of the associated instruction definition.",
+          "description": "The identifier of the associated instruction definition.",
           "value_type": "ref",
           "ref_type": "instruction_definition"
         }
@@ -223,7 +223,7 @@
           "value_type": "string"
         },
         "parameter": {
-          "description": "",
+          "description": "The identifier of the parameter definition.",
           "value_type": "ref",
           "ref_type": "parameter_definition"
         }
@@ -239,12 +239,12 @@
           "value_type": "string"
         },
         "parameter": {
-          "description": "The id of the associated parameter definition.",
+          "description": "The identifier of the associated parameter definition.",
           "value_type": "ref",
           "ref_type": "parameter_definition"
         },
         "remove_default_output": {
-          "description": "",
+          "description": "Whether or not this output removes the default output.",
           "value_type": "bool"
         }
       },
@@ -259,45 +259,45 @@
           "value_type": "string"
         },
         "definition": {
-          "description": "The id of the associated node definition.",
+          "description": "The identifier of the associated node definition.",
           "value_type": "ref",
           "ref_type": "node_definition"
         },
         "x": {
-          "description": "",
+          "description": "The x-position of the node on the graph.",
           "value_type": "int"
         },
         "y": {
-          "description": "",
+          "description": "The y-position of the node on the graph.",
           "value_type": "int"
         },
         "width": {
-          "description": "",
+          "description": "The width of the node on the graph.",
           "value_type": "uint"
         },
         "height": {
-          "description": "",
+          "description": "The height of the node on the graph.",
           "value_type": "uint"
         },
         "folded": {
-          "description": "",
+          "description": "Whether or not the node has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
-          "description": "",
+          "description": "The identifier of the parent frame.",
           "value_type": "ref",
           "ref_type": "frame"
         },
         "text": {
-          "description": "",
+          "description": "The title of the node.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the node.",
           "value_type": "color"
         },
         "start_point_name": {
-          "description": "",
+          "description": "The start point name, from which the program can be started.",
           "value_type": "string"
         }
       },
@@ -319,11 +319,11 @@
           "value_type": "string"
         },
         "x": {
-          "description": "The x position of the memo on the graph.",
+          "description": "The x-position of the memo on the graph.",
           "value_type": "int"
         },
         "y": {
-          "description": "The y position of the memo on the graph.",
+          "description": "The y-position of the memo on the graph.",
           "value_type": "int"
         },
         "width": {
@@ -339,7 +339,7 @@
           "value_type": "bool"
         },
         "parent_frame": {
-          "description": "The id of the frame that contains this memo.",
+          "description": "The identifier of the parent frame.",
           "value_type": "ref",
           "ref_type": "frame"
         },
@@ -363,36 +363,36 @@
           "value_type": "string"
         },
         "x": {
-          "description": "",
+          "description": "The x-position of the frame on the graph.",
           "value_type": "int"
         },
         "y": {
-          "description": "",
+          "description": "The y-position of the frame on the graph.",
           "value_type": "int"
         },
         "width": {
-          "description": "",
+          "description": "The width of the frame on the graph.",
           "value_type": "uint"
         },
         "height": {
-          "description": "",
+          "description": "The height of the frame on the graph.",
           "value_type": "uint"
         },
         "folded": {
-          "description": "",
+          "description": "Whether or not the frame has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
-          "description": "",
+          "description": "The identifier of the parent frame.",
           "value_type": "ref",
           "ref_type": "frame"
         },
         "text": {
-          "description": "",
+          "description": "The title text of the frame.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the frame.",
           "value_type": "color"
         }
       },
@@ -407,33 +407,33 @@
           "value_type": "string"
         },
         "edge": {
-          "description": "",
+          "description": "The identifier of the associated edge.",
           "value_type": "ref",
           "ref_type": "edge"
         },
         "x": {
-          "description": "",
+          "description": "The x-position of the joint.",
           "value_type": "int"
         },
         "y": {
-          "description": "",
+          "description": "The y-position of the joint.",
           "value_type": "int"
         },
         "size": {
-          "description": "",
+          "description": "The size of the joint.",
           "value_type": "uint"
         },
         "parent_frame": {
-          "description": "",
+          "description": "The identifier of the parent frame.",
           "value_type": "ref",
           "ref_type": "frame"
         },
         "text": {
-          "description": "",
+          "description": "The annotation of the joint.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the joint.",
           "value_type": "color"
         }
       },
@@ -448,29 +448,29 @@
           "value_type": "string"
         },
         "from": {
-          "description": "",
+          "description": "The identifier of the origin node.",
           "value_type": "ref",
           "ref_type": "edge"
         },
         "port": {
-          "description": "",
+          "description": "The port index on the origin node.",
           "value_type": "uint"
         },
         "to": {
-          "description": "",
+          "description": "The identifier of the destination edge.",
           "value_type": "ref",
           "ref_type": "edge"
         },
         "thickness": {
-          "description": "",
+          "description": "The thickness of the edge.",
           "value_type": "uint"
         },
         "text": {
-          "description": "",
+          "description": "The label of the edge.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the edge.",
           "value_type": "color"
         }
       },
@@ -486,20 +486,20 @@
           "value_type": "string"
         },
         "definition": {
-          "description": "",
+          "description": "The identifier of the associated form definition.",
           "value_type": "ref",
           "ref_type": "form_definition"
         },
         "folded": {
-          "description": "",
+          "description": "Whether or not the form has been folded.",
           "value_type": "bool"
         },
         "text": {
-          "description": "",
+          "description": "The annotation of the form.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the form.",
           "value_type": "color"
         }
       },
@@ -510,7 +510,7 @@
       "allow_multiple_children": true
     },
     "option": {
-      "description": "An option (toggle) inspector.",
+      "description": "An option inspector.",
       "inherits_abstract": "inspector",
       "attributes": {
         "id": {
@@ -518,20 +518,20 @@
           "value_type": "string"
         },
         "definition": {
-          "description": "The id of the associated option definition.",
+          "description": "The identifier of the associated option definition.",
           "value_type": "ref",
           "ref_type": "option_definition"
         },
         "folded": {
-          "description": "",
+          "description": "Whether or not the option has been folded.",
           "value_type": "bool"
         },
         "text": {
-          "description": "",
+          "description": "The annotation of the option inspector.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the option.",
           "value_type": "color"
         }
       },
@@ -545,7 +545,7 @@
       "allow_multiple_children": false
     },
     "choice": {
-      "description": "A choice (dropdown) inspector.",
+      "description": "A choice inspector.",
       "inherits_abstract": "inspector",
       "attributes": {
         "id": {
@@ -553,25 +553,25 @@
           "value_type": "string"
         },
         "definition": {
-          "description": "",
+          "description": "The identifier of the choice definition.",
           "value_type": "ref",
           "ref_type": "choice_definition"
         },
         "selected": {
-          "description": "",
+          "description": "The identifier of the selected item.",
           "value_type": "ref",
           "ref_type": "inspector"
         },
         "folded": {
-          "description": "",
+          "description": "Whether or not the choice has been folded.",
           "value_type": "bool"
         },
         "text": {
-          "description": "",
+          "description": "The annotation of the choice.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the choice.",
           "value_type": "color"
         }
       },
@@ -585,7 +585,7 @@
       "allow_multiple_children": false
     },
     "tuple": {
-      "description": "A tuple (group) inspector.",
+      "description": "A tuple inspector.",
       "inherits_abstract": "inspector",
       "attributes": {
         "id": {
@@ -593,20 +593,20 @@
           "value_type": "string"
         },
         "definition": {
-          "description": "",
+          "description": "The identifier of the tuple definition.",
           "value_type": "ref",
           "ref_type": "tuple_definition"
         },
         "folded": {
-          "description": "",
+          "description": "Whether or not the tuple has been folded.",
           "value_type": "bool"
         },
         "text": {
-          "description": "",
+          "description": "The annotation of the tuple.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the tuple.",
           "value_type": "color"
         }
       },
@@ -628,20 +628,20 @@
           "value_type": "string"
         },
         "definition": {
-          "description": "",
+          "description": "The identifier of the list definition.",
           "value_type": "ref",
           "ref_type": "list_definition"
         },
         "folded": {
-          "description": "",
+          "description": "Whether or not the list has been folded.",
           "value_type": "bool"
         },
         "text": {
-          "description": "",
+          "description": "The annotation of the list.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the list.",
           "value_type": "color"
         }
       },
@@ -663,20 +663,20 @@
           "value_type": "string"
         },
         "definition": {
-          "description": "",
+          "description": "The identifier of the field definition.",
           "value_type": "ref",
           "ref_type": "field_definition"
         },
         "value": {
-          "description": "",
+          "description": "The value of the field.",
           "value_type": "string"
         },
         "text": {
-          "description": "",
+          "description": "The annotation of the field.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the field.",
           "value_type": "color"
         }
       },
@@ -694,16 +694,16 @@
           "value_type": "string"
         },
         "definition": {
-          "description": "",
+          "description": "The identifier of the associated output definition.",
           "value_type": "ref",
           "ref_type": "output_definition"
         },
         "text": {
-          "description": "",
+          "description": "The annotation of the output port.",
           "value_type": "string"
         },
         "color": {
-          "description": "",
+          "description": "The color of the output port.",
           "value_type": "color"
         }
       },
@@ -718,7 +718,7 @@
           "value_type": "string"
         },
         "definition": {
-          "description": "The id of the language definition.",
+          "description": "The identifier of the language definition.",
           "value_type": "ref",
           "ref_type": "language_definition"
         },
