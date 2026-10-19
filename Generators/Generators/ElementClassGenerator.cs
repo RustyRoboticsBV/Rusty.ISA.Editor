@@ -4,7 +4,7 @@
     {
         CodeWriter w = new();
 
-        // Header.
+        /*// Header.
         w.Line(Notice);
         w.Line();
         w.Line("using System;");
@@ -113,7 +113,7 @@
         }
 
         // End of class.
-        w.CloseBlock();
+        w.CloseBlock(); */
 
         // Godot using.
         string str = w.ToString();

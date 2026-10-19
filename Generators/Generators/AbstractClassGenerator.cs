@@ -6,7 +6,7 @@ public class AbstractClassGenerator : ClassGenerator
     {
         CodeWriter w = new();
 
-        // Header.
+        /*// Header.
         w.Line(Notice);
         w.Line();
         w.Line(Namespace);
@@ -24,7 +24,7 @@ public class AbstractClassGenerator : ClassGenerator
         }
 
         // End of class.
-        w.CloseBlock();
+        w.CloseBlock();*/
 
         return w.ToString();
     }
