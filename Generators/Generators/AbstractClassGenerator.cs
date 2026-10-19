@@ -1,22 +1,31 @@
 ﻿using System.Text;
 
-public class AbstractClassGenerator
+public class AbstractClassGenerator : ClassGenerator
 {
-    public static string Generate(Schema schema, string name)
+    public static string Generate(Schema schema, Abstract @abstract)
     {
-        StringBuilder sb = new();
+        CodeWriter w = new();
 
         // Header.
-        sb.AppendLine("// THIS IS A GENERATED SCRIPT FILE! IT SHOULD NOT BE EDITED MANUALLY!");
-        sb.AppendLine();
-        sb.AppendLine("namespace Rusty.ActionGraph.Serialization;");
-        sb.AppendLine();
+        w.Line(Notice);
+        w.Line();
+        w.Line(Namespace);
+        w.Line();
 
         // Class.
-        sb.AppendLine($"internal abstract class {NameUtility.GetCodecName(name)} : Codec");
-        sb.AppendLine("{");
-        sb.AppendLine("}");
+        w.OpenBlock($"internal abstract class {NameUtility.GetCodecName(@abstract.Name)} : Codec");
 
-        return sb.ToString();
+        // Properties.
+        w.MultilineComment("Public properties.");
+        foreach (var attribute in @abstract.Attributes)
+        {
+            if (!schema.HasSharedAttribute(attribute))
+                w.Property(TypeUtility.GetType(attribute.ValueType), NameUtility.CamelCase(attribute.Name), "abstract");
+        }
+
+        // End of class.
+        w.CloseBlock();
+
+        return w.ToString();
     }
 }

@@ -1,15 +1,15 @@
 ﻿using System.Text;
 
-public class SchemaClassGenerator
+public class SchemaClassGenerator : ClassGenerator
 {
     public static string Generate(Schema schema)
     {
         StringBuilder sb = new();
 
         // Header.
-        sb.AppendLine("// THIS IS A GENERATED SCRIPT FILE! IT SHOULD NOT BE EDITED MANUALLY!");
+        sb.AppendLine(Notice);
         sb.AppendLine();
-        sb.AppendLine("namespace Rusty.ActionGraph.Serialization;");
+        sb.AppendLine(Namespace);
         sb.AppendLine();
 
         // Start of class.

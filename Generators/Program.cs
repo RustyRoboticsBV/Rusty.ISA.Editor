@@ -1,30 +1,32 @@
-﻿using System;
+﻿using Rusty.ActionGraph.Serialization;
+using System;
 using System.IO;
-using System.Xml.Linq;
+
+const string proj_path = "../../../";
 
 // Read JSON.
-const string path = "../../../schema.json";
-string json = File.ReadAllText(path);
+const string schema_path = proj_path + "schema.json";
+string json = File.ReadAllText(schema_path);
 Schema schema = new(json);
 Console.WriteLine(schema);
 
 // Create directory.
-const string target_folder = "../../../Generated";
+const string target_folder = proj_path + "Generated/";
 if (Directory.Exists(target_folder))
     Directory.Delete(target_folder, true);
 Directory.CreateDirectory(target_folder);
 
 // Generate base classes.
-const string abstractFolder = target_folder + "/Abstract";
-foreach (var name in schema.Abstracts)
+const string abstractFolder = target_folder + "Abstract/";
+foreach (var @abstract in schema.Abstracts)
 {
-    string code = AbstractClassGenerator.Generate(schema, name);
-    string className = NameUtility.GetCodecName(name);
+    string code = AbstractClassGenerator.Generate(schema, @abstract);
+    string className = NameUtility.GetCodecName(@abstract.Name);
     Write(abstractFolder, className, code);
 }
 
 // Generate sealed classes.
-const string elementFolder = target_folder + "/Elements";
+const string elementFolder = target_folder + "Elements/";
 foreach (var element in schema.Elements)
 {
     string code = ElementClassGenerator.Generate(schema, element);
@@ -35,13 +37,22 @@ foreach (var element in schema.Elements)
 // Generate schema class.
 Write(target_folder, "CodecSchema", SchemaClassGenerator.Generate(schema));
 
+// Copy source files.
+const string src_path = proj_path + "Src/";
+Write(target_folder, "Codec", File.ReadAllText(src_path + "Codec.cs"));
+Write(target_folder, "ICodecGroup", File.ReadAllText(src_path + "ICodecGroup.cs"));
+
+// Generate binary serializer.
+string binSerializerSkeleton = File.ReadAllText(src_path + "BinarySerializer.txt");
+
+
 // Write to file method.
 static void Write(string folder, string name, string code)
 {
     if (!Directory.Exists(folder))
         Directory.CreateDirectory(folder);
 
-    var file = File.CreateText(folder + "/" + name + ".cs");
+    var file = File.CreateText(folder + name + ".cs");
     file.Write(code);
     file.Close();
 }

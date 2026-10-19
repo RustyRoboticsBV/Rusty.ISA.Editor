@@ -1,0 +1,119 @@
+using Godot;
+using System;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace Rusty.ActionGraph.Serialization.Binary;
+
+/// <summary>
+/// A utility for serializing FileCodec objects to binary.
+/// </summary>
+internal static class BinarySerializer
+{
+    /* Constants. */
+    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes(__MAGIC_SIGNATURE__);
+    private const string Version = __FORMAT_VERSION__;
+
+    /// <summary>
+    /// Serialize a FileCodec to a byte array.
+    /// </summary>
+    public static byte[] Serialize(FileCodec file)
+    {
+        // Compute checksum.
+        Hasher.StoreHash(file, MD5.Create());
+
+        // Serialize.
+        MemoryStream stream = new();
+        BinaryWriter writer = new(stream);
+
+        writer.Write(MagicBytes);
+        WriteString(writer, Version);
+        WriteCodec(writer, file);
+
+        writer.Close();
+        return stream.ToArray();
+    }
+
+    /* Private methods. */
+    /// <summary>
+    /// Convert this node to binary.
+    /// </summary>
+    private static void WriteCodec(BinaryWriter writer, Codec codec)
+    {
+__WRITE_CODEC_IMPL__
+    }
+
+__WRITE_CODECS_METHODS
+    /// <summary>
+    /// Write a boolean to binary, 0x01 for true and 0x00 for false.
+    /// </summary>
+    private static void WriteBool(BinaryWriter writer, bool value)
+    {
+        writer.Write((byte)(value ? 0x01 : 0x00));
+    }
+
+    /// <summary>
+    /// Write a signed integer to binary, using SLEB128 encoding.
+    /// </summary>
+    private static void WriteInt(BinaryWriter writer, int value)
+    {
+        int remaining = value;
+        bool more;
+        do
+        {
+            byte current = (byte)(remaining & 0x7F);
+            remaining >>= 7;
+
+            more = !((remaining == 0 && (current & 0x40) == 0) || (remaining == -1 && (current & 0x40) != 0));
+            if (more)
+                current |= 0x80;
+
+            writer.Write(current);
+        }
+        while (more);
+    }
+
+    /// <summary>
+    /// Write an unsigned integer to binary, using ULEB128 encoding.
+    /// </summary>
+    private static void WriteUint(BinaryWriter writer, uint value)
+    {
+        uint remaining = value;
+        do
+        {
+            byte current = (byte)(remaining & 0x7F);
+            remaining >>= 7;
+
+            if (remaining != 0)
+                current |= 0x80;
+
+            writer.Write(current);
+        }
+        while (remaining != 0);
+    }
+
+    /// <summary>
+    /// Write a string to binary, using ULEB128 length-prefixed UTF-8 encoding.
+    /// </summary>
+    private static void WriteString(BinaryWriter writer, string str)
+    {
+        if (str == null)
+            throw new ArgumentNullException(nameof(str));
+
+        byte[] bytes = Encoding.UTF8.GetBytes(str);
+        WriteUint(writer, (uint)bytes.Length);
+        writer.Write(bytes);
+    }
+
+    /// <summary>
+    /// Write a color to binary, using RGBA8 encoding.
+    /// </summary>
+    private static void WriteColor(BinaryWriter writer, Color color)
+    {
+        writer.Write(color.R8);
+        writer.Write(color.G8);
+        writer.Write(color.B8);
+        writer.Write(color.A8);
+    }
+}

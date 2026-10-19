@@ -1,137 +1,122 @@
-﻿using System;
-using System.Text;
-
-public class ElementClassGenerator
+﻿public class ElementClassGenerator : ClassGenerator
 {
     public static string Generate(Schema schema, Element element)
     {
-        StringBuilder sb = new();
+        CodeWriter w = new();
 
         // Header.
-        sb.AppendLine("// THIS IS A GENERATED SCRIPT FILE! IT SHOULD NOT BE EDITED MANUALLY!");
-        sb.AppendLine();
-        sb.AppendLine("using System;");
-        sb.AppendLine();
-        sb.AppendLine("namespace Rusty.ActionGraph.Serialization;");
-        sb.AppendLine();
+        w.Line(Notice);
+        w.Line();
+        w.Line("using System;");
+        w.Line();
+        w.Line(Namespace);
+        w.Line();
 
         // Start of class.
-        string inherit = element.Inherits != "none" ? NameUtility.GetCodecName(element.Inherits) : "Codec";
+        string inherit = element.Inherits != null ? NameUtility.GetCodecName(element.Inherits.Name) : "Codec";
         string group = CheckGroup(schema, element);
         string groupInterface = group != "none" ? $", ICodecGroup<{NameUtility.GetCodecName(group)}>" : "";
 
         if (element.Description != "")
-        {
-            sb.AppendLine("/// <summary>");
-            sb.AppendLine($"/// {element.Description}");
-            sb.AppendLine("/// </summary>");
-        }
+            w.Summary(element.Description);
+        w.OpenBlock($"internal sealed class {NameUtility.GetCodecName(element.Name)} : {inherit}{groupInterface}");
 
-        sb.AppendLine($"internal sealed class {NameUtility.GetCodecName(element.Name)} : {inherit}{groupInterface}");
-        sb.AppendLine("{");
+        // Properties.
+        w.MultilineComment("Public properties.");
+
+        // Attribute count.
+        w.Line($"public override int AttributeCount => {element.Attributes.Count};");
+        w.Line();
 
         // Attribute properties.
-        sb.AppendLine("    /* Public properties. */");
-
-        sb.AppendLine($"    public override int AttributeCount => {element.Attributes.Count};");
-        sb.AppendLine();
-
         foreach (Attribute attribute in element.Attributes)
         {
-            if (attribute.Name == "id")
-                continue;
             string id = NameUtility.CamelCase(attribute.Name);
-            string type = GetType(attribute.ValueType, attribute.RefType);
+            string type = TypeUtility.GetType(attribute.ValueType);
             if (attribute.Description.Length > 0)
-            {
-                sb.AppendLine("    /// <summary>");
-                sb.AppendLine("    /// " + attribute.Description);
-                sb.AppendLine("    /// </summary>");
-            }
-            sb.AppendLine($"    public {type} {id}" + " { get; set; }");
+                w.Summary(attribute.Description);
+
+            if (schema.HasSharedAttribute(attribute) || element.Inherits != null && element.Inherits.HasAttribute(attribute))
+                w.Property(type, id, "override");
+            else
+                w.Property(type, id);
         }
+
+        // Methods.
+        w.Line();
+        w.MultilineComment("Public methods.");
 
         // Attribute getter.
-        sb.AppendLine();
-        sb.AppendLine("    /* Public methods. */");
-        sb.AppendLine("    public override object GetAttribute(int index) => index switch");
-        sb.AppendLine("    {");
+        w.OpenBlock("public override object GetAttribute(int index) => index switch");
         for (int i = 0; i < element.Attributes.Count; i++)
         {
             var attribute = element.Attributes[i];
-            sb.AppendLine($"        {i} => {NameUtility.CamelCase(attribute.Name)},");
+            w.Line($"{i} => {NameUtility.CamelCase(attribute.Name)},");
         }
-        sb.AppendLine($"        _ => throw new ArgumentOutOfRangeException(nameof(index))");
-        sb.AppendLine("    };");
-        sb.AppendLine();
+        w.Line($"_ => throw new ArgumentOutOfRangeException(nameof(index))");
+        w.CloseBlock(";");
+        w.Line();
 
         // Attribute setter.
-        sb.AppendLine("    public override void SetAttribute(int index, object value)");
-        sb.AppendLine("    {");
-        sb.AppendLine("        switch (index)");
-        sb.AppendLine("        {");
+        w.OpenBlock("public override void SetAttribute(int index, object value)");
+        w.OpenBlock("switch (index)");
         for (int i = 0; i < element.Attributes.Count; i++)
         {
             var attribute = element.Attributes[i];
-            string type = GetType(attribute.ValueType, attribute.RefType);
-            sb.AppendLine($"            case {i}: {NameUtility.CamelCase(attribute.Name)} = ({type})value; break;");
+            string type = TypeUtility.GetType(attribute.ValueType);
+            w.Line($"case {i}: {NameUtility.CamelCase(attribute.Name)} = ({type})value; break;");
         }
-        sb.AppendLine($"            default: throw new ArgumentOutOfRangeException(nameof(index));");
-        sb.AppendLine("        }");
-        sb.AppendLine("    }");
-        sb.AppendLine();
+        w.Line($"default: throw new ArgumentOutOfRangeException(nameof(index));");
+        w.CloseBlock();
+        w.CloseBlock();
+        w.Line();
 
-        // Add child.
-        sb.AppendLine("    public override void AddChild(Codec child)");
-        sb.AppendLine("    {");
+        // Add child method.
+        w.OpenBlock("public override void AddChild(Codec child)");
 
         if (element.Children.Count > 0)
         {
-            sb.Append("        if (!(");
+            w.Line("if (!(");
             for (int i = 0; i < element.Children.Count; i++)
             {
                 if (i > 0 && i % 2 == 0)
-                    sb.Append("\n          ");
+                    w.IndentedLine();
                 if (i > 0)
-                    sb.Append(" || ");
-                sb.Append($"child is {NameUtility.GetCodecName(element.Children[i])}");
+                    w.Append(" || ");
+                w.Append($"child is {NameUtility.GetCodecName(element.Children[i])}");
             }
-            sb.AppendLine("))");
-            sb.AppendLine("        {");
-            sb.AppendLine("            throw new ArgumentException("
-                + "\n                $\"Codec '{GetType().Name}' does not allow children of type '{child.GetType().Name}'.\","
-                + "\n                nameof(child)"
-                + "\n            );");
-            sb.AppendLine("        }");
-            sb.AppendLine("        Children.Add(child);");
+            w.Line("))");
+            w.OpenBlock();
+            w.Line("throw new ArgumentException(");
+            w.IndentedLine("$\"Codec '{GetType().Name}' does not allow children of type '{child.GetType().Name}'.\",");
+            w.IndentedLine("nameof(child)");
+            w.Line(");");
+            w.Line("Children.Add(child);");
         }
         else
-        {
-            sb.AppendLine("        throw new InvalidOperationException($\"Codec '{GetType().Name}' does not allow any children.\");");
-        }
-        sb.AppendLine("    }");
+            w.Line("throw new InvalidOperationException($\"Codec '{GetType().Name}' does not allow any children.\");");
+        w.CloseBlock();
 
         // Find method.
         if (group != "none")
         {
             string returnType = NameUtility.GetCodecName(group);
-            sb.AppendLine();
-            sb.AppendLine($"    public {returnType} FindChild(string id)");
-            sb.AppendLine("    {");
-            sb.AppendLine("        for (int i = 0; i < ChildCount; i++)");
-            sb.AppendLine("        {");
-            sb.AppendLine($"            if (Children[i] is {returnType} typed && typed.ID == id)");
-            sb.AppendLine("                return typed;");
-            sb.AppendLine("        }");
-            sb.AppendLine("        return null;");
-            sb.AppendLine("    }");
+
+            w.Line();
+            w.OpenBlock($"public {returnType} FindChild(string id)");
+            w.OpenBlock("for (int i = 0; i < ChildCount; i++)");
+            w.Line($"if (Children[i] is {returnType} typed && typed.ID == id)");
+            w.IndentedLine("return typed;");
+            w.CloseBlock();
+            w.Line("return null;");
+            w.CloseBlock();
         }
 
         // End of class.
-        sb.AppendLine("}");
+        w.CloseBlock();
 
         // Godot using.
-        string str = sb.ToString();
+        string str = w.ToString();
         if (str.Contains("Godot."))
             str = str
                 .Replace("Godot.", "")
@@ -142,36 +127,15 @@ public class ElementClassGenerator
 
     private static string CheckGroup(Schema schema, Element element)
     {
-        string inherits = "none";
+        Abstract inherits = null;
         foreach (string child in element.Children)
         {
-            Element found = schema.Get(child);
-            if (inherits == "none")
+            Element found = schema.GetElement(child);
+            if (inherits == null)
                 inherits = found.Inherits;
             else if (inherits != found.Inherits)
                 return "none";
         }
-        return inherits;
-    }
-
-    private static string GetType(ValueType valueType, string refType)
-    {
-        switch (valueType)
-        {
-            case ValueType.Bool:
-                return "bool";
-            case ValueType.Int:
-                return "int";
-            case ValueType.Uint:
-                return "uint";
-            case ValueType.String:
-                return "string";
-            case ValueType.Color:
-                return "Godot.Color";
-            case ValueType.Ref:
-                return "string";
-            default:
-                throw new Exception();
-        }
+        return inherits?.Name ?? "none";
     }
 }

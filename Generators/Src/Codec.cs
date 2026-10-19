@@ -11,7 +11,7 @@ public abstract class Codec
     /// <summary>
     /// The identifier of this codec.
     /// </summary>
-    public string ID { get; set; }
+    public abstract string ID { get; set; }
 
     /// <summary>
     /// The number of attributes.
