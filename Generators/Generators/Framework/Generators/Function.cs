@@ -1,11 +1,18 @@
 ﻿/// <summary>
 /// A base class for function generators.
 /// </summary>
-public abstract class Function : Generator
+public abstract class Function : Generator, ISummarizable<Function>
 {
+    public Function This => this;
+    public bool SingleLine
+        => Summary == null && (Implementation.Length == 0 || Implementation.Length == 1 && Implementation[0].SingleLine);
+
     public Summary Summary { get; set; }
-    public Statement Implementation { get; set; }
-    public bool SingleLine => Summary == null && (Implementation == null || Implementation.SingleLine);
+    public Statement[] Implementation { get; set; } = [];
+
+    public Function() { }
+
+    public Function(params Statement[] statement) => Implementation = statement;
 
     public sealed override bool Generate(CodeWriter w)
     {
@@ -15,26 +22,29 @@ public abstract class Function : Generator
             w.Line();
         }
 
-        if (Implementation == null)
+        if (Implementation.Length == 0)
         {
             GenerateHeader(w);
             w.Append(';');
         }
-        else if (Implementation.SingleLine)
+        else if (Implementation.Length == 1 && Implementation[0].SingleLine)
         {
             GenerateHeader(w);
             w.Append(" => ");
-            if (Implementation is Return @return)
+            if (Implementation[0] is Return @return)
                 @return.GenerateImplicit(w);
             else
-                Implementation.Generate(w);
+                Implementation[0].Generate(w);
         }
         else
         {
             GenerateHeader(w);
             w.OpenBlock();
             w.Line();
-            Implementation.Generate(w);
+            foreach (Statement statement in Implementation)
+            {
+                statement.Generate(w);
+            }
             w.CloseBlock();
         }
         return true;

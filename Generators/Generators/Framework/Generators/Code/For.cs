@@ -7,9 +7,17 @@ public sealed class For : Statement
     public Statement Init { get; set; }
     public Statement Conditions { get; set; }
     public Statement Increment { get; set; }
-    public Block Do { get; set; }
+    public Statement Do { get; set; }
 
-    public For(Statement init, Statement conditions, Statement increment, Block @do)
+    public For(Value from, Value to, Statement @do)
+    {
+        Init = new Assign("int i", from);
+        Conditions = new BinaryValue((Id)"i", BinaryOperator.Less, to);
+        Increment = new Code("i++"); // TODO: replace with proper unary operation generator.
+        Do = @do;
+    }
+
+    public For(Statement init, Statement conditions, Statement increment, Statement @do)
     {
         Init = init;
         Conditions = conditions;

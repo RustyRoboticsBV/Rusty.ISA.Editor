@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Text;
+using System.Xml.Linq;
 
 public class ElementClassGenerator : ClassGenerator
 {
@@ -12,36 +14,29 @@ public class ElementClassGenerator : ClassGenerator
         {
             Access = AccessType.Internal,
             Modifier = ModifierType.Sealed,
-            Name = NameUtility.GetCodecName(element.Name)
+            Name = Names.GetCodecName(element.Name)
         };
 
         if (element.Description != "")
             @class.Summary = element.Description;
 
         if (element.Inherits != null)
-            @class.Base = NameUtility.GetCodecName(element.Inherits.Name);
+            @class.Base = Names.GetCodecName(element.Inherits.Name);
         else
             @class.Base = "Codec";
 
         string group = CheckGroup(schema, element);
         if (group != null)
-            @class.Interfaces.Add($"ICodecGroup<{NameUtility.GetCodecName(group)}>");
+            @class.Interfaces.Add($"ICodecGroup<{Names.GetCodecName(group)}>");
 
 
         // Properties.
         @class.Members.Add(new MultilineComment("Public properties."));
 
         // Attribute count property.
-        @class.Members.Add(new Property()
-        {
-            Modifier = ModifierType.Override,
-            Type = "int",
-            Name = "AttributeCount",
-            Getter = new()
-            {
-                Implementation = (Return)(Int)element.Attributes.Count
-            }
-        });
+        @class.Property(AccessType.Public, ModifierType.Override, "int", "AttributeCount")
+            .AddGetter((Return)(Int)element.Attributes.Count)
+            .AddSummary("The number of attributes that this codec has.");
 
         // Attribute properties.
         if (element.Attributes.Count > 0)
@@ -53,13 +48,7 @@ public class ElementClassGenerator : ClassGenerator
                 needsGodot = true;
 
             // Create property.
-            Property property = new()
-            {
-                Name = NameUtility.CamelCase(attribute.Name),
-                Type = TypeUtility.GetType(attribute.ValueType),
-                Getter = new(),
-                Setter = new()
-            };
+            Property property = @class.Property(Types.Get(attribute.ValueType), Names.CamelCase(attribute.Name));
 
             // Attribute description.
             if (attribute.Description.Length > 0)
@@ -79,49 +68,11 @@ public class ElementClassGenerator : ClassGenerator
         @class.Members.Add(new MultilineComment("Public methods."));
 
         // GetAttribute method.
-        Switch getterSwitch = new((Id)"index");
-        for (int i = 0; i < element.Attributes.Count; i++)
-        {
-            getterSwitch.Cases.Add(new Case((Int)i, (Return)(Id)NameUtility.CamelCase(element.Attributes[i].Name)));
-        }
-        getterSwitch.Default = new(new Throw("ArgumentOutOfRangeException", (Id)"nameof(index)"));
-
-        Method getter = new()
-        {
-            Modifier = ModifierType.Override,
-            ReturnType = "object",
-            Name = "GetAttribute",
-            Parameters = [new("int", "index")],
-            Implementation = getterSwitch
-        };
-
-        @class.Members.Add(getter);
+        @class.Members.Add(GetAttribute(element));
 
         // SetAttribute method.
-        Switch setterSwitch = new((Id)"index");
-        for (int i = 0; i < element.Attributes.Count; i++)
-        {
-            setterSwitch.Cases.Add(new Case(
-                (Int)i,
-                new Assign(
-                    (Id)NameUtility.CamelCase(element.Attributes[i].Name),
-                    new Cast(TypeUtility.GetType(element.Attributes[i].ValueType), (Id)"value")
-                )
-            ));
-        }
-        setterSwitch.Default = new(new Throw("ArgumentOutOfRangeException", (Id)"nameof(index)"));
-
-        Method setter = new()
-        {
-            Modifier = ModifierType.Override,
-            ReturnType = "void",
-            Name = "SetAttribute",
-            Parameters = [new("int", "index"), new("object", "value")],
-            Implementation = setterSwitch
-        };
-
         @class.Members.Add(new Empty());
-        @class.Members.Add(setter);
+        @class.Members.Add(SetAttribute(element));
 
         // AddChild method.
         Block addChildBlock = new();
@@ -135,18 +86,18 @@ public class ElementClassGenerator : ClassGenerator
                     sb.Append("\n  ");
                 if (i > 0)
                     sb.Append(" || ");
-                sb.Append($"child is {NameUtility.GetCodecName(element.Children[i])}");
+                sb.Append($"child is {Names.GetCodecName(element.Children[i])}");
             }
             sb.Append("\n))");
             addChildBlock.Statements.Add((Code)sb.ToString());
 
-            sb.Clear();
+            sb = sb.Clear();
             sb.Append("throw new ArgumentException(");
             sb.Append("\n    $\"Codec '{GetType().Name}' does not allow children of type '{child.GetType().Name}'.\",");
             sb.Append("\n    nameof(child)");
             sb.Append("\n);");
             sb.Append("\nChildren.Add(child);");
-            addChildBlock.Statements.Add((Code)sb.ToString());
+            addChildBlock.Statements.Add(new Block((Code)sb.ToString()));
         }
         else
             addChildBlock.Statements.Add(new Throw("InvalidOperationException", (IString)"Codec '{GetType().Name}' does not allow any children."));
@@ -162,6 +113,31 @@ public class ElementClassGenerator : ClassGenerator
 
         @class.Members.Add(new Empty());
         @class.Members.Add(addChild);
+
+        // FindChild method.
+        if (group != null)
+        {
+            Id rt = Names.GetCodecName(group);
+            For @for = new((Int)0, (Id)"ChildCount", (Return)(Id)"typed");
+            Method findChild = new()
+            {
+                ReturnType = rt,
+                Name = "FindChild",
+                Parameters = [new("string", "id")],
+                Implementation = @for
+            };
+
+            @class.Members.Add(new Empty());
+            @class.Members.Add(findChild);
+        }
+
+        /*w.Line();
+        w.OpenBlock("for (int i = 0; i < ChildCount; i++)");
+        w.Line($"if (Children[i] is {returnType} typed && typed.ID == id)");
+        w.IndentedLine("return typed;");
+        w.CloseBlock();
+        w.Line("return null;");
+        w.CloseBlock();*/
 
 
         // Generate code.
@@ -210,5 +186,42 @@ public class ElementClassGenerator : ClassGenerator
                 return null;
         }
         return inherits?.Name;
+    }
+
+    private static Method GetAttribute(Element element)
+    {
+        // Implementation.
+        Switch @switch = new((Id)"index");
+        for (int i = 0; i < element.Attributes.Count; i++)
+        {
+            @switch.Case((Int)i, (Return)(Id)Names.CamelCase(element.Attributes[i].Name));
+        }
+        @switch.Default = new(new Throw("ArgumentOutOfRangeException", (Id)"nameof(index)"));
+
+        // Method.
+        return new Method(AccessType.Public, ModifierType.Override, "object", "GetAttribute")
+            .Parameter("int", "index")
+            .Implement(@switch);
+    }
+
+    private static Method SetAttribute(Element element)
+    {
+        // Implementation.
+        Switch @switch = new((Id)"index");
+        for (int i = 0; i < element.Attributes.Count; i++)
+        {
+            @switch.Case((Int)i, new Assign(
+                    (Id)Names.CamelCase(element.Attributes[i].Name),
+                    new Cast(Types.Get(element.Attributes[i].ValueType), (Id)"value")
+                )
+            );
+        }
+        @switch.Default = new(new Throw("ArgumentOutOfRangeException", (Id)"nameof(index)"));
+
+        // Method.
+        return new Method(AccessType.Public, ModifierType.Override, "void", "SetAttribute")
+            .Parameter("int", "index")
+            .Parameter("object", "value")
+            .Implement(@switch);
     }
 }

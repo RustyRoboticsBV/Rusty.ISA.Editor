@@ -6,8 +6,8 @@
 public sealed class Property : Generator
 {
     public Summary Summary { get; set; }
-    public Access Access { get; set; } = new();
-    public Modifier Modifier { get; set; } = new();
+    public Access Access { get; set; } = AccessType.Public;
+    public Modifier Modifier { get; set; } = ModifierType.None;
     public Id Type { get; set; }
     public Id Name { get; set; }
     public Getter Getter { get; set; }
@@ -63,6 +63,34 @@ public sealed class Property : Generator
             w.Append(" }");
 
         return true;
+    }
+
+    public Property() { }
+
+    public Property(Access access, Modifier modifier, Id type, Id name)
+    {
+        Access = access;
+        Modifier = modifier;
+        Type = type;
+        Name = name;
+    }
+
+    public Property AddSummary(Summary summary)
+    {
+        Summary = summary;
+        return this;
+    }
+
+    public Property AddGetter(Getter getter)
+    {
+        Getter = getter;
+        return this;
+    }
+
+    public Property AddSetter(Setter setter)
+    {
+        Setter = setter;
+        return this;
     }
 
     private static void WriteSingular(Accessor accessor, bool lambda, CodeWriter w)

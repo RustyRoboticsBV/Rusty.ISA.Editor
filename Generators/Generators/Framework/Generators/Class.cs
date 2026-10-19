@@ -3,8 +3,10 @@
 /// <summary>
 /// A property generator.
 /// </summary>
-public sealed class Class : Generator
+public sealed class Class : Generator, ISummarizable<Class>
 {
+    public Class This => this;
+
     public Summary Summary { get; set; }
     public Access Access { get; set; } = new();
     public Modifier Modifier { get; set; } = new();
@@ -12,6 +14,15 @@ public sealed class Class : Generator
     public Id Base { get; set; }
     public List<Id> Interfaces { get; set; } = [];
     public List<Generator> Members { get; set; } = [];
+
+    public Property Property(Id type, Id name) => Property(AccessType.Public, ModifierType.None, type, name);
+
+    public Property Property(Access access, Modifier modifier, Id type, Id name)
+    {
+        Property p = new(access, modifier, type, name);
+        Members.Add(p);
+        return p;
+    }
 
     public override bool Generate(CodeWriter w)
     {

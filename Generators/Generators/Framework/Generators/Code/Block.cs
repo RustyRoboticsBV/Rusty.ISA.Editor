@@ -17,12 +17,18 @@ public sealed class Block : Statement
         if (Statements.Count == 0)
             return false;
 
+        if (Statements.Count > 1)
+            w.OpenBlock();
+
         Statements[0].Generate(w);
         for (int i = 1; i < Statements.Count; i++)
         {
             w.Line();
             Statements[i].Generate(w);
         }
+
+        if (Statements.Count > 1)
+            w.CloseBlock();
 
         return true;
     }

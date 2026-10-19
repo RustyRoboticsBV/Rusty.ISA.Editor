@@ -17,9 +17,14 @@ public sealed class Code : Statement
         else
         {
             string[] lines = CodeString.Split('\n');
-            foreach (string line in lines)
+
+            if (lines.Length == 0)
+                return false;
+
+            w.Append(lines[0]);
+            for (int i = 1; i < lines.Length; i++)
             {
-                w.Line(line);
+                w.Line(lines[i]);
             }
         }
         return CodeString.Length > 0;

@@ -12,6 +12,13 @@ public sealed class Switch : Statement
 
     public Switch(Value value) => Value = value;
 
+    public Switch Case(Value value, Statement statement)
+    {
+        Case @case = new(value, statement);
+        Cases.Add(@case);
+        return this;
+    }
+
     public override bool Generate(CodeWriter w)
     {
         w.Append("switch (");

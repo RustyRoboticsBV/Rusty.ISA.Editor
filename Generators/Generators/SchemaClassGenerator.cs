@@ -30,7 +30,7 @@ public class SchemaClassGenerator : ClassGenerator
         {
             if (element.Name == "id")
                 continue;
-            string id = NameUtility.CamelCase(element.Name);
+            string id = Names.CamelCase(element.Name);
             if (element.Description.Length > 0)
             {
                 sb.AppendLine("    /// <summary>");
@@ -43,7 +43,7 @@ public class SchemaClassGenerator : ClassGenerator
             for (int i = 0; i < element.Attributes.Count; i++)
             {
                 Attribute attribute = element.Attributes[i];
-                sb.AppendLine($"        public const int {NameUtility.CamelCase(attribute.Name)} = {i};");
+                sb.AppendLine($"        public const int {Names.CamelCase(attribute.Name)} = {i};");
             }
             sb.AppendLine("    }");
             sb.AppendLine();

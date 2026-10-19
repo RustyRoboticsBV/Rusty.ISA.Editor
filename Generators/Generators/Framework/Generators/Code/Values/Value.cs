@@ -1,7 +1,6 @@
 ﻿/// <summary>
 /// A value generator.
 /// </summary>
-public abstract class Value : Generator
+public abstract class Value : Statement
 {
-    public abstract bool SingleLine { get; }
 }

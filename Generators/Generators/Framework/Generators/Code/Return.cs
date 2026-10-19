@@ -6,6 +6,8 @@ public sealed class Return : Statement
     public override bool SingleLine => Value.SingleLine;
     public Value Value { get; set; }
 
+    public Return() { }
+
     public Return(Value value) => Value = value;
 
     public static implicit operator Return(Value v) => new(v);

@@ -1,8 +1,8 @@
 ﻿using System;
 
-internal class TypeUtility
+internal class Types
 {
-    public static string GetType(ValueType valueType)
+    public static string Get(ValueType valueType)
     {
         switch (valueType)
         {

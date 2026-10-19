@@ -9,7 +9,7 @@
         {
             Access = AccessType.Internal,
             Modifier = ModifierType.Abstract,
-            Name = NameUtility.GetCodecName(@abstract.Name),
+            Name = Names.GetCodecName(@abstract.Name),
             Base = "Codec"
         };
 
@@ -24,8 +24,8 @@
                 @class.Members.Add(new Property()
                 {
                     Modifier = ModifierType.Abstract,
-                    Type = TypeUtility.GetType(attribute.ValueType),
-                    Name = NameUtility.CamelCase(attribute.Name),
+                    Type = Types.Get(attribute.ValueType),
+                    Name = Names.CamelCase(attribute.Name),
                     Getter = new(),
                     Setter = new()
                 });

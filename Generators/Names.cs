@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-internal static class NameUtility
+internal static class Names
 {
     public static string GetCodecName(string elementName)
     {

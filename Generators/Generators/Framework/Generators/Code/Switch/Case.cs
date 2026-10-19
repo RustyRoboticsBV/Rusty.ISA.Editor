@@ -7,11 +7,8 @@ public sealed class Case : Statement
     public Value Value { get; set; }
     public Statement Do { get; set; }
 
-    public Case(Value value, Statement @do)
-    {
-        Value = value;
-        Do = @do;
-    }
+    public Case(Value value) => Value = value;
+    public Case(Value value, Statement @do) : this(value) => Do = @do;
 
     public override bool Generate(CodeWriter w)
     {

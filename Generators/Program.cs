@@ -21,7 +21,7 @@ const string abstractFolder = target_folder + "Abstract/";
 foreach (var @abstract in schema.Abstracts)
 {
     string code = AbstractClassGenerator.Generate(schema, @abstract);
-    string className = NameUtility.GetCodecName(@abstract.Name);
+    string className = Names.GetCodecName(@abstract.Name);
     Write(abstractFolder, className, code);
 }
 
@@ -30,7 +30,7 @@ const string elementFolder = target_folder + "Elements/";
 foreach (var element in schema.Elements)
 {
     string code = ElementClassGenerator.Generate(schema, element);
-    string className = NameUtility.GetCodecName(element.Name);
+    string className = Names.GetCodecName(element.Name);
     Write(elementFolder, className, code);
 }
 
