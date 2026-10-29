@@ -4,7 +4,7 @@ internal static class Names
 {
     public static string GetCodecName(string elementName)
     {
-        return $"{CamelCase(elementName)}Codec";
+        return $"{CamelCase(elementName)}Element";
     }
 
     public static string CamelCase(string snake_case)
@@ -23,7 +23,30 @@ internal static class Names
                 sb.Append(snake_case[i]);
         }
         string name = sb.ToString();
+
         if (name == "Id")
+            return "ID";
+        else
+            return name;
+    }
+
+    public static string Prose(string snake_case)
+    {
+        StringBuilder sb = new();
+        for (int i = 0; i < snake_case.Length; i++)
+        {
+            if (i < snake_case.Length - 1 && snake_case[i] == '_')
+            {
+                sb.Append(' ');
+                sb.Append(snake_case[i + 1]);
+                i++;
+            }
+            else
+                sb.Append(snake_case[i]);
+        }
+        string name = sb.ToString();
+
+        if (name == "id")
             return "ID";
         else
             return name;

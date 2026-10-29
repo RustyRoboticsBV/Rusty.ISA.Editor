@@ -1,6 +1,4 @@
-﻿// placeholder
-
-namespace Godot;
+﻿namespace Godot;
 
 internal class Color
 {

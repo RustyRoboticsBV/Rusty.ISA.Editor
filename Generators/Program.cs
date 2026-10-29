@@ -1,5 +1,4 @@
-﻿using Rusty.ActionGraph.Serialization;
-using System;
+﻿using System;
 using System.IO;
 
 const string proj_path = "../../../";
@@ -16,34 +15,37 @@ if (Directory.Exists(target_folder))
     Directory.Delete(target_folder, true);
 Directory.CreateDirectory(target_folder);
 
+// Generate base codec class.
+BaseElementClassGenerator @base = new();
+Write(target_folder, "Element", @base.Generate(schema));
+
 // Generate base classes.
 const string abstractFolder = target_folder + "Abstract/";
+AbstractElementClassGenerator abstractGenerator = new();
 foreach (var @abstract in schema.Abstracts)
 {
-    string code = AbstractClassGenerator.Generate(schema, @abstract);
+    string code = abstractGenerator.Generate(schema, @abstract);
     string className = Names.GetCodecName(@abstract.Name);
     Write(abstractFolder, className, code);
 }
 
 // Generate sealed classes.
 const string elementFolder = target_folder + "Elements/";
+SealedElementClassGenerator sealedGenerator = new();
 foreach (var element in schema.Elements)
 {
-    string code = ElementClassGenerator.Generate(schema, element);
+    string code = sealedGenerator.Generate(schema, element);
     string className = Names.GetCodecName(element.Name);
     Write(elementFolder, className, code);
 }
 
-// Generate schema class.
+/*// Generate schema class.
 Write(target_folder, "CodecSchema", SchemaClassGenerator.Generate(schema));
 
 // Copy source files.
 const string src_path = proj_path + "Src/";
 Write(target_folder, "Codec", File.ReadAllText(src_path + "Codec.cs"));
-Write(target_folder, "ICodecGroup", File.ReadAllText(src_path + "ICodecGroup.cs"));
-
-// Generate binary serializer.
-string binSerializerSkeleton = File.ReadAllText(src_path + "BinarySerializer.txt");
+Write(target_folder, "ICodecGroup", File.ReadAllText(src_path + "ICodecGroup.cs"));*/
 
 // Write to file method.
 static void Write(string folder, string name, string code)

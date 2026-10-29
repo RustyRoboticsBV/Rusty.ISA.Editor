@@ -2,7 +2,7 @@
 
 internal class Types
 {
-    public static string Get(ValueType valueType)
+    public static TypeName Get(ValueType valueType)
     {
         switch (valueType)
         {

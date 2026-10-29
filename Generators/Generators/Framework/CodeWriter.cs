@@ -8,7 +8,7 @@ public sealed class CodeWriter
 {
     /* Fields. */
     private readonly StringBuilder sb = new();
-    public int indent;
+    private int indent;
 
     /* Public properties. */
     public int Indent
@@ -42,12 +42,12 @@ public sealed class CodeWriter
     {
         if (sb.Length == 0 && text.Length == 0)
         {
-            Append('\n');
+            Append("\r\n");
             return;
         }
 
         if (sb.Length > 0)
-            Append('\n');
+            Append("\r\n");
         Append(' ', Indent * 4);
         Append(text);
     }
