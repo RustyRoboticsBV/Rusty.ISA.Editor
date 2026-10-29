@@ -52,14 +52,6 @@
             Getter(),
             new New()
         ));
-        @class.Members.Add(Property(
-            Summary("Whether or not multiple child elements are allowed."),
-            AccessType.Protected,
-            ModifierType.Abstract,
-            Type("bool"),
-            Id("AllowsMultipleChildren"),
-            Getter()
-        ));
 
         // Methods.
         @class.Members.Add(new Empty());

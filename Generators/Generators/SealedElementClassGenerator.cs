@@ -17,7 +17,6 @@ public sealed class SealedElementClassGenerator : Generator
         @class.Members.Add(MultilineComment("Public properties."));
 
         @class.Members.Add(Property(
-            Summary("The number of attributes of this element."),
             AccessType.Public,
             ModifierType.Override,
             Type("int"),
@@ -44,18 +43,6 @@ public sealed class SealedElementClassGenerator : Generator
             if (attribute.ValueType == ValueType.Color)
                 needGodot = true;
         }
-
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(MultilineComment("Protected properties."));
-
-        @class.Members.Add(Property(
-            AccessType.Protected,
-            ModifierType.Override,
-            Type("bool"),
-            Id("AllowsMultipleChildren"),
-            Getter(Return(Bool(element.MultipleChildren)))
-        ));
 
         // Methods.
         @class.Members.Add(new Empty());
@@ -139,11 +126,13 @@ public sealed class SealedElementClassGenerator : Generator
             Type("void"),
             Id("AddChild"),
             Parameter(Type("Element"), Id("child")),
-            Switch(
-                Id("child"),
-                Default(Throw(Type("ArgumentOutOfRangeException"), IString("Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}."))),
-                addChild.ToArray()
-            )
+            element.Children.Count > 0
+                ? Switch(
+                    Id("child"),
+                    Default(Throw(Type("ArgumentOutOfRangeException"), IString("Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}."))),
+                    addChild.ToArray()
+                )
+                : Throw(Type("NotImplementedException"), IString("Elements of type {GetType().Name} do not allow for child elements."))
         ));
 
 
