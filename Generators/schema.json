@@ -1,11 +1,19 @@
 {
   "schema_version": "1.0.0",
-  "abstract_types": [
-    "inspector_definition",
-    "inspector",
-    "argument_definition",
-    "argument"
-  ],
+  "abstract_types": {
+    "inspector_definition": {
+      "description": "A base class for elements that represent an editor inspector definition."
+    },
+    "inspector": {
+      "description": "A base class for elements that represent an editor inspector."
+    },
+    "argument_definition": {
+      "description": "A base class for elements that represent an instruction argument definition."
+    },
+    "argument": {
+      "description": "A base class for elements that represent an instruction argument."
+    }
+  },
   "element_types": {
     "file": {
       "description": "The root element.",

@@ -109,6 +109,7 @@ public class Element
 public class Abstract
 {
     public string Name { get; set; }
+    public string Description { get; set; }
     public List<SharedAttribute> Attributes { get; } = new();
 
     public override string ToString()
@@ -153,10 +154,11 @@ public class Schema
 
         // Parse abstract base classes.
         JsonElement abstracts = root.GetProperty("abstract_types");
-        foreach (var obj in abstracts.EnumerateArray())
+        foreach (var obj in abstracts.EnumerateObject())
         {
             Abstract @abstract = new();
-            @abstract.Name = obj.GetString();
+            @abstract.Name = obj.Name;
+            @abstract.Description = obj.Value.GetProperty("description").GetString();
             Abstracts.Add(@abstract);
         }
 

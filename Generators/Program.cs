@@ -39,13 +39,10 @@ foreach (var element in schema.Elements)
     Write(elementFolder, className, code);
 }
 
-/*// Generate schema class.
-Write(target_folder, "CodecSchema", SchemaClassGenerator.Generate(schema));
-
-// Copy source files.
-const string src_path = proj_path + "Src/";
-Write(target_folder, "Codec", File.ReadAllText(src_path + "Codec.cs"));
-Write(target_folder, "ICodecGroup", File.ReadAllText(src_path + "ICodecGroup.cs"));*/
+// Generate interface class.
+GroupInterfaceGenerator interfaceGenerator = new();
+string interfaceCode = interfaceGenerator.Generate(schema);
+Write(target_folder, "IElementGroup", interfaceCode);
 
 // Write to file method.
 static void Write(string folder, string name, string code)

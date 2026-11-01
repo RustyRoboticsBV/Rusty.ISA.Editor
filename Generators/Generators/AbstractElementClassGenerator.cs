@@ -5,7 +5,7 @@
         bool needGodot = false;
 
         Class @class = Class(AccessType.Internal, ModifierType.Abstract, Names.CamelCase(@abstract.Name) + "Element");
-        @class.Summary = Summary($"A base class for all {Names.Prose(@abstract.Name)} elements.");
+        @class.Summary = Summary(@abstract.Description);
         @class.Base = Type("Element");
 
         // Properties.
