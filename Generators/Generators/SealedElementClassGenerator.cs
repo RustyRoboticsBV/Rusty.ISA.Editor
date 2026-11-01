@@ -132,18 +132,23 @@ public sealed class SealedElementClassGenerator : Generator
                     Default(Throw(Type("ArgumentOutOfRangeException"), IString("Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}."))),
                     addChild.ToArray()
                 )
-                : Throw(Type("NotImplementedException"), IString("Elements of type {GetType().Name} do not allow for child elements."))
+                : Throw(Type("NotImplementedException"), IString("Elements of type {GetType().Name} do not allow child elements."))
         ));
 
+        if (element.Children.Count > 0 && !element.MultipleChildren)
+        {
+            var s = If(Greater(Id("Children.Count"), Int(0)),
+                Throw(Type("InvalidOperationException"), IString("Elements of type {GetType().Name} do not allow multiple child elements."))
+            );
+            ((Method)@class.Members[^1]).Implementation.Statements.Insert(0, s);
+            ((Method)@class.Members[^1]).Implementation.Statements.Insert(1, new Empty());
+        }
 
         CodeWriter w = new();
         w.Line(Notice);
         w.Line();
         if (needGodot)
-        {
-            w.Line();
             Using("Godot").Generate(w);
-        }
         Using("System").Generate(w);
         w.Line();
         Namespace("Rusty", "ActionGraph", "Serialization").Generate(w);

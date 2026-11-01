@@ -160,6 +160,12 @@ public abstract class Generator
         Right = right
     };
 
+    protected static Greater Greater(Value left, Value right) => new()
+    {
+        Left = left,
+        Right = right
+    };
+
     protected static GreaterEqual GreaterEqual(Value left, Value right) => new()
     {
         Left = left,
