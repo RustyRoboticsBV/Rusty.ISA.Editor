@@ -47,8 +47,8 @@ internal static class Names
         }
         string name = sb.ToString();
 
-        if (name == "Id")
-            return "ID";
+        if (name == "iD")
+            return "id";
         else
             return name;
     }

@@ -10,13 +10,13 @@
 
         // Properties.
         bool first = true;
-        foreach (SharedAttribute shared in @abstract.Attributes)
+        foreach (Attribute shared in @abstract.Attributes)
         {
             if (shared.ValueType == ValueType.Color)
                 needGodot = true;
 
             bool isGlobal = false;
-            foreach (SharedAttribute globalShared in schema.SharedAttributes)
+            foreach (Attribute globalShared in schema.GlobalAttributes)
             {
                 if (globalShared.ValueType == shared.ValueType && globalShared.Name == shared.Name)
                     isGlobal = true;
@@ -29,7 +29,7 @@
             first = false;
 
             @class.Members.Add(Property(
-                Summary($"The {Names.Prose(shared.Name)} of this element."),
+                Summary(shared.Description),
                 AccessType.Public,
                 ModifierType.Abstract,
                 Types.Get(shared.ValueType),

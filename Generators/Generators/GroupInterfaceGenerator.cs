@@ -2,18 +2,18 @@
 {
     public string Generate(Schema schema)
     {
-
-        CodeWriter w = new();
-        w.Line(Notice);
-        w.Line();
-        Namespace("Rusty", "ActionGraph", "Serialization").Generate(w);
-        w.Line();
-
         string generic = "ChildElementT";
-        string key = Names.CamelCase(schema.SharedAttributes[0].Name);
+        string key = Names.CamelCase(schema.GlobalAttributes[0].Name);
         string parameter = Names.PascalCase(key);
         string code =
-@$"internal interface IElementGroup<{generic}>
+@$"{Notice}
+
+namespace Rusty.ActionGraph.Serialization;
+
+/// <summary>
+/// An element that represents a group of child elements of some type.
+/// </summary>
+internal interface IElementGroup<{generic}>
     where {generic} : Element
 {{
     /// <summary>
@@ -30,7 +30,6 @@
         return null;
     }}
 }}";
-        w.Line(code);
-        return w.ToString();
+        return code;
     }
 }

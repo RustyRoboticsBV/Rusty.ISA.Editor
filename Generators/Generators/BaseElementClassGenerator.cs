@@ -17,10 +17,10 @@
             Getter()
         ));
 
-        foreach (SharedAttribute shared in schema.SharedAttributes)
+        foreach (Attribute shared in schema.GlobalAttributes)
         {
             @class.Members.Add(Property(
-                Summary($"The {Names.Prose(shared.Name)} of this element."),
+                Summary(shared.Description),
                 AccessType.Public,
                 ModifierType.Abstract,
                 Types.Get(shared.ValueType),

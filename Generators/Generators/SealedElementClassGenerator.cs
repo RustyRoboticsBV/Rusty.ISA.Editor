@@ -2,7 +2,7 @@
 
 public sealed class SealedElementClassGenerator : Generator
 {
-    public string Generate(Schema schema, Element element)
+    public string Generate(Schema schema, Sealed element)
     {
         bool needGodot = false;
 
@@ -27,7 +27,7 @@ public sealed class SealedElementClassGenerator : Generator
         @class.Members.Add(new Empty());
         foreach (Attribute attribute in element.Attributes)
         {
-            bool isShared = schema.HasSharedAttribute(attribute)
+            bool isShared = schema.HasGlobalAttribute(attribute)
                 || (element.Inherits != null ? element.Inherits.HasAttribute(attribute) : false);
 
             @class.Members.Add(Property(
