@@ -9,9 +9,9 @@ public sealed class String : Value
 
     public override bool Generate(CodeWriter w)
     {
-        w.Append("'");
+        w.Append("\"");
         w.Append(Value.Replace("\"", "\\\""));
-        w.Append("'");
+        w.Append("\"");
         return true;
     }
 }

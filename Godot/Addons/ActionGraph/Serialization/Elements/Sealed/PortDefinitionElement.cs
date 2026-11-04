@@ -30,6 +30,51 @@ internal sealed class PortDefinitionElement : ArgumentDefinitionElement
     public bool RemoveDefaultPort { get; set; }
     
     /* Public methods. */
+    public override string NameOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "id";
+            case 1:
+                return "parameter";
+            case 2:
+                return "remove_default_port";
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override Type TypeOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return ID.GetType();
+            case 1:
+                return Parameter.GetType();
+            case 2:
+                return RemoveDefaultPort.GetType();
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 3;
+            case "parameter":
+                return 3;
+            case "remove_default_port":
+                return 3;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
     public override object GetAttribute(int index)
     {
         switch (index)
@@ -41,7 +86,7 @@ internal sealed class PortDefinitionElement : ArgumentDefinitionElement
             case 2:
                 return RemoveDefaultPort;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     
@@ -59,7 +104,7 @@ internal sealed class PortDefinitionElement : ArgumentDefinitionElement
                 RemoveDefaultPort = (bool)value;
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     

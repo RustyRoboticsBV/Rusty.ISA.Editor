@@ -51,6 +51,81 @@ internal sealed class JointElement : Element
     public Color Color { get; set; }
     
     /* Public methods. */
+    public override string NameOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "id";
+            case 1:
+                return "edge";
+            case 2:
+                return "x";
+            case 3:
+                return "y";
+            case 4:
+                return "size";
+            case 5:
+                return "parent_frame";
+            case 6:
+                return "text";
+            case 7:
+                return "color";
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override Type TypeOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return ID.GetType();
+            case 1:
+                return Edge.GetType();
+            case 2:
+                return X.GetType();
+            case 3:
+                return Y.GetType();
+            case 4:
+                return Size.GetType();
+            case 5:
+                return ParentFrame.GetType();
+            case 6:
+                return Text.GetType();
+            case 7:
+                return Color.GetType();
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 8;
+            case "edge":
+                return 8;
+            case "x":
+                return 8;
+            case "y":
+                return 8;
+            case "size":
+                return 8;
+            case "parent_frame":
+                return 8;
+            case "text":
+                return 8;
+            case "color":
+                return 8;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
     public override object GetAttribute(int index)
     {
         switch (index)
@@ -72,7 +147,7 @@ internal sealed class JointElement : Element
             case 7:
                 return Color;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     
@@ -105,7 +180,7 @@ internal sealed class JointElement : Element
                 Color = (Color)value;
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     

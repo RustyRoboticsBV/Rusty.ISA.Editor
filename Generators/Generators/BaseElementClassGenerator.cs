@@ -58,6 +58,36 @@
         @class.Members.Add(MultilineComment("Public methods."));
 
         @class.Members.Add(Method(
+            Summary("Get the name of an attribute by its index."),
+            AccessType.Public,
+            ModifierType.Abstract,
+            Type("string"),
+            Id("NameOfAttribute"),
+            Parameter(Type("int"), Id("index"))
+        ));
+
+        @class.Members.Add(new Empty());
+        @class.Members.Add(Method(
+            Summary("Get the type of an attribute by its index."),
+            AccessType.Public,
+            ModifierType.Abstract,
+            Type("Type"),
+            Id("TypeOfAttribute"),
+            Parameter(Type("int"), Id("index"))
+        ));
+
+        @class.Members.Add(new Empty());
+        @class.Members.Add(Method(
+            Summary("Get the index of an attribute by its name."),
+            AccessType.Public,
+            ModifierType.Abstract,
+            Type("int"),
+            Id("IndexOfAttribute"),
+            Parameter(Type("string"), Id("name"))
+        ));
+
+        @class.Members.Add(new Empty());
+        @class.Members.Add(Method(
             Summary("Get the value of an attribute by its index."),
             AccessType.Public,
             ModifierType.Abstract,

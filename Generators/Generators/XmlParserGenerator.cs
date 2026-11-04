@@ -13,6 +13,8 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
+using ValueType = Schema.ValueType;
+
 /// <summary>
 /// A utility for parsing strings of XML as {fileElement} objects.
 /// </summary>
@@ -60,7 +62,7 @@ internal static class XmlParser
         foreach (XmlAttribute attribute in xml.Attributes)
         {{
             int attributeIndex = element.FindAttribute(attribute.Name);
-            Schema.ValueType type = element.Attributes[attributeIndex].ValueType;
+            ValueType type = element.Attributes[attributeIndex].ValueType;
             object value = ParseValue(type, attribute.Value);
             result.SetAttribute(attributeIndex, value);
         }}
@@ -68,15 +70,14 @@ internal static class XmlParser
         return result;
     }}
 
-    private static object ParseValue(Schema.ValueType type, string value) => type switch
+    private static object ParseValue(ValueType type, string value) => type switch
     {{
-        Schema.ValueType.Bool => bool.Parse(value),
-        Schema.ValueType.Int => int.Parse(value),
-        Schema.ValueType.Uint => uint.Parse(value),
-        Schema.ValueType.String => value,
-        Schema.ValueType.Color => Color.FromHtml(value),
-        Schema.ValueType.Ref => value,
-        _ => throw new InvalidOperationException(""Invalid type."")
+        ValueType.Bool => bool.Parse(value),
+        ValueType.Int => int.Parse(value),
+        ValueType.Uint => uint.Parse(value),
+        ValueType.String => value,
+        ValueType.Color => Color.FromHtml(value),
+        _ => throw new InvalidOperationException($""Invalid type {{type}}."")
     }};
 }}";
     }

@@ -47,6 +47,75 @@ internal sealed class EdgeElement : Element
     public Color Color { get; set; }
     
     /* Public methods. */
+    public override string NameOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "id";
+            case 1:
+                return "from";
+            case 2:
+                return "port";
+            case 3:
+                return "to";
+            case 4:
+                return "thickness";
+            case 5:
+                return "text";
+            case 6:
+                return "color";
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override Type TypeOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return ID.GetType();
+            case 1:
+                return From.GetType();
+            case 2:
+                return Port.GetType();
+            case 3:
+                return To.GetType();
+            case 4:
+                return Thickness.GetType();
+            case 5:
+                return Text.GetType();
+            case 6:
+                return Color.GetType();
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 7;
+            case "from":
+                return 7;
+            case "port":
+                return 7;
+            case "to":
+                return 7;
+            case "thickness":
+                return 7;
+            case "text":
+                return 7;
+            case "color":
+                return 7;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
     public override object GetAttribute(int index)
     {
         switch (index)
@@ -66,7 +135,7 @@ internal sealed class EdgeElement : Element
             case 6:
                 return Color;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     
@@ -96,7 +165,7 @@ internal sealed class EdgeElement : Element
                 Color = (Color)value;
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     

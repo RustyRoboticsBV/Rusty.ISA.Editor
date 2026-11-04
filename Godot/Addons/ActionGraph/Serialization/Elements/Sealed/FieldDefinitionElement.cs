@@ -26,6 +26,45 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
     public override string Parameter { get; set; }
     
     /* Public methods. */
+    public override string NameOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "id";
+            case 1:
+                return "parameter";
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override Type TypeOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return ID.GetType();
+            case 1:
+                return Parameter.GetType();
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 2;
+            case "parameter":
+                return 2;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
     public override object GetAttribute(int index)
     {
         switch (index)
@@ -35,7 +74,7 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
             case 1:
                 return Parameter;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     
@@ -50,7 +89,7 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
                 Parameter = (string)value;
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     

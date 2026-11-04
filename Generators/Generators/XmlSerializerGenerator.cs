@@ -18,6 +18,7 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal static class XmlSerializer
 {{
+    /* Public methods. */
     /// <summary>
     /// Serialize a {fileElement} to a string of XML.
     /// </summary>
@@ -52,12 +53,14 @@ internal static class XmlSerializer
     {{
         // Handle start tag.
         int elementIndex = Schema.FindElement(element.GetType());
-        writer.WriteStartElement(Schema.Elements[elementIndex].Name);
+        Schema.Element schemaElement = Schema.Elements[elementIndex];
+        writer.WriteStartElement(schemaElement.Name);
 
         // Handle attributes.
         for (int i = 0; i < element.AttributeCount; i++)
         {{
-            writer.WriteStartAttribute(Schema.Elements[elementIndex].Attributes[element.AttributeCount].Name);
+            Schema.Attribute schemaAttribute = schemaElement.Attributes[element.AttributeCount];
+            writer.WriteStartAttribute(schemaAttribute.Name);
             writer.WriteValue(element.GetAttribute(i));
             writer.WriteEndAttribute();
         }}

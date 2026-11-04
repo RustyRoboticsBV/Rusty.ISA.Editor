@@ -63,6 +63,99 @@ internal sealed class NodeElement : Element
     public string StartPointName { get; set; }
     
     /* Public methods. */
+    public override string NameOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "id";
+            case 1:
+                return "definition";
+            case 2:
+                return "x";
+            case 3:
+                return "y";
+            case 4:
+                return "width";
+            case 5:
+                return "height";
+            case 6:
+                return "folded";
+            case 7:
+                return "parent_frame";
+            case 8:
+                return "text";
+            case 9:
+                return "color";
+            case 10:
+                return "start_point_name";
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override Type TypeOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return ID.GetType();
+            case 1:
+                return Definition.GetType();
+            case 2:
+                return X.GetType();
+            case 3:
+                return Y.GetType();
+            case 4:
+                return Width.GetType();
+            case 5:
+                return Height.GetType();
+            case 6:
+                return Folded.GetType();
+            case 7:
+                return ParentFrame.GetType();
+            case 8:
+                return Text.GetType();
+            case 9:
+                return Color.GetType();
+            case 10:
+                return StartPointName.GetType();
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 11;
+            case "definition":
+                return 11;
+            case "x":
+                return 11;
+            case "y":
+                return 11;
+            case "width":
+                return 11;
+            case "height":
+                return 11;
+            case "folded":
+                return 11;
+            case "parent_frame":
+                return 11;
+            case "text":
+                return 11;
+            case "color":
+                return 11;
+            case "start_point_name":
+                return 11;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
     public override object GetAttribute(int index)
     {
         switch (index)
@@ -90,7 +183,7 @@ internal sealed class NodeElement : Element
             case 10:
                 return StartPointName;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     
@@ -132,7 +225,7 @@ internal sealed class NodeElement : Element
                 StartPointName = (string)value;
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     

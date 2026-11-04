@@ -38,6 +38,63 @@ internal sealed class FileElement : Element
     public string Checksum { get; set; }
     
     /* Public methods. */
+    public override string NameOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "id";
+            case 1:
+                return "editor";
+            case 2:
+                return "schema_version";
+            case 3:
+                return "format_version";
+            case 4:
+                return "checksum";
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override Type TypeOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return ID.GetType();
+            case 1:
+                return Editor.GetType();
+            case 2:
+                return SchemaVersion.GetType();
+            case 3:
+                return FormatVersion.GetType();
+            case 4:
+                return Checksum.GetType();
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 5;
+            case "editor":
+                return 5;
+            case "schema_version":
+                return 5;
+            case "format_version":
+                return 5;
+            case "checksum":
+                return 5;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
     public override object GetAttribute(int index)
     {
         switch (index)
@@ -53,7 +110,7 @@ internal sealed class FileElement : Element
             case 4:
                 return Checksum;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     
@@ -77,7 +134,7 @@ internal sealed class FileElement : Element
                 Checksum = (string)value;
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     

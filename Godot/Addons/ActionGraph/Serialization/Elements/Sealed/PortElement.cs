@@ -39,6 +39,63 @@ internal sealed class PortElement : ArgumentElement
     public override Color Color { get; set; }
     
     /* Public methods. */
+    public override string NameOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "id";
+            case 1:
+                return "definition";
+            case 2:
+                return "index";
+            case 3:
+                return "text";
+            case 4:
+                return "color";
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override Type TypeOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return ID.GetType();
+            case 1:
+                return Definition.GetType();
+            case 2:
+                return Index.GetType();
+            case 3:
+                return Text.GetType();
+            case 4:
+                return Color.GetType();
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 5;
+            case "definition":
+                return 5;
+            case "index":
+                return 5;
+            case "text":
+                return 5;
+            case "color":
+                return 5;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
     public override object GetAttribute(int index)
     {
         switch (index)
@@ -54,7 +111,7 @@ internal sealed class PortElement : ArgumentElement
             case 4:
                 return Color;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     
@@ -78,7 +135,7 @@ internal sealed class PortElement : ArgumentElement
                 Color = (Color)value;
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     

@@ -48,6 +48,74 @@ public sealed class SealedElementClassGenerator : Generator
         @class.Members.Add(new Empty());
         @class.Members.Add(MultilineComment("Public methods."));
 
+        List<Case> nameOfAttribute = new();
+        foreach (Attribute attribute in element.Attributes)
+        {
+            Int index = Int(nameOfAttribute.Count);
+            String str = String(attribute.Name);
+            nameOfAttribute.Add(Case(index, Return(str)));
+        }
+
+        @class.Members.Add(Method(
+            AccessType.Public,
+            ModifierType.Override,
+            Type("string"),
+            Id("NameOfAttribute"),
+            Parameter(Type("int"), Id("index")),
+            Switch(
+                Id("index"),
+                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the index {index}."))),
+                nameOfAttribute.ToArray()
+            )
+        ));
+
+
+        List<Case> typeOfAttribute = new();
+        foreach (Attribute attribute in element.Attributes)
+        {
+            Int index = Int(typeOfAttribute.Count);
+            Id type = Id(Names.CamelCase(attribute.Name) + ".GetType()");
+            typeOfAttribute.Add(Case(index, Return(type)));
+        }
+
+        @class.Members.Add(new Empty());
+        @class.Members.Add(Method(
+            AccessType.Public,
+            ModifierType.Override,
+            Type("Type"),
+            Id("TypeOfAttribute"),
+            Parameter(Type("int"), Id("index")),
+            Switch(
+                Id("index"),
+                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the index {index}."))),
+                typeOfAttribute.ToArray()
+            )
+        ));
+
+
+        List<Case> indexOfAttribute = new();
+        foreach (Attribute attribute in element.Attributes)
+        {
+            String name = String(attribute.Name);
+            Int index = Int(typeOfAttribute.Count);
+            indexOfAttribute.Add(Case(name, Return(index)));
+        }
+
+        @class.Members.Add(new Empty());
+        @class.Members.Add(Method(
+            AccessType.Public,
+            ModifierType.Override,
+            Type("int"),
+            Id("IndexOfAttribute"),
+            Parameter(Type("string"), Id("name")),
+            Switch(
+                Id("name"),
+                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the name '{name}'."))),
+                indexOfAttribute.ToArray()
+            )
+        ));
+
+
         List<Case> getAttribute = new();
         foreach (Attribute attribute in element.Attributes)
         {
@@ -56,6 +124,7 @@ public sealed class SealedElementClassGenerator : Generator
             getAttribute.Add(Case(index, Return(id)));
         }
 
+        @class.Members.Add(new Empty());
         @class.Members.Add(Method(
             AccessType.Public,
             ModifierType.Override,
@@ -64,7 +133,7 @@ public sealed class SealedElementClassGenerator : Generator
             Parameter(Type("int"), Id("index")),
             Switch(
                 Id("index"),
-                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to index {index}."))),
+                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the index {index}."))),
                 getAttribute.ToArray()
             )
         ));
@@ -89,7 +158,7 @@ public sealed class SealedElementClassGenerator : Generator
             Parameter(Type("object"), Id("value")),
             Switch(
                 Id("index"),
-                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to index {index}."))),
+                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the index {index}."))),
                 setAttribute.ToArray()
             )
         ));

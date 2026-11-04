@@ -14,9 +14,10 @@
             {
                 if (!attributes.IsEmpty)
                     attributes.Append(',');
-                attributes.Append($"new(\"{attribute.Name}\", ValueType.{attribute.ValueType}");
-                if (attribute.RefType != null)
-                    attributes.Append($", Elements[{schema.Sealeds.IndexOf(attribute.RefType as Sealed)}]");
+                if (attribute.ValueType == ValueType.Ref)
+                    attributes.Append($"new(\"{attribute.Name}\", ValueType.{ValueType.String}");
+                else
+                    attributes.Append($"new(\"{attribute.Name}\", ValueType.{attribute.ValueType}");
                 attributes.Append($")");
             }
 
@@ -37,19 +38,17 @@ using SElement = Element;
 internal static class Schema
 {{
     /* Public types. */
-    public enum ValueType {{ Bool, Uint, Int, Color, String, Ref }}
+    public enum ValueType {{ Bool, Uint, Int, Color, String }}
     
     public class Attribute
     {{
         public string Name {{ get; init; }}
         public ValueType ValueType {{ get; init; }}
-        public Element RefType {{ get; init; }}
-
-        public Attribute(string name, ValueType valueType, Element refType = null)
+        
+        public Attribute(string name, ValueType valueType)
         {{
             Name = name;
             ValueType = valueType;
-            RefType = refType;
         }}
     }}
     

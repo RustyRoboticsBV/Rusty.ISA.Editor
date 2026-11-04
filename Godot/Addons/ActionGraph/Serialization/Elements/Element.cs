@@ -37,6 +37,21 @@ internal abstract class Element
     
     /* Public methods. */
     /// <summary>
+    /// Get the name of an attribute by its index.
+    /// </summary>
+    public abstract string NameOfAttribute(int index);
+    
+    /// <summary>
+    /// Get the type of an attribute by its index.
+    /// </summary>
+    public abstract Type TypeOfAttribute(int index);
+    
+    /// <summary>
+    /// Get the index of an attribute by its name.
+    /// </summary>
+    public abstract int IndexOfAttribute(string name);
+    
+    /// <summary>
     /// Get the value of an attribute by its index.
     /// </summary>
     public abstract object GetAttribute(int index);

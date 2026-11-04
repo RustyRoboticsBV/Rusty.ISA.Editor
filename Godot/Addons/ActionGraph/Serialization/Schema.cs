@@ -16,19 +16,17 @@ using SElement = Element;
 internal static class Schema
 {
     /* Public types. */
-    public enum ValueType { Bool, Uint, Int, Color, String, Ref }
+    public enum ValueType { Bool, Uint, Int, Color, String }
     
     public class Attribute
     {
         public string Name { get; init; }
         public ValueType ValueType { get; init; }
-        public Element RefType { get; init; }
-
-        public Attribute(string name, ValueType valueType, Element refType = null)
+        
+        public Attribute(string name, ValueType valueType)
         {
             Name = name;
             ValueType = valueType;
-            RefType = refType;
         }
     }
     
@@ -65,26 +63,26 @@ internal static class Schema
         new(typeof(InstructionDefinitionElement), "instruction_definition", [new("id", ValueType.String),new("execution_handler", ValueType.String)]),
         new(typeof(ParameterDefinitionElement), "parameter_definition", [new("id", ValueType.String),new("localizable", ValueType.Bool)]),
         new(typeof(NodeDefinitionElement), "node_definition", [new("id", ValueType.String)]),
-        new(typeof(FormDefinitionElement), "form_definition", [new("id", ValueType.String),new("instruction_definition", ValueType.Ref, Elements[3])]),
+        new(typeof(FormDefinitionElement), "form_definition", [new("id", ValueType.String),new("instruction_definition", ValueType.String)]),
         new(typeof(OptionDefinitionElement), "option_definition", [new("id", ValueType.String)]),
         new(typeof(ChoiceDefinitionElement), "choice_definition", [new("id", ValueType.String)]),
         new(typeof(TupleDefinitionElement), "tuple_definition", [new("id", ValueType.String)]),
         new(typeof(ListDefinitionElement), "list_definition", [new("id", ValueType.String)]),
-        new(typeof(FieldDefinitionElement), "field_definition", [new("id", ValueType.String),new("parameter", ValueType.Ref, Elements[4])]),
-        new(typeof(PortDefinitionElement), "port_definition", [new("id", ValueType.String),new("parameter", ValueType.Ref, Elements[4]),new("remove_default_port", ValueType.Bool)]),
-        new(typeof(NodeElement), "node", [new("id", ValueType.String),new("definition", ValueType.Ref, Elements[5]),new("x", ValueType.Int),new("y", ValueType.Int),new("width", ValueType.Uint),new("height", ValueType.Uint),new("folded", ValueType.Bool),new("parent_frame", ValueType.Ref, Elements[15]),new("text", ValueType.String),new("color", ValueType.Color),new("start_point_name", ValueType.String)]),
-        new(typeof(MemoElement), "memo", [new("id", ValueType.String),new("x", ValueType.Int),new("y", ValueType.Int),new("width", ValueType.Uint),new("height", ValueType.Uint),new("folded", ValueType.Bool),new("parent_frame", ValueType.Ref, Elements[15]),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(FrameElement), "frame", [new("id", ValueType.String),new("x", ValueType.Int),new("y", ValueType.Int),new("width", ValueType.Uint),new("height", ValueType.Uint),new("folded", ValueType.Bool),new("parent_frame", ValueType.Ref, Elements[15]),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(JointElement), "joint", [new("id", ValueType.String),new("edge", ValueType.Ref, Elements[17]),new("x", ValueType.Int),new("y", ValueType.Int),new("size", ValueType.Uint),new("parent_frame", ValueType.Ref, Elements[15]),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(EdgeElement), "edge", [new("id", ValueType.String),new("from", ValueType.Ref, Elements[17]),new("port", ValueType.Uint),new("to", ValueType.Ref, Elements[17]),new("thickness", ValueType.Uint),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(FormElement), "form", [new("id", ValueType.String),new("definition", ValueType.Ref, Elements[6]),new("folded", ValueType.Bool),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(OptionElement), "option", [new("id", ValueType.String),new("definition", ValueType.Ref, Elements[7]),new("folded", ValueType.Bool),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(ChoiceElement), "choice", [new("id", ValueType.String),new("definition", ValueType.Ref, Elements[8]),new("selected", ValueType.Ref, Elements[-1]),new("folded", ValueType.Bool),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(TupleElement), "tuple", [new("id", ValueType.String),new("definition", ValueType.Ref, Elements[9]),new("folded", ValueType.Bool),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(ListElement), "list", [new("id", ValueType.String),new("definition", ValueType.Ref, Elements[10]),new("folded", ValueType.Bool),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(FieldElement), "field", [new("id", ValueType.String),new("definition", ValueType.Ref, Elements[11]),new("value", ValueType.String),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(PortElement), "port", [new("id", ValueType.String),new("definition", ValueType.Ref, Elements[12]),new("index", ValueType.Uint),new("text", ValueType.String),new("color", ValueType.Color)]),
-        new(typeof(LocalizedValueElement), "localized_value", [new("id", ValueType.String),new("definition", ValueType.Ref, Elements[2]),new("value", ValueType.String)])
+        new(typeof(FieldDefinitionElement), "field_definition", [new("id", ValueType.String),new("parameter", ValueType.String)]),
+        new(typeof(PortDefinitionElement), "port_definition", [new("id", ValueType.String),new("parameter", ValueType.String),new("remove_default_port", ValueType.Bool)]),
+        new(typeof(NodeElement), "node", [new("id", ValueType.String),new("definition", ValueType.String),new("x", ValueType.Int),new("y", ValueType.Int),new("width", ValueType.Uint),new("height", ValueType.Uint),new("folded", ValueType.Bool),new("parent_frame", ValueType.String),new("text", ValueType.String),new("color", ValueType.Color),new("start_point_name", ValueType.String)]),
+        new(typeof(MemoElement), "memo", [new("id", ValueType.String),new("x", ValueType.Int),new("y", ValueType.Int),new("width", ValueType.Uint),new("height", ValueType.Uint),new("folded", ValueType.Bool),new("parent_frame", ValueType.String),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(FrameElement), "frame", [new("id", ValueType.String),new("x", ValueType.Int),new("y", ValueType.Int),new("width", ValueType.Uint),new("height", ValueType.Uint),new("folded", ValueType.Bool),new("parent_frame", ValueType.String),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(JointElement), "joint", [new("id", ValueType.String),new("edge", ValueType.String),new("x", ValueType.Int),new("y", ValueType.Int),new("size", ValueType.Uint),new("parent_frame", ValueType.String),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(EdgeElement), "edge", [new("id", ValueType.String),new("from", ValueType.String),new("port", ValueType.Uint),new("to", ValueType.String),new("thickness", ValueType.Uint),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(FormElement), "form", [new("id", ValueType.String),new("definition", ValueType.String),new("folded", ValueType.Bool),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(OptionElement), "option", [new("id", ValueType.String),new("definition", ValueType.String),new("folded", ValueType.Bool),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(ChoiceElement), "choice", [new("id", ValueType.String),new("definition", ValueType.String),new("selected", ValueType.String),new("folded", ValueType.Bool),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(TupleElement), "tuple", [new("id", ValueType.String),new("definition", ValueType.String),new("folded", ValueType.Bool),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(ListElement), "list", [new("id", ValueType.String),new("definition", ValueType.String),new("folded", ValueType.Bool),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(FieldElement), "field", [new("id", ValueType.String),new("definition", ValueType.String),new("value", ValueType.String),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(PortElement), "port", [new("id", ValueType.String),new("definition", ValueType.String),new("index", ValueType.Uint),new("text", ValueType.String),new("color", ValueType.Color)]),
+        new(typeof(LocalizedValueElement), "localized_value", [new("id", ValueType.String),new("definition", ValueType.String),new("value", ValueType.String)])
     ];
     
     /* Public methods. */

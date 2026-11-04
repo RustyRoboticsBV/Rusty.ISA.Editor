@@ -99,10 +99,10 @@ internal static class CodeGenerator
 
         // Compile metadata & instruction set.
         Metadata metadata = CompileMetadata(file);
-        InstructionSet iset = CompileInstructionSet(file);
+        InstructionSet instructionSet = CompileInstructionSet(file);
 
         // Create program.
-        return new(metadata, iset, new(instructions));
+        return new(metadata, instructionSet, new(instructions));
     }
 
     /* Private methods. */

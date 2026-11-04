@@ -55,6 +55,87 @@ internal sealed class FrameElement : Element
     public Color Color { get; set; }
     
     /* Public methods. */
+    public override string NameOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "id";
+            case 1:
+                return "x";
+            case 2:
+                return "y";
+            case 3:
+                return "width";
+            case 4:
+                return "height";
+            case 5:
+                return "folded";
+            case 6:
+                return "parent_frame";
+            case 7:
+                return "text";
+            case 8:
+                return "color";
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override Type TypeOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return ID.GetType();
+            case 1:
+                return X.GetType();
+            case 2:
+                return Y.GetType();
+            case 3:
+                return Width.GetType();
+            case 4:
+                return Height.GetType();
+            case 5:
+                return Folded.GetType();
+            case 6:
+                return ParentFrame.GetType();
+            case 7:
+                return Text.GetType();
+            case 8:
+                return Color.GetType();
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 9;
+            case "x":
+                return 9;
+            case "y":
+                return 9;
+            case "width":
+                return 9;
+            case "height":
+                return 9;
+            case "folded":
+                return 9;
+            case "parent_frame":
+                return 9;
+            case "text":
+                return 9;
+            case "color":
+                return 9;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
     public override object GetAttribute(int index)
     {
         switch (index)
@@ -78,7 +159,7 @@ internal sealed class FrameElement : Element
             case 8:
                 return Color;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     
@@ -114,7 +195,7 @@ internal sealed class FrameElement : Element
                 Color = (Color)value;
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     

@@ -43,6 +43,69 @@ internal sealed class ChoiceElement : InspectorElement
     public override Color Color { get; set; }
     
     /* Public methods. */
+    public override string NameOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "id";
+            case 1:
+                return "definition";
+            case 2:
+                return "selected";
+            case 3:
+                return "folded";
+            case 4:
+                return "text";
+            case 5:
+                return "color";
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override Type TypeOfAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return ID.GetType();
+            case 1:
+                return Definition.GetType();
+            case 2:
+                return Selected.GetType();
+            case 3:
+                return Folded.GetType();
+            case 4:
+                return Text.GetType();
+            case 5:
+                return Color.GetType();
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
+        }
+    }
+    
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 6;
+            case "definition":
+                return 6;
+            case "selected":
+                return 6;
+            case "folded":
+                return 6;
+            case "text":
+                return 6;
+            case "color":
+                return 6;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
     public override object GetAttribute(int index)
     {
         switch (index)
@@ -60,7 +123,7 @@ internal sealed class ChoiceElement : InspectorElement
             case 5:
                 return Color;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     
@@ -87,7 +150,7 @@ internal sealed class ChoiceElement : InspectorElement
                 Color = (Color)value;
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
     }
     
