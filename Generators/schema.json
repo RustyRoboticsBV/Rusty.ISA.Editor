@@ -84,7 +84,7 @@
       "allowed_children": []
     },
     "instruction_definition": {
-      "description": "A definition for an instruction.",
+      "description": "A definition for a form inspector, which represents an instruction's state.",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -110,7 +110,7 @@
           "value_type": "string"
         },
         "localizable": {
-          "description": "Whether or not this parameter can be localized.",
+          "description": "Whether this parameter can be localized.",
           "value_type": "bool"
         }
       },
@@ -150,7 +150,7 @@
       },
       "allowed_children": [
         "field_definition",
-        "output_definition"
+        "port_definition"
       ],
       "allow_multiple_children": true
     },
@@ -242,8 +242,8 @@
       },
       "allowed_children": []
     },
-    "output_definition": {
-      "description": "A definition for an output port, which corresponds to a parameter.",
+    "port_definition": {
+      "description": "A definition for a port, which corresponds to a parameter.",
       "inherits_abstract": "argument_definition",
       "attributes": {
         "id": {
@@ -255,8 +255,8 @@
           "value_type": "ref",
           "ref_type": "parameter_definition"
         },
-        "remove_default_output": {
-          "description": "Whether or not this output' presence removes a node's default output.",
+        "remove_default_port": {
+          "description": "Whether this port's presence removes a node's default port.",
           "value_type": "bool"
         }
       },
@@ -292,7 +292,7 @@
           "value_type": "uint"
         },
         "folded": {
-          "description": "Whether or not the <this> has been folded.",
+          "description": "Whether the <this> has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
@@ -347,7 +347,7 @@
           "value_type": "uint"
         },
         "folded": {
-          "description": "Whether or not the <this> has been folded.",
+          "description": "Whether the <this> has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
@@ -375,7 +375,7 @@
           "value_type": "string"
         },
         "x": {
-          "description": "The x-position of the frame on the graph.",
+          "description": "The x-position of the <this> on the graph.",
           "value_type": "int"
         },
         "y": {
@@ -391,7 +391,7 @@
           "value_type": "uint"
         },
         "folded": {
-          "description": "Whether or not the <this> has been folded.",
+          "description": "Whether the <this> has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
@@ -460,12 +460,12 @@
           "value_type": "string"
         },
         "from": {
-          "description": "The identifier of the origin node.",
+          "description": "The identifier of the source node.",
           "value_type": "ref",
           "ref_type": "edge"
         },
         "port": {
-          "description": "The output port index on the origin node.",
+          "description": "The port index on the source node.",
           "value_type": "uint"
         },
         "to": {
@@ -489,7 +489,7 @@
       "allowed_children": []
     },
     "form": {
-      "description": "An instruction form inspector.",
+      "description": "A form inspector, which represennts the state of an instruction.",
       "inherits_abstract": "inspector",
       "collection_type": "argument",
       "attributes": {
@@ -503,7 +503,7 @@
           "ref_type": "form_definition"
         },
         "folded": {
-          "description": "Whether or not the <this> has been folded.",
+          "description": "Whether the <this> has been folded.",
           "value_type": "bool"
         },
         "text": {
@@ -517,7 +517,7 @@
       },
       "allowed_children": [
         "field",
-        "output"
+        "port"
       ],
       "allow_multiple_children": true
     },
@@ -535,7 +535,7 @@
           "ref_type": "option_definition"
         },
         "folded": {
-          "description": "Whether or not the <this> has been folded.",
+          "description": "Whether the <this> has been folded.",
           "value_type": "bool"
         },
         "text": {
@@ -575,7 +575,7 @@
           "ref_type": "inspector"
         },
         "folded": {
-          "description": "Whether or not the <this> has been folded.",
+          "description": "Whether the <this> has been folded.",
           "value_type": "bool"
         },
         "text": {
@@ -610,7 +610,7 @@
           "ref_type": "tuple_definition"
         },
         "folded": {
-          "description": "Whether or not the <this> has been folded.",
+          "description": "Whether the <this> has been folded.",
           "value_type": "bool"
         },
         "text": {
@@ -645,7 +645,7 @@
           "ref_type": "list_definition"
         },
         "folded": {
-          "description": "Whether or not the <this> has been folded.",
+          "description": "Whether the <this> has been folded.",
           "value_type": "bool"
         },
         "text": {
@@ -667,7 +667,7 @@
       "allow_multiple_children": true
     },
     "field": {
-      "description": "A parameter field inspector, containing a (non-localized) parameter value.",
+      "description": "A field inspector, which represents the state of an instruction argument.",
       "inherits_abstract": "argument",
       "attributes": {
         "id": {
@@ -680,7 +680,7 @@
           "ref_type": "field_definition"
         },
         "value": {
-          "description": "The value of this <this>.",
+          "description": "The non-localized value of this <this>.",
           "value_type": "string"
         },
         "text": {
@@ -697,8 +697,8 @@
       ],
       "allow_multiple_children": true
     },
-    "output": {
-      "description": "A parameter output port.",
+    "port": {
+      "description": "A node port, which represents the state of an instruction argument.",
       "inherits_abstract": "argument",
       "attributes": {
         "id": {
@@ -708,7 +708,11 @@
         "definition": {
           "description": "The identifier of the associated <ref_type>.",
           "value_type": "ref",
-          "ref_type": "output_definition"
+          "ref_type": "port_definition"
+        },
+        "index": {
+          "description": "The index of this <this> on its parent node.",
+          "value_type": "uint"
         },
         "text": {
           "description": "The annotation of this <this> port.",
