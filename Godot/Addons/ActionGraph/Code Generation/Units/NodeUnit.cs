@@ -15,7 +15,7 @@ internal sealed class NodeUnit : Unit
     /// <summary>
     /// The loaded node data from the program file.
     /// </summary>
-    public NodeCodec Codec { get; set; }
+    public NodeElement Element { get; set; }
     /// <summary>
     /// The data of the outputs. Contains whether or not the default output exists or not, and the number of parameter outputs.
     /// </summary>
@@ -27,20 +27,20 @@ internal sealed class NodeUnit : Unit
         To = [];
     }
 
-    public NodeUnit(FileCodec file, NodeCodec codec)
+    public NodeUnit(FileElement file, NodeElement codec)
     {
         OutputData = new(file, codec);
         To = new Unit[OutputData.CountOutputs()];
-        Codec = codec;
+        Element = codec;
     }
 
     /* Public methods. */
-    public override string ToString() => (CodecPrinter.ToString(Codec, true) ?? "") + " " + OutputData.ToString();
+    public override string ToString() => (ElementPrinter.ToString(Element, true) ?? "") + " " + OutputData.ToString();
 
     /// <summary>
     /// Connect an output port
     /// </summary>
-    public void ConnectTo(int port, Unit to)
+    public void ConnectTo(uint port, Unit to)
     {
         Disconnect(port);
         To[port] = to;
@@ -50,7 +50,7 @@ internal sealed class NodeUnit : Unit
     /// <summary>
     /// Disconnect an output port.
     /// </summary>
-    public void Disconnect(int port)
+    public void Disconnect(uint port)
     {
         if (To[port] == null)
             return;

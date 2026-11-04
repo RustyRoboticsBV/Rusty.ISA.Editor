@@ -1,3 +1,9 @@
+////////////////////////////////////////////////////////////////////////////////
+// WARNING:                                                                   //
+// This is a generated script file. It should not be edited directly.         //
+// See the Generators/ directory to view the source generation module.        //
+////////////////////////////////////////////////////////////////////////////////
+
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -5,14 +11,14 @@ using System.Xml;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A utility for serializing FileCodec objects to XML.
+/// A utility for serializing FileElement objects to XML.
 /// </summary>
 internal static class XmlSerializer
 {
     /// <summary>
-    /// Serialize a FileCodec to a string of XML.
+    /// Serialize a FileElement to a string of XML.
     /// </summary>
-    public static string Serialize(FileCodec file)
+    public static string Serialize(FileElement file)
     {
         // Compute checksum.
         Hasher.StoreHash(file, MD5.Create());
@@ -28,7 +34,7 @@ internal static class XmlSerializer
         StringBuilder output = new();
         using (var writer = XmlWriter.Create(output, settings))
         {
-            SerializeCodec(file, writer);
+            SerializeElement(file, writer);
             writer.Flush();
         }
 
@@ -39,23 +45,24 @@ internal static class XmlSerializer
     /// <summary>
     /// Convert this node to XML.
     /// </summary>
-    private static void SerializeCodec(Codec codec, XmlWriter writer)
+    private static void SerializeElement(Element element, XmlWriter writer)
     {
         // Handle start tag.
-        writer.WriteStartElement(codec.Name);
+        int elementIndex = Schema.FindElement(element.GetType());
+        writer.WriteStartElement(Schema.Elements[elementIndex].Name);
 
         // Handle attributes.
-        foreach (var attribute in codec.Attributes)
+        for (int i = 0; i < element.AttributeCount; i++)
         {
-            writer.WriteStartAttribute(attribute.Key);
-            writer.WriteValue(attribute.Value);
+            writer.WriteStartAttribute(Schema.Elements[elementIndex].Attributes[element.AttributeCount].Name);
+            writer.WriteValue(element.GetAttribute(i));
             writer.WriteEndAttribute();
         }
 
         // Handle children.
-        foreach (Codec child in codec.Children)
+        for (int i = 0; i < element.ChildCount; i++)
         {
-            SerializeCodec(child, writer);
+            SerializeElement(element.GetChild(i), writer);
         }
 
         // Handle end tag.

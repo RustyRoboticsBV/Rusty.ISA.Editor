@@ -15,32 +15,29 @@ internal static class CodeGenerator
     /// <summary>
     /// Convert a file codec into an instruction program.
     /// </summary>
-    public static InstructionProgram Generate(FileCodec file)
+    public static InstructionProgram Generate(FileElement file)
     {
         // Create units for nodes.
         Dictionary<string, Unit> units = new();
-        foreach (Codec element in file.Children)
+        for (int i = 0; i < file.ChildCount; i++)
         {
-            string id = element.GetAttribute(Codecs.ID);
-            if (element is NodeCodec node)
-                units.Add(id, new NodeUnit(file, node));
+            Element child = file.GetChild(i);
+            if (child is NodeElement node)
+                units.Add(child.ID, new NodeUnit(file, node));
         }
 
         // Connect units according to graph edges.
-        foreach (Codec codec in file.Children)
+        for (int i = 0; i < file.ChildCount; i++)
         {
-            if (codec is EdgeCodec edge)
+            Element child = file.GetChild(i);
+            if (child is EdgeElement edge)
             {
-                string from = edge.GetAttribute(Codecs.From);
-                string port = edge.GetAttribute(Codecs.Port);
-                string to = edge.GetAttribute(Codecs.To);
+                Unit from = units[edge.From];
+                uint port = edge.Port;
+                Unit to = units[edge.To];
 
-                Unit fromUnit = units[from];
-                int portIndex = int.Parse(port);
-                Unit toUnit = units[to];
-
-                if (fromUnit is NodeUnit node)
-                    node.ConnectTo(portIndex, toUnit);
+                if (from is NodeUnit node)
+                    node.ConnectTo(port, to);
             }
         }
 
@@ -129,7 +126,7 @@ internal static class CodeGenerator
 
             case NodeUnit node:
 
-                for (int i = 0; i < node.To.Length; i++)
+                for (uint i = 0; i < node.To.Length; i++)
                 {
                     // Insert end if necessary.
                     if (node.To[i] == null)
@@ -164,17 +161,17 @@ internal static class CodeGenerator
     /// <summary>
     /// Compile a unit's instructions.
     /// </summary>
-    private static void CompileNode(NodeUnit unit, FileCodec file, List<Instruction> instructions, Labels labels)
+    private static void CompileNode(NodeUnit unit, FileElement file, List<Instruction> instructions, Labels labels)
     {
         // Find node definition.
-        NodeCodec node = unit.Codec;
-        NdefCodec ndef = file.FindNdef(node.GetAttribute(Codecs.Definition));
+        NodeElement node = unit.Element;
+        var ndef = Find<NodeDefinitionElement>(file, node.Definition);
 
         // Compile contents.
         int handledOutputArgs = 0;
-        foreach (Codec child in unit.Codec.Children)
+        for (int i = 0; i < node.ChildCount; i++)
         {
-            if (child is InspectorCodec inspector)
+            if (node.GetChild(i) is InspectorElement inspector)
                 CompileInspector(unit, ndef, node, inspector, instructions, labels, ref handledOutputArgs);
         }
 
@@ -183,109 +180,98 @@ internal static class CodeGenerator
             instructions.Add(new DummyInstruction());
 
         // Check for entry point.
-        instructions[0].Start = unit.Codec.GetAttribute(Codecs.Start);
+        instructions[0].Start = node.StartPointName;
     }
 
     /// <summary>
     /// Compile an inspector's instructions.
     /// </summary>
-    private static void CompileInspector(NodeUnit node, Codec parentDefinition, Codec parent, InspectorCodec current, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileInspector(NodeUnit node, Element parentDefinition, Element parent, InspectorElement current, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
         // Find child definition.
-        string currentType = current.GetAttribute(Codecs.Definition);
-        Codec currentDefinition = parentDefinition.FindChildWithAttribute(Codecs.ID, currentType);
+        Element currentDefinition = Find<InspectorElement>(current, current.Definition);
 
         switch (currentDefinition, current)
         {
-            case (FdefCodec fdef, FormCodec form):
+            case (FormDefinitionElement fdef, FormElement form):
                 CompileForm(node, fdef, form, instructions, labels, ref handledOutputArgs);
                 break;
-            case (OdefCodec odef, OptionCodec option):
+            case (OptionDefinitionElement odef, OptionElement option):
                 CompileOption(node, odef, option, instructions, labels, ref handledOutputArgs);
                 break;
-            case (CdefCodec cdef, ChoiceCodec choice):
+            case (ChoiceDefinitionElement cdef, ChoiceElement choice):
                 CompileChoice(node, cdef, choice, instructions, labels, ref handledOutputArgs);
                 break;
-            case (TdefCodec tdef, TupleCodec tuple):
+            case (TupleDefinitionElement tdef, TupleElement tuple):
                 CompileTuple(node, tdef, tuple, instructions, labels, ref handledOutputArgs);
                 break;
-            case (LdefCodec ldef, ListCodec list):
+            case (ListDefinitionElement ldef, ListElement list):
                 CompileList(node, ldef, list, instructions, labels, ref handledOutputArgs);
                 break;
             default:
-                throw new InvalidOperationException($"Invalid coded pair: '{CodecPrinter.ToString(current, true)
-                    ?? "null"}' and '{CodecPrinter.ToString(currentDefinition, true) ?? "null"}'.");
+                throw new InvalidOperationException($"Invalid coded pair: '{ElementPrinter.ToString(current, true)
+                    ?? "null"}' and '{ElementPrinter.ToString(currentDefinition, true) ?? "null"}'.");
         }
     }
 
     /// <summary>
     /// Compile an option.
     /// </summary>
-    private static void CompileOption(NodeUnit node, OdefCodec odef, OptionCodec option, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileOption(NodeUnit node, OptionDefinitionElement odef, OptionElement option, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
-        InspectorCodec child = option.GetFirstChild<InspectorCodec>();
+        InspectorElement child = FindFirst<InspectorElement>(option);
         if (child != null)
-        {
-            string childType = child.GetAttribute(Codecs.Definition);
             CompileInspector(node, odef, option, child, instructions, labels, ref handledOutputArgs);
-        }
     }
 
     /// <summary>
     /// Compile a choice.
     /// </summary>
-    private static void CompileChoice(NodeUnit node, CdefCodec cdef, ChoiceCodec choice, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileChoice(NodeUnit node, ChoiceDefinitionElement cdef, ChoiceElement choice, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
-        InspectorCodec child = choice.GetFirstChild<InspectorCodec>();
-        string childType = child.GetAttribute(Codecs.Definition);
+        InspectorElement child = FindFirst<InspectorElement>(choice);
         CompileInspector(node, cdef, choice, child, instructions, labels, ref handledOutputArgs);
     }
 
     /// <summary>
     /// Compile a tuple.
     /// </summary>
-    private static void CompileTuple(NodeUnit node, TdefCodec tdef, TupleCodec tuple, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileTuple(NodeUnit node, TupleDefinitionElement tdef, TupleElement tuple, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
-        foreach (Codec element in tuple.Children)
+        for (int i = 0; i < tuple.ChildCount; i++)
         {
-            if (element is InspectorCodec child)
-            {
-                string childType = element.GetAttribute(Codecs.Definition);
+            if (tuple.GetChild(i) is InspectorElement child)
                 CompileInspector(node, tdef, tuple, child, instructions, labels, ref handledOutputArgs);
-            }
         }
     }
 
     /// <summary>
     /// Compile a list.
     /// </summary>
-    private static void CompileList(NodeUnit node, LdefCodec ldef, ListCodec list, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileList(NodeUnit node, ListDefinitionElement ldef, ListElement list, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
-        foreach (Codec element in list.Children)
+        for (int i = 0; i < list.ChildCount; i++)
         {
-            if (element is InspectorCodec child)
-            {
-                string childType = element.GetAttribute(Codecs.Definition);
+            if (list.GetChild(i) is InspectorElement child)
                 CompileInspector(node, ldef, list, child, instructions, labels, ref handledOutputArgs);
-            }
         }
     }
 
     /// <summary>
     /// Compile a form.
     /// </summary>
-    private static void CompileForm(NodeUnit node, FdefCodec fdef, FormCodec form, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileForm(NodeUnit node, FormDefinitionElement fdef, FormElement form, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
-        string opcode = fdef.GetAttribute(Codecs.Definition);
+        // Compile arguments.
         List<string> arguments = new();
-        foreach (Codec child in form.Children)
+        for (int i = 0; i < form.ChildCount; i++)
         {
-            if (child is ArgCodec varg)
-            {
-                string value = varg.GetAttribute(Codecs.Value);
-                arguments.Add(value);
-            }
-            else if (child is OutCodec oarg)
+            // Field argument.
+            if (form.GetChild(i) is FieldElement field)
+                arguments.Add(field.Value);
+
+            // Port argument.
+            else if (form.GetChild(i) is PortElement port)
             {
                 // Find parameter target unit.
                 int outputPort = node.OutputData.HideDefaultOutput ? handledOutputArgs : handledOutputArgs + 1;
@@ -297,23 +283,23 @@ internal static class CodeGenerator
                 arguments.Add(value);
             }
         }
-        instructions.Add(new GenericInstruction(opcode, arguments.ToArray()));
+        instructions.Add(new GenericInstruction(fdef.InstructionDefinition, arguments.ToArray()));
     }
 
     /// <summary>
     /// Compile an instruction set.
     /// </summary>
-    private static InstructionSet CompileInstructionSet(FileCodec file)
+    private static InstructionSet CompileInstructionSet(FileElement file)
     {
         if (file == null)
             return new();
 
         // Read instructions.
         List<InstructionDefinition> definitions = new();
-        foreach (Codec child in file.Children)
+        for (int i = 0; i < file.ChildCount; i++)
         {
-            if (child is IdefCodec idef)
-                definitions.Add(CompileIdef(idef));
+            if (file.GetChild(i) is InstructionDefinitionElement definition)
+                definitions.Add(CompileInstruction(definition));
         }
 
         // Create instruction set.
@@ -323,40 +309,62 @@ internal static class CodeGenerator
     /// <summary>
     /// Compile an instruction definition.
     /// </summary>
-    private static InstructionDefinition CompileIdef(IdefCodec idef)
+    private static InstructionDefinition CompileInstruction(InstructionDefinitionElement idef)
     {
-        // Read opcode.
-        string opcode = idef.GetAttribute(Codecs.ID);
-
-        // Read execution handler.
-        string exec = idef.GetAttribute(Codecs.ExecutionHandler);
-
         // Read parameters.
         List<string> parameters = new();
-        foreach (Codec child in idef.Children)
+        for (int i = 0; i < idef.ChildCount; i++)
         {
-            if (child is PdefCodec pdef)
-                parameters.Add(pdef.GetAttribute(Codecs.ID));
+            if (idef.GetChild(i) is ParameterDefinitionElement pdef)
+                parameters.Add(pdef.ID);
         }
 
         // Create definition.
-        return new(opcode, parameters.ToArray(), exec);
+        return new(idef.ID, parameters.ToArray(), idef.ExecutionHandler);
     }
 
     /// <summary>
     /// Compile metadata.
     /// </summary>
-    private static Metadata CompileMetadata(FileCodec file)
+    private static Metadata CompileMetadata(FileElement file)
     {
         Metadata metadata = new();
         if (file == null)
             return metadata;
 
-        foreach (Codec child in file.Children)
+        for (int i = 0; i < file.ChildCount; i++)
         {
-            if (child is MetaCodec data)
-                metadata.AddValue(data.GetAttribute(Codecs.ID), data.GetAttribute(Codecs.Value));
+            if (file.GetChild(i) is MetadataElement data)
+                metadata.AddValue(data.Key, data.Value);
         }
         return metadata;
+    }
+
+    /// <summary>
+    /// Find a child element.
+    /// </summary>
+    private static T FindFirst<T>(Element element)
+        where T : Element
+    {
+        for (int i = 0; i < element.ChildCount; i++)
+        {
+            if (element.GetChild(i) is T definition)
+                return definition;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Find a child element.
+    /// </summary>
+    private static T Find<T>(Element element, string id)
+        where T : Element
+    {
+        for (int i = 0; i < element.ChildCount; i++)
+        {
+            if (element.GetChild(i) is T definition && definition.ID == id)
+                return definition;
+        }
+        return null;
     }
 }

@@ -1,48 +1,82 @@
-﻿using System;
+﻿#define RELEASE
+
+using System;
 using System.IO;
 
-const string proj_path = "../../../";
+const string projPath = "../../../";
 
 // Read JSON.
-const string schema_path = proj_path + "schema.json";
-string json = File.ReadAllText(schema_path);
+const string schemaPath = projPath + "schema.json";
+string json = File.ReadAllText(schemaPath);
 Schema schema = new(json);
 Console.WriteLine(schema);
 
 // Create directory.
-const string target_folder = proj_path + "Generated/";
-if (Directory.Exists(target_folder))
-    Directory.Delete(target_folder, true);
-Directory.CreateDirectory(target_folder);
+#if RELEASE
+const string targetFolder = projPath + "../Godot/Addons/ActionGraph/Serialization/";
+#else
+const string targetFolder = projPath + "Generated/";
+#endif
+if (Directory.Exists(targetFolder))
+    Directory.Delete(targetFolder, true);
+Directory.CreateDirectory(targetFolder);
+
+const string elementsFolder = targetFolder + "Elements/";
 
 // Generate base codec class.
 BaseElementClassGenerator @base = new();
-Write(target_folder, "Element", @base.Generate(schema));
+Write(elementsFolder, "Element", @base.Generate(schema));
 
 // Generate base classes.
-const string abstractFolder = target_folder + "Abstract/";
+const string abstractFolder = elementsFolder + "Abstract/";
 AbstractElementClassGenerator abstractGenerator = new();
 foreach (var @abstract in schema.Abstracts)
 {
     string code = abstractGenerator.Generate(schema, @abstract);
-    string className = Names.GetCodecName(@abstract.Name);
+    string className = Names.ElementName(@abstract.Name);
     Write(abstractFolder, className, code);
 }
 
 // Generate sealed classes.
-const string elementFolder = target_folder + "Elements/";
+const string sealedFolder = elementsFolder + "Sealed/";
 SealedElementClassGenerator sealedGenerator = new();
-foreach (var element in schema.Elements)
+foreach (var element in schema.Sealeds)
 {
     string code = sealedGenerator.Generate(schema, element);
-    string className = Names.GetCodecName(element.Name);
-    Write(elementFolder, className, code);
+    string className = Names.ElementName(element.Name);
+    Write(sealedFolder, className, code);
 }
 
 // Generate interface class.
 GroupInterfaceGenerator interfaceGenerator = new();
 string interfaceCode = interfaceGenerator.Generate(schema);
-Write(target_folder, "IElementGroup", interfaceCode);
+Write(elementsFolder, "IElementGroup", interfaceCode);
+
+// Generate schema class.
+SchemaGenerator schemaGenerator = new();
+string schemaCode = schemaGenerator.Generate(schema);
+Write(targetFolder, "Schema", schemaCode);
+
+// Generate hasher class.
+HasherGenerator hasherGenerator = new();
+string hasherCode = hasherGenerator.Generate(schema);
+Write(targetFolder, "Hasher", hasherCode);
+
+// Generate printer class.
+ElementPrinterGenerator printerGenerator = new();
+string printerCode = printerGenerator.Generate(schema);
+Write(elementsFolder, "ElementPrinter", printerCode);
+
+// Generate XML parser/serializer.
+const string xmlFolder = targetFolder + "XML/";
+
+XmlSerializerGenerator xmlSerializerGenerator = new();
+string xmlSerializerCode = xmlSerializerGenerator.Generate(schema);
+Write(xmlFolder, "XmlSerializer", xmlSerializerCode);
+
+XmlParserGenerator xmlParserGenerator = new();
+string xmlParserCode = xmlParserGenerator.Generate(schema);
+Write(xmlFolder, "XmlParser", xmlParserCode);
 
 // Write to file method.
 static void Write(string folder, string name, string code)

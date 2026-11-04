@@ -2,7 +2,7 @@
 
 internal static class Names
 {
-    public static string GetCodecName(string elementName)
+    public static string ElementName(string elementName)
     {
         return $"{CamelCase(elementName)}Element";
     }

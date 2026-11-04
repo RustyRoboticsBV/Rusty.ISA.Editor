@@ -1,7 +1,7 @@
 using Godot;
 using Rusty.ActionGraph.CodeGen;
 using Rusty.ActionGraph.Serialization;
-using Rusty.ActionGraph.Serialization.Binary;
+//using Rusty.ActionGraph.Serialization.Binary; //TODO: uncomment
 
 namespace Rusty.ActionGraph.ImportPlugins;
 
@@ -29,12 +29,13 @@ public abstract partial class InstructionProgramImporter : Node
     /// </summary>
     public static InstructionProgram ImportBinary(byte[] bytes)
     {
-        // Parse the file as a codec.
-        FileCodec codec = BinaryParser.Parse(bytes);
+        return null;/*TODO: remove
+        // Parse the file as an element.
+        FileCodec element = BinaryParser.Parse(bytes);
 
-        // Compile the codec into a program.
-        InstructionProgram program = CodeGenerator.Generate(codec);
-        return program;
+        // Compile the element into a program.
+        InstructionProgram program = CodeGenerator.Generate(element);
+        return program;*/
     }
 
     /// <summary>
@@ -42,18 +43,11 @@ public abstract partial class InstructionProgramImporter : Node
     /// </summary>
     public static InstructionProgram ImportXml(string text)
     {
-        // Parse the XML as a codec.
-        FileCodec codec = Serialization.XmlParser.Parse(text);
+        // Parse the XML as an element.
+        FileElement element = Serialization.XmlParser.Parse(text);
 
-        // TODO: REMOVE  //
-        var b = BinarySerializer.Serialize(codec);
-        var f = System.IO.File.Create("Test/bin.agbp");
-        f.Write(b);
-        f.Close();
-        ///////////////////
-
-        // Compile the codec into a program.
-        InstructionProgram program = CodeGenerator.Generate(codec);
+        // Compile the element into a program.
+        InstructionProgram program = CodeGenerator.Generate(element);
         return program;
     }
 }

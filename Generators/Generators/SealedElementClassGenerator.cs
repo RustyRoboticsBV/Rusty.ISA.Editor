@@ -9,7 +9,7 @@ public sealed class SealedElementClassGenerator : Generator
         Class @class = Class(AccessType.Internal, ModifierType.Sealed, Names.CamelCase(element.Name) + "Element");
         @class.Summary = Summary(element.Description);
         if (element.Inherits != null)
-            @class.Base = Type(Names.GetCodecName(element.Inherits.Name));
+            @class.Base = Type(Names.ElementName(element.Inherits.Name));
         else
             @class.Base = Type("Element");
 
@@ -98,7 +98,7 @@ public sealed class SealedElementClassGenerator : Generator
         List<Case> addChild = new();
         foreach (string child in element.Children)
         {
-            Id type = Id(Names.GetCodecName(child));
+            Id type = Id(Names.ElementName(child));
             addChild.Add(Case(type, []));
             addChild[^1].OmitBreak = true;
         }

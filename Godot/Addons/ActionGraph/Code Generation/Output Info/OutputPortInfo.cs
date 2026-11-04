@@ -8,12 +8,12 @@ namespace Rusty.ActionGraph.CodeGen;
 internal sealed class OutputPortInfo
 {
     /* Public properties. */
-    public PdefCodec Parameter { get; private set; }
-    public JdefCodec Definition { get; private set; }
-    public OutCodec Instance { get; private set; }
+    public ParameterDefinitionElement Parameter { get; private set; }
+    public PortDefinitionElement Definition { get; private set; }
+    public PortElement Instance { get; private set; }
 
     /* Constructors. */
-    public OutputPortInfo(PdefCodec parameter, JdefCodec definition, OutCodec instance)
+    public OutputPortInfo(ParameterDefinitionElement parameter, PortDefinitionElement definition, PortElement instance)
     {
         Parameter = parameter;
         Definition = definition;
@@ -21,10 +21,5 @@ internal sealed class OutputPortInfo
     }
 
     /* Public methods. */
-    public override string ToString()
-    {
-        return Parameter.GetAttribute(Codecs.ID)
-            + " / " + Definition.GetAttribute(Codecs.ID)
-            + ": \"" + Instance.GetAttribute(Codecs.Value) + '"';
-    }
+    public override string ToString() => $"{Parameter.ID} / {Definition.ID}: \"{Instance.Index}\"";
 }

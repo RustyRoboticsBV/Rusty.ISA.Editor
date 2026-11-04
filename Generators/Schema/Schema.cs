@@ -8,7 +8,7 @@ public class Schema
     /* Public properties. */
     public string Version {get; set; }
     public List<Abstract> Abstracts { get; } = new();
-    public List<Sealed> Elements { get; } = new();
+    public List<Sealed> Sealeds { get; } = new();
     public List<Attribute> GlobalAttributes { get; } = new();
 
     /* Constructors. */
@@ -63,7 +63,7 @@ public class Schema
             if (element.Children.Count > 0)
                 element.MultipleChildren = obj.Value.GetProperty("allow_multiple_children").GetBoolean();
 
-            Elements.Add(element);
+            Sealeds.Add(element);
         }
 
         // Resolve ref types.
@@ -102,7 +102,7 @@ public class Schema
             }
         }
 
-        foreach (Sealed element in Elements)
+        foreach (Sealed element in Sealeds)
         {
             foreach (Attribute attribute in element.Attributes)
             {
@@ -137,10 +137,10 @@ public class Schema
         sb.Append("\n");
 
         sb.Append("Elements:");
-        for (int i = 0; i < Elements.Count; i++)
+        for (int i = 0; i < Sealeds.Count; i++)
         {
             sb.Append("\n\n");
-            sb.Append(Elements[i].ToString());
+            sb.Append(Sealeds[i].ToString());
         }
 
         return sb.ToString();
@@ -167,7 +167,7 @@ public class Schema
 
     public Sealed GetSealed(string name)
     {
-        foreach (Sealed element in Elements)
+        foreach (Sealed element in Sealeds)
         {
             if (element.Name == name)
                 return element;
@@ -191,7 +191,7 @@ public class Schema
         Dictionary<Attribute, List<Attribute>> sharedSources = new();
         HashSet<Attribute> result = null;
 
-        foreach (Sealed element in Elements)
+        foreach (Sealed element in Sealeds)
         {
             // Skip this element if it does not inherit the abstract type.
             if (abstractType != null && element.Inherits != abstractType)

@@ -11,6 +11,8 @@ public sealed class CodeWriter
     private int indent;
 
     /* Public properties. */
+    public bool IsEmpty => sb.Length == 0;
+
     public int Indent
     {
         get => indent;

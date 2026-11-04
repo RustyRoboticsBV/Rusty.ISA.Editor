@@ -19,14 +19,10 @@ internal sealed class OutputCountResult
     /* Constructors. */
     public OutputCountResult() { }
 
-    public OutputCountResult(FileCodec file, Codec node)
+    public OutputCountResult(FileElement file, NodeElement node)
     {
-        // Find the ndef.
-        string nodeType = node.GetAttribute(Codecs.Definition);
-        NdefCodec ndef = file.FindNdef(nodeType);
-
-        // Search for outputs.
-        Search(file, ndef, node);
+        var definition = Find<NodeDefinitionElement>(file, node.Definition);
+        Search(file, definition, node);
     }
 
     /* Public methods. */
@@ -66,26 +62,37 @@ internal sealed class OutputCountResult
     }
 
     /* Private methods. */
-    private void Search(FileCodec file, Codec definition, Codec instance)
+    private void Search(FileElement file, Element definition, Element instance)
     {
         // If a form, search it.
-        if (definition is FdefCodec fdef && instance is FormCodec form)
-        {
+        if (definition is FormDefinitionElement fdef && instance is FormElement form)
             Search(file, fdef, form);
-            return;
-        }
 
         // Search children.
-        else if (definition is ICodecGroup<InspectorDefinitionCodec> collection && instance is ICodecGroup<InspectorCodec> inspector)
+        else if (definition is InspectorDefinitionElement idef && instance is InspectorElement inspector)
         {
-            for (int i = 0; i < inspector.Children.Count; i++)
+            for (int i = 0; i < instance.ChildCount; i++)
             {
-                Codec child = inspector.Children[i];
-                string type = child.GetAttribute(Codecs.Definition);
-                InspectorDefinitionCodec childDefinition = collection.Find(type);
-                if (childDefinition == null)
-                    throw new NullReferenceException($"Cannot find definition '{type}' in '{CodecPrinter.ToString(definition, true)}'.");
-                Search(file, childDefinition, child);
+                if (instance.GetChild(i) is InspectorElement child)
+                {
+                    var childDefinition = Find<InspectorDefinitionElement>(idef, child.Definition);
+                    if (childDefinition == null)
+                        throw new NullReferenceException($"Cannot find definition '{child.Definition}' in '{ElementPrinter.ToString(definition, true)}'.");
+                    Search(file, childDefinition, child);
+                }
+            }
+        }
+        else if (definition is NodeDefinitionElement ndef && instance is NodeElement node)
+        {
+            for (int i = 0; i < instance.ChildCount; i++)
+            {
+                if (instance.GetChild(i) is InspectorElement child)
+                {
+                    var childDefinition = Find<InspectorDefinitionElement>(ndef, child.Definition);
+                    if (childDefinition == null)
+                        throw new NullReferenceException($"Cannot find definition '{child.Definition}' in '{ElementPrinter.ToString(definition, true)}'.");
+                    Search(file, childDefinition, child);
+                }
             }
         }
 
@@ -93,24 +100,35 @@ internal sealed class OutputCountResult
             throw new InvalidOperationException("Cannot find outputs of codec " + instance + " / " + definition);
     }
 
-    private void Search(FileCodec file, FdefCodec fdef, FormCodec form)
+    private void Search(FileElement file, FormDefinitionElement definition, FormElement form)
     {
-        // Find the idef.
-        IdefCodec idef = file.FindIdef(fdef.GetAttribute(Codecs.Definition));
+        // Find the instruction definition.
+        var instruction = Find<InspectorDefinitionElement>(file, form.Definition);
 
         // Parallel-search arguments.
-        int count = Math.Min(fdef.Children.Count, form.Children.Count);
+        int count = Math.Min(definition.ChildCount, form.ChildCount);
         for (int i = 0; i < count; i++)
         {
-            if (fdef.Children[i] is JdefCodec oadef && form.Children[i] is OutCodec output)
+            if (definition.GetChild(i) is PortDefinitionElement portDefinition && form.GetChild(i) is PortElement port)
             {
-                PdefCodec parameter = idef.FindPdef(oadef.GetAttribute(Codecs.Definition));
+                var parameter = Find<ParameterDefinitionElement>(instruction, portDefinition.Parameter);
 
-                Arguments.Add(new OutputPortInfo(parameter, oadef, output));
+                Arguments.Add(new OutputPortInfo(parameter, portDefinition, port));
 
-                if (oadef.GetAttribute(Codecs.NoDefault).ToLower() == "true")
+                if (portDefinition.RemoveDefaultPort)
                     HideDefaultOutput = true;
             }
         }
+    }
+
+    private static T Find<T>(Element element, string id)
+        where T : Element
+    {
+        for (int i = 0; i < element.ChildCount; i++)
+        {
+            if (element.GetChild(i) is T definition && definition.ID == id)
+                return definition;
+        }
+        return null;
     }
 }

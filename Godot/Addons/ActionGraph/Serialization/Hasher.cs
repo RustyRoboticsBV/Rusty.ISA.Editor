@@ -1,75 +1,83 @@
-﻿using System;
+////////////////////////////////////////////////////////////////////////////////
+// WARNING:                                                                   //
+// This is a generated script file. It should not be edited directly.         //
+// See the Generators/ directory to view the source generation module.        //
+////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Security.Cryptography;
 
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A utility for computing the hashcode of a codec.
+/// A utility for computing the hashcode of a element.
 /// </summary>
 internal static class Hasher
 {
     /* Public methods. */
     /// <summary>
-    /// Compute the hashcode of a file codec and its children, and store it in the codec.
+    /// Compute the hashcode of a file and its children, and store it in the element.
     /// </summary>
-    public static void StoreHash(FileCodec file, HashAlgorithm hash)
+    public static void StoreHash(FileElement file, HashAlgorithm hash)
     {
         // Compute checksum.
         string hashHex = Hash(file, hash);
 
         // Store the checksum.
-        file.SetAttribute(Codecs.Checksum, hashHex);
+        file.Checksum = hashHex;
     }
 
     /// <summary>
-    /// Compute the hashcode of a codec and its children.
+    /// Compute the hashcode of a element and its children.
     /// </summary>
-    public static string Hash(Codec codec, HashAlgorithm hash)
+    public static string Hash(Element element, HashAlgorithm hash)
     {
-        Hash(hash, codec, [0x00, 0x00, 0x00, 0x00]);
+        Hash(hash, element, [0x00, 0x00, 0x00, 0x00]);
         hash.TransformFinalBlock([], 0, 0);
         return Convert.ToHexString(hash.Hash);
     }
 
     /* Private methods. */
     /// <summary>
-    /// Compute the hashcode of this codec and its children.
+    /// Compute the hashcode of this element and its children.
     /// </summary>
-    private static void Hash(HashAlgorithm hash, Codec codec, byte[] buffer)
+    private static void Hash(HashAlgorithm hash, Element element, byte[] buffer)
     {
+        int elementIndex = Schema.FindElement(element.GetType());
+        
         // Hash tag.
-        Hash(hash, codec.Name.Length, buffer);
-        Hash(hash, codec.Name, buffer);
-
+        string name = Schema.Elements[elementIndex].Name;
+        Hash(hash, name.Length, buffer);
+        Hash(hash, name, buffer);
+        
         // Hash attributes.
-        int count = 0;
-        foreach (var attribute in codec.Attributes)
+        int count = element.AttributeCount;
+        if (element is FileElement)
+            count--;
+        
+        for (int i = 0; i < element.AttributeCount; i++)
         {
-            if (attribute.Key != Codecs.Checksum)
-                count++;
-        }
-        Hash(hash, count, buffer);
-
-        foreach (var attribute in codec.Attributes)
-        {
-            if (attribute.Key == Codecs.Checksum)
+            string attributeName = Schema.Elements[elementIndex].Attributes[i].Name;
+            
+            if (attributeName == "checksum")
                 continue;
-
-            Hash(hash, attribute.Key.Length, buffer);
-            Hash(hash, attribute.Key, buffer);
-
-            Hash(hash, attribute.Value.Length, buffer);
-            Hash(hash, attribute.Value, buffer);
+            
+            Hash(hash, attributeName.Length, buffer);
+            Hash(hash, attributeName, buffer);
+            
+            string valueStr = element.GetAttribute(i).ToString();
+            Hash(hash, valueStr.Length, buffer);
+            Hash(hash, valueStr, buffer);
         }
-
+        
         // Hash child nodes.
-        Hash(hash, codec.Children.Count, buffer);
-        foreach (Codec child in codec.Children)
+        Hash(hash, element.ChildCount, buffer);
+        for (int i = 0; i < element.ChildCount; i++)
         {
-            Hash(hash, child, buffer);
+            Hash(hash, element.GetChild(i), buffer);
         }
     }
-
+    
     /// <summary>
     /// Compute the hashcode of a string.
     /// </summary>
@@ -80,7 +88,7 @@ internal static class Hasher
             Hash(hash, str[i], buffer);
         }
     }
-
+    
     /// <summary>
     /// Compute the hashcode of a character.
     /// </summary>

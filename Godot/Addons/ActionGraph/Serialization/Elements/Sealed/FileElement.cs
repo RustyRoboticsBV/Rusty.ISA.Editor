@@ -1,0 +1,103 @@
+////////////////////////////////////////////////////////////////////////////////
+// WARNING:                                                                   //
+// This is a generated script file. It should not be edited directly.         //
+// See the Generators/ directory to view the source generation module.        //
+////////////////////////////////////////////////////////////////////////////////
+
+using System;
+
+namespace Rusty.ActionGraph.Serialization;
+
+/// <summary>
+/// The root element.
+/// </summary>
+internal sealed class FileElement : Element
+{
+    /* Public properties. */
+    public override int AttributeCount => 5;
+    
+    /// <summary>
+    /// The unique identifier of this file.
+    /// </summary>
+    public override string ID { get; set; }
+    /// <summary>
+    /// The name of the editor that generated this file.
+    /// </summary>
+    public string Editor { get; set; }
+    /// <summary>
+    /// The ActionGraph schema version.
+    /// </summary>
+    public string SchemaVersion { get; set; }
+    /// <summary>
+    /// The file format version.
+    /// </summary>
+    public string FormatVersion { get; set; }
+    /// <summary>
+    /// The checksum of this file.
+    /// </summary>
+    public string Checksum { get; set; }
+    
+    /* Public methods. */
+    public override object GetAttribute(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return ID;
+            case 1:
+                return Editor;
+            case 2:
+                return SchemaVersion;
+            case 3:
+                return FormatVersion;
+            case 4:
+                return Checksum;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+        }
+    }
+    
+    public override void SetAttribute(int index, object value)
+    {
+        switch (index)
+        {
+            case 0:
+                ID = (string)value;
+                break;
+            case 1:
+                Editor = (string)value;
+                break;
+            case 2:
+                SchemaVersion = (string)value;
+                break;
+            case 3:
+                FormatVersion = (string)value;
+                break;
+            case 4:
+                Checksum = (string)value;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to index {index}.");
+        }
+    }
+    
+    public override void AddChild(Element child)
+    {
+        switch (child)
+        {
+            case MetadataElement:
+            case LanguageDefinitionElement:
+            case InstructionDefinitionElement:
+            case NodeDefinitionElement:
+            case NodeElement:
+            case FrameElement:
+            case MemoElement:
+            case JointElement:
+            case EdgeElement:
+                Children.Add(child);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException($"Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}.");
+        }
+    }
+}
