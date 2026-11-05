@@ -61,10 +61,6 @@
           "description": "The unique identifier of this <this>.",
           "value_type": "string"
         },
-        "key": {
-          "description": "The <this> key.",
-          "value_type": "string"
-        },
         "value": {
           "description": "The <this> value.",
           "value_type": "string"
@@ -243,7 +239,7 @@
       "allowed_children": []
     },
     "port_definition": {
-      "description": "A definition for a port, which corresponds to a parameter.",
+      "description": "A definition for a node output port, which corresponds to a parameter.",
       "inherits_abstract": "argument_definition",
       "attributes": {
         "id": {
@@ -698,7 +694,7 @@
       "allow_multiple_children": true
     },
     "port": {
-      "description": "A node port, which represents the state of an instruction argument.",
+      "description": "A node output port, which represents the state of an instruction argument.",
       "inherits_abstract": "argument",
       "attributes": {
         "id": {

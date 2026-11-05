@@ -19,16 +19,12 @@ internal sealed class MetadataElement : Element
     
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 3;
+    public override int AttributeCount => 2;
     
     /// <summary>
     /// The unique identifier of this metadata.
     /// </summary>
     public override string ID { get; set; }
-    /// <summary>
-    /// The metadata key.
-    /// </summary>
-    public string Key { get; set; }
     /// <summary>
     /// The metadata value.
     /// </summary>
@@ -42,8 +38,6 @@ internal sealed class MetadataElement : Element
             case 0:
                 return "id";
             case 1:
-                return "key";
-            case 2:
                 return "value";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -57,8 +51,6 @@ internal sealed class MetadataElement : Element
             case 0:
                 return ID.GetType();
             case 1:
-                return Key.GetType();
-            case 2:
                 return Value.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -70,11 +62,9 @@ internal sealed class MetadataElement : Element
         switch (name)
         {
             case "id":
-                return 3;
-            case "key":
-                return 3;
+                return 2;
             case "value":
-                return 3;
+                return 2;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -87,8 +77,6 @@ internal sealed class MetadataElement : Element
             case 0:
                 return ID;
             case 1:
-                return Key;
-            case 2:
                 return Value;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -103,9 +91,6 @@ internal sealed class MetadataElement : Element
                 ID = (string)value;
                 break;
             case 1:
-                Key = (string)value;
-                break;
-            case 2:
                 Value = (string)value;
                 break;
             default:

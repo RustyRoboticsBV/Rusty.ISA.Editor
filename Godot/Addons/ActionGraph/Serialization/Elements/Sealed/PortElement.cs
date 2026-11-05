@@ -10,7 +10,7 @@ using System;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A node port, which represents the state of an instruction argument.
+/// A node output port, which represents the state of an instruction argument.
 /// </summary>
 internal sealed class PortElement : ArgumentElement
 {

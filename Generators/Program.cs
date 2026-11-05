@@ -78,13 +78,19 @@ XmlParserGenerator xmlParserGenerator = new();
 string xmlParserCode = xmlParserGenerator.Generate(schema);
 Write(xmlFolder, "XmlParser", xmlParserCode);
 
+// Documentation.
+const string docsFolder = projPath + "../Docs/";
+DomDocsGenerator domDocsGenerator = new();
+string domDocs = domDocsGenerator.Generate(schema);
+Write(docsFolder, "Schema", domDocs, "md");
+
 // Write to file method.
-static void Write(string folder, string name, string code)
+static void Write(string folder, string name, string code, string extension = "cs")
 {
     if (!Directory.Exists(folder))
         Directory.CreateDirectory(folder);
 
-    var file = File.CreateText(folder + name + ".cs");
+    var file = File.CreateText(folder + name + "." + extension);
     file.Write(code);
     file.Close();
 }

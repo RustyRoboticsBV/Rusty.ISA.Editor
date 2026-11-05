@@ -9,7 +9,7 @@ using System;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A definition for a port, which corresponds to a parameter.
+/// A definition for a node output port, which corresponds to a parameter.
 /// </summary>
 internal sealed class PortDefinitionElement : ArgumentDefinitionElement
 {
