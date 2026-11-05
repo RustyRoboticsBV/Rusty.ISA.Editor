@@ -14,6 +14,11 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class ParameterDefinitionElement : Element
 {
     /* Public properties. */
+    public const int ELEMENT_INDEX = 4;
+    public const string ELEMENT_NAME = "parameter_definition";
+    
+    public override int ElementIndex => ELEMENT_INDEX;
+    public override string ElementName => ELEMENT_NAME;
     public override int AttributeCount => 2;
     
     /// <summary>

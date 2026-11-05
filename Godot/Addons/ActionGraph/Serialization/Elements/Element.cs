@@ -16,6 +16,14 @@ internal abstract class Element
 {
     /* Public properties. */
     /// <summary>
+    /// The index of this element type.
+    /// </summary>
+    public abstract int ElementIndex { get; }
+    /// <summary>
+    /// The name of this element type.
+    /// </summary>
+    public abstract string ElementName { get; }
+    /// <summary>
     /// The number of attributes of this element.
     /// </summary>
     public abstract int AttributeCount { get; }

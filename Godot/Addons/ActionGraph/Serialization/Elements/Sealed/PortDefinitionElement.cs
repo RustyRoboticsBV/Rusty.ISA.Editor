@@ -14,6 +14,11 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class PortDefinitionElement : ArgumentDefinitionElement
 {
     /* Public properties. */
+    public const int ELEMENT_INDEX = 12;
+    public const string ELEMENT_NAME = "port_definition";
+    
+    public override int ElementIndex => ELEMENT_INDEX;
+    public override string ElementName => ELEMENT_NAME;
     public override int AttributeCount => 3;
     
     /// <summary>

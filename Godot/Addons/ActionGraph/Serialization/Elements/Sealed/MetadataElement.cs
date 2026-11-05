@@ -14,6 +14,11 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class MetadataElement : Element
 {
     /* Public properties. */
+    public const int ELEMENT_INDEX = 1;
+    public const string ELEMENT_NAME = "metadata";
+    
+    public override int ElementIndex => ELEMENT_INDEX;
+    public override string ElementName => ELEMENT_NAME;
     public override int AttributeCount => 3;
     
     /// <summary>

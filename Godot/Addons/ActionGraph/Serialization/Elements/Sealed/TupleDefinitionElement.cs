@@ -14,6 +14,11 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class TupleDefinitionElement : InspectorDefinitionElement
 {
     /* Public properties. */
+    public const int ELEMENT_INDEX = 9;
+    public const string ELEMENT_NAME = "tuple_definition";
+    
+    public override int ElementIndex => ELEMENT_INDEX;
+    public override string ElementName => ELEMENT_NAME;
     public override int AttributeCount => 1;
     
     /// <summary>

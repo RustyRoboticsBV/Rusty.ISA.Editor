@@ -2,26 +2,28 @@
 {
     public string Generate(Schema schema)
     {
-        CodeWriter elements = new();
-        elements.Indent = 2;
+        CodeWriter indexOfCases = new();
+        indexOfCases.Indent = 2;
         foreach (Sealed @sealed in schema.Sealeds)
         {
-            if (!elements.IsEmpty)
-                elements.Append(',');
+            string name = Names.ElementName(@sealed.Name);
+            indexOfCases.Line($"{name}.ELEMENT_NAME => {name}.ELEMENT_INDEX,");
+        }
 
-            CodeWriter attributes = new();
-            foreach (Attribute attribute in @sealed.Attributes)
-            {
-                if (!attributes.IsEmpty)
-                    attributes.Append(',');
-                if (attribute.ValueType == ValueType.Ref)
-                    attributes.Append($"new(\"{attribute.Name}\", ValueType.{ValueType.String}");
-                else
-                    attributes.Append($"new(\"{attribute.Name}\", ValueType.{attribute.ValueType}");
-                attributes.Append($")");
-            }
+        CodeWriter nameOfCases = new();
+        nameOfCases.Indent = 2;
+        foreach (Sealed @sealed in schema.Sealeds)
+        {
+            string name = Names.ElementName(@sealed.Name);
+            nameOfCases.Line($"{name}.ELEMENT_INDEX => {name}.ELEMENT_NAME,");
+        }
 
-            elements.Line($"new(typeof({Names.ElementName(@sealed.Name)}), \"{@sealed.Name}\", [{attributes}])");
+        CodeWriter typeOfCases = new();
+        typeOfCases.Indent = 2;
+        foreach (Sealed @sealed in schema.Sealeds)
+        {
+            string name = Names.ElementName(@sealed.Name);
+            typeOfCases.Line($"{name}.ELEMENT_INDEX => typeof({name}),");
         }
 
         return @$"{Notice}
@@ -30,80 +32,43 @@ using System;
 
 namespace Rusty.ActionGraph.Serialization;
 
-using SElement = Element;
-
 /// <summary>
-/// The ActionGraph schema.
+/// The ActionGraph element types.
 /// </summary>
-internal static class Schema
+internal static class Elements
 {{
-    /* Public types. */
-    public enum ValueType {{ Bool, Uint, Int, Color, String }}
-    
-    public class Attribute
-    {{
-        public string Name {{ get; init; }}
-        public ValueType ValueType {{ get; init; }}
-        
-        public Attribute(string name, ValueType valueType)
-        {{
-            Name = name;
-            ValueType = valueType;
-        }}
-    }}
-    
-    public class Element
-    {{
-        public Type Type {{ get; init; }}
-        public string Name {{ get; init; }}
-        public Attribute[] Attributes {{ get; init; }}
-
-        public Element(Type type, string name, Attribute[] attributes)
-        {{
-            Type = type;
-            Name = name;
-            Attributes = attributes;
-        }}
-
-        public int FindAttribute(string attributeName)
-        {{
-            for (int i = 0; i < Attributes.Length; i++)
-            {{
-                if (Attributes[i].Name == attributeName)
-                    return i;
-            }}
-            throw new ArgumentException($""Unknown element '{{attributeName}}'."", nameof(attributeName));
-        }}
-    }}
-    
-    /* Public properties. */
-    public static Element[] Elements {{ get; }} =
-    [
-{elements}
-    ];
-    
     /* Public methods. */
-    public static int FindElement(Type type)
+    /// <summary>
+    /// Get the index of an element, using its name.
+    /// </summary>
+    public static int IndexOfElement(string name) => name switch
     {{
-        for (int i = 0; i < Elements.Length; i++)
-        {{
-            if (Elements[i].Type == type)
-                return i;
-        }}
-        throw new ArgumentException($""Unknown element '{{type.Name}}'."", nameof(type));
-    }}
-    
-    public static int FindElement(string elementName)
+{indexOfCases}
+        _ => throw new ArgumentException($""Unknown element '{{name}}'."", nameof(name))
+    }};
+
+    /// <summary>
+    /// Get the name of an element, using its index.
+    /// </summary>
+    public static string NameOfElement(int index) => index switch
     {{
-        for (int i = 0; i < Elements.Length; i++)
-        {{
-            if (Elements[i].Name == elementName)
-                return i;
-        }}
-        throw new ArgumentException($""Unknown element '{{elementName}}'."", nameof(elementName));
-    }}
+{nameOfCases}
+        _ => throw new ArgumentException($""Unknown element '{{index}}'."", nameof(index))
+    }};
+
+    /// <summary>
+    /// Get the type of an element, using its index.
+    /// </summary>
+    public static Type TypeOfElement(int index) => index switch
+    {{
+{typeOfCases}
+        _ => throw new ArgumentException($""Unknown element '{{index}}'."", nameof(index))
+    }};
     
-    public static SElement Instantiate(int index) => (SElement)Activator.CreateInstance(Elements[index].Type);
+    /// <summary>
+    /// Instantiate an element of some type, using its index.
+    /// </summary>
+    public static Element Instantiate(int index) => (Element)Activator.CreateInstance(TypeOfElement(index));
 }}";
     }
 }

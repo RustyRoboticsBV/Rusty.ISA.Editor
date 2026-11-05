@@ -2,33 +2,51 @@
 
 public sealed class SealedElementClassGenerator : Generator
 {
-    public string Generate(Schema schema, Sealed element)
+    public string Generate(Schema schema, Sealed @sealed)
     {
         bool needGodot = false;
 
-        Class @class = Class(AccessType.Internal, ModifierType.Sealed, Names.CamelCase(element.Name) + "Element");
-        @class.Summary = Summary(element.Description);
-        if (element.Inherits != null)
-            @class.Base = Type(Names.ElementName(element.Inherits.Name));
+        Class @class = Class(AccessType.Internal, ModifierType.Sealed, Names.ElementName(@sealed.Name));
+        @class.Summary = Summary(@sealed.Description);
+        if (@sealed.Inherits != null)
+            @class.Base = Type(Names.ElementName(@sealed.Inherits.Name));
         else
             @class.Base = Type("Element");
 
         // Properties.
         @class.Members.Add(MultilineComment("Public properties."));
 
+        @class.Members.Add(new Code($"public const int ELEMENT_INDEX = {schema.Sealeds.IndexOf(@sealed)};"));
+        @class.Members.Add(new Code($"public const string ELEMENT_NAME = \"{@sealed.Name}\";"));
+
+        @class.Members.Add(new Empty());
+        @class.Members.Add(Property(
+            AccessType.Public,
+            ModifierType.Override,
+            Type("int"),
+            Id("ElementIndex"),
+            Getter(Return(Id("ELEMENT_INDEX")))
+        ));
+        @class.Members.Add(Property(
+            AccessType.Public,
+            ModifierType.Override,
+            Type("string"),
+            Id("ElementName"),
+            Getter(Return(Id("ELEMENT_NAME")))
+        ));
         @class.Members.Add(Property(
             AccessType.Public,
             ModifierType.Override,
             Type("int"),
             Id("AttributeCount"),
-            Getter(Return(Int(element.Attributes.Count)))
+            Getter(Return(Int(@sealed.Attributes.Count)))
         ));
 
         @class.Members.Add(new Empty());
-        foreach (Attribute attribute in element.Attributes)
+        foreach (Attribute attribute in @sealed.Attributes)
         {
             bool isShared = schema.HasGlobalAttribute(attribute)
-                || (element.Inherits != null ? element.Inherits.HasAttribute(attribute) : false);
+                || (@sealed.Inherits != null ? @sealed.Inherits.HasAttribute(attribute) : false);
 
             @class.Members.Add(Property(
                 Summary(attribute.Description),
@@ -49,7 +67,7 @@ public sealed class SealedElementClassGenerator : Generator
         @class.Members.Add(MultilineComment("Public methods."));
 
         List<Case> nameOfAttribute = new();
-        foreach (Attribute attribute in element.Attributes)
+        foreach (Attribute attribute in @sealed.Attributes)
         {
             Int index = Int(nameOfAttribute.Count);
             String str = String(attribute.Name);
@@ -71,7 +89,7 @@ public sealed class SealedElementClassGenerator : Generator
 
 
         List<Case> typeOfAttribute = new();
-        foreach (Attribute attribute in element.Attributes)
+        foreach (Attribute attribute in @sealed.Attributes)
         {
             Int index = Int(typeOfAttribute.Count);
             Id type = Id(Names.CamelCase(attribute.Name) + ".GetType()");
@@ -94,7 +112,7 @@ public sealed class SealedElementClassGenerator : Generator
 
 
         List<Case> indexOfAttribute = new();
-        foreach (Attribute attribute in element.Attributes)
+        foreach (Attribute attribute in @sealed.Attributes)
         {
             String name = String(attribute.Name);
             Int index = Int(typeOfAttribute.Count);
@@ -117,7 +135,7 @@ public sealed class SealedElementClassGenerator : Generator
 
 
         List<Case> getAttribute = new();
-        foreach (Attribute attribute in element.Attributes)
+        foreach (Attribute attribute in @sealed.Attributes)
         {
             Int index = Int(getAttribute.Count);
             Id id = Id(Names.CamelCase(attribute.Name));
@@ -140,7 +158,7 @@ public sealed class SealedElementClassGenerator : Generator
 
 
         List<Case> setAttribute = new();
-        foreach (Attribute attribute in element.Attributes)
+        foreach (Attribute attribute in @sealed.Attributes)
         {
             Int index = Int(setAttribute.Count);
             Id id = Id(Names.CamelCase(attribute.Name));
@@ -165,7 +183,7 @@ public sealed class SealedElementClassGenerator : Generator
 
 
         List<Case> addChild = new();
-        foreach (string child in element.Children)
+        foreach (string child in @sealed.Children)
         {
             Id type = Id(Names.ElementName(child));
             addChild.Add(Case(type, []));
@@ -195,7 +213,7 @@ public sealed class SealedElementClassGenerator : Generator
             Type("void"),
             Id("AddChild"),
             Parameter(Type("Element"), Id("child")),
-            element.Children.Count > 0
+            @sealed.Children.Count > 0
                 ? Switch(
                     Id("child"),
                     Default(Throw(Type("ArgumentOutOfRangeException"), IString("Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}."))),
@@ -204,7 +222,7 @@ public sealed class SealedElementClassGenerator : Generator
                 : Throw(Type("NotImplementedException"), IString("Elements of type {GetType().Name} do not allow child elements."))
         ));
 
-        if (element.Children.Count > 0 && !element.MultipleChildren)
+        if (@sealed.Children.Count > 0 && !@sealed.MultipleChildren)
         {
             var s = If(Greater(Id("Children.Count"), Int(0)),
                 Throw(Type("InvalidOperationException"), IString("Elements of type {GetType().Name} do not allow multiple child elements."))

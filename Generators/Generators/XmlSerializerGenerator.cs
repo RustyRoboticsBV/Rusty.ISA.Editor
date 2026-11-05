@@ -52,15 +52,12 @@ internal static class XmlSerializer
     private static void SerializeElement(Element element, XmlWriter writer)
     {{
         // Handle start tag.
-        int elementIndex = Schema.FindElement(element.GetType());
-        Schema.Element schemaElement = Schema.Elements[elementIndex];
-        writer.WriteStartElement(schemaElement.Name);
+        writer.WriteStartElement(element.ElementName);
 
         // Handle attributes.
         for (int i = 0; i < element.AttributeCount; i++)
         {{
-            Schema.Attribute schemaAttribute = schemaElement.Attributes[element.AttributeCount];
-            writer.WriteStartAttribute(schemaAttribute.Name);
+            writer.WriteStartAttribute(element.NameOfAttribute(i));
             writer.WriteValue(element.GetAttribute(i));
             writer.WriteEndAttribute();
         }}

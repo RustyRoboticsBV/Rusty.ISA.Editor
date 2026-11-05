@@ -43,12 +43,9 @@ internal static class Hasher
     /// </summary>
     private static void Hash(HashAlgorithm hash, Element element, byte[] buffer)
     {
-        int elementIndex = Schema.FindElement(element.GetType());
-        
         // Hash tag.
-        string name = Schema.Elements[elementIndex].Name;
-        Hash(hash, name.Length, buffer);
-        Hash(hash, name, buffer);
+        Hash(hash, element.ElementName.Length, buffer);
+        Hash(hash, element.ElementName, buffer);
         
         // Hash attributes.
         int count = element.AttributeCount;
@@ -57,7 +54,7 @@ internal static class Hasher
         
         for (int i = 0; i < element.AttributeCount; i++)
         {
-            string attributeName = Schema.Elements[elementIndex].Attributes[i].Name;
+            string attributeName = element.NameOfAttribute(i);
             
             if (attributeName == "checksum")
                 continue;

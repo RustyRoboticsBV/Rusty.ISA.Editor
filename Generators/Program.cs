@@ -55,7 +55,7 @@ Write(elementsFolder, "IElementGroup", interfaceCode);
 // Generate schema class.
 SchemaGenerator schemaGenerator = new();
 string schemaCode = schemaGenerator.Generate(schema);
-Write(targetFolder, "Schema", schemaCode);
+Write(targetFolder, "Elements", schemaCode);
 
 // Generate hasher class.
 HasherGenerator hasherGenerator = new();

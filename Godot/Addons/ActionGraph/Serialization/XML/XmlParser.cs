@@ -10,8 +10,6 @@ using System.Xml;
 
 namespace Rusty.ActionGraph.Serialization;
 
-using ValueType = Schema.ValueType;
-
 /// <summary>
 /// A utility for parsing strings of XML as FileElement objects.
 /// </summary>
@@ -26,7 +24,7 @@ internal static class XmlParser
         // Load XML.
         XmlDocument doc = new XmlDocument();
         doc.LoadXml(xml);
-
+        
         // Parse DOM.
         foreach (XmlNode node in doc)
         {
@@ -41,39 +39,38 @@ internal static class XmlParser
         }
         throw new FormatException("Empty XML file!");
     }
-
+    
     /* Private methods. */
     private static Element ParseXml(XmlElement xml)
     {
-        int elementIndex = Schema.FindElement(xml.Name);
-        Schema.Element element = Schema.Elements[elementIndex];
+        int elementIndex = Elements.IndexOfElement(xml.Name);
+        Element element = Elements.Instantiate(elementIndex);
         
-        Element result = Schema.Instantiate(elementIndex);
-
         foreach (XmlNode child in xml.ChildNodes)
         {
             if (child is XmlElement childElement)
-                result.AddChild(ParseXml(childElement));
+                element.AddChild(ParseXml(childElement));
         }
-
+        
         foreach (XmlAttribute attribute in xml.Attributes)
         {
-            int attributeIndex = element.FindAttribute(attribute.Name);
-            ValueType type = element.Attributes[attributeIndex].ValueType;
-            object value = ParseValue(type, attribute.Value);
-            result.SetAttribute(attributeIndex, value);
+            int attributeIndex = element.IndexOfAttribute(attribute.Name);
+            Type type = element.TypeOfAttribute(attributeIndex);
+            
+            if (type == typeof(bool))
+                element.SetAttribute(attributeIndex, bool.Parse(attribute.Value));
+            else if (type == typeof(uint))
+                element.SetAttribute(attributeIndex, uint.Parse(attribute.Value));
+            else if (type == typeof(int))
+                element.SetAttribute(attributeIndex, int.Parse(attribute.Value));
+            else if (type == typeof(string))
+                element.SetAttribute(attributeIndex, attribute.Value);
+            else if (type == typeof(Color))
+                element.SetAttribute(attributeIndex, Color.FromHtml(attribute.Value));
+            else
+                throw new InvalidOperationException($"Invalid type {type}.");
         }
-
-        return result;
+        
+        return element;
     }
-
-    private static object ParseValue(ValueType type, string value) => type switch
-    {
-        ValueType.Bool => bool.Parse(value),
-        ValueType.Int => int.Parse(value),
-        ValueType.Uint => uint.Parse(value),
-        ValueType.String => value,
-        ValueType.Color => Color.FromHtml(value),
-        _ => throw new InvalidOperationException($"Invalid type {type}.")
-    };
 }

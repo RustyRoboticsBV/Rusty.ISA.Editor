@@ -52,8 +52,7 @@ internal static class ElementPrinter
             sb.Append(last ? ""\u2514\u2500"" : ""\u251C\u2500"");
         }}
 
-        int elementIndex = Schema.FindElement(element.GetType());
-        sb.Append(Schema.Elements[elementIndex].Name);
+        sb.Append(element.ElementName);
 
         if (element.AttributeCount > 0)
         {{
@@ -65,7 +64,7 @@ internal static class ElementPrinter
                 if (!first)
                     sb.Append("", "");
 
-                sb.Append(Schema.Elements[elementIndex].Attributes[i].Name);
+                sb.Append(element.NameOfAttribute(i));
                 sb.Append(""=\"""");
                 sb.Append(element.GetAttribute(i));
                 sb.Append('""');

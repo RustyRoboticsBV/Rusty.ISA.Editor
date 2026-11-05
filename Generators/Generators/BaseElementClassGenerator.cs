@@ -9,6 +9,23 @@
         @class.Members.Add(MultilineComment("Public properties."));
 
         @class.Members.Add(Property(
+            Summary("The index of this element type."),
+            AccessType.Public,
+            ModifierType.Abstract,
+            Type("int"),
+            Id("ElementIndex"),
+            Getter()
+        ));
+        @class.Members.Add(Property(
+            Summary("The name of this element type."),
+            AccessType.Public,
+            ModifierType.Abstract,
+            Type("string"),
+            Id("ElementName"),
+            Getter()
+        ));
+
+        @class.Members.Add(Property(
             Summary("The number of attributes of this element."),
             AccessType.Public,
             ModifierType.Abstract,

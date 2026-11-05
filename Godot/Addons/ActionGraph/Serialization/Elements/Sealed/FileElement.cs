@@ -14,6 +14,11 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class FileElement : Element
 {
     /* Public properties. */
+    public const int ELEMENT_INDEX = 0;
+    public const string ELEMENT_NAME = "file";
+    
+    public override int ElementIndex => ELEMENT_INDEX;
+    public override string ElementName => ELEMENT_NAME;
     public override int AttributeCount => 5;
     
     /// <summary>
