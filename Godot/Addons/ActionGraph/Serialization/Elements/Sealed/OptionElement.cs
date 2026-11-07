@@ -20,30 +20,56 @@ internal sealed class OptionElement : InspectorElement
     
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 5;
+    public override int AttributeCount => 6;
     
     /// <summary>
     /// The unique identifier of this option.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the associated option definition.
     /// </summary>
-    public override string Definition { get; set; }
+    public override string Definition { get; set; } = "";
     /// <summary>
-    /// Whether the option has been folded.
+    /// Whether this option has been enabled.
+    /// </summary>
+    public bool Enabled { get; set; }
+    /// <summary>
+    /// Whether this option has been folded.
     /// </summary>
     public override bool Folded { get; set; }
     /// <summary>
     /// The annotation of this option.
     /// </summary>
-    public override string Text { get; set; }
+    public override string Text { get; set; } = "";
     /// <summary>
     /// The color of this option.
     /// </summary>
     public override Color Color { get; set; }
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "definition":
+                return 1;
+            case "enabled":
+                return 2;
+            case "folded":
+                return 3;
+            case "text":
+                return 4;
+            case "color":
+                return 5;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -53,10 +79,12 @@ internal sealed class OptionElement : InspectorElement
             case 1:
                 return "definition";
             case 2:
-                return "folded";
+                return "enabled";
             case 3:
-                return "text";
+                return "folded";
             case 4:
+                return "text";
+            case 5:
                 return "color";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -72,32 +100,15 @@ internal sealed class OptionElement : InspectorElement
             case 1:
                 return Definition.GetType();
             case 2:
-                return Folded.GetType();
+                return Enabled.GetType();
             case 3:
-                return Text.GetType();
+                return Folded.GetType();
             case 4:
+                return Text.GetType();
+            case 5:
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 5;
-            case "definition":
-                return 5;
-            case "folded":
-                return 5;
-            case "text":
-                return 5;
-            case "color":
-                return 5;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     
@@ -110,10 +121,12 @@ internal sealed class OptionElement : InspectorElement
             case 1:
                 return Definition;
             case 2:
-                return Folded;
+                return Enabled;
             case 3:
-                return Text;
+                return Folded;
             case 4:
+                return Text;
+            case 5:
                 return Color;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -131,12 +144,15 @@ internal sealed class OptionElement : InspectorElement
                 Definition = (string)value;
                 break;
             case 2:
-                Folded = (bool)value;
+                Enabled = (bool)value;
                 break;
             case 3:
-                Text = (string)value;
+                Folded = (bool)value;
                 break;
             case 4:
+                Text = (string)value;
+                break;
+            case 5:
                 Color = (Color)value;
                 break;
             default:

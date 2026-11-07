@@ -24,17 +24,33 @@ internal sealed class PortDefinitionElement : ArgumentDefinitionElement
     /// <summary>
     /// The unique identifier of this port definition.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the associated parameter definition.
     /// </summary>
-    public override string Parameter { get; set; }
+    public override string Parameter { get; set; } = "";
     /// <summary>
     /// Whether this port's presence removes a node's default port.
     /// </summary>
     public bool RemoveDefaultPort { get; set; }
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "parameter":
+                return 1;
+            case "remove_default_port":
+                return 2;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -62,21 +78,6 @@ internal sealed class PortDefinitionElement : ArgumentDefinitionElement
                 return RemoveDefaultPort.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 3;
-            case "parameter":
-                return 3;
-            case "remove_default_port":
-                return 3;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

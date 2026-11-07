@@ -138,7 +138,7 @@
           "description": "The unique identifier of this <this>.",
           "value_type": "string"
         },
-        "instruction_definition": {
+        "instruction": {
           "description": "The identifier of the associated <ref_type>.",
           "value_type": "ref",
           "ref_type": "instruction_definition"
@@ -288,7 +288,7 @@
           "value_type": "uint"
         },
         "folded": {
-          "description": "Whether the <this> has been folded.",
+          "description": "Whether this <this> has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
@@ -343,7 +343,7 @@
           "value_type": "uint"
         },
         "folded": {
-          "description": "Whether the <this> has been folded.",
+          "description": "Whether this <this> has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
@@ -387,7 +387,7 @@
           "value_type": "uint"
         },
         "folded": {
-          "description": "Whether the <this> has been folded.",
+          "description": "Whether this <this> has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
@@ -499,7 +499,7 @@
           "ref_type": "form_definition"
         },
         "folded": {
-          "description": "Whether the <this> has been folded.",
+          "description": "Whether this <this> has been folded.",
           "value_type": "bool"
         },
         "text": {
@@ -530,8 +530,12 @@
           "value_type": "ref",
           "ref_type": "option_definition"
         },
+        "enabled": {
+          "description": "Whether this <this> has been enabled.",
+          "value_type": "bool"
+        },
         "folded": {
-          "description": "Whether the <this> has been folded.",
+          "description": "Whether this <this> has been folded.",
           "value_type": "bool"
         },
         "text": {
@@ -571,7 +575,7 @@
           "ref_type": "inspector"
         },
         "folded": {
-          "description": "Whether the <this> has been folded.",
+          "description": "Whether this <this> has been folded.",
           "value_type": "bool"
         },
         "text": {
@@ -606,7 +610,7 @@
           "ref_type": "tuple_definition"
         },
         "folded": {
-          "description": "Whether the <this> has been folded.",
+          "description": "Whether this <this> has been folded.",
           "value_type": "bool"
         },
         "text": {
@@ -641,7 +645,7 @@
           "ref_type": "list_definition"
         },
         "folded": {
-          "description": "Whether the <this> has been folded.",
+          "description": "Whether this <this> has been folded.",
           "value_type": "bool"
         },
         "text": {

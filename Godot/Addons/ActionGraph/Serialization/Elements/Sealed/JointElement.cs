@@ -25,11 +25,11 @@ internal sealed class JointElement : Element
     /// <summary>
     /// The unique identifier of this joint.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the associated edge.
     /// </summary>
-    public string Edge { get; set; }
+    public string Edge { get; set; } = "";
     /// <summary>
     /// The x-position of this joint.
     /// </summary>
@@ -45,17 +45,43 @@ internal sealed class JointElement : Element
     /// <summary>
     /// The identifier of the parent frame.
     /// </summary>
-    public string ParentFrame { get; set; }
+    public string ParentFrame { get; set; } = "";
     /// <summary>
     /// The annotation of this joint.
     /// </summary>
-    public string Text { get; set; }
+    public string Text { get; set; } = "";
     /// <summary>
     /// The color of this joint.
     /// </summary>
     public Color Color { get; set; }
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "edge":
+                return 1;
+            case "x":
+                return 2;
+            case "y":
+                return 3;
+            case "size":
+                return 4;
+            case "parent_frame":
+                return 5;
+            case "text":
+                return 6;
+            case "color":
+                return 7;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -103,31 +129,6 @@ internal sealed class JointElement : Element
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 8;
-            case "edge":
-                return 8;
-            case "x":
-                return 8;
-            case "y":
-                return 8;
-            case "size":
-                return 8;
-            case "parent_frame":
-                return 8;
-            case "text":
-                return 8;
-            case "color":
-                return 8;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

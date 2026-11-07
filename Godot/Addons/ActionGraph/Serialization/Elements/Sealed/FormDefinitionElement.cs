@@ -24,13 +24,27 @@ internal sealed class FormDefinitionElement : InspectorDefinitionElement
     /// <summary>
     /// The unique identifier of this form definition.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the associated instruction definition.
     /// </summary>
-    public string InstructionDefinition { get; set; }
+    public string Instruction { get; set; } = "";
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "instruction":
+                return 1;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -38,7 +52,7 @@ internal sealed class FormDefinitionElement : InspectorDefinitionElement
             case 0:
                 return "id";
             case 1:
-                return "instruction_definition";
+                return "instruction";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -51,22 +65,9 @@ internal sealed class FormDefinitionElement : InspectorDefinitionElement
             case 0:
                 return ID.GetType();
             case 1:
-                return InstructionDefinition.GetType();
+                return Instruction.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 2;
-            case "instruction_definition":
-                return 2;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     
@@ -77,7 +78,7 @@ internal sealed class FormDefinitionElement : InspectorDefinitionElement
             case 0:
                 return ID;
             case 1:
-                return InstructionDefinition;
+                return Instruction;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -91,7 +92,7 @@ internal sealed class FormDefinitionElement : InspectorDefinitionElement
                 ID = (string)value;
                 break;
             case 1:
-                InstructionDefinition = (string)value;
+                Instruction = (string)value;
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");

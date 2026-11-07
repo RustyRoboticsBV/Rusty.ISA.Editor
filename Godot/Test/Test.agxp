@@ -1,0 +1,114 @@
+<file id="test-001" editor="Test" schema_version="1.0" format_version="1.0" checksum="abc123">
+    
+    <metadata id="author" value="Rusty"/>
+    <metadata id="description" value="Test example file."/>
+    
+    <language_definition id="uk"/>
+    <language_definition id="nl"/>
+    <language_definition id="fr"/>
+
+    <instruction_definition id="add" execution_handler="AddHandler">
+        <parameter_definition id="a"/>
+        <parameter_definition id="b"/>
+    </instruction_definition>
+    <instruction_definition id="sub" execution_handler="SubHandler">
+        <parameter_definition id="a"/>
+        <parameter_definition id="b"/>
+    </instruction_definition>
+    <instruction_definition id="mul" execution_handler="MulHandler">
+        <parameter_definition id="a"/>
+        <parameter_definition id="b"/>
+    </instruction_definition>
+    <instruction_definition id="div" execution_handler="DivHandler">
+        <parameter_definition id="a"/>
+        <parameter_definition id="b"/>
+    </instruction_definition>
+    <instruction_definition id="log" execution_handler="LogHandler">
+        <parameter_definition id="message" localizable="true"/>
+    </instruction_definition>
+    <instruction_definition id="jump" execution_handler="JumpHandler">
+        <parameter_definition id="target"/>
+    </instruction_definition>
+    
+    <node_definition id="calculator">
+        <list_definition id="step_list">
+            <tuple_definition id="step">
+                <option_definition id="log_option">
+                    <form_definition id="log_form" instruction="log">
+                        <field_definition id="message_field" parameter="message"/>
+                    </form_definition>
+                </option_definition>
+                <choice_definition id="operation_choice">
+                    <form_definition id="add_form" instruction="add">
+                        <field_definition id="a_field" parameter="a"/>
+                        <field_definition id="b_field" parameter="b"/>
+                    </form_definition>
+                    <form_definition id="sub_form" instruction="sub">
+                        <field_definition id="a_field" parameter="a"/>
+                        <field_definition id="b_field" parameter="b"/>
+                    </form_definition>
+                    <form_definition id="mul_form" instruction="mul">
+                        <field_definition id="a_field" parameter="a"/>
+                        <field_definition id="b_field" parameter="b"/>
+                    </form_definition>
+                    <form_definition id="div_form" instruction="div">
+                        <field_definition id="a_field" parameter="a"/>
+                        <field_definition id="b_field" parameter="b"/>
+                    </form_definition>
+                </choice_definition>
+            </tuple_definition>
+        </list_definition>
+        <form_definition id="jump_form" instruction="jump">
+            <port_definition id="target_port" parameter="target"/>
+        </form_definition>
+    </node_definition>
+
+<frame id="frame-001" x="50" y="50" width="700" height="450" folded="false" text="Calculator Workflow" color="#3498db"/>
+
+<node id="node-001" definition="calculator" x="100" y="120" width="220" height="180" folded="false" parent_frame="frame-001" text="Main Calculator" color="#2ecc71">
+    <list id="list-001" definition="step_list" folded="false" text="Calculation Steps">
+        <tuple id="tuple-001" definition="step" folded="false" text="Addition Step">
+            <option id="option-001" definition="log_option" enabled="true" folded="false" text="Optional Log">
+                <form id="form-001" definition="log_form" folded="false">
+                    <field id="field-001" definition="message_field" value="Starting calculation" text="Log Message">
+                        <localized_value id="localized-001" definition="nl" value="Berekening gestart"/>
+                        <localized_value id="localized-002" definition="fr" value="Calcul commencé"/>
+
+                    </field>
+                </form>
+            </option>
+            <choice id="choice-001" definition="operation_choice" selected="form-002" folded="false" text="Operation">
+
+                <form id="form-002" definition="add_form" folded="false">
+                    <field id="field-002" definition="a_field" value="10" text="First Number"/>
+                    <field id="field-003" definition="b_field" value="20" text="Second Number"/>
+                </form>
+            </choice>
+        </tuple>
+    </list>
+    <form id="form-003" definition="jump_form" folded="false" text="Next Step">
+        <port id="port-001" definition="target_port" index="0" text="Next Target" color="#e67e22"/>
+    </form>
+</node>
+
+<node id="node-002" definition="calculator" x="450" y="120" width="220" height="180" folded="false" parent_frame="frame-001" text="Second Calculator" color="#9b59b6">
+    <list id="list-002" definition="step_list" folded="false">
+        <tuple id="tuple-002" definition="step" folded="false">
+            <option id="option-001" definition="log_option" enabled="false" folded="false" text="Optional Log"/>
+            <choice id="choice-002" definition="operation_choice" selected="form-004" folded="false">
+                <form id="form-004" definition="mul_form" folded="false">
+                    <field id="field-004" definition="a_field" value="5"/>
+                    <field id="field-005" definition="b_field" value="6"/>
+                </form>
+            </choice>
+        </tuple>
+    </list>
+</node>
+
+<edge id="edge-001" from="node-001" port="0" to="node-002" thickness="3" text="Next calculation" color="#34495e"/>
+
+<joint id="joint-001" edge="edge-001" x="380" y="150" size="8" parent_frame="frame-001" text="Connection waypoint" color="#e74c3c"/>
+
+<memo id="memo-001" x="100" y="350" width="300" height="100" folded="false" parent_frame="frame-001" text="This workflow demonstrates arithmetic operations and optional logging." color="#2c3e50"/>
+
+</file>

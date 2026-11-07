@@ -25,11 +25,11 @@ internal sealed class PortElement : ArgumentElement
     /// <summary>
     /// The unique identifier of this port.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the associated port definition.
     /// </summary>
-    public override string Definition { get; set; }
+    public override string Definition { get; set; } = "";
     /// <summary>
     /// The index of this port on its parent node.
     /// </summary>
@@ -37,13 +37,33 @@ internal sealed class PortElement : ArgumentElement
     /// <summary>
     /// The annotation of this port port.
     /// </summary>
-    public override string Text { get; set; }
+    public override string Text { get; set; } = "";
     /// <summary>
     /// The color of this port port.
     /// </summary>
     public override Color Color { get; set; }
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "definition":
+                return 1;
+            case "index":
+                return 2;
+            case "text":
+                return 3;
+            case "color":
+                return 4;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -79,25 +99,6 @@ internal sealed class PortElement : ArgumentElement
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 5;
-            case "definition":
-                return 5;
-            case "index":
-                return 5;
-            case "text":
-                return 5;
-            case "color":
-                return 5;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

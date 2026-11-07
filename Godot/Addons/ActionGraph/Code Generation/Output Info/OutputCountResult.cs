@@ -103,7 +103,9 @@ internal sealed class OutputCountResult
     private void Search(FileElement file, FormDefinitionElement definition, FormElement form)
     {
         // Find the instruction definition.
-        var instruction = Find<InspectorDefinitionElement>(file, form.Definition);
+        var instruction = Find<InstructionDefinitionElement>(file, definition.Instruction);
+        if (instruction == null)
+            throw new NullReferenceException($"Cannot find instruction definition '{definition.Instruction}'.");
 
         // Parallel-search arguments.
         int count = Math.Min(definition.ChildCount, form.ChildCount);
@@ -112,6 +114,8 @@ internal sealed class OutputCountResult
             if (definition.GetChild(i) is PortDefinitionElement portDefinition && form.GetChild(i) is PortElement port)
             {
                 var parameter = Find<ParameterDefinitionElement>(instruction, portDefinition.Parameter);
+                if (parameter == null)
+                    throw new NullReferenceException($"Cannot find parameter definition '{portDefinition.Parameter}'.");
 
                 Arguments.Add(new OutputPortInfo(parameter, portDefinition, port));
 
@@ -121,12 +125,15 @@ internal sealed class OutputCountResult
         }
     }
 
-    private static T Find<T>(Element element, string id)
+    private static T Find<T>(Element parent, string id)
         where T : Element
     {
-        for (int i = 0; i < element.ChildCount; i++)
+        if (parent == null)
+            throw new ArgumentNullException(nameof(parent));
+
+        for (int i = 0; i < parent.ChildCount; i++)
         {
-            if (element.GetChild(i) is T definition && definition.ID == id)
+            if (parent.GetChild(i) is T definition && definition.ID == id)
                 return definition;
         }
         return null;

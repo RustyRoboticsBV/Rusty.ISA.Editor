@@ -24,17 +24,33 @@ internal sealed class LocalizedValueElement : Element
     /// <summary>
     /// The unique identifier of this localized value.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the language definition.
     /// </summary>
-    public string Definition { get; set; }
+    public string Definition { get; set; } = "";
     /// <summary>
     /// The localized value.
     /// </summary>
-    public string Value { get; set; }
+    public string Value { get; set; } = "";
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "definition":
+                return 1;
+            case "value":
+                return 2;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -62,21 +78,6 @@ internal sealed class LocalizedValueElement : Element
                 return Value.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 3;
-            case "definition":
-                return 3;
-            case "value":
-                return 3;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

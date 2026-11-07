@@ -24,13 +24,27 @@ internal sealed class ParameterDefinitionElement : Element
     /// <summary>
     /// The unique identifier of this parameter definition.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// Whether this parameter can be localized.
     /// </summary>
     public bool Localizable { get; set; }
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "localizable":
+                return 1;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -54,19 +68,6 @@ internal sealed class ParameterDefinitionElement : Element
                 return Localizable.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 2;
-            case "localizable":
-                return 2;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

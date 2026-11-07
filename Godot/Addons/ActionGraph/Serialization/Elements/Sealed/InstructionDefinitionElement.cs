@@ -24,13 +24,27 @@ internal sealed class InstructionDefinitionElement : Element
     /// <summary>
     /// The unique identifier of this instruction definition.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The name of the class responsible for executing this instruction.
     /// </summary>
-    public string ExecutionHandler { get; set; }
+    public string ExecutionHandler { get; set; } = "";
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "execution_handler":
+                return 1;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -54,19 +68,6 @@ internal sealed class InstructionDefinitionElement : Element
                 return ExecutionHandler.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 2;
-            case "execution_handler":
-                return 2;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

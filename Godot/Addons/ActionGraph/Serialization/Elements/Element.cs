@@ -44,6 +44,8 @@ internal abstract class Element
     protected List<Element> Children { get; } = new();
     
     /* Public methods. */
+    public sealed override string ToString() => ElementPrinter.ToString(this);
+    
     /// <summary>
     /// Get the name of an attribute by its index.
     /// </summary>

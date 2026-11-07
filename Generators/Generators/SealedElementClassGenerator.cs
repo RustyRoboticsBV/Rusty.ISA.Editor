@@ -55,7 +55,8 @@ public sealed class SealedElementClassGenerator : Generator
                 Types.Get(attribute.ValueType),
                 Id(Names.CamelCase(attribute.Name)),
                 Getter(),
-                Setter()
+                Setter(),
+                attribute.ValueType >= ValueType.String ? String("") : null
             ));
 
             if (attribute.ValueType == ValueType.Color)
@@ -66,6 +67,29 @@ public sealed class SealedElementClassGenerator : Generator
         @class.Members.Add(new Empty());
         @class.Members.Add(MultilineComment("Public methods."));
 
+        List<Case> indexOfAttribute = new();
+        foreach (Attribute attribute in @sealed.Attributes)
+        {
+            String name = String(attribute.Name);
+            Int index = Int(indexOfAttribute.Count);
+            indexOfAttribute.Add(Case(name, Return(index)));
+        }
+
+        @class.Members.Add(Method(
+            AccessType.Public,
+            ModifierType.Override,
+            Type("int"),
+            Id("IndexOfAttribute"),
+            Parameter(Type("string"), Id("name")),
+            Switch(
+                Id("name"),
+                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the name '{name}'."))),
+                indexOfAttribute.ToArray()
+            )
+        ));
+
+
+        @class.Members.Add(new Empty());
         List<Case> nameOfAttribute = new();
         foreach (Attribute attribute in @sealed.Attributes)
         {
@@ -73,7 +97,8 @@ public sealed class SealedElementClassGenerator : Generator
             String str = String(attribute.Name);
             nameOfAttribute.Add(Case(index, Return(str)));
         }
-
+        
+        @class.Members.Add(new Empty());
         @class.Members.Add(Method(
             AccessType.Public,
             ModifierType.Override,
@@ -107,29 +132,6 @@ public sealed class SealedElementClassGenerator : Generator
                 Id("index"),
                 Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the index {index}."))),
                 typeOfAttribute.ToArray()
-            )
-        ));
-
-
-        List<Case> indexOfAttribute = new();
-        foreach (Attribute attribute in @sealed.Attributes)
-        {
-            String name = String(attribute.Name);
-            Int index = Int(typeOfAttribute.Count);
-            indexOfAttribute.Add(Case(name, Return(index)));
-        }
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("int"),
-            Id("IndexOfAttribute"),
-            Parameter(Type("string"), Id("name")),
-            Switch(
-                Id("name"),
-                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the name '{name}'."))),
-                indexOfAttribute.ToArray()
             )
         ));
 

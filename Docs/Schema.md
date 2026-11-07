@@ -368,7 +368,7 @@
       </tr>
       <tr>
         <td><code>1</code></td>
-        <td><code>instruction_definition</code></td>
+        <td><code>instruction</code></td>
         <td><code>string</code></td>
         <td>The identifier of the associated instruction definition.</td>
       </tr>
@@ -746,7 +746,7 @@
         <td><code>6</code></td>
         <td><code>folded</code></td>
         <td><code>bool</code></td>
-        <td>Whether the node has been folded.</td>
+        <td>Whether this node has been folded.</td>
       </tr>
       <tr>
         <td><code>7</code></td>
@@ -846,7 +846,7 @@
         <td><code>5</code></td>
         <td><code>folded</code></td>
         <td><code>bool</code></td>
-        <td>Whether the memo has been folded.</td>
+        <td>Whether this memo has been folded.</td>
       </tr>
       <tr>
         <td><code>6</code></td>
@@ -940,7 +940,7 @@
         <td><code>5</code></td>
         <td><code>folded</code></td>
         <td><code>bool</code></td>
-        <td>Whether the frame has been folded.</td>
+        <td>Whether this frame has been folded.</td>
       </tr>
       <tr>
         <td><code>6</code></td>
@@ -1186,7 +1186,7 @@
         <td><code>2</code></td>
         <td><code>folded</code></td>
         <td><code>bool</code></td>
-        <td>Whether the form has been folded.</td>
+        <td>Whether this form has been folded.</td>
       </tr>
       <tr>
         <td><code>3</code></td>
@@ -1254,18 +1254,24 @@
       </tr>
       <tr>
         <td><code>2</code></td>
-        <td><code>folded</code></td>
+        <td><code>enabled</code></td>
         <td><code>bool</code></td>
-        <td>Whether the option has been folded.</td>
+        <td>Whether this option has been enabled.</td>
       </tr>
       <tr>
         <td><code>3</code></td>
+        <td><code>folded</code></td>
+        <td><code>bool</code></td>
+        <td>Whether this option has been folded.</td>
+      </tr>
+      <tr>
+        <td><code>4</code></td>
         <td><code>text</code></td>
         <td><code>string</code></td>
         <td>The annotation of this option.</td>
       </tr>
       <tr>
-        <td><code>4</code></td>
+        <td><code>5</code></td>
         <td><code>color</code></td>
         <td><code>color</code></td>
         <td>The color of this option.</td>
@@ -1332,7 +1338,7 @@
         <td><code>3</code></td>
         <td><code>folded</code></td>
         <td><code>bool</code></td>
-        <td>Whether the choice has been folded.</td>
+        <td>Whether this choice has been folded.</td>
       </tr>
       <tr>
         <td><code>4</code></td>
@@ -1402,7 +1408,7 @@
         <td><code>2</code></td>
         <td><code>folded</code></td>
         <td><code>bool</code></td>
-        <td>Whether the tuple has been folded.</td>
+        <td>Whether this tuple has been folded.</td>
       </tr>
       <tr>
         <td><code>3</code></td>
@@ -1472,7 +1478,7 @@
         <td><code>2</code></td>
         <td><code>folded</code></td>
         <td><code>bool</code></td>
-        <td>Whether the list has been folded.</td>
+        <td>Whether this list has been folded.</td>
       </tr>
       <tr>
         <td><code>3</code></td>

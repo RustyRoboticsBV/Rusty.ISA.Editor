@@ -65,7 +65,7 @@ internal static class CodeGenerator
 
         foreach (Unit target in jumpTargets)
         {
-            labels[target] = "L_" + nextLabel.ToString();
+            labels[target] = "L_" + nextLabel;
             nextLabel++;
         }
 
@@ -154,7 +154,7 @@ internal static class CodeGenerator
                 break;
 
             default:
-                throw new InvalidOperationException($"Invalid unit: {unit}");
+                throw new InvalidOperationException($"Invalid unit: {unit}.");
         }
     }
 
@@ -166,6 +166,8 @@ internal static class CodeGenerator
         // Find node definition.
         NodeElement node = unit.Element;
         var ndef = Find<NodeDefinitionElement>(file, node.Definition);
+        if (ndef == null)
+            throw MissingDefinitionError(node, node.Definition);
 
         // Compile contents.
         int handledOutputArgs = 0;
@@ -186,10 +188,13 @@ internal static class CodeGenerator
     /// <summary>
     /// Compile an inspector's instructions.
     /// </summary>
-    private static void CompileInspector(NodeUnit node, Element parentDefinition, Element parent, InspectorElement current, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileInspector(NodeUnit node, Element parentDefinition, Element parent, InspectorElement current,
+        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
-        // Find child definition.
-        Element currentDefinition = Find<InspectorElement>(current, current.Definition);
+        // Find inspector definition.
+        var currentDefinition = Find<InspectorDefinitionElement>(parentDefinition, current.Definition);
+        if (currentDefinition == null)
+            throw MissingDefinitionError(current, current.Definition);
 
         switch (currentDefinition, current)
         {
@@ -209,35 +214,51 @@ internal static class CodeGenerator
                 CompileList(node, ldef, list, instructions, labels, ref handledOutputArgs);
                 break;
             default:
-                throw new InvalidOperationException($"Invalid coded pair: '{ElementPrinter.ToString(current, true)
-                    ?? "null"}' and '{ElementPrinter.ToString(currentDefinition, true) ?? "null"}'.");
+                throw FormatError(current, currentDefinition, "invalid inspector / inspector definition pair.");
         }
     }
 
     /// <summary>
     /// Compile an option.
     /// </summary>
-    private static void CompileOption(NodeUnit node, OptionDefinitionElement odef, OptionElement option, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileOption(NodeUnit node, OptionDefinitionElement odef, OptionElement option,
+        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
         InspectorElement child = FindFirst<InspectorElement>(option);
-        if (child != null)
+        if (!option.Enabled && option.ChildCount > 0)
+            throw FormatError(option, $"option is disabled and may not have any children (it has {option.ChildCount}).");
+
+        if (option.Enabled)
+        {
+            if (option.ChildCount == 0)
+                throw FormatError(option, "option is enabled but has no child inspector.");
+            else if (option.ChildCount > 1)
+                throw FormatError(option, $"option is enabled but has too many children ({option.ChildCount}).");
             CompileInspector(node, odef, option, child, instructions, labels, ref handledOutputArgs);
+        }
     }
 
     /// <summary>
     /// Compile a choice.
     /// </summary>
-    private static void CompileChoice(NodeUnit node, ChoiceDefinitionElement cdef, ChoiceElement choice, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileChoice(NodeUnit node, ChoiceDefinitionElement cdef, ChoiceElement choice,
+        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
-        InspectorElement child = FindFirst<InspectorElement>(choice);
+        InspectorElement child = Find<InspectorElement>(choice, choice.Selected);
+        if (child == null)
+            throw FormatError(choice, $"cannot find selected inspector '{choice.Selected}'");
         CompileInspector(node, cdef, choice, child, instructions, labels, ref handledOutputArgs);
     }
 
     /// <summary>
     /// Compile a tuple.
     /// </summary>
-    private static void CompileTuple(NodeUnit node, TupleDefinitionElement tdef, TupleElement tuple, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileTuple(NodeUnit node, TupleDefinitionElement tdef, TupleElement tuple,
+        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
+        if (tdef.ChildCount != tuple.ChildCount)
+            throw ChildCountError(tuple, tdef);
+
         for (int i = 0; i < tuple.ChildCount; i++)
         {
             if (tuple.GetChild(i) is InspectorElement child)
@@ -248,7 +269,8 @@ internal static class CodeGenerator
     /// <summary>
     /// Compile a list.
     /// </summary>
-    private static void CompileList(NodeUnit node, ListDefinitionElement ldef, ListElement list, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileList(NodeUnit node, ListDefinitionElement ldef, ListElement list,
+        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
         for (int i = 0; i < list.ChildCount; i++)
         {
@@ -260,8 +282,12 @@ internal static class CodeGenerator
     /// <summary>
     /// Compile a form.
     /// </summary>
-    private static void CompileForm(NodeUnit node, FormDefinitionElement fdef, FormElement form, List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+    private static void CompileForm(NodeUnit node, FormDefinitionElement fdef, FormElement form,
+        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
     {
+        if (fdef.ChildCount != form.ChildCount)
+            throw ChildCountError(form, fdef);
+
         // Compile arguments.
         List<string> arguments = new();
         for (int i = 0; i < form.ChildCount; i++)
@@ -283,7 +309,7 @@ internal static class CodeGenerator
                 arguments.Add(value);
             }
         }
-        instructions.Add(new GenericInstruction(fdef.InstructionDefinition, arguments.ToArray()));
+        instructions.Add(new GenericInstruction(fdef.Instruction, arguments.ToArray()));
     }
 
     /// <summary>
@@ -299,7 +325,7 @@ internal static class CodeGenerator
         for (int i = 0; i < file.ChildCount; i++)
         {
             if (file.GetChild(i) is InstructionDefinitionElement definition)
-                definitions.Add(CompileInstruction(definition));
+                definitions.Add(CompileInstructionDefinition(definition));
         }
 
         // Create instruction set.
@@ -309,7 +335,7 @@ internal static class CodeGenerator
     /// <summary>
     /// Compile an instruction definition.
     /// </summary>
-    private static InstructionDefinition CompileInstruction(InstructionDefinitionElement idef)
+    private static InstructionDefinition CompileInstructionDefinition(InstructionDefinitionElement idef)
     {
         // Read parameters.
         List<string> parameters = new();
@@ -335,7 +361,7 @@ internal static class CodeGenerator
         for (int i = 0; i < file.ChildCount; i++)
         {
             if (file.GetChild(i) is MetadataElement data)
-                metadata.AddValue(data.Key, data.Value);
+                metadata.AddValue(data.ID, data.Value);
         }
         return metadata;
     }
@@ -348,8 +374,8 @@ internal static class CodeGenerator
     {
         for (int i = 0; i < element.ChildCount; i++)
         {
-            if (element.GetChild(i) is T definition)
-                return definition;
+            if (element.GetChild(i) is T child)
+                return child;
         }
         return null;
     }
@@ -362,9 +388,34 @@ internal static class CodeGenerator
     {
         for (int i = 0; i < element.ChildCount; i++)
         {
-            if (element.GetChild(i) is T definition && definition.ID == id)
-                return definition;
+            if (element.GetChild(i) is T child && child.ID == id)
+                return child;
         }
         return null;
     }
+
+    /// <summary>
+    /// Throw a format error.
+    /// </summary>
+    private static FormatException FormatError(Element at, string message)
+        => new FormatException($"At {at.ElementName} '{at.ID}': {message}");
+
+    /// <summary>
+    /// Throw a format error.
+    /// </summary>
+    private static FormatException FormatError(Element at, Element definition, string message)
+        => new FormatException($"At {at.ElementName} '{at.ID}', {definition.ElementName} '{definition.ID}': {message}");
+
+    /// <summary>
+    /// Throw a missing definition error.
+    /// </summary>
+    private static FormatException MissingDefinitionError(Element at, string definition)
+        => FormatError(at, $"cannot find definition '{definition}'.");
+
+    /// <summary>
+    /// Throw a child count error.
+    /// </summary>
+    private static FormatException ChildCountError(Element at, Element definition)
+        => FormatError(at, definition, $"wrong number of children (requires {definition.ChildCount}, "
+            + $"but it has {at.ChildCount}).");
 }

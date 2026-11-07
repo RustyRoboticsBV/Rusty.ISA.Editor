@@ -75,6 +75,15 @@
         @class.Members.Add(MultilineComment("Public methods."));
 
         @class.Members.Add(Method(
+            AccessType.Public,
+            ModifierType.SealedOverride,
+            Type("string"),
+            Id("ToString"),
+            Return(Id("ElementPrinter.ToString(this)"))
+        ));
+
+        @class.Members.Add(new Empty());
+        @class.Members.Add(Method(
             Summary("Get the name of an attribute by its index."),
             AccessType.Public,
             ModifierType.Abstract,

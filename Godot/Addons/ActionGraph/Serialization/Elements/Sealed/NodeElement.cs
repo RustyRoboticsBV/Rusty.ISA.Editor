@@ -25,11 +25,11 @@ internal sealed class NodeElement : Element
     /// <summary>
     /// The unique identifier of this node.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the associated node definition.
     /// </summary>
-    public string Definition { get; set; }
+    public string Definition { get; set; } = "";
     /// <summary>
     /// The x-position of this node on the graph.
     /// </summary>
@@ -47,17 +47,17 @@ internal sealed class NodeElement : Element
     /// </summary>
     public uint Height { get; set; }
     /// <summary>
-    /// Whether the node has been folded.
+    /// Whether this node has been folded.
     /// </summary>
     public bool Folded { get; set; }
     /// <summary>
     /// The identifier of the parent frame.
     /// </summary>
-    public string ParentFrame { get; set; }
+    public string ParentFrame { get; set; } = "";
     /// <summary>
     /// The annotation of this node.
     /// </summary>
-    public string Text { get; set; }
+    public string Text { get; set; } = "";
     /// <summary>
     /// The color of this node.
     /// </summary>
@@ -65,9 +65,41 @@ internal sealed class NodeElement : Element
     /// <summary>
     /// The unique start point name, from which runtime execution of the graph can begin.
     /// </summary>
-    public string StartPointName { get; set; }
+    public string StartPointName { get; set; } = "";
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "definition":
+                return 1;
+            case "x":
+                return 2;
+            case "y":
+                return 3;
+            case "width":
+                return 4;
+            case "height":
+                return 5;
+            case "folded":
+                return 6;
+            case "parent_frame":
+                return 7;
+            case "text":
+                return 8;
+            case "color":
+                return 9;
+            case "start_point_name":
+                return 10;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -127,37 +159,6 @@ internal sealed class NodeElement : Element
                 return StartPointName.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 11;
-            case "definition":
-                return 11;
-            case "x":
-                return 11;
-            case "y":
-                return 11;
-            case "width":
-                return 11;
-            case "height":
-                return 11;
-            case "folded":
-                return 11;
-            case "parent_frame":
-                return 11;
-            case "text":
-                return 11;
-            case "color":
-                return 11;
-            case "start_point_name":
-                return 11;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

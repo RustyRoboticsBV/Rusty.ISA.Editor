@@ -24,9 +24,21 @@ internal sealed class TupleDefinitionElement : InspectorDefinitionElement
     /// <summary>
     /// The unique identifier of this tuple definition.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -46,17 +58,6 @@ internal sealed class TupleDefinitionElement : InspectorDefinitionElement
                 return ID.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 1;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

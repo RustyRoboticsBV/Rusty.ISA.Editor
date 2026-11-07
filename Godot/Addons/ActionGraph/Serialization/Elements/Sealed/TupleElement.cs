@@ -25,25 +25,45 @@ internal sealed class TupleElement : InspectorElement
     /// <summary>
     /// The unique identifier of this tuple.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the associated tuple definition.
     /// </summary>
-    public override string Definition { get; set; }
+    public override string Definition { get; set; } = "";
     /// <summary>
-    /// Whether the tuple has been folded.
+    /// Whether this tuple has been folded.
     /// </summary>
     public override bool Folded { get; set; }
     /// <summary>
     /// The annotation of this tuple.
     /// </summary>
-    public override string Text { get; set; }
+    public override string Text { get; set; } = "";
     /// <summary>
     /// The color of this tuple.
     /// </summary>
     public override Color Color { get; set; }
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "definition":
+                return 1;
+            case "folded":
+                return 2;
+            case "text":
+                return 3;
+            case "color":
+                return 4;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -79,25 +99,6 @@ internal sealed class TupleElement : InspectorElement
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 5;
-            case "definition":
-                return 5;
-            case "folded":
-                return 5;
-            case "text":
-                return 5;
-            case "color":
-                return 5;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

@@ -25,11 +25,11 @@ internal sealed class EdgeElement : Element
     /// <summary>
     /// The unique identifier of this edge.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the source node.
     /// </summary>
-    public string From { get; set; }
+    public string From { get; set; } = "";
     /// <summary>
     /// The port index on the source node.
     /// </summary>
@@ -37,7 +37,7 @@ internal sealed class EdgeElement : Element
     /// <summary>
     /// The identifier of the destination node.
     /// </summary>
-    public string To { get; set; }
+    public string To { get; set; } = "";
     /// <summary>
     /// The thickness of this edge.
     /// </summary>
@@ -45,13 +45,37 @@ internal sealed class EdgeElement : Element
     /// <summary>
     /// The label of this edge.
     /// </summary>
-    public string Text { get; set; }
+    public string Text { get; set; } = "";
     /// <summary>
     /// The color of this edge.
     /// </summary>
     public Color Color { get; set; }
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "from":
+                return 1;
+            case "port":
+                return 2;
+            case "to":
+                return 3;
+            case "thickness":
+                return 4;
+            case "text":
+                return 5;
+            case "color":
+                return 6;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -95,29 +119,6 @@ internal sealed class EdgeElement : Element
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 7;
-            case "from":
-                return 7;
-            case "port":
-                return 7;
-            case "to":
-                return 7;
-            case "thickness":
-                return 7;
-            case "text":
-                return 7;
-            case "color":
-                return 7;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

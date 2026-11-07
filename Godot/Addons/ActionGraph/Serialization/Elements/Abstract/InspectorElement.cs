@@ -19,7 +19,7 @@ internal abstract class InspectorElement : Element
     /// </summary>
     public abstract string Definition { get; set; }
     /// <summary>
-    /// Whether the inspector has been folded.
+    /// Whether this inspector has been folded.
     /// </summary>
     public abstract bool Folded { get; set; }
     /// <summary>

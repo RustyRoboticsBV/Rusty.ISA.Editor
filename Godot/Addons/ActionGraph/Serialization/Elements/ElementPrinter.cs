@@ -48,12 +48,18 @@ internal static class ElementPrinter
             sb.Append(prefix);
             sb.Append(last ? "\u2514\u2500" : "\u251C\u2500");
         }
-
+        
+        if (element == null)
+        {
+            sb.Append("(null)");
+            return;
+        }
+        
         sb.Append(element.ElementName);
 
         if (element.AttributeCount > 0)
         {
-            sb.Append(" {");
+            sb.Append(" { ");
 
             bool first = true;
             for (int i = 0; i < element.AttributeCount; i++)
@@ -69,7 +75,7 @@ internal static class ElementPrinter
                 first = false;
             }
 
-            sb.Append('}');
+            sb.Append(" }");
         }
 
         if (recurse)

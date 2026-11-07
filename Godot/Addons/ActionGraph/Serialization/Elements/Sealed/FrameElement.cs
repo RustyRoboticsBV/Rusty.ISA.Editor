@@ -25,7 +25,7 @@ internal sealed class FrameElement : Element
     /// <summary>
     /// The unique identifier of this frame.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The x-position of the frame on the graph.
     /// </summary>
@@ -43,23 +43,51 @@ internal sealed class FrameElement : Element
     /// </summary>
     public uint Height { get; set; }
     /// <summary>
-    /// Whether the frame has been folded.
+    /// Whether this frame has been folded.
     /// </summary>
     public bool Folded { get; set; }
     /// <summary>
     /// The identifier of the parent frame.
     /// </summary>
-    public string ParentFrame { get; set; }
+    public string ParentFrame { get; set; } = "";
     /// <summary>
     /// The title text of this frame.
     /// </summary>
-    public string Text { get; set; }
+    public string Text { get; set; } = "";
     /// <summary>
     /// The color of this frame.
     /// </summary>
     public Color Color { get; set; }
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "x":
+                return 1;
+            case "y":
+                return 2;
+            case "width":
+                return 3;
+            case "height":
+                return 4;
+            case "folded":
+                return 5;
+            case "parent_frame":
+                return 6;
+            case "text":
+                return 7;
+            case "color":
+                return 8;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -111,33 +139,6 @@ internal sealed class FrameElement : Element
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 9;
-            case "x":
-                return 9;
-            case "y":
-                return 9;
-            case "width":
-                return 9;
-            case "height":
-                return 9;
-            case "folded":
-                return 9;
-            case "parent_frame":
-                return 9;
-            case "text":
-                return 9;
-            case "color":
-                return 9;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

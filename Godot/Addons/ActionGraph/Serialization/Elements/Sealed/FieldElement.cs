@@ -25,25 +25,45 @@ internal sealed class FieldElement : ArgumentElement
     /// <summary>
     /// The unique identifier of this field.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the associated field definition.
     /// </summary>
-    public override string Definition { get; set; }
+    public override string Definition { get; set; } = "";
     /// <summary>
     /// The non-localized value of this field.
     /// </summary>
-    public string Value { get; set; }
+    public string Value { get; set; } = "";
     /// <summary>
     /// The annotation of this field.
     /// </summary>
-    public override string Text { get; set; }
+    public override string Text { get; set; } = "";
     /// <summary>
     /// The color of this field.
     /// </summary>
     public override Color Color { get; set; }
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "definition":
+                return 1;
+            case "value":
+                return 2;
+            case "text":
+                return 3;
+            case "color":
+                return 4;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -79,25 +99,6 @@ internal sealed class FieldElement : ArgumentElement
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 5;
-            case "definition":
-                return 5;
-            case "value":
-                return 5;
-            case "text":
-                return 5;
-            case "color":
-                return 5;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

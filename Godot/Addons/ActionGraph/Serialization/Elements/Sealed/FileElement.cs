@@ -24,25 +24,45 @@ internal sealed class FileElement : Element
     /// <summary>
     /// The unique identifier of this file.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The name of the editor that generated this file.
     /// </summary>
-    public string Editor { get; set; }
+    public string Editor { get; set; } = "";
     /// <summary>
     /// The ActionGraph schema version.
     /// </summary>
-    public string SchemaVersion { get; set; }
+    public string SchemaVersion { get; set; } = "";
     /// <summary>
     /// The file format version.
     /// </summary>
-    public string FormatVersion { get; set; }
+    public string FormatVersion { get; set; } = "";
     /// <summary>
     /// The checksum of this file.
     /// </summary>
-    public string Checksum { get; set; }
+    public string Checksum { get; set; } = "";
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "editor":
+                return 1;
+            case "schema_version":
+                return 2;
+            case "format_version":
+                return 3;
+            case "checksum":
+                return 4;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -78,25 +98,6 @@ internal sealed class FileElement : Element
                 return Checksum.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 5;
-            case "editor":
-                return 5;
-            case "schema_version":
-                return 5;
-            case "format_version":
-                return 5;
-            case "checksum":
-                return 5;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

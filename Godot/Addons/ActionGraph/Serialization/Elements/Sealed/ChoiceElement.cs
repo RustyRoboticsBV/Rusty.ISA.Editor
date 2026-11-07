@@ -25,29 +25,51 @@ internal sealed class ChoiceElement : InspectorElement
     /// <summary>
     /// The unique identifier of this choice.
     /// </summary>
-    public override string ID { get; set; }
+    public override string ID { get; set; } = "";
     /// <summary>
     /// The identifier of the associated choice definition.
     /// </summary>
-    public override string Definition { get; set; }
+    public override string Definition { get; set; } = "";
     /// <summary>
     /// The identifier of the selected item.
     /// </summary>
-    public string Selected { get; set; }
+    public string Selected { get; set; } = "";
     /// <summary>
-    /// Whether the choice has been folded.
+    /// Whether this choice has been folded.
     /// </summary>
     public override bool Folded { get; set; }
     /// <summary>
     /// The annotation of this choice.
     /// </summary>
-    public override string Text { get; set; }
+    public override string Text { get; set; } = "";
     /// <summary>
     /// The color of this choice.
     /// </summary>
     public override Color Color { get; set; }
     
     /* Public methods. */
+    public override int IndexOfAttribute(string name)
+    {
+        switch (name)
+        {
+            case "id":
+                return 0;
+            case "definition":
+                return 1;
+            case "selected":
+                return 2;
+            case "folded":
+                return 3;
+            case "text":
+                return 4;
+            case "color":
+                return 5;
+            default:
+                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
+        }
+    }
+    
+    
     public override string NameOfAttribute(int index)
     {
         switch (index)
@@ -87,27 +109,6 @@ internal sealed class ChoiceElement : InspectorElement
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
-    
-    public override int IndexOfAttribute(string name)
-    {
-        switch (name)
-        {
-            case "id":
-                return 6;
-            case "definition":
-                return 6;
-            case "selected":
-                return 6;
-            case "folded":
-                return 6;
-            case "text":
-                return 6;
-            case "color":
-                return 6;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
     }
     

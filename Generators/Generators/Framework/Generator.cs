@@ -48,6 +48,7 @@ public abstract class Generator
                 case Getter getter: prop.Getter = getter; break;
                 case Setter setter: prop.Setter = setter; break;
                 case Value value: prop.Initialization = value; break;
+                case null: break;
                 default: throw new ArgumentException(node.GetType().Name, nameof(contents));
             }
         }
