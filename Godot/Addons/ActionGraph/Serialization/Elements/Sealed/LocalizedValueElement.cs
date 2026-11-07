@@ -26,9 +26,9 @@ internal sealed class LocalizedValueElement : Element
     /// </summary>
     public override string ID { get; set; } = "";
     /// <summary>
-    /// The identifier of the language definition.
+    /// The identifier of the associated language definition.
     /// </summary>
-    public string Definition { get; set; } = "";
+    public string Language { get; set; } = "";
     /// <summary>
     /// The localized value.
     /// </summary>
@@ -41,7 +41,7 @@ internal sealed class LocalizedValueElement : Element
         {
             case "id":
                 return 0;
-            case "definition":
+            case "language":
                 return 1;
             case "value":
                 return 2;
@@ -58,7 +58,7 @@ internal sealed class LocalizedValueElement : Element
             case 0:
                 return "id";
             case 1:
-                return "definition";
+                return "language";
             case 2:
                 return "value";
             default:
@@ -73,7 +73,7 @@ internal sealed class LocalizedValueElement : Element
             case 0:
                 return ID.GetType();
             case 1:
-                return Definition.GetType();
+                return Language.GetType();
             case 2:
                 return Value.GetType();
             default:
@@ -88,7 +88,7 @@ internal sealed class LocalizedValueElement : Element
             case 0:
                 return ID;
             case 1:
-                return Definition;
+                return Language;
             case 2:
                 return Value;
             default:
@@ -104,7 +104,7 @@ internal sealed class LocalizedValueElement : Element
                 ID = (string)value;
                 break;
             case 1:
-                Definition = (string)value;
+                Language = (string)value;
                 break;
             case 2:
                 Value = (string)value;

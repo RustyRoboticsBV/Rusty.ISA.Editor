@@ -38,7 +38,7 @@ internal sealed class FileElement : Element
     /// </summary>
     public string FormatVersion { get; set; } = "";
     /// <summary>
-    /// The ID of the default language when no localization is applied. This must NOT match any language_definition IDs.
+    /// The ID of the default language when no localization is applied. This must NOT match any language definition IDs.
     /// </summary>
     public string DefaultLanguage { get; set; } = "";
     /// <summary>

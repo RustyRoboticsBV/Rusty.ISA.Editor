@@ -22,7 +22,7 @@
 |`1` (`0x01`)|`editor`|`string`|The name of the editor that generated this file.|
 |`2` (`0x02`)|`schema_version`|`string`|The ActionGraph schema version.|
 |`3` (`0x03`)|`format_version`|`string`|The file format version.|
-|`4` (`0x04`)|`default_language`|`string`|The ID of the default language when no localization is applied. This must NOT match any language_definition IDs.|
+|`4` (`0x04`)|`default_language`|`string`|The ID of the default language when no localization is applied. This must NOT match any language definition IDs.|
 |`5` (`0x05`)|`checksum`|`string`|The checksum of this file.|
 ---
 
@@ -475,6 +475,6 @@
 |Index|Name|Type|Description|
 |-|-|-|-|
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this localized value.|
-|`1` (`0x01`)|`definition`|`string`|The identifier of the language definition.|
+|`1` (`0x01`)|`language`|`string`|The identifier of the associated language definition.|
 |`2` (`0x02`)|`value`|`string`|The localized value.|
 ---
