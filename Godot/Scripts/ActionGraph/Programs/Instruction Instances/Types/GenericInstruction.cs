@@ -9,8 +9,14 @@ namespace Rusty.ActionGraph;
 public sealed partial class GenericInstruction : Instruction
 {
     /* Public properties. */
-    [Export] public string Opcode { get; set; } = "";
-    [Export] public string[] Arguments { get; set; } = [];
+    /// <summary>
+    /// The opcode of the instruction.
+    /// </summary>
+    [Export] public string Opcode { get; private set; } = "";
+    /// <summary>
+    /// The argumens of the instruction.
+    /// </summary>
+    [Export] public string[] Arguments { get; private set; } = [];
 
     /* Constructors. */
     public GenericInstruction() : this("", []) { }

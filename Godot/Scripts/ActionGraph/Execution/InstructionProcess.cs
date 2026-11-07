@@ -36,6 +36,9 @@ public partial class InstructionProcess : Node
     private Dictionary<string, IExecutionHandler> ExecutionHandlers { get; } = new();
 
     /* Public methods. */
+    /// <summary>
+    /// Load a program.
+    /// </summary>
     public void LoadProgram(InstructionProgram program)
     {
         // Stop execution.
@@ -121,47 +124,17 @@ public partial class InstructionProcess : Node
         if (!IsPlaying || IsPaused)
             return;
 
-        // Fetch instruction.
-        Instruction instruction = Program.Instructions[ProgramCounter];
-
-        // Execute instruction.
-        switch (instruction)
+        ExecutionResponse response = ExecutionResponse.Advance;
+        while (response.Type != ResponseType.Block && response.Type != ResponseType.Stop)
         {
-            case GotoInstruction gto:
-                Goto(gto.TargetLabel);
-                break;
-            case EndInstruction:
-                Stop();
-                break;
-            case DummyInstruction:
-                Advance();
-                break;
-            case GenericInstruction generic:
-                IExecutionHandler handler = ExecutionHandlers[generic.Opcode];
-                ExecutionResponse response = handler.Execute(this, delta, generic.Arguments);
-                switch (response.Type)
-                {
-                    case ExecutionResponse.ResponseType.Advance:
-                        Advance();
-                        break;
-                    case ExecutionResponse.ResponseType.Block:
-                        break;
-                    case ExecutionResponse.ResponseType.Goto:
-                        Goto(response.GotoTarget);
-                        break;
-                    case ExecutionResponse.ResponseType.Stop:
-                        Stop();
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Unknown execution response type '{response.Type}'.");
-                }
-                break;
-            default:
-                throw new InvalidOperationException($"Unknown instruction type '{instruction.GetType().Name}'.");
+            response = Tick(delta);
         }
     }
 
     /* Private methods. */
+    /// <summary>
+    /// Find an execution handler.
+    /// </summary>
     private static IExecutionHandler FindExecutionHandler(string name)
     {
         // Get type.
@@ -183,6 +156,56 @@ public partial class InstructionProcess : Node
             throw new InvalidCastException($"Method '{nameof(IExecutionHandler.Instantiate)}' of type '{type}' does not return an instance of {nameof(IExecutionHandler)}.");
 
         return method.Invoke(null, null) as IExecutionHandler;
+    }
+
+    /// <summary>
+    /// Execute a fetch-decode-execute cycle.
+    /// </summary>
+    private ExecutionResponse Tick(double delta)
+    {
+        // Fetch instruction.
+        Instruction instruction = Program.Instructions[ProgramCounter];
+
+        // Execute instruction.
+        ExecutionResponse response;
+        switch (instruction)
+        {
+            case GotoInstruction gto:
+                response = ExecutionResponse.Goto(gto.TargetLabel);
+                break;
+            case EndInstruction:
+                response = ExecutionResponse.Stop;
+                break;
+            case DummyInstruction:
+                response = ExecutionResponse.Advance;
+                break;
+            case GenericInstruction generic:
+                IExecutionHandler handler = ExecutionHandlers[generic.Opcode];
+                response = handler.Execute(this, delta, generic.Arguments);
+                break;
+            default:
+                throw new InvalidOperationException($"Unknown instruction type '{instruction.GetType().Name}'.");
+        }
+
+        // Handle response.
+        switch (response.Type)
+        {
+            case ResponseType.Advance:
+                Advance();
+                break;
+            case ResponseType.Block:
+                break;
+            case ResponseType.Goto:
+                Goto(response.GotoTarget);
+                break;
+            case ResponseType.Stop:
+                Stop();
+                break;
+            default:
+                throw new InvalidOperationException($"Unknown execution response type '{response.Type}'.");
+        }
+
+        return response;
     }
 
     /// <summary>

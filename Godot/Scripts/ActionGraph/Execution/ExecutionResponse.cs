@@ -5,21 +5,33 @@
 /// </summary>
 public struct ExecutionResponse
 {
-    /* Public types. */
-    public enum ResponseType { Advance, Block, Stop, Goto }
-
     /* Public properties. */
+    /// <summary>
+    /// Advance the program counter.
+    /// </summary>
     public static ExecutionResponse Advance => new(ResponseType.Advance);
+    /// <summary>
+    /// Don't advance the program counter.
+    /// </summary>
     public static ExecutionResponse Block => new(ResponseType.Block);
+    /// <summary>
+    /// Stop program execution.
+    /// </summary>
     public static ExecutionResponse Stop => new(ResponseType.Stop);
 
-    public ResponseType Type { get; set; }
-    public string GotoTarget { get; set; }
+    /// <summary>
+    /// The type of this execution response.
+    /// </summary>
+    public ResponseType Type { get; private set; }
+    /// <summary>
+    /// The goto target (only used if the response type is goto).
+    /// </summary>
+    public string GotoTarget { get; private set; }
 
     /* Constructors. */
-    public ExecutionResponse(ResponseType action)
+    public ExecutionResponse(ResponseType responseType)
     {
-        Type = action;
+        Type = responseType;
     }
 
     public ExecutionResponse(string gotoTarget) : this(ResponseType.Goto)
@@ -28,5 +40,8 @@ public struct ExecutionResponse
     }
 
     /* Public methods. */
+    /// <summary>
+    /// Jump to an instruction at the label.
+    /// </summary>
     public static ExecutionResponse Goto(string label) => new(label);
 }

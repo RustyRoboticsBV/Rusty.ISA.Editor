@@ -10,25 +10,28 @@ namespace Rusty.ActionGraph;
 [GlobalClass]
 public sealed partial class InstructionSet : Resource
 {
-    /* Private properties. */
-    [Export] Array<InstructionDefinition> Definitions { get; set; } = [];
+    /* Fields. */
+    [Export] Array<InstructionDefinition> definitions = [];
 
     /* Public properties. */
-    public int Count => Definitions.Count;
+    /// <summary>
+    /// The number of instruction definitions in the instruction set.
+    /// </summary>
+    public int Count => definitions.Count;
     
     /* Public indexers. */
-    public InstructionDefinition this[int index] => Definitions[index];
+    public InstructionDefinition this[int index] => definitions[index];
 
     /* Constructors. */
     public InstructionSet() { }
 
-    public InstructionSet(InstructionDefinition[] definitions) => Definitions = new(definitions);
+    public InstructionSet(InstructionDefinition[] definitions) => this.definitions = new(definitions);
 
     public InstructionSet(List<InstructionDefinition> definitions)
     {
         foreach (InstructionDefinition definition in definitions)
         {
-            Definitions.Add(definition);
+            this.definitions.Add(definition);
         }
     }
 
@@ -38,7 +41,7 @@ public sealed partial class InstructionSet : Resource
     /// </summary>
     public InstructionDefinition Find(string opcode)
     {
-        foreach (InstructionDefinition definition in Definitions)
+        foreach (InstructionDefinition definition in definitions)
         {
             if (definition.Opcode == opcode)
                 return definition;

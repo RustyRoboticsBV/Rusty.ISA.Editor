@@ -3,7 +3,7 @@
 namespace Rusty.ActionGraph;
 
 /// <summary>
-/// An intercace for instruction execution handlers.
+/// An interface for instruction execution handlers.
 /// </summary>
 public interface IExecutionHandler
 {
