@@ -19,7 +19,7 @@ internal sealed class FileElement : Element
     
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 5;
+    public override int AttributeCount => 6;
     
     /// <summary>
     /// The unique identifier of this file.
@@ -38,6 +38,10 @@ internal sealed class FileElement : Element
     /// </summary>
     public string FormatVersion { get; set; } = "";
     /// <summary>
+    /// The ID of the default language when no localization is applied. This must NOT match any language_definition IDs.
+    /// </summary>
+    public string DefaultLanguage { get; set; } = "";
+    /// <summary>
     /// The checksum of this file.
     /// </summary>
     public string Checksum { get; set; } = "";
@@ -55,8 +59,10 @@ internal sealed class FileElement : Element
                 return 2;
             case "format_version":
                 return 3;
-            case "checksum":
+            case "default_language":
                 return 4;
+            case "checksum":
+                return 5;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -76,6 +82,8 @@ internal sealed class FileElement : Element
             case 3:
                 return "format_version";
             case 4:
+                return "default_language";
+            case 5:
                 return "checksum";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -95,6 +103,8 @@ internal sealed class FileElement : Element
             case 3:
                 return FormatVersion.GetType();
             case 4:
+                return DefaultLanguage.GetType();
+            case 5:
                 return Checksum.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -114,6 +124,8 @@ internal sealed class FileElement : Element
             case 3:
                 return FormatVersion;
             case 4:
+                return DefaultLanguage;
+            case 5:
                 return Checksum;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -137,6 +149,9 @@ internal sealed class FileElement : Element
                 FormatVersion = (string)value;
                 break;
             case 4:
+                DefaultLanguage = (string)value;
+                break;
+            case 5:
                 Checksum = (string)value;
                 break;
             default:

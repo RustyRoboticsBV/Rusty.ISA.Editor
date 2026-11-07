@@ -35,6 +35,10 @@
           "description": "The file format version.",
           "value_type": "string"
         },
+        "default_language": {
+          "description": "The ID of the default language when no localization is applied. This must NOT match any language_definition IDs.",
+          "value_type": "string"
+        },
         "checksum": {
           "description": "The checksum of this <this>.",
           "value_type": "string"
@@ -53,6 +57,17 @@
       ],
       "allow_multiple_children": true
     },
+    "language_definition": {
+      "description": "A definition for a localization language.",
+      "inherits_abstract": "none",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        }
+      },
+      "allowed_children": []
+    },
     "metadata": {
       "description": "A metadata entry.",
       "inherits_abstract": "none",
@@ -66,18 +81,8 @@
           "value_type": "string"
         }
       },
-      "allowed_children": []
-    },
-    "language_definition": {
-      "description": "A definition for a localization language.",
-      "inherits_abstract": "none",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        }
-      },
-      "allowed_children": []
+      "allowed_children": [ "localized_value" ],
+      "allow_multiple_children": true
     },
     "instruction_definition": {
       "description": "A definition for a form inspector, which represents an instruction's state.",
@@ -692,9 +697,7 @@
           "value_type": "color"
         }
       },
-      "allowed_children": [
-        "localized_value"
-      ],
+      "allowed_children": [ "localized_value" ],
       "allow_multiple_children": true
     },
     "port": {

@@ -24,7 +24,7 @@ internal static class Hasher
         string hashHex = Hash(file, hash);
 
         // Store the checksum.
-        file.Checksum = hashHex;
+        file.DefaultLanguage = hashHex;
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ internal static class Hasher
         {
             string attributeName = element.NameOfAttribute(i);
             
-            if (attributeName == "checksum")
+            if (attributeName == "default_language")
                 continue;
             
             Hash(hash, attributeName.Length, buffer);

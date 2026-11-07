@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class MetadataElement : Element
 {
     /* Public properties. */
-    public const int ELEMENT_INDEX = 1;
+    public const int ELEMENT_INDEX = 2;
     public const string ELEMENT_NAME = "metadata";
     
     public override int ElementIndex => ELEMENT_INDEX;
@@ -99,5 +99,15 @@ internal sealed class MetadataElement : Element
         }
     }
     
-    public override void AddChild(Element child) => throw new NotImplementedException($"Elements of type {GetType().Name} do not allow child elements.");
+    public override void AddChild(Element child)
+    {
+        switch (child)
+        {
+            case LocalizedValueElement:
+                Children.Add(child);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException($"Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}.");
+        }
+    }
 }

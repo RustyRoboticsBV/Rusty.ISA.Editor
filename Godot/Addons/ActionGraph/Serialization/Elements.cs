@@ -20,8 +20,8 @@ internal static class Elements
     public static int IndexOfElement(string name) => name switch
     {
         FileElement.ELEMENT_NAME => FileElement.ELEMENT_INDEX,
-        MetadataElement.ELEMENT_NAME => MetadataElement.ELEMENT_INDEX,
         LanguageDefinitionElement.ELEMENT_NAME => LanguageDefinitionElement.ELEMENT_INDEX,
+        MetadataElement.ELEMENT_NAME => MetadataElement.ELEMENT_INDEX,
         InstructionDefinitionElement.ELEMENT_NAME => InstructionDefinitionElement.ELEMENT_INDEX,
         ParameterDefinitionElement.ELEMENT_NAME => ParameterDefinitionElement.ELEMENT_INDEX,
         NodeDefinitionElement.ELEMENT_NAME => NodeDefinitionElement.ELEMENT_INDEX,
@@ -54,8 +54,8 @@ internal static class Elements
     public static string NameOfElement(int index) => index switch
     {
         FileElement.ELEMENT_INDEX => FileElement.ELEMENT_NAME,
-        MetadataElement.ELEMENT_INDEX => MetadataElement.ELEMENT_NAME,
         LanguageDefinitionElement.ELEMENT_INDEX => LanguageDefinitionElement.ELEMENT_NAME,
+        MetadataElement.ELEMENT_INDEX => MetadataElement.ELEMENT_NAME,
         InstructionDefinitionElement.ELEMENT_INDEX => InstructionDefinitionElement.ELEMENT_NAME,
         ParameterDefinitionElement.ELEMENT_INDEX => ParameterDefinitionElement.ELEMENT_NAME,
         NodeDefinitionElement.ELEMENT_INDEX => NodeDefinitionElement.ELEMENT_NAME,
@@ -88,8 +88,8 @@ internal static class Elements
     public static Type TypeOfElement(int index) => index switch
     {
         FileElement.ELEMENT_INDEX => typeof(FileElement),
-        MetadataElement.ELEMENT_INDEX => typeof(MetadataElement),
         LanguageDefinitionElement.ELEMENT_INDEX => typeof(LanguageDefinitionElement),
+        MetadataElement.ELEMENT_INDEX => typeof(MetadataElement),
         InstructionDefinitionElement.ELEMENT_INDEX => typeof(InstructionDefinitionElement),
         ParameterDefinitionElement.ELEMENT_INDEX => typeof(ParameterDefinitionElement),
         NodeDefinitionElement.ELEMENT_INDEX => typeof(NodeDefinitionElement),

@@ -17,79 +17,46 @@
                 {
                     if (!parents.IsEmpty)
                         parents.Append(", ");
-                    parents.Append($"<code>{parent.Name}</code>");
+                    parents.Append($"`{parent.Name}`");
                 }
             }
             if (parents.IsEmpty)
-                parents.Append("<i>(None)</i>");
+                parents.Append("*(None)*");
 
             CodeWriter children = new();
             foreach (string child in element.Children)
             {
                 if (!children.IsEmpty)
                     children.Append(", ");
-                children.Append($"<code>{child}</code>");
+                children.Append($"`{child}`");
             }
             if (children.IsEmpty)
-                children.Append("<i>(None)</i>");
+                children.Append("*(None)*");
 
-            CodeWriter attributes = new();
-            attributes.Indent = 1;
-            attributes.Line($"<table>");
-            attributes.Line($"  <tr>");
-            attributes.Line($"    <th>Index</th>");
-            attributes.Line($"    <th>Name</th>");
-            attributes.Line($"    <th>Type</th>");
-            attributes.Line($"    <th>Description</th>");
-            attributes.Line($"  </tr>");
+            elementTypes.Line();
+            elementTypes.Line($"### `{element.Name}`");
+            elementTypes.Line($"|Property|Value|");
+            elementTypes.Line($"|-|-|");
+            elementTypes.Line($"|Index|`{i}` (`0x{i:X2}`)|");
+            elementTypes.Line($"|Description|{element.Description}|");
+            elementTypes.Line($"|Allowed parents|{parents}|");
+            elementTypes.Line($"|Allowed children|{children}|");
+            elementTypes.Line($"|Multiple children allowed?|{element.MultipleChildren.ToString().ToLowerInvariant()}|");
+
+            elementTypes.Line();
+            elementTypes.Line("**Attributes:**");
+            elementTypes.Line($"|Index|Name|Type|Description|");
+            elementTypes.Line($"|-|-|-|-|");
             for (int j = 0; j < element.Attributes.Count; j++)
             {
                 string type = element.Attributes[j].ValueType == ValueType.Ref
                     ? ValueType.String.ToString()
                     : element.Attributes[j].ValueType.ToString();
 
-                attributes.Line($"  <tr>");
-                attributes.Line($"    <td><code>{j}</code></td>");
-                attributes.Line($"    <td><code>{element.Attributes[j].Name}</code></td>");
-                attributes.Line($"    <td><code>{type.ToLowerInvariant()}</code></td>");
-                attributes.Line($"    <td>{element.Attributes[j].Description}</td>");
-                attributes.Line($"  </tr>");
+                elementTypes.Line($"|`{j}` (`0x{j:X2}`)|`{element.Attributes[j].Name}`|`{type.ToLowerInvariant()}`|"
+                    + $"{element.Attributes[j].Description}|");
             }
-            attributes.Line($"</table>");
-
-            elementTypes.Line();
-            elementTypes.Line($"### `{element.Name}`");
-            elementTypes.Line($"<table>");
-            elementTypes.Line($"  <tr>");
-            elementTypes.Line($"    <th>Property</th>");
-            elementTypes.Line($"    <th>Value</th>");
-            elementTypes.Line($"  </tr>");
-            elementTypes.Line($"  <tr>");
-            elementTypes.Line($"    <td>Index</td>");
-            elementTypes.Line($"    <td><code>{i}</code></td>");
-            elementTypes.Line($"  </tr>");
-            elementTypes.Line($"  <tr>");
-            elementTypes.Line($"    <td>Description</td>");
-            elementTypes.Line($"    <td>{element.Description}</td>");
-            elementTypes.Line($"  </tr>");
-            elementTypes.Line($"  <tr>");
-            elementTypes.Line($"    <td>Parent</td>");
-            elementTypes.Line($"    <td>{parents}</td>");
-            elementTypes.Line($"  </tr>");
-            elementTypes.Line($"  <tr>");
-            elementTypes.Line($"    <td>Children</td>");
-            elementTypes.Line($"    <td>{children}</td>");
-            elementTypes.Line($"  </tr>");
-            elementTypes.Line($"    <td>Multiple children allowed?</td>");
-            elementTypes.Line($"    <td>{element.MultipleChildren.ToString().ToLowerInvariant()}</td>");
-            elementTypes.Line($"  </tr>");
-            elementTypes.Line($"  <tr>");
-            elementTypes.Line($"    <td>Attributes</td>");
-            elementTypes.Line($"    <td>");
-            elementTypes.Line(attributes.ToString());
-            elementTypes.Line($"    </td>");
-            elementTypes.Line($"  </tr>");
-            elementTypes.Line($"</table>");
+            elementTypes.Line("---");
         }
 
         return @$"# Schema
@@ -98,8 +65,6 @@
 - Each file must have a `{fileSnake}` element as the root.
 - All `{schema.GlobalAttributes[0].Name}` attributes must be unique among elements with the same tag within their scope.
 
-## Element Types
-{elementTypes}
-";
+## Element Types{elementTypes}";
     }
 }

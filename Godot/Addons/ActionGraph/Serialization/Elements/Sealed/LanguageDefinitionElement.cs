@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class LanguageDefinitionElement : Element
 {
     /* Public properties. */
-    public const int ELEMENT_INDEX = 2;
+    public const int ELEMENT_INDEX = 1;
     public const string ELEMENT_NAME = "language_definition";
     
     public override int ElementIndex => ELEMENT_INDEX;
