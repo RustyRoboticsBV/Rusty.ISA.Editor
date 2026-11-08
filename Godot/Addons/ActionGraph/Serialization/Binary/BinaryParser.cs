@@ -9,7 +9,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Rusty.ActionGraph.Serialization.Binary;
+namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
 /// A utility for parsing binary files as FileElement objects.
@@ -49,7 +49,7 @@ internal static class BinaryParser
             throw new FormatException($"Expected root element to be 'file', got '{element.ElementName}'.");
 
         if (stream.Position != stream.Length)
-            throw new FormatException($"Trailing data after 'file' element at offset {stream.Position}.");
+            throw new FormatException($"Trailing data after 'file' element at offset 0x{stream.Position:X}.");
 
         return file;
     }
@@ -85,33 +85,14 @@ internal static class BinaryParser
     /// </summary>
     private static Element ReadElement(BinaryReader reader)
     {
+        // Instantiate element of correct type.
         int index = reader.ReadByte();
+        if (index >= Elements.ELEMENT_COUNT)
+            throw FormatError(reader, $"Invalid element index {index}.");
 
-        Element element;
+        Element element = Elements.Instantiate(index);
 
-        try
-        {
-            element = Elements.Instantiate(index);
-        }
-        catch (Exception ex)
-        {
-            throw new FormatException($"Invalid element index {index}.", ex);
-        }
-
-        ReadAttributes(reader, element);
-        ReadChildren(reader, element);
-
-        return element;
-    }
-
-    /// <summary>
-    /// Read an element's attributes.
-    /// </summary>
-    private static void ReadAttributes(BinaryReader reader, Element element)
-    {
-        if (element.AttributeCount == 0)
-            return;
-
+        // Read attributes.
         for (int i = 0; i < element.AttributeCount; i++)
         {
             if (element.TypeOfAttribute(i) == typeof(bool))
@@ -125,22 +106,19 @@ internal static class BinaryParser
             else if (element.TypeOfAttribute(i) == typeof(Color))
                 element.SetAttribute(i, ReadColor(reader));
         }
-    }
-
-    /// <summary>
-    /// Read an element's children.
-    /// </summary>
-    private static void ReadChildren(BinaryReader reader, Element element)
-    {
-        if (element.ChildCount == 0)
-            return;
-
-        uint count = ReadUint(reader);
-        for (int i = 0; i < count; i++)
+        
+        // Read children.
+        if (element.AllowsChildren)
         {
-            Element child = ReadElement(reader);
-            element.AddChild(child);
+            uint childCount = ReadUint(reader);
+            for (int i = 0; i < childCount; i++)
+            {
+                Element child = ReadElement(reader);
+                element.AddChild(child);
+            }
         }
+
+        return element;
     }
 
     /// <summary>
@@ -157,7 +135,7 @@ internal static class BinaryParser
         else if (val == 0x01)
             return true;
         else
-            throw new FormatException($"Invalid boolean value '{val}'.");
+            throw FormatError(reader, $"Invalid boolean value '{val}'.");
     }
 
     /// <summary>
@@ -174,11 +152,11 @@ internal static class BinaryParser
                 throw new EndOfStreamException($"Unexpected end of stream while reading ULEB128.");
 
             if (shift >= 7 * 5)
-                throw new FormatException("Size of ULEB128 exceeds size of Uint32.");
+                throw FormatError(reader, "Size of ULEB128 exceeds size of Uint32.");
 
             @byte = reader.ReadByte();
             if (shift == 7 * 4 && (@byte & 0xF0) != 0)
-                throw new FormatException("Invalid final byte of ULEB128.");
+                throw FormatError(reader, "Invalid final byte of ULEB128.");
 
             result |= (uint)((@byte & 0x7F) << shift);
             shift += 7;
@@ -203,11 +181,11 @@ internal static class BinaryParser
                 throw new EndOfStreamException($"Unexpected end of stream while reading SLEB128.");
 
             if (shift >= 7 * 5)
-                throw new FormatException("Size of SLEB128 exceeds size of Int32.");
+                throw FormatError(reader, "Size of SLEB128 exceeds size of Int32.");
 
             @byte = reader.ReadByte();
             if (shift == 7 * 4 && (@byte & 0x70) != 0 && (@byte & 0x70) != 0x70)
-                throw new FormatException("Invalid final byte of SLEB128.");
+                throw FormatError(reader, "Invalid final byte of SLEB128.");
 
             result |= (@byte & 0x7F) << shift;
             shift += 7;
@@ -262,4 +240,7 @@ internal static class BinaryParser
 
         return bytes;
     }
+    
+    private static FormatException FormatError(BinaryReader reader, string message)
+        => new FormatException($"At 0x{reader.BaseStream.Position:X}: {message}");
 }

@@ -37,6 +37,9 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal static class Elements
 {{
+    /* Public constants. */
+    public const int ELEMENT_COUNT = {schema.Sealeds.Count};
+    
     /* Public methods. */
     /// <summary>
     /// Get the index of an element, using its name.

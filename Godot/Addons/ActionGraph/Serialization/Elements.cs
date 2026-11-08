@@ -13,6 +13,9 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal static class Elements
 {
+    /* Public constants. */
+    public const int ELEMENT_COUNT = 26;
+    
     /* Public methods. */
     /// <summary>
     /// Get the index of an element, using its name.

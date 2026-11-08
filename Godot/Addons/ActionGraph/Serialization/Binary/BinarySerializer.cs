@@ -10,7 +10,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Rusty.ActionGraph.Serialization.Binary;
+namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
 /// A utility for serializing FileElement objects to binary.
@@ -59,11 +59,11 @@ internal static class BinarySerializer
                 case bool @bool:
                     WriteBool(writer, @bool);
                     break;
-                case int @int:
-                    WriteInt(writer, @int);
-                    break;
                 case uint @uint:
                     WriteUint(writer, @uint);
+                    break;
+                case int @int:
+                    WriteInt(writer, @int);
                     break;
                 case Color color:
                     WriteColor(writer, color);
@@ -157,9 +157,9 @@ internal static class BinarySerializer
     /// </summary>
     private static void WriteColor(BinaryWriter writer, Color color)
     {
-        writer.Write(color.R8);
-        writer.Write(color.G8);
-        writer.Write(color.B8);
-        writer.Write(color.A8);
+        writer.Write((byte)color.R8);
+        writer.Write((byte)color.G8);
+        writer.Write((byte)color.B8);
+        writer.Write((byte)color.A8);
     }
 }
