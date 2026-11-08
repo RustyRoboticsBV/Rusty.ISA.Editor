@@ -13,18 +13,21 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class ListDefinitionElement : InspectorDefinitionElement
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 10;
     public const string ELEMENT_NAME = "list_definition";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 1;
     
+    public override int AttributeCount => 1;
     /// <summary>
     /// The unique identifier of this list definition.
     /// </summary>
     public override string ID { get; set; } = "";
+    
+    public override bool AllowsChildren => true;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

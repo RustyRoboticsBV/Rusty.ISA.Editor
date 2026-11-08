@@ -13,14 +13,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class PortDefinitionElement : ArgumentDefinitionElement
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 12;
     public const string ELEMENT_NAME = "port_definition";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 3;
     
+    public override int AttributeCount => 3;
     /// <summary>
     /// The unique identifier of this port definition.
     /// </summary>
@@ -33,6 +34,8 @@ internal sealed class PortDefinitionElement : ArgumentDefinitionElement
     /// Whether this port's presence removes a node's default port.
     /// </summary>
     public bool RemoveDefaultPort { get; set; }
+    
+    public override bool AllowsChildren => false;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

@@ -25,6 +25,7 @@
             Getter()
         ));
 
+        @class.Members.Add(new Empty());
         @class.Members.Add(Property(
             Summary("The number of attributes of this element."),
             AccessType.Public,
@@ -46,8 +47,18 @@
                 Setter()
             ));
         }
+        
 
         @class.Members.Add(new Empty());
+        @class.Members.Add(Property(
+            Summary("Whether or not this element can have child elements."),
+            AccessType.Public,
+            ModifierType.Abstract,
+            Type("bool"),
+            Id("AllowsChildren"),
+            Getter()
+        ));
+
         @class.Members.Add(Property(
             Summary("The number of child elements contained within this element."),
             AccessType.Public,

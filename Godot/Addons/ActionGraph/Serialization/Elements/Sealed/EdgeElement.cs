@@ -14,14 +14,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class EdgeElement : Element
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 17;
     public const string ELEMENT_NAME = "edge";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 7;
     
+    public override int AttributeCount => 7;
     /// <summary>
     /// The unique identifier of this edge.
     /// </summary>
@@ -50,6 +51,8 @@ internal sealed class EdgeElement : Element
     /// The color of this edge.
     /// </summary>
     public Color Color { get; set; }
+    
+    public override bool AllowsChildren => false;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

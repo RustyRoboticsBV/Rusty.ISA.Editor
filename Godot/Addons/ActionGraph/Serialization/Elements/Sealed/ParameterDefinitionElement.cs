@@ -13,14 +13,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class ParameterDefinitionElement : Element
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 4;
     public const string ELEMENT_NAME = "parameter_definition";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 2;
     
+    public override int AttributeCount => 2;
     /// <summary>
     /// The unique identifier of this parameter definition.
     /// </summary>
@@ -29,6 +30,8 @@ internal sealed class ParameterDefinitionElement : Element
     /// Whether this parameter can be localized.
     /// </summary>
     public bool Localizable { get; set; }
+    
+    public override bool AllowsChildren => false;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

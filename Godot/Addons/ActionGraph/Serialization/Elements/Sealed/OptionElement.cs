@@ -14,14 +14,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class OptionElement : InspectorElement
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 19;
     public const string ELEMENT_NAME = "option";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 6;
     
+    public override int AttributeCount => 6;
     /// <summary>
     /// The unique identifier of this option.
     /// </summary>
@@ -46,6 +47,8 @@ internal sealed class OptionElement : InspectorElement
     /// The color of this option.
     /// </summary>
     public override Color Color { get; set; }
+    
+    public override bool AllowsChildren => true;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

@@ -13,13 +13,15 @@ public sealed class SealedElementClassGenerator : Generator
         else
             @class.Base = Type("Element");
 
-        // Properties.
-        @class.Members.Add(MultilineComment("Public properties."));
-
+        // Constants.
+        @class.Members.Add(MultilineComment("Public constants."));
         @class.Members.Add(new Code($"public const int ELEMENT_INDEX = {schema.Sealeds.IndexOf(@sealed)};"));
         @class.Members.Add(new Code($"public const string ELEMENT_NAME = \"{@sealed.Name}\";"));
 
+        // Properties.
         @class.Members.Add(new Empty());
+        @class.Members.Add(MultilineComment("Public properties."));
+
         @class.Members.Add(Property(
             AccessType.Public,
             ModifierType.Override,
@@ -27,6 +29,7 @@ public sealed class SealedElementClassGenerator : Generator
             Id("ElementIndex"),
             Getter(Return(Id("ELEMENT_INDEX")))
         ));
+
         @class.Members.Add(Property(
             AccessType.Public,
             ModifierType.Override,
@@ -34,6 +37,8 @@ public sealed class SealedElementClassGenerator : Generator
             Id("ElementName"),
             Getter(Return(Id("ELEMENT_NAME")))
         ));
+
+        @class.Members.Add(new Empty());
         @class.Members.Add(Property(
             AccessType.Public,
             ModifierType.Override,
@@ -42,7 +47,6 @@ public sealed class SealedElementClassGenerator : Generator
             Getter(Return(Int(@sealed.Attributes.Count)))
         ));
 
-        @class.Members.Add(new Empty());
         foreach (Attribute attribute in @sealed.Attributes)
         {
             bool isShared = schema.HasGlobalAttribute(attribute)
@@ -62,6 +66,15 @@ public sealed class SealedElementClassGenerator : Generator
             if (attribute.ValueType == ValueType.Color)
                 needGodot = true;
         }
+
+        @class.Members.Add(new Empty());
+        @class.Members.Add(Property(
+            AccessType.Public,
+            ModifierType.Override,
+            Type("bool"),
+            Id("AllowsChildren"),
+            Getter(Return(Bool(@sealed.Children.Count > 0)))
+        ));
 
         // Methods.
         @class.Members.Add(new Empty());

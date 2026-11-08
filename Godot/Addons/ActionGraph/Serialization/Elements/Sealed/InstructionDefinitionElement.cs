@@ -13,14 +13,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class InstructionDefinitionElement : Element
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 3;
     public const string ELEMENT_NAME = "instruction_definition";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 2;
     
+    public override int AttributeCount => 2;
     /// <summary>
     /// The unique identifier of this instruction definition.
     /// </summary>
@@ -29,6 +30,8 @@ internal sealed class InstructionDefinitionElement : Element
     /// The name of the class responsible for executing this instruction.
     /// </summary>
     public string ExecutionHandler { get; set; } = "";
+    
+    public override bool AllowsChildren => true;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

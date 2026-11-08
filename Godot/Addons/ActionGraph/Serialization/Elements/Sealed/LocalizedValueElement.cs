@@ -13,14 +13,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class LocalizedValueElement : Element
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 25;
     public const string ELEMENT_NAME = "localized_value";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 3;
     
+    public override int AttributeCount => 3;
     /// <summary>
     /// The unique identifier of this localized value.
     /// </summary>
@@ -33,6 +34,8 @@ internal sealed class LocalizedValueElement : Element
     /// The localized value.
     /// </summary>
     public string Value { get; set; } = "";
+    
+    public override bool AllowsChildren => false;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

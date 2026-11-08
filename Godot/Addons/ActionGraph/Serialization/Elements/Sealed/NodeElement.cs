@@ -14,14 +14,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class NodeElement : Element
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 13;
     public const string ELEMENT_NAME = "node";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 11;
     
+    public override int AttributeCount => 11;
     /// <summary>
     /// The unique identifier of this node.
     /// </summary>
@@ -66,6 +67,8 @@ internal sealed class NodeElement : Element
     /// The unique start point name, from which runtime execution of the graph can begin.
     /// </summary>
     public string StartPointName { get; set; } = "";
+    
+    public override bool AllowsChildren => true;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

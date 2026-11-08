@@ -14,14 +14,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class FormElement : InspectorElement
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 18;
     public const string ELEMENT_NAME = "form";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 5;
     
+    public override int AttributeCount => 5;
     /// <summary>
     /// The unique identifier of this form.
     /// </summary>
@@ -42,6 +43,8 @@ internal sealed class FormElement : InspectorElement
     /// The color of this form.
     /// </summary>
     public override Color Color { get; set; }
+    
+    public override bool AllowsChildren => true;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

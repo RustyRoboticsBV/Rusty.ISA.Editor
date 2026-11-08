@@ -14,14 +14,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class TupleElement : InspectorElement
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 21;
     public const string ELEMENT_NAME = "tuple";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 5;
     
+    public override int AttributeCount => 5;
     /// <summary>
     /// The unique identifier of this tuple.
     /// </summary>
@@ -42,6 +43,8 @@ internal sealed class TupleElement : InspectorElement
     /// The color of this tuple.
     /// </summary>
     public override Color Color { get; set; }
+    
+    public override bool AllowsChildren => true;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

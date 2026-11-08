@@ -23,6 +23,7 @@ internal abstract class Element
     /// The name of this element type.
     /// </summary>
     public abstract string ElementName { get; }
+    
     /// <summary>
     /// The number of attributes of this element.
     /// </summary>
@@ -32,6 +33,10 @@ internal abstract class Element
     /// </summary>
     public abstract string ID { get; set; }
     
+    /// <summary>
+    /// Whether or not this element can have child elements.
+    /// </summary>
+    public abstract bool AllowsChildren { get; }
     /// <summary>
     /// The number of child elements contained within this element.
     /// </summary>

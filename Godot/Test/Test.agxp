@@ -1,11 +1,11 @@
-<file id="test-001" editor="Test" schema_version="1.0" format_version="1.0" checksum="abc123">
-    
-    <metadata id="author" value="Rusty"/>
-    <metadata id="description" value="Test example file."/>
+<file id="test-001" editor="Test" schema_version="1.0" format_version="1.0" default_language="us" checksum="abc123">
     
     <language_definition id="uk"/>
     <language_definition id="nl"/>
     <language_definition id="fr"/>
+    
+    <metadata id="author" value="Rusty"/>
+    <metadata id="description" value="Test example file."/>
 
     <instruction_definition id="add" execution_handler="AddHandler">
         <parameter_definition id="a"/>
@@ -71,8 +71,8 @@
             <option id="option-001" definition="log_option" enabled="true" folded="false" text="Optional Log">
                 <form id="form-001" definition="log_form" folded="false">
                     <field id="field-001" definition="message_field" value="Starting calculation" text="Log Message">
-                        <localized_value id="localized-001" definition="nl" value="Berekening gestart"/>
-                        <localized_value id="localized-002" definition="fr" value="Calcul commencé"/>
+                        <localized_value id="localized-001" language="nl" value="Berekening gestart"/>
+                        <localized_value id="localized-002" language="fr" value="Calcul commencé"/>
 
                     </field>
                 </form>

@@ -14,14 +14,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class FieldElement : ArgumentElement
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 23;
     public const string ELEMENT_NAME = "field";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 5;
     
+    public override int AttributeCount => 5;
     /// <summary>
     /// The unique identifier of this field.
     /// </summary>
@@ -42,6 +43,8 @@ internal sealed class FieldElement : ArgumentElement
     /// The color of this field.
     /// </summary>
     public override Color Color { get; set; }
+    
+    public override bool AllowsChildren => true;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

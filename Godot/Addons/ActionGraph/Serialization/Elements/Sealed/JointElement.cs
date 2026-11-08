@@ -14,14 +14,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class JointElement : Element
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 16;
     public const string ELEMENT_NAME = "joint";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 8;
     
+    public override int AttributeCount => 8;
     /// <summary>
     /// The unique identifier of this joint.
     /// </summary>
@@ -54,6 +55,8 @@ internal sealed class JointElement : Element
     /// The color of this joint.
     /// </summary>
     public Color Color { get; set; }
+    
+    public override bool AllowsChildren => false;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

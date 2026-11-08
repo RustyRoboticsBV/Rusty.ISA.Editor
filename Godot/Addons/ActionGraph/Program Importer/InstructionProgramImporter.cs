@@ -1,7 +1,7 @@
 using Godot;
 using Rusty.ActionGraph.CodeGen;
 using Rusty.ActionGraph.Serialization;
-//using Rusty.ActionGraph.Serialization.Binary; //TODO: uncomment
+using Rusty.ActionGraph.Serialization.Binary;
 
 namespace Rusty.ActionGraph.ImportPlugins;
 
@@ -29,13 +29,12 @@ public abstract partial class InstructionProgramImporter : Node
     /// </summary>
     public static InstructionProgram ImportBinary(byte[] bytes)
     {
-        return null;/*TODO: remove
         // Parse the file as an element.
-        FileCodec element = BinaryParser.Parse(bytes);
+        FileElement element = BinaryParser.Parse(bytes);
 
         // Compile the element into a program.
         InstructionProgram program = CodeGenerator.Generate(element);
-        return program;*/
+        return program;
     }
 
     /// <summary>

@@ -13,14 +13,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 11;
     public const string ELEMENT_NAME = "field_definition";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 2;
     
+    public override int AttributeCount => 2;
     /// <summary>
     /// The unique identifier of this field definition.
     /// </summary>
@@ -29,6 +30,8 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
     /// The identifier of the associated parameter definition.
     /// </summary>
     public override string Parameter { get; set; } = "";
+    
+    public override bool AllowsChildren => false;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)

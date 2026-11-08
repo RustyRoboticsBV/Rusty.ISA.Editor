@@ -78,6 +78,17 @@ XmlParserGenerator xmlParserGenerator = new();
 string xmlParserCode = xmlParserGenerator.Generate(schema);
 Write(xmlFolder, "XmlParser", xmlParserCode);
 
+// Generate binary parser/serializer.
+const string binaryFolder = targetFolder + "Binary/";
+
+BinarySerializerGenerator binarySerializerGenerator = new();
+string binarySerializerCode = binarySerializerGenerator.Generate(schema);
+Write(binaryFolder, "BinarySerializer", binarySerializerCode);
+
+BinaryParserGenerator binaryParserGenerator = new();
+string binaryParserCode = binaryParserGenerator.Generate(schema);
+Write(binaryFolder, "BinaryParser", binaryParserCode);
+
 // Documentation.
 const string docsFolder = projPath + "../Docs/";
 DomDocsGenerator domDocsGenerator = new();

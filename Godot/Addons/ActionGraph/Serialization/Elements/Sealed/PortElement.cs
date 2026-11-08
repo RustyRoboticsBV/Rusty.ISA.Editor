@@ -14,14 +14,15 @@ namespace Rusty.ActionGraph.Serialization;
 /// </summary>
 internal sealed class PortElement : ArgumentElement
 {
-    /* Public properties. */
+    /* Public constants. */
     public const int ELEMENT_INDEX = 24;
     public const string ELEMENT_NAME = "port";
     
+    /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
-    public override int AttributeCount => 5;
     
+    public override int AttributeCount => 5;
     /// <summary>
     /// The unique identifier of this port.
     /// </summary>
@@ -42,6 +43,8 @@ internal sealed class PortElement : ArgumentElement
     /// The color of this port port.
     /// </summary>
     public override Color Color { get; set; }
+    
+    public override bool AllowsChildren => false;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)
