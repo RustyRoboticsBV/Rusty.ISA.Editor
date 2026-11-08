@@ -95,6 +95,12 @@ DomDocsGenerator domDocsGenerator = new();
 string domDocs = domDocsGenerator.Generate(schema);
 Write(docsFolder, "Schema", domDocs, "md");
 
+// ImHex pattern.
+const string toolsFolder = projPath + "../Tools/";
+ImHexPatternGenerator imHexPatternGenerator = new();
+string imHexPattern = imHexPatternGenerator.Generate(schema);
+Write(toolsFolder, "agbp", imHexPattern, "hexpat");
+
 // Write to file method.
 static void Write(string folder, string name, string code, string extension = "cs")
 {

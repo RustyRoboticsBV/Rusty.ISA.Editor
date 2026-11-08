@@ -1,112 +1,234 @@
-#pragma name agbp
-#pragma description ActionGraph Binary Program
-#pragma magic [ 00 00 41 47 42 50 00 00 ] @ 0x00
+////////////////////////////////////////////////////////////////////////////////
+// WARNING:                                                                   //
+// This is a generated script file. It should not be edited directly.         //
+// See the Generators/ directory to view the source generation module.        //
+////////////////////////////////////////////////////////////////////////////////
 
-import std.io;
+import type.leb128;
+import type.color;
+import std.string;
 
-fn count_bits(u8 value) {
-    u8 count = 0;
-    
-    for (u8 i = 0, i < 8, i += 1) {
-        if ((value & (1 << i)) != 0)
-            count += 1;
-    }
-    
-    return count;
+using uint = type::uLEB128;
+using int = type::sLEB128;
+using color = type::RGBA8;
+
+struct string {
+    uint length;
+    char value[length];
 };
-
-fn element_name(u8 id) {
-    if (id == 0)
-        return "file";
-    if (id == 1)
-        return "meta";
-    if (id == 2)
-        return "lang";
-    if (id == 3)
-        return "idef";
-    if (id == 4)
-        return "pdef";
-    if (id == 5)
-        return "ndef";
-    if (id == 6)
-        return "fdef";
-    if (id == 7)
-        return "odef";
-    if (id == 8)
-        return "cdef";
-    if (id == 9)
-        return "tdef";
-    if (id == 10)
-        return "ldef";
-    if (id == 11)
-        return "vdef";
-    if (id == 12)
-        return "jdef";
-    if (id == 13)
-        return "node";
-    if (id == 14)
-        return "joint";
-    if (id == 15)
-        return "frame";
-    if (id == 16)
-        return "memo";
-    if (id == 17)
-        return "edge";
-    if (id == 18)
-        return "form";
-    if (id == 19)
-        return "option";
-    if (id == 20)
-        return "choice";
-    if (id == 21)
-        return "tuple";
-    if (id == 22)
-        return "list";
-    if (id == 23)
-        return "arg";
-    if (id == 24)
-        return "loc";
-    if (id == 25)
-        return "out";
-};
-
-fn has_children(u8 id) {
-    if (id == 1 || id == 2 || id == 4 ||
-        id == 11 || id == 12 || id == 14 ||
-        id == 15 || id == 16 || id == 17 ||
-        id == 24 || id == 25)
-        return false;
-
-    return true;
-};
-
-struct Text {
-    u8 length [[color("FF0000")]];
-    char string[length] [[color("FF8888")]];
-};
-
-struct Version {
-    u8 length [[color("888888")]];
-    char string[length] [[color("FFFFFF")]];
-};
-
 
 struct Element {
-    u8 id [[color("00FFFF")]];
-    u8 attr_mask [[color("0000FF")]];
-    Text attr_values[count_bits(attr_mask)];
-    if (has_children(id)) {
-        u8 child_count [[color("FFFF00")]];
-        Element children[child_count];
-    }
-}[[name(element_name(id))]];
-
-struct Root {
-    u64 magic [[color("000000")]];
-    Version version;
-    Element root;
+    uint index;
+    string id;
 };
 
-Root root @ 0x00;
+struct File : Element {
+    string editor;
+    string schema_version;
+    string format_version;
+    string default_language;
+    string checksum;
+    
+    uint child_count;
+    Element children[child_count];
+};
 
-std::print("0x{:08X}", root.magic);
+struct LanguageDefinition : Element {
+};
+
+struct Metadata : Element {
+    string value;
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct InstructionDefinition : Element {
+    string execution_handler;
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct ParameterDefinition : Element {
+    bool localizable;
+};
+
+struct NodeDefinition : Element {
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct FormDefinition : Element {
+    string instruction;
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct OptionDefinition : Element {
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct ChoiceDefinition : Element {
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct TupleDefinition : Element {
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct ListDefinition : Element {
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct FieldDefinition : Element {
+    string parameter;
+};
+
+struct PortDefinition : Element {
+    string parameter;
+    bool remove_default_port;
+};
+
+struct Node : Element {
+    string definition;
+    int x;
+    int y;
+    uint width;
+    uint height;
+    bool folded;
+    string parent_frame;
+    string text;
+    color color;
+    string start_point_name;
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct Memo : Element {
+    int x;
+    int y;
+    uint width;
+    uint height;
+    bool folded;
+    string parent_frame;
+    string text;
+    color color;
+};
+
+struct Frame : Element {
+    int x;
+    int y;
+    uint width;
+    uint height;
+    bool folded;
+    string parent_frame;
+    string text;
+    color color;
+};
+
+struct Joint : Element {
+    string edge;
+    int x;
+    int y;
+    uint size;
+    string parent_frame;
+    string text;
+    color color;
+};
+
+struct Edge : Element {
+    string _from;
+    uint port;
+    string to;
+    uint thickness;
+    string text;
+    color color;
+};
+
+struct Form : Element {
+    string definition;
+    bool folded;
+    string text;
+    color color;
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct Option : Element {
+    string definition;
+    bool enabled;
+    bool folded;
+    string text;
+    color color;
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct Choice : Element {
+    string definition;
+    string selected;
+    bool folded;
+    string text;
+    color color;
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct Tuple : Element {
+    string definition;
+    bool folded;
+    string text;
+    color color;
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct List : Element {
+    string definition;
+    bool folded;
+    string text;
+    color color;
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct Field : Element {
+    string definition;
+    string value;
+    string text;
+    color color;
+    
+    uint child_count;
+    Element children[child_count];
+};
+
+struct Port : Element {
+    string definition;
+    uint index;
+    string text;
+    color color;
+};
+
+struct LocalizedValue : Element {
+    string language;
+    string value;
+};
+
+LocalizedValue root @ 0x00;
