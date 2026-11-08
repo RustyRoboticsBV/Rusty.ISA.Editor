@@ -39,6 +39,7 @@ public class Schema
             Sealed element = new();
             element.Name = obj.Name;
             element.Description = obj.Value.GetProperty("description").GetString();
+            element.Color = obj.Value.GetProperty("color").GetString();
             element.Inherits = GetAbstract(obj.Value.GetProperty("inherits_abstract").GetString());
 
             // Parse attributes.

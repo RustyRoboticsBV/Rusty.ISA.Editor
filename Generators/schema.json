@@ -17,6 +17,7 @@
   "element_types": {
     "file": {
       "description": "The root element.",
+      "color": "333333",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -59,6 +60,7 @@
     },
     "language_definition": {
       "description": "A definition for a localization language.",
+      "color": "3f8c6d",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -70,6 +72,7 @@
     },
     "metadata": {
       "description": "A metadata entry.",
+      "color": "a478cc",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -86,6 +89,7 @@
     },
     "instruction_definition": {
       "description": "A definition for a form inspector, which represents an instruction's state.",
+      "color": "4393d1",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -104,6 +108,7 @@
     },
     "parameter_definition": {
       "description": "A definition for an instruction parameter.",
+      "color": "cf7474",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -119,6 +124,7 @@
     },
     "node_definition": {
       "description": "A definition for a graph node.",
+      "color": "74cf7d",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -137,6 +143,7 @@
     },
     "form_definition": {
       "description": "A definition for an instruction inspector.",
+      "color": "74b5cf",
       "inherits_abstract": "inspector_definition",
       "attributes": {
         "id": {
@@ -157,6 +164,7 @@
     },
     "option_definition": {
       "description": "A definition for an option inspector.",
+      "color": "808080",
       "inherits_abstract": "inspector_definition",
       "attributes": {
         "id": {
@@ -175,6 +183,7 @@
     },
     "choice_definition": {
       "description": "A definition for a choice inspector.",
+      "color": "808080",
       "inherits_abstract": "inspector_definition",
       "attributes": {
         "id": {
@@ -193,6 +202,7 @@
     },
     "tuple_definition": {
       "description": "A definition for a tuple inspector.",
+      "color": "808080",
       "inherits_abstract": "inspector_definition",
       "attributes": {
         "id": {
@@ -211,6 +221,7 @@
     },
     "list_definition": {
       "description": "A definition for a list inspector.",
+      "color": "808080",
       "inherits_abstract": "inspector_definition",
       "attributes": {
         "id": {
@@ -229,6 +240,7 @@
     },
     "field_definition": {
       "description": "A definition for a field inspector, which corresponds to a parameter.",
+      "color": "f07878",
       "inherits_abstract": "argument_definition",
       "attributes": {
         "id": {
@@ -245,6 +257,7 @@
     },
     "port_definition": {
       "description": "A definition for a node output port, which corresponds to a parameter.",
+      "color": "808080",
       "inherits_abstract": "argument_definition",
       "attributes": {
         "id": {
@@ -265,6 +278,7 @@
     },
     "node": {
       "description": "An editor node.",
+      "color": "4bcc4b",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -325,6 +339,7 @@
     },
     "memo": {
       "description": "An editor sticky note.",
+      "color": "fff373",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -369,6 +384,7 @@
     },
     "frame": {
       "description": "A visual element grouping in the editor.",
+      "color": "8068f6",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -413,6 +429,7 @@
     },
     "joint": {
       "description": "A visual edge joint in the editor.",
+      "color": "bee0ed",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -454,6 +471,7 @@
     },
     "edge": {
       "description": "An editor graph edge.",
+      "color": "3646f5",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -491,6 +509,7 @@
     },
     "form": {
       "description": "A form inspector, which represennts the state of an instruction.",
+      "color": "13ace9",
       "inherits_abstract": "inspector",
       "collection_type": "argument",
       "attributes": {
@@ -524,6 +543,7 @@
     },
     "option": {
       "description": "An option inspector.",
+      "color": "808080",
       "inherits_abstract": "inspector",
       "attributes": {
         "id": {
@@ -563,6 +583,7 @@
     },
     "choice": {
       "description": "A choice inspector.",
+      "color": "808080",
       "inherits_abstract": "inspector",
       "attributes": {
         "id": {
@@ -603,6 +624,7 @@
     },
     "tuple": {
       "description": "A tuple inspector.",
+      "color": "808080",
       "inherits_abstract": "inspector",
       "attributes": {
         "id": {
@@ -638,6 +660,7 @@
     },
     "list": {
       "description": "A list inspector.",
+      "color": "808080",
       "inherits_abstract": "inspector",
       "attributes": {
         "id": {
@@ -673,6 +696,7 @@
     },
     "field": {
       "description": "A field inspector, which represents the state of an instruction argument.",
+      "color": "f00000",
       "inherits_abstract": "argument",
       "attributes": {
         "id": {
@@ -702,6 +726,7 @@
     },
     "port": {
       "description": "A node output port, which represents the state of an instruction argument.",
+      "color": "f07400",
       "inherits_abstract": "argument",
       "attributes": {
         "id": {
@@ -730,6 +755,7 @@
     },
     "localized_value": {
       "description": "A field's value when localized to a specific language.",
+      "color": "d6866b",
       "inherits_abstract": "none",
       "attributes": {
         "id": {

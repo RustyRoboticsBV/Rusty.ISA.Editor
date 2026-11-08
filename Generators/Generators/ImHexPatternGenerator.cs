@@ -7,24 +7,46 @@
         int index = 0;
         foreach (Sealed @sealed in schema.Sealeds)
         {
-            string color = Colors.Pastel(index, schema.Sealeds.Count);
+            string main = @sealed.Color;
+            string pastel = Colors.Brighten(@sealed.Color, 0.3);
+            string dark = Colors.Darken(@sealed.Color, 0.2);
+
             cases.Line($"({index}): {{");
             cases.Indent++;
+            int aindex = 0;
             foreach (Attribute attribute in @sealed.Attributes)
             {
-                string type = attribute.ValueType != ValueType.Ref
-                    ? attribute.ValueType.ToString().ToLowerInvariant()
-                    : ValueType.String.ToString().ToLowerInvariant();
-
-                string name = attribute.Name != "from" ? attribute.Name : "_from";
-
-                cases.Line($"{type} {name} [[color(\"{color}\")]];");
+                string color = aindex % 2 == 0 ? main : pastel;
+                switch (attribute.ValueType)
+                {
+                    case ValueType.Bool:
+                        cases.Line($"bool {attribute.Name} [[color(\"{color}\")]];");
+                        break;
+                    case ValueType.Uint:
+                        cases.Line($"uint {attribute.Name} [[color(\"{color}\")]];");
+                        break;
+                    case ValueType.Int:
+                        cases.Line($"int {attribute.Name} [[color(\"{color}\")]];");
+                        break;
+                    case ValueType.String:
+                    case ValueType.Ref:
+                        cases.Line($"uint {attribute.Name}_length [[color(\"{color}\")]];");
+                        cases.Line($"char {attribute.Name}_text[{attribute.Name}_length] [[color(\"{color}\")]];");
+                        break;
+                    case ValueType.Color:
+                        cases.Line($"u8 {attribute.Name}_r [[color(\"{color}\")]];");
+                        cases.Line($"u8 {attribute.Name}_g [[color(\"{color}\")]];");
+                        cases.Line($"u8 {attribute.Name}_b [[color(\"{color}\")]];");
+                        cases.Line($"u8 {attribute.Name}_a [[color(\"{color}\")]];");
+                        break;
+                }
+                aindex++;
             }
 
             if (@sealed.Children.Count > 0)
             {
                 cases.Line();
-                cases.Line($"uint child_count [[color(\"{color}\")]];");
+                cases.Line($"uint child_count [[color(\"{dark}\")]];");
                 cases.Line("Element children[child_count];");
             }
 
@@ -65,8 +87,9 @@ struct Element {{
 
 // Entry point.
 struct Root {{
-    u8 magic_header[8];
-    string version;
+    char magic_header[8] [[color(""000000"")]];
+    uint version_length [[color(""111111"")]];
+    char version[version_length] [[color(""111111"")]];
     Element element;
 }};
 

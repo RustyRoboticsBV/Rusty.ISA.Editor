@@ -63,8 +63,6 @@
         </form_definition>
     </node_definition>
 
-<frame id="frame-001" x="50" y="50" width="700" height="450" folded="false" text="Calculator Workflow" color="#3498db"/>
-
 <node id="node-001" definition="calculator" x="100" y="120" width="220" height="180" folded="false" parent_frame="frame-001" text="Main Calculator" color="#2ecc71">
     <list id="list-001" definition="step_list" folded="false" text="Calculation Steps">
         <tuple id="tuple-001" definition="step" folded="false" text="Addition Step">
@@ -108,6 +106,8 @@
 <edge id="edge-001" from="node-001" port="0" to="node-002" thickness="3" text="Next calculation" color="#34495e"/>
 
 <joint id="joint-001" edge="edge-001" x="380" y="150" size="8" parent_frame="frame-001" text="Connection waypoint" color="#e74c3c"/>
+
+<frame id="frame-001" x="50" y="50" width="700" height="450" folded="false" text="Calculator Workflow" color="#3498db"/>
 
 <memo id="memo-001" x="100" y="350" width="300" height="100" folded="false" parent_frame="frame-001" text="This workflow demonstrates arithmetic operations and optional logging." color="#2c3e50"/>
 

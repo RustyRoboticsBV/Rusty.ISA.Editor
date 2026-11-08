@@ -4,6 +4,7 @@ using System.Text;
 public sealed class Sealed : Element
 {
     /* Public properties. */
+    public string Color { get; set; }
     public Abstract Inherits { get; set; }
     public List<string> Children { get; set; } = new();
     public bool MultipleChildren { get; set; }

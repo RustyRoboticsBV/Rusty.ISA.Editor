@@ -1,12 +1,53 @@
 ﻿using System;
+using System.Linq;
 
 public static class Colors
 {
-    public static string Pastel(int index, int count)
+    public static string Brighten(string hex, double amount = 0.2)
+    {
+        hex = hex.TrimStart('#');
+
+        if (hex.Length == 3)
+            hex = string.Concat(hex.Select(c => $"{c}{c}"));
+
+        if (hex.Length != 6)
+            throw new ArgumentException("Invalid hex color.", nameof(hex));
+
+        int r = Convert.ToInt32(hex.Substring(0, 2), 16);
+        int g = Convert.ToInt32(hex.Substring(2, 2), 16);
+        int b = Convert.ToInt32(hex.Substring(4, 2), 16);
+
+        r = Math.Min(255, (int)(r + (255 - r) * amount));
+        g = Math.Min(255, (int)(g + (255 - g) * amount));
+        b = Math.Min(255, (int)(b + (255 - b) * amount));
+
+        return $"{r:X2}{g:X2}{b:X2}";
+    }
+
+    public static string Darken(string hex, double amount = 0.2)
+    {
+        hex = hex.TrimStart('#');
+
+        if (hex.Length == 3)
+            hex = string.Concat(hex.Select(c => $"{c}{c}"));
+
+        if (hex.Length != 6)
+            throw new ArgumentException("Invalid hex color.", nameof(hex));
+
+        int r = Convert.ToInt32(hex.Substring(0, 2), 16);
+        int g = Convert.ToInt32(hex.Substring(2, 2), 16);
+        int b = Convert.ToInt32(hex.Substring(4, 2), 16);
+
+        r = Math.Max(0, (int)(r * (1 - amount)));
+        g = Math.Max(0, (int)(g * (1 - amount)));
+        b = Math.Max(0, (int)(b * (1 - amount)));
+
+        return $"{r:X2}{g:X2}{b:X2}";
+    }
+
+    public static string Range(int index, int count, double value = 0.8, double saturation = 0.5)
     {
         double hue = (index % count) * (360.0 / count);
-        double saturation = 0.5;
-        double value = 0.8;
         return Get(hue, value, saturation);
     }
 
