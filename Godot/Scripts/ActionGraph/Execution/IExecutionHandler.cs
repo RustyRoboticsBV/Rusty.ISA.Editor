@@ -16,5 +16,6 @@ public interface IExecutionHandler
     /// <summary>
     /// Execute an instruction. Returns true if the process must advance to the next instruction, and false if it should not.
     /// </summary>
-    public ExecutionResponse Execute(InstructionProcess process, double deltaTime, string[] args) => ExecutionResponse.Advance;
+    public ExecutionResponse Execute(InstructionProcess process, double deltaTime, string[] args)
+        => ExecutionResponse.Advance;
 }

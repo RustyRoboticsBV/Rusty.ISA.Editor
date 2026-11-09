@@ -16,6 +16,10 @@ public partial class InstructionProcess : Node
     /// The currently-loaded program.
     /// </summary>
     [Export] public InstructionProgram Program { get; private set; }
+    /// <summary>
+    /// The current localization language. Use "" for unlocalized values.
+    /// </summary>
+    [Export] public string LocalizationLanguage { get;  set; } = "";
 
     /// <summary>
     /// The index of the current instruction.
@@ -181,7 +185,13 @@ public partial class InstructionProcess : Node
                 break;
             case GenericInstruction generic:
                 IExecutionHandler handler = ExecutionHandlers[generic.Opcode];
-                response = handler.Execute(this, delta, generic.Arguments);
+                // TODO: optimize, we don't want to allocate an array every loop here.
+                string[] arguments = new string[generic.Arguments.Length];
+                for (int i = 0; i < arguments.Length; i++)
+                {
+                    arguments[i] = generic.Arguments[i].GetLocalizedValue(LocalizationLanguage);
+                }
+                response = handler.Execute(this, delta, arguments);
                 break;
             default:
                 throw new InvalidOperationException($"Unknown instruction type '{instruction.GetType().Name}'.");

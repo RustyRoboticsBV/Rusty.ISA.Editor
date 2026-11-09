@@ -5,6 +5,7 @@ using Rusty.ActionGraph.Serialization;
 namespace Rusty.ActionGraph.CodeGen;
 
 using Labels = Dictionary<Unit, string>;
+using LocalizedValues = Godot.Collections.Dictionary<string, string>;
 
 /// <summary>
 /// A utility that takes a file codec and converts it into an instruction program.
@@ -289,12 +290,27 @@ internal static class CodeGenerator
             throw ChildCountError(form, fdef);
 
         // Compile arguments.
-        List<string> arguments = new();
+        List<InstructionArgument> arguments = new();
         for (int i = 0; i < form.ChildCount; i++)
         {
             // Field argument.
             if (form.GetChild(i) is FieldElement field)
-                arguments.Add(field.Value);
+            {
+                // Get unlocalized value.
+                string unlocalized = field.Value;
+
+                // Find localized values.
+                LocalizedValues localized = new();
+                for (int j = 0; j < field.ChildCount; j++)
+                {
+                    if (field.GetChild(j) is LocalizedValueElement loc)
+                        localized.Add(loc.Language, loc.Value);
+                }
+
+                // Add argument.
+                InstructionArgument argument = new(unlocalized, localized);
+                arguments.Add(argument);
+            }
 
             // Port argument.
             else if (form.GetChild(i) is PortElement port)
@@ -304,12 +320,18 @@ internal static class CodeGenerator
                 Unit to = node.To[outputPort];
                 handledOutputArgs++;
 
-                // Set argument value.
+                // Get argument value.
                 string value = labels[to];
-                arguments.Add(value);
+
+                // Add argument.
+                InstructionArgument argument = new(value);
+                arguments.Add(argument);
             }
         }
-        instructions.Add(new GenericInstruction(fdef.Instruction, arguments.ToArray()));
+
+        // Create instruction.
+        GenericInstruction instruction = new(fdef.Instruction, arguments.ToArray());
+        instructions.Add(instruction);
     }
 
     /// <summary>

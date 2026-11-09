@@ -14,17 +14,17 @@ public sealed partial class GenericInstruction : Instruction
     /// </summary>
     [Export] public string Opcode { get; private set; } = "";
     /// <summary>
-    /// The argumens of the instruction.
+    /// The arguments of the instruction.
     /// </summary>
-    [Export] public string[] Arguments { get; private set; } = [];
+    [Export] public InstructionArgument[] Arguments { get; private set; } = [];
 
     /* Constructors. */
-    public GenericInstruction() : this("", []) { }
+    public GenericInstruction() : this("", (InstructionArgument[])null) { }
 
-    public GenericInstruction(string opcode, string[] arguments)
+    public GenericInstruction(string opcode, InstructionArgument[] arguments)
     {
         Opcode = opcode;
-        Arguments = arguments;
+        Arguments = arguments ?? [];
         ResourceName = ToString();
     }
 
@@ -36,7 +36,7 @@ public sealed partial class GenericInstruction : Instruction
         {
             if (args.Length > 0)
                 args += ", ";
-            args += '"' + arg + '"';
+            args += $"\"{arg}\"";
         }
         return base.ToString() + $"_{Opcode}({args})";
     }
