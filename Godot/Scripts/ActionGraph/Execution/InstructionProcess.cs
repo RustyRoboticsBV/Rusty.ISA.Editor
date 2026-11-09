@@ -19,7 +19,7 @@ public partial class InstructionProcess : Node
     /// <summary>
     /// The current localization language. Use "" for unlocalized values.
     /// </summary>
-    [Export] public string LocalizationLanguage { get;  set; } = "";
+    [Export] public string LocalizationLanguage { get; set; } = "";
 
     /// <summary>
     /// The index of the current instruction.
@@ -38,6 +38,8 @@ public partial class InstructionProcess : Node
     private Dictionary<string, int> StartPoints { get; } = new();
     private Dictionary<string, int> Labels { get; } = new();
     private Dictionary<string, IExecutionHandler> ExecutionHandlers { get; } = new();
+
+    private List<string> ArgumentBuffer { get; } = new();
 
     /* Public methods. */
     /// <summary>
@@ -184,14 +186,19 @@ public partial class InstructionProcess : Node
                 response = ExecutionResponse.Advance;
                 break;
             case GenericInstruction generic:
+                // Find the execution handler.
                 IExecutionHandler handler = ExecutionHandlers[generic.Opcode];
-                // TODO: optimize, we don't want to allocate an array every loop here.
-                string[] arguments = new string[generic.Arguments.Length];
-                for (int i = 0; i < arguments.Length; i++)
+
+                // Collect the arguments.
+                ArgumentBuffer.Clear();
+                for (int i = 0; i < generic.Arguments.Length; i++)
                 {
-                    arguments[i] = generic.Arguments[i].GetLocalizedValue(LocalizationLanguage);
+                    string arg = generic.Arguments[i].GetLocalizedValue(LocalizationLanguage);
+                    ArgumentBuffer.Add(arg);
                 }
-                response = handler.Execute(this, delta, arguments);
+
+                // Execute.
+                response = handler.Execute(this, delta, ArgumentBuffer);
                 break;
             default:
                 throw new InvalidOperationException($"Unknown instruction type '{instruction.GetType().Name}'.");

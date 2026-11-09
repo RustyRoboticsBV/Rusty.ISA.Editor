@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Rusty.ActionGraph;
 
@@ -16,6 +17,6 @@ public interface IExecutionHandler
     /// <summary>
     /// Execute an instruction. Returns true if the process must advance to the next instruction, and false if it should not.
     /// </summary>
-    public ExecutionResponse Execute(InstructionProcess process, double deltaTime, string[] args)
+    public ExecutionResponse Execute(InstructionProcess process, double deltaTime, IReadOnlyList<string> args)
         => ExecutionResponse.Advance;
 }
