@@ -62,37 +62,37 @@
             <port_definition id="target_port" parameter="target"/>
         </form_definition>
     </node_definition>
+    
+    <start_point id="start"/>
 
-<node id="node-001" definition="calculator" x="100" y="120" width="220" height="180" folded="false" parent_frame="frame-001" text="Main Calculator" color="#2ecc71">
-    <list id="list-001" definition="step_list" folded="false" text="Calculation Steps">
-        <tuple id="tuple-001" definition="step" folded="false" text="Addition Step">
-            <option id="option-001" definition="log_option" enabled="true" folded="false" text="Optional Log">
+<node id="node-001" definition="calculator" x="100" y="120" width="220" height="180" folded="false" parent_frame="frame-001">
+    <list id="list-001" definition="step_list" folded="false">
+        <tuple id="tuple-001" definition="step" folded="false">
+            <option id="option-001" definition="log_option" enabled="true" folded="false">
                 <form id="form-001" definition="log_form" folded="false">
-                    <field id="field-001" definition="message_field" value="Starting calculation" text="Log Message">
+                    <field id="field-001" definition="message_field" value="Starting calculation">
                         <localized_value id="localized-001" language="nl" value="Berekening gestart"/>
                         <localized_value id="localized-002" language="fr" value="Calcul commencé"/>
-
                     </field>
                 </form>
             </option>
-            <choice id="choice-001" definition="operation_choice" selected="form-002" folded="false" text="Operation">
-
+            <choice id="choice-001" definition="operation_choice" selected="form-002" folded="false">
                 <form id="form-002" definition="add_form" folded="false">
-                    <field id="field-002" definition="a_field" value="10" text="First Number"/>
-                    <field id="field-003" definition="b_field" value="20" text="Second Number"/>
+                    <field id="field-002" definition="a_field" value="10"/>
+                    <field id="field-003" definition="b_field" value="20"/>
                 </form>
             </choice>
         </tuple>
     </list>
-    <form id="form-003" definition="jump_form" folded="false" text="Next Step">
-        <port id="port-001" definition="target_port" index="0" text="Next Target" color="#e67e22"/>
+    <form id="form-003" definition="jump_form" folded="false">
+        <port id="port-001" definition="target_port" index="0"/>
     </form>
 </node>
 
-<node id="node-002" definition="calculator" x="450" y="120" width="220" height="180" folded="false" parent_frame="frame-001" text="Second Calculator" color="#9b59b6">
+<node id="node-002" definition="calculator" x="450" y="120" width="220" height="180" folded="false" parent_frame="frame-001">
     <list id="list-002" definition="step_list" folded="false">
         <tuple id="tuple-002" definition="step" folded="false">
-            <option id="option-001" definition="log_option" enabled="false" folded="false" text="Optional Log"/>
+            <option id="option-001" definition="log_option" enabled="false" folded="false"/>
             <choice id="choice-002" definition="operation_choice" selected="form-004" folded="false">
                 <form id="form-004" definition="mul_form" folded="false">
                     <field id="field-004" definition="a_field" value="5"/>
@@ -103,8 +103,10 @@
     </list>
 </node>
 
-<edge id="edge-001" from="node-001" port="0" to="node-002" thickness="3" text="Next calculation" color="#34495e">
-    <joint id="joint-001" x="380" y="150" size="8" parent_frame="frame-001" text="Connection waypoint" color="#e74c3c"/>
+<edge id="edge-000" from="start" from_port="0" to="node-001" thickness="3" color="#34495e"/>
+
+<edge id="edge-001" from="node-001" from_port="0" to="node-002" thickness="3" color="#34495e">
+    <joint id="joint-001" x="380" y="150" size="8" parent_frame="frame-001" color="#e74c3c"/>
 </edge>
 
 <frame id="frame-001" x="50" y="50" width="700" height="450" folded="false" text="Calculator Workflow" color="#3498db"/>

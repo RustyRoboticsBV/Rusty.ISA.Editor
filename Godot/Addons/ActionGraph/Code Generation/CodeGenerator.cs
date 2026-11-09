@@ -23,7 +23,9 @@ internal static class CodeGenerator
         for (int i = 0; i < file.ChildCount; i++)
         {
             Element child = file.GetChild(i);
-            if (child is NodeElement node)
+            if (child is StartPointElement start)
+                units.Add(child.ID, new StartUnit(start.ID));
+            else if (child is NodeElement node)
                 units.Add(child.ID, new NodeUnit(file, node));
         }
 
@@ -34,11 +36,17 @@ internal static class CodeGenerator
             if (child is EdgeElement edge)
             {
                 Unit from = units[edge.From];
-                uint port = edge.Port;
+                uint fromPort = edge.FromPort;
                 Unit to = units[edge.To];
+                uint toPort = edge.ToPort;
 
-                if (from is NodeUnit node)
-                    node.ConnectTo(port, to);
+                if (to is StartUnit)
+                    throw FormatError(edge, "Cannot connect edge to element without input ports.");
+
+                if (from is StartUnit start)
+                    start.ConnectTo(to);
+                else if (from is NodeUnit node)
+                    node.ConnectTo(fromPort, to);
             }
         }
 
@@ -73,6 +81,7 @@ internal static class CodeGenerator
         // Compile to instructions.
         List<Instruction> instructions = new();
         List<Instruction> unitInstructions = new();
+        string startName = null;
         foreach (Unit unit in executionOrder)
         {
             // Compile this unit's instructions.
@@ -85,6 +94,9 @@ internal static class CodeGenerator
                 case GotoUnit gto:
                     unitInstructions.Add(new GotoInstruction(labels[gto.To]));
                     break;
+                case StartUnit start:
+                    startName = start.Name;
+                    continue;
                 case NodeUnit node:
                     CompileNode(node, file, unitInstructions, labels);
                     break;
@@ -93,6 +105,13 @@ internal static class CodeGenerator
             // Add label if necessary.
             if (labels.ContainsKey(unit) && unitInstructions.Count > 0)
                 unitInstructions[0].Label = labels[unit];
+
+            // Add start name if necessary.
+            if (startName != null)
+            {
+                unitInstructions[0].Start = startName;
+                startName = null;
+            }
 
             // Add unit's instructions to compiled program.
             instructions.AddRange(unitInstructions);
@@ -125,8 +144,29 @@ internal static class CodeGenerator
             case GotoUnit:
                 break;
 
-            case NodeUnit node:
+            case StartUnit start:
+                // Insert end if necessary.
+                if (start.To == null)
+                    start.ConnectTo(new EndUnit());
 
+                // Insert goto if necessary.
+                else if (visited.Contains(start.To))
+                {
+                    // Register as jump target.
+                    jumpTargets.Add(start.To);
+
+                    // Insert goto.
+                    GotoUnit gto = new();
+                    gto.ConnectTo(start.To);
+                    start.ConnectTo(gto);
+                }
+
+                // Continue with output unit.
+                Linearize(start.To, visited, executionOrder, jumpTargets);
+
+                break;
+
+            case NodeUnit node:
                 for (uint i = 0; i < node.To.Length; i++)
                 {
                     // Insert end if necessary.
@@ -181,9 +221,6 @@ internal static class CodeGenerator
         // Ensure a dummy instruction if the node compiled to no instructions.
         if (instructions.Count == 0)
             instructions.Add(new DummyInstruction());
-
-        // Check for entry point.
-        instructions[0].Start = node.StartPointName;
     }
 
     /// <summary>

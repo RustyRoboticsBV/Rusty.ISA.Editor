@@ -171,6 +171,7 @@ internal sealed class FileElement : Element
             case InstructionDefinitionElement:
             case NodeDefinitionElement:
             case SubgraphDefinitionElement:
+            case StartPointElement:
             case NodeElement:
             case FrameElement:
             case MemoElement:

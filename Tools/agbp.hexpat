@@ -169,7 +169,7 @@ struct Element {
             char parent_frame_text[parent_frame_length] [[color("000000")]];
             uint index [[color("4C4C4C")]];
             
-            std::core::set_display_name(this, "in");
+            std::core::set_display_name(this, "input");
         }
         (15): {
             uint id_length [[color("000000")]];
@@ -183,9 +183,20 @@ struct Element {
             char parent_frame_text[parent_frame_length] [[color("000000")]];
             uint index [[color("4C4C4C")]];
             
-            std::core::set_display_name(this, "out");
+            std::core::set_display_name(this, "output");
         }
         (16): {
+            uint id_length [[color("000000")]];
+            char id_text[id_length] [[color("000000")]];
+            int x [[color("4C4C4C")]];
+            int y [[color("000000")]];
+            uint width [[color("4C4C4C")]];
+            uint height [[color("000000")]];
+            bool folded [[color("4C4C4C")]];
+            
+            std::core::set_display_name(this, "start_point");
+        }
+        (17): {
             uint id_length [[color("67e527")]];
             char id_text[id_length] [[color("67e527")]];
             uint definition_length [[color("94EC67")]];
@@ -197,15 +208,13 @@ struct Element {
             bool folded [[color("67e527")]];
             uint parent_frame_length [[color("94EC67")]];
             char parent_frame_text[parent_frame_length] [[color("94EC67")]];
-            uint start_point_name_length [[color("67e527")]];
-            char start_point_name_text[start_point_name_length] [[color("67e527")]];
             
             uint child_count [[color("52B71F")]];
             Element children[child_count];
             
             std::core::set_display_name(this, "node");
         }
-        (17): {
+        (18): {
             uint id_length [[color("159102")]];
             char id_text[id_length] [[color("159102")]];
             int x [[color("5BB24D")]];
@@ -224,7 +233,7 @@ struct Element {
             
             std::core::set_display_name(this, "memo");
         }
-        (18): {
+        (19): {
             uint id_length [[color("8068f6")]];
             char id_text[id_length] [[color("8068f6")]];
             int x [[color("A695F8")]];
@@ -243,7 +252,7 @@ struct Element {
             
             std::core::set_display_name(this, "frame");
         }
-        (19): {
+        (20): {
             uint id_length [[color("000000")]];
             char id_text[id_length] [[color("000000")]];
             uint definition_length [[color("4C4C4C")]];
@@ -258,7 +267,7 @@ struct Element {
             
             std::core::set_display_name(this, "subgraph");
         }
-        (20): {
+        (21): {
             uint id_length [[color("3646f5")]];
             char id_text[id_length] [[color("3646f5")]];
             uint from_length [[color("727DF8")]];
@@ -278,7 +287,7 @@ struct Element {
             
             std::core::set_display_name(this, "edge");
         }
-        (21): {
+        (22): {
             uint id_length [[color("b0b6f5")]];
             char id_text[id_length] [[color("b0b6f5")]];
             int x [[color("C7CBF8")]];
@@ -286,10 +295,14 @@ struct Element {
             uint size [[color("C7CBF8")]];
             uint parent_frame_length [[color("b0b6f5")]];
             char parent_frame_text[parent_frame_length] [[color("b0b6f5")]];
+            u8 color_r [[color("C7CBF8")]];
+            u8 color_g [[color("C7CBF8")]];
+            u8 color_b [[color("C7CBF8")]];
+            u8 color_a [[color("C7CBF8")]];
             
             std::core::set_display_name(this, "joint");
         }
-        (22): {
+        (23): {
             uint id_length [[color("ba9d95")]];
             char id_text[id_length] [[color("ba9d95")]];
             uint definition_length [[color("CEBAB4")]];
@@ -302,7 +315,7 @@ struct Element {
             
             std::core::set_display_name(this, "option");
         }
-        (23): {
+        (24): {
             uint id_length [[color("b4ba95")]];
             char id_text[id_length] [[color("b4ba95")]];
             uint definition_length [[color("CACEB4")]];
@@ -316,7 +329,7 @@ struct Element {
             
             std::core::set_display_name(this, "choice");
         }
-        (24): {
+        (25): {
             uint id_length [[color("95baa5")]];
             char id_text[id_length] [[color("95baa5")]];
             uint definition_length [[color("B4CEC0")]];
@@ -328,7 +341,7 @@ struct Element {
             
             std::core::set_display_name(this, "tuple");
         }
-        (25): {
+        (26): {
             uint id_length [[color("95b0ba")]];
             char id_text[id_length] [[color("95b0ba")]];
             uint definition_length [[color("B4C7CE")]];
@@ -340,7 +353,7 @@ struct Element {
             
             std::core::set_display_name(this, "list");
         }
-        (26): {
+        (27): {
             uint id_length [[color("13ace9")]];
             char id_text[id_length] [[color("13ace9")]];
             uint definition_length [[color("59C4EF")]];
@@ -352,7 +365,7 @@ struct Element {
             
             std::core::set_display_name(this, "form");
         }
-        (27): {
+        (28): {
             uint id_length [[color("f00000")]];
             char id_text[id_length] [[color("f00000")]];
             uint definition_length [[color("F44C4C")]];
@@ -365,7 +378,7 @@ struct Element {
             
             std::core::set_display_name(this, "field");
         }
-        (28): {
+        (29): {
             uint id_length [[color("f07400")]];
             char id_text[id_length] [[color("f07400")]];
             uint definition_length [[color("F49D4C")]];
@@ -374,7 +387,7 @@ struct Element {
             
             std::core::set_display_name(this, "port");
         }
-        (29): {
+        (30): {
             uint id_length [[color("d6bc6b")]];
             char id_text[id_length] [[color("d6bc6b")]];
             uint language_length [[color("E2D097")]];

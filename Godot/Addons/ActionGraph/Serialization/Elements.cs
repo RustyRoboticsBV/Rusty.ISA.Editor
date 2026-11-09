@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class Elements
 {
     /* Public constants. */
-    public const int ELEMENT_COUNT = 30;
+    public const int ELEMENT_COUNT = 31;
     
     /* Public methods. */
     /// <summary>
@@ -36,8 +36,9 @@ internal static class Elements
         FieldDefinitionElement.ELEMENT_NAME => FieldDefinitionElement.ELEMENT_INDEX,
         PortDefinitionElement.ELEMENT_NAME => PortDefinitionElement.ELEMENT_INDEX,
         SubgraphDefinitionElement.ELEMENT_NAME => SubgraphDefinitionElement.ELEMENT_INDEX,
-        InElement.ELEMENT_NAME => InElement.ELEMENT_INDEX,
-        OutElement.ELEMENT_NAME => OutElement.ELEMENT_INDEX,
+        InputElement.ELEMENT_NAME => InputElement.ELEMENT_INDEX,
+        OutputElement.ELEMENT_NAME => OutputElement.ELEMENT_INDEX,
+        StartPointElement.ELEMENT_NAME => StartPointElement.ELEMENT_INDEX,
         NodeElement.ELEMENT_NAME => NodeElement.ELEMENT_INDEX,
         MemoElement.ELEMENT_NAME => MemoElement.ELEMENT_INDEX,
         FrameElement.ELEMENT_NAME => FrameElement.ELEMENT_INDEX,
@@ -74,8 +75,9 @@ internal static class Elements
         FieldDefinitionElement.ELEMENT_INDEX => FieldDefinitionElement.ELEMENT_NAME,
         PortDefinitionElement.ELEMENT_INDEX => PortDefinitionElement.ELEMENT_NAME,
         SubgraphDefinitionElement.ELEMENT_INDEX => SubgraphDefinitionElement.ELEMENT_NAME,
-        InElement.ELEMENT_INDEX => InElement.ELEMENT_NAME,
-        OutElement.ELEMENT_INDEX => OutElement.ELEMENT_NAME,
+        InputElement.ELEMENT_INDEX => InputElement.ELEMENT_NAME,
+        OutputElement.ELEMENT_INDEX => OutputElement.ELEMENT_NAME,
+        StartPointElement.ELEMENT_INDEX => StartPointElement.ELEMENT_NAME,
         NodeElement.ELEMENT_INDEX => NodeElement.ELEMENT_NAME,
         MemoElement.ELEMENT_INDEX => MemoElement.ELEMENT_NAME,
         FrameElement.ELEMENT_INDEX => FrameElement.ELEMENT_NAME,
@@ -112,8 +114,9 @@ internal static class Elements
         FieldDefinitionElement.ELEMENT_INDEX => typeof(FieldDefinitionElement),
         PortDefinitionElement.ELEMENT_INDEX => typeof(PortDefinitionElement),
         SubgraphDefinitionElement.ELEMENT_INDEX => typeof(SubgraphDefinitionElement),
-        InElement.ELEMENT_INDEX => typeof(InElement),
-        OutElement.ELEMENT_INDEX => typeof(OutElement),
+        InputElement.ELEMENT_INDEX => typeof(InputElement),
+        OutputElement.ELEMENT_INDEX => typeof(OutputElement),
+        StartPointElement.ELEMENT_INDEX => typeof(StartPointElement),
         NodeElement.ELEMENT_INDEX => typeof(NodeElement),
         MemoElement.ELEMENT_INDEX => typeof(MemoElement),
         FrameElement.ELEMENT_INDEX => typeof(FrameElement),

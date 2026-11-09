@@ -15,7 +15,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class FrameElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 18;
+    public const int ELEMENT_INDEX = 19;
     public const string ELEMENT_NAME = "frame";
     
     /* Public properties. */
@@ -28,7 +28,7 @@ internal sealed class FrameElement : Element
     /// </summary>
     public override string ID { get; set; } = "";
     /// <summary>
-    /// The x-position of the frame on the graph.
+    /// The x-position of this frame on the graph.
     /// </summary>
     public int X { get; set; }
     /// <summary>

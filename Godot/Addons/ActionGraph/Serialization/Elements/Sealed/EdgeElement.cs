@@ -15,7 +15,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class EdgeElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 20;
+    public const int ELEMENT_INDEX = 21;
     public const string ELEMENT_NAME = "edge";
     
     /* Public properties. */

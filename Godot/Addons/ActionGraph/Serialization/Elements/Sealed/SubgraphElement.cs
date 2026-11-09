@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class SubgraphElement : ProgramUnitElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 19;
+    public const int ELEMENT_INDEX = 20;
     public const string ELEMENT_NAME = "subgraph";
     
     /* Public properties. */
@@ -31,7 +31,7 @@ internal sealed class SubgraphElement : ProgramUnitElement
     /// </summary>
     public string Definition { get; set; } = "";
     /// <summary>
-    /// The x-position of the subgraph on the graph.
+    /// The x-position of this subgraph on the graph.
     /// </summary>
     public override int X { get; set; }
     /// <summary>
@@ -53,7 +53,7 @@ internal sealed class SubgraphElement : ProgramUnitElement
     /// <summary>
     /// The identifier of the parent frame.
     /// </summary>
-    public override string ParentFrame { get; set; } = "";
+    public string ParentFrame { get; set; } = "";
     
     public override bool AllowsChildren => false;
     

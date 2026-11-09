@@ -13,7 +13,7 @@ internal abstract class ProgramUnitElement : Element
 {
     /* Public properties. */
     /// <summary>
-    /// The x-position of the program unit on the graph.
+    /// The x-position of this program unit on the graph.
     /// </summary>
     public abstract int X { get; set; }
     /// <summary>
@@ -32,8 +32,4 @@ internal abstract class ProgramUnitElement : Element
     /// Whether this program unit's inspector has been folded.
     /// </summary>
     public abstract bool Folded { get; set; }
-    /// <summary>
-    /// The identifier of the parent frame.
-    /// </summary>
-    public abstract string ParentFrame { get; set; }
 }

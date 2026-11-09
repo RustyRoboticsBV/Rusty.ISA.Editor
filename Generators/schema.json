@@ -54,6 +54,7 @@
         "instruction_definition",
         "node_definition",
         "subgraph_definition",
+        "start_point",
         "node",
         "frame",
         "memo",
@@ -303,14 +304,14 @@
         "frame",
         "memo",
         "subgraph",
-        "in",
-        "out",
+        "input",
+        "output",
         "edge"
       ],
       "allow_multiple_children": true
     },
-    "in": {
-      "description": "A subgraph instance input.",
+    "input": {
+      "description": "A subgraph instance entry point.",
       "color": "000000",
       "inherits_abstract": "program_unit",
       "attributes": {
@@ -319,7 +320,7 @@
           "value_type": "string"
         },
         "x": {
-          "description": "The x-position of the <this> on the graph.",
+          "description": "The x-position of this <this> on the graph.",
           "value_type": "int"
         },
         "y": {
@@ -351,8 +352,8 @@
       "allowed_children": [],
       "allow_multiple_children": false
     },
-    "out": {
-      "description": "A subgraph instance output.",
+    "output": {
+      "description": "A subgraph instance exit point.",
       "color": "000000",
       "inherits_abstract": "program_unit",
       "attributes": {
@@ -361,7 +362,7 @@
           "value_type": "string"
         },
         "x": {
-          "description": "The x-position of the <this> on the graph.",
+          "description": "The x-position of this <this> on the graph.",
           "value_type": "int"
         },
         "y": {
@@ -388,6 +389,39 @@
         "index": {
           "description": "The index of this <this> on the subgraph's external connection layer.",
           "value_type": "uint"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
+    "start_point": {
+      "description": "A graph entry point, from which execution can begin.",
+      "color": "000000",
+      "inherits_abstract": "program_unit",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "x": {
+          "description": "The x-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
         }
       },
       "allowed_children": [],
@@ -431,10 +465,6 @@
           "description": "The identifier of the parent <ref_type>.",
           "value_type": "ref",
           "ref_type": "frame"
-        },
-        "start_point_name": {
-          "description": "The unique start point name, from which runtime execution of the graph can begin.",
-          "value_type": "string"
         }
       },
       "allowed_children": [
@@ -502,7 +532,7 @@
           "value_type": "string"
         },
         "x": {
-          "description": "The x-position of the <this> on the graph.",
+          "description": "The x-position of this <this> on the graph.",
           "value_type": "int"
         },
         "y": {
@@ -553,7 +583,7 @@
           "ref_type": "subgraph_definition"
         },
         "x": {
-          "description": "The x-position of the <this> on the graph.",
+          "description": "The x-position of this <this> on the graph.",
           "value_type": "int"
         },
         "y": {
@@ -645,6 +675,10 @@
           "description": "The identifier of the parent <ref_type>.",
           "value_type": "ref",
           "ref_type": "frame"
+        },
+        "color": {
+          "description": "The color of this <this>.",
+          "value_type": "color"
         }
       },
       "allowed_children": [],

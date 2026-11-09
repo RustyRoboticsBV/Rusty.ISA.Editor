@@ -14,14 +14,14 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class NodeElement : ProgramUnitElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 16;
+    public const int ELEMENT_INDEX = 17;
     public const string ELEMENT_NAME = "node";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 9;
+    public override int AttributeCount => 8;
     /// <summary>
     /// The unique identifier of this node.
     /// </summary>
@@ -53,11 +53,7 @@ internal sealed class NodeElement : ProgramUnitElement
     /// <summary>
     /// The identifier of the parent frame.
     /// </summary>
-    public override string ParentFrame { get; set; } = "";
-    /// <summary>
-    /// The unique start point name, from which runtime execution of the graph can begin.
-    /// </summary>
-    public string StartPointName { get; set; } = "";
+    public string ParentFrame { get; set; } = "";
     
     public override bool AllowsChildren => true;
     
@@ -82,8 +78,6 @@ internal sealed class NodeElement : ProgramUnitElement
                 return 6;
             case "parent_frame":
                 return 7;
-            case "start_point_name":
-                return 8;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -110,8 +104,6 @@ internal sealed class NodeElement : ProgramUnitElement
                 return "folded";
             case 7:
                 return "parent_frame";
-            case 8:
-                return "start_point_name";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -137,8 +129,6 @@ internal sealed class NodeElement : ProgramUnitElement
                 return Folded.GetType();
             case 7:
                 return ParentFrame.GetType();
-            case 8:
-                return StartPointName.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -164,8 +154,6 @@ internal sealed class NodeElement : ProgramUnitElement
                 return Folded;
             case 7:
                 return ParentFrame;
-            case 8:
-                return StartPointName;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -198,9 +186,6 @@ internal sealed class NodeElement : ProgramUnitElement
                 break;
             case 7:
                 ParentFrame = (string)value;
-                break;
-            case 8:
-                StartPointName = (string)value;
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");

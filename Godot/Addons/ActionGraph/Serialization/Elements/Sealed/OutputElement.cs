@@ -9,13 +9,13 @@ using System;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A subgraph instance output.
+/// A subgraph instance exit point.
 /// </summary>
-internal sealed class OutElement : ProgramUnitElement
+internal sealed class OutputElement : ProgramUnitElement
 {
     /* Public constants. */
     public const int ELEMENT_INDEX = 15;
-    public const string ELEMENT_NAME = "out";
+    public const string ELEMENT_NAME = "output";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
@@ -23,35 +23,35 @@ internal sealed class OutElement : ProgramUnitElement
     
     public override int AttributeCount => 8;
     /// <summary>
-    /// The unique identifier of this out.
+    /// The unique identifier of this output.
     /// </summary>
     public override string ID { get; set; } = "";
     /// <summary>
-    /// The x-position of the out on the graph.
+    /// The x-position of this output on the graph.
     /// </summary>
     public override int X { get; set; }
     /// <summary>
-    /// The y-position of this out on the graph.
+    /// The y-position of this output on the graph.
     /// </summary>
     public override int Y { get; set; }
     /// <summary>
-    /// The width of this out on the graph.
+    /// The width of this output on the graph.
     /// </summary>
     public override uint Width { get; set; }
     /// <summary>
-    /// The height of this out on the graph.
+    /// The height of this output on the graph.
     /// </summary>
     public override uint Height { get; set; }
     /// <summary>
-    /// Whether this out's inspector has been folded.
+    /// Whether this output's inspector has been folded.
     /// </summary>
     public override bool Folded { get; set; }
     /// <summary>
     /// The identifier of the parent frame.
     /// </summary>
-    public override string ParentFrame { get; set; } = "";
+    public string ParentFrame { get; set; } = "";
     /// <summary>
-    /// The index of this out on the subgraph's external connection layer.
+    /// The index of this output on the subgraph's external connection layer.
     /// </summary>
     public uint Index { get; set; }
     
