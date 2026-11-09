@@ -15,7 +15,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class MemoElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 15;
+    public const int ELEMENT_INDEX = 17;
     public const string ELEMENT_NAME = "memo";
     
     /* Public properties. */

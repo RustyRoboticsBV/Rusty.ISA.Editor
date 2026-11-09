@@ -14,14 +14,14 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class OutElement : ProgramUnitElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 19;
+    public const int ELEMENT_INDEX = 15;
     public const string ELEMENT_NAME = "out";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 7;
+    public override int AttributeCount => 8;
     /// <summary>
     /// The unique identifier of this out.
     /// </summary>
@@ -50,6 +50,10 @@ internal sealed class OutElement : ProgramUnitElement
     /// The identifier of the parent frame.
     /// </summary>
     public override string ParentFrame { get; set; } = "";
+    /// <summary>
+    /// The index of this out on the subgraph's external connection layer.
+    /// </summary>
+    public uint Index { get; set; }
     
     public override bool AllowsChildren => false;
     
@@ -72,6 +76,8 @@ internal sealed class OutElement : ProgramUnitElement
                 return 5;
             case "parent_frame":
                 return 6;
+            case "index":
+                return 7;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -96,6 +102,8 @@ internal sealed class OutElement : ProgramUnitElement
                 return "folded";
             case 6:
                 return "parent_frame";
+            case 7:
+                return "index";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -119,6 +127,8 @@ internal sealed class OutElement : ProgramUnitElement
                 return Folded.GetType();
             case 6:
                 return ParentFrame.GetType();
+            case 7:
+                return Index.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -142,6 +152,8 @@ internal sealed class OutElement : ProgramUnitElement
                 return Folded;
             case 6:
                 return ParentFrame;
+            case 7:
+                return Index;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -171,6 +183,9 @@ internal sealed class OutElement : ProgramUnitElement
                 break;
             case 6:
                 ParentFrame = (string)value;
+                break;
+            case 7:
+                Index = (uint)value;
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");

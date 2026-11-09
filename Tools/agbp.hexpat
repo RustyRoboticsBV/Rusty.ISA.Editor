@@ -158,6 +158,34 @@ struct Element {
             std::core::set_display_name(this, "subgraph_definition");
         }
         (14): {
+            uint id_length [[color("000000")]];
+            char id_text[id_length] [[color("000000")]];
+            int x [[color("4C4C4C")]];
+            int y [[color("000000")]];
+            uint width [[color("4C4C4C")]];
+            uint height [[color("000000")]];
+            bool folded [[color("4C4C4C")]];
+            uint parent_frame_length [[color("000000")]];
+            char parent_frame_text[parent_frame_length] [[color("000000")]];
+            uint index [[color("4C4C4C")]];
+            
+            std::core::set_display_name(this, "in");
+        }
+        (15): {
+            uint id_length [[color("000000")]];
+            char id_text[id_length] [[color("000000")]];
+            int x [[color("4C4C4C")]];
+            int y [[color("000000")]];
+            uint width [[color("4C4C4C")]];
+            uint height [[color("000000")]];
+            bool folded [[color("4C4C4C")]];
+            uint parent_frame_length [[color("000000")]];
+            char parent_frame_text[parent_frame_length] [[color("000000")]];
+            uint index [[color("4C4C4C")]];
+            
+            std::core::set_display_name(this, "out");
+        }
+        (16): {
             uint id_length [[color("67e527")]];
             char id_text[id_length] [[color("67e527")]];
             uint definition_length [[color("94EC67")]];
@@ -177,7 +205,7 @@ struct Element {
             
             std::core::set_display_name(this, "node");
         }
-        (15): {
+        (17): {
             uint id_length [[color("159102")]];
             char id_text[id_length] [[color("159102")]];
             int x [[color("5BB24D")]];
@@ -196,7 +224,7 @@ struct Element {
             
             std::core::set_display_name(this, "memo");
         }
-        (16): {
+        (18): {
             uint id_length [[color("8068f6")]];
             char id_text[id_length] [[color("8068f6")]];
             int x [[color("A695F8")]];
@@ -215,7 +243,7 @@ struct Element {
             
             std::core::set_display_name(this, "frame");
         }
-        (17): {
+        (19): {
             uint id_length [[color("000000")]];
             char id_text[id_length] [[color("000000")]];
             uint definition_length [[color("4C4C4C")]];
@@ -230,45 +258,20 @@ struct Element {
             
             std::core::set_display_name(this, "subgraph");
         }
-        (18): {
-            uint id_length [[color("000000")]];
-            char id_text[id_length] [[color("000000")]];
-            int x [[color("4C4C4C")]];
-            int y [[color("000000")]];
-            uint width [[color("4C4C4C")]];
-            uint height [[color("000000")]];
-            bool folded [[color("4C4C4C")]];
-            uint parent_frame_length [[color("000000")]];
-            char parent_frame_text[parent_frame_length] [[color("000000")]];
-            
-            std::core::set_display_name(this, "in");
-        }
-        (19): {
-            uint id_length [[color("000000")]];
-            char id_text[id_length] [[color("000000")]];
-            int x [[color("4C4C4C")]];
-            int y [[color("000000")]];
-            uint width [[color("4C4C4C")]];
-            uint height [[color("000000")]];
-            bool folded [[color("4C4C4C")]];
-            uint parent_frame_length [[color("000000")]];
-            char parent_frame_text[parent_frame_length] [[color("000000")]];
-            
-            std::core::set_display_name(this, "out");
-        }
         (20): {
             uint id_length [[color("3646f5")]];
             char id_text[id_length] [[color("3646f5")]];
             uint from_length [[color("727DF8")]];
             char from_text[from_length] [[color("727DF8")]];
-            uint port [[color("3646f5")]];
+            uint from_port [[color("3646f5")]];
             uint to_length [[color("727DF8")]];
             char to_text[to_length] [[color("727DF8")]];
-            uint thickness [[color("3646f5")]];
-            u8 color_r [[color("727DF8")]];
-            u8 color_g [[color("727DF8")]];
-            u8 color_b [[color("727DF8")]];
-            u8 color_a [[color("727DF8")]];
+            uint to_port [[color("3646f5")]];
+            uint thickness [[color("727DF8")]];
+            u8 color_r [[color("3646f5")]];
+            u8 color_g [[color("3646f5")]];
+            u8 color_b [[color("3646f5")]];
+            u8 color_a [[color("3646f5")]];
             
             uint child_count [[color("2B38C4")]];
             Element children[child_count];

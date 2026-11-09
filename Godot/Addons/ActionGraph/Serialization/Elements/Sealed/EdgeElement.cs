@@ -22,23 +22,27 @@ internal sealed class EdgeElement : Element
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 6;
+    public override int AttributeCount => 7;
     /// <summary>
     /// The unique identifier of this edge.
     /// </summary>
     public override string ID { get; set; } = "";
     /// <summary>
-    /// The identifier of the source node.
+    /// The identifier of the source element.
     /// </summary>
     public string From { get; set; } = "";
     /// <summary>
-    /// The port index on the source node.
+    /// The port index on the source element.
     /// </summary>
-    public uint Port { get; set; }
+    public uint FromPort { get; set; }
     /// <summary>
-    /// The identifier of the destination node.
+    /// The identifier of the destination element.
     /// </summary>
     public string To { get; set; } = "";
+    /// <summary>
+    /// The port index of the destination element.
+    /// </summary>
+    public uint ToPort { get; set; }
     /// <summary>
     /// The thickness of this edge.
     /// </summary>
@@ -59,14 +63,16 @@ internal sealed class EdgeElement : Element
                 return 0;
             case "from":
                 return 1;
-            case "port":
+            case "from_port":
                 return 2;
             case "to":
                 return 3;
-            case "thickness":
+            case "to_port":
                 return 4;
-            case "color":
+            case "thickness":
                 return 5;
+            case "color":
+                return 6;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -82,12 +88,14 @@ internal sealed class EdgeElement : Element
             case 1:
                 return "from";
             case 2:
-                return "port";
+                return "from_port";
             case 3:
                 return "to";
             case 4:
-                return "thickness";
+                return "to_port";
             case 5:
+                return "thickness";
+            case 6:
                 return "color";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -103,12 +111,14 @@ internal sealed class EdgeElement : Element
             case 1:
                 return From.GetType();
             case 2:
-                return Port.GetType();
+                return FromPort.GetType();
             case 3:
                 return To.GetType();
             case 4:
-                return Thickness.GetType();
+                return ToPort.GetType();
             case 5:
+                return Thickness.GetType();
+            case 6:
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -124,12 +134,14 @@ internal sealed class EdgeElement : Element
             case 1:
                 return From;
             case 2:
-                return Port;
+                return FromPort;
             case 3:
                 return To;
             case 4:
-                return Thickness;
+                return ToPort;
             case 5:
+                return Thickness;
+            case 6:
                 return Color;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -147,15 +159,18 @@ internal sealed class EdgeElement : Element
                 From = (string)value;
                 break;
             case 2:
-                Port = (uint)value;
+                FromPort = (uint)value;
                 break;
             case 3:
                 To = (string)value;
                 break;
             case 4:
-                Thickness = (uint)value;
+                ToPort = (uint)value;
                 break;
             case 5:
+                Thickness = (uint)value;
+                break;
+            case 6:
                 Color = (Color)value;
                 break;
             default:

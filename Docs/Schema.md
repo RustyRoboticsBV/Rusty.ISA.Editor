@@ -229,10 +229,54 @@
 |`1` (`0x01`)|`text`|`string`|The title text of this subgraph definition.|
 ---
 
-### `node`
+### `in`
 |Property|Value|
 |-|-|
 |Index|`14` (`0x0E`)|
+|Description|A subgraph instance input.|
+|Allowed parents|`subgraph_definition`|
+|Allowed children|*(None)*|
+|Multiple children allowed?|false|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this in.|
+|`1` (`0x01`)|`x`|`int`|The x-position of the in on the graph.|
+|`2` (`0x02`)|`y`|`int`|The y-position of this in on the graph.|
+|`3` (`0x03`)|`width`|`uint`|The width of this in on the graph.|
+|`4` (`0x04`)|`height`|`uint`|The height of this in on the graph.|
+|`5` (`0x05`)|`folded`|`bool`|Whether this in's inspector has been folded.|
+|`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
+|`7` (`0x07`)|`index`|`uint`|The index of this in on the subgraph's external connection layer.|
+---
+
+### `out`
+|Property|Value|
+|-|-|
+|Index|`15` (`0x0F`)|
+|Description|A subgraph instance output.|
+|Allowed parents|`subgraph_definition`|
+|Allowed children|*(None)*|
+|Multiple children allowed?|false|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this out.|
+|`1` (`0x01`)|`x`|`int`|The x-position of the out on the graph.|
+|`2` (`0x02`)|`y`|`int`|The y-position of this out on the graph.|
+|`3` (`0x03`)|`width`|`uint`|The width of this out on the graph.|
+|`4` (`0x04`)|`height`|`uint`|The height of this out on the graph.|
+|`5` (`0x05`)|`folded`|`bool`|Whether this out's inspector has been folded.|
+|`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
+|`7` (`0x07`)|`index`|`uint`|The index of this out on the subgraph's external connection layer.|
+---
+
+### `node`
+|Property|Value|
+|-|-|
+|Index|`16` (`0x10`)|
 |Description|An editor node.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
@@ -255,7 +299,7 @@
 ### `memo`
 |Property|Value|
 |-|-|
-|Index|`15` (`0x0F`)|
+|Index|`17` (`0x11`)|
 |Description|An editor sticky note.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
@@ -278,7 +322,7 @@
 ### `frame`
 |Property|Value|
 |-|-|
-|Index|`16` (`0x10`)|
+|Index|`18` (`0x12`)|
 |Description|A visual element grouping in the editor.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
@@ -301,7 +345,7 @@
 ### `subgraph`
 |Property|Value|
 |-|-|
-|Index|`17` (`0x11`)|
+|Index|`19` (`0x13`)|
 |Description|A subgraph instance.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
@@ -320,48 +364,6 @@
 |`7` (`0x07`)|`parent_frame`|`string`|The identifier of the parent frame.|
 ---
 
-### `in`
-|Property|Value|
-|-|-|
-|Index|`18` (`0x12`)|
-|Description|A subgraph instance input.|
-|Allowed parents|`subgraph_definition`|
-|Allowed children|*(None)*|
-|Multiple children allowed?|false|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this in.|
-|`1` (`0x01`)|`x`|`int`|The x-position of the in on the graph.|
-|`2` (`0x02`)|`y`|`int`|The y-position of this in on the graph.|
-|`3` (`0x03`)|`width`|`uint`|The width of this in on the graph.|
-|`4` (`0x04`)|`height`|`uint`|The height of this in on the graph.|
-|`5` (`0x05`)|`folded`|`bool`|Whether this in's inspector has been folded.|
-|`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
----
-
-### `out`
-|Property|Value|
-|-|-|
-|Index|`19` (`0x13`)|
-|Description|A subgraph instance output.|
-|Allowed parents|`subgraph_definition`|
-|Allowed children|*(None)*|
-|Multiple children allowed?|false|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this out.|
-|`1` (`0x01`)|`x`|`int`|The x-position of the out on the graph.|
-|`2` (`0x02`)|`y`|`int`|The y-position of this out on the graph.|
-|`3` (`0x03`)|`width`|`uint`|The width of this out on the graph.|
-|`4` (`0x04`)|`height`|`uint`|The height of this out on the graph.|
-|`5` (`0x05`)|`folded`|`bool`|Whether this out's inspector has been folded.|
-|`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
----
-
 ### `edge`
 |Property|Value|
 |-|-|
@@ -375,11 +377,12 @@
 |Index|Name|Type|Description|
 |-|-|-|-|
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this edge.|
-|`1` (`0x01`)|`from`|`string`|The identifier of the source node.|
-|`2` (`0x02`)|`port`|`uint`|The port index on the source node.|
-|`3` (`0x03`)|`to`|`string`|The identifier of the destination node.|
-|`4` (`0x04`)|`thickness`|`uint`|The thickness of this edge.|
-|`5` (`0x05`)|`color`|`color`|The color of this edge.|
+|`1` (`0x01`)|`from`|`string`|The identifier of the source element.|
+|`2` (`0x02`)|`from_port`|`uint`|The port index on the source element.|
+|`3` (`0x03`)|`to`|`string`|The identifier of the destination element.|
+|`4` (`0x04`)|`to_port`|`uint`|The port index of the destination element.|
+|`5` (`0x05`)|`thickness`|`uint`|The thickness of this edge.|
+|`6` (`0x06`)|`color`|`color`|The color of this edge.|
 ---
 
 ### `joint`

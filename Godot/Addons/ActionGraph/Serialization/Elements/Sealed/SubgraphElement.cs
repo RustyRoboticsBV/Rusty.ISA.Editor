@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class SubgraphElement : ProgramUnitElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 17;
+    public const int ELEMENT_INDEX = 19;
     public const string ELEMENT_NAME = "subgraph";
     
     /* Public properties. */

@@ -13,7 +13,7 @@ internal abstract class ProgramUnitElement : Element
 {
     /* Public properties. */
     /// <summary>
-    /// The x-position of this program unit on the graph.
+    /// The x-position of the program unit on the graph.
     /// </summary>
     public abstract int X { get; set; }
     /// <summary>

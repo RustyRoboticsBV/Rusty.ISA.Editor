@@ -309,6 +309,90 @@
       ],
       "allow_multiple_children": true
     },
+    "in": {
+      "description": "A subgraph instance input.",
+      "color": "000000",
+      "inherits_abstract": "program_unit",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "x": {
+          "description": "The x-position of the <this> on the graph.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        },
+        "index": {
+          "description": "The index of this <this> on the subgraph's external connection layer.",
+          "value_type": "uint"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
+    "out": {
+      "description": "A subgraph instance output.",
+      "color": "000000",
+      "inherits_abstract": "program_unit",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "x": {
+          "description": "The x-position of the <this> on the graph.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        },
+        "index": {
+          "description": "The index of this <this> on the subgraph's external connection layer.",
+          "value_type": "uint"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
     "node": {
       "description": "An editor node.",
       "color": "67e527",
@@ -497,82 +581,6 @@
       "allowed_children": [],
       "allow_multiple_children": false
     },
-    "in": {
-      "description": "A subgraph instance input.",
-      "color": "000000",
-      "inherits_abstract": "program_unit",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "x": {
-          "description": "The x-position of the <this> on the graph.",
-          "value_type": "int"
-        },
-        "y": {
-          "description": "The y-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "width": {
-          "description": "The width of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "height": {
-          "description": "The height of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "folded": {
-          "description": "Whether this <this>'s inspector has been folded.",
-          "value_type": "bool"
-        },
-        "parent_frame": {
-          "description": "The identifier of the parent <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "frame"
-        }
-      },
-      "allowed_children": [],
-      "allow_multiple_children": false
-    },
-    "out": {
-      "description": "A subgraph instance output.",
-      "color": "000000",
-      "inherits_abstract": "program_unit",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "x": {
-          "description": "The x-position of the <this> on the graph.",
-          "value_type": "int"
-        },
-        "y": {
-          "description": "The y-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "width": {
-          "description": "The width of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "height": {
-          "description": "The height of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "folded": {
-          "description": "Whether this <this>'s inspector has been folded.",
-          "value_type": "bool"
-        },
-        "parent_frame": {
-          "description": "The identifier of the parent <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "frame"
-        }
-      },
-      "allowed_children": [],
-      "allow_multiple_children": false
-    },
     "edge": {
       "description": "An editor graph edge.",
       "color": "3646f5",
@@ -583,18 +591,22 @@
           "value_type": "string"
         },
         "from": {
-          "description": "The identifier of the source node.",
+          "description": "The identifier of the source element.",
           "value_type": "ref",
-          "ref_type": "node"
+          "ref_type": "program_unit"
         },
-        "port": {
-          "description": "The port index on the source node.",
+        "from_port": {
+          "description": "The port index on the source element.",
           "value_type": "uint"
         },
         "to": {
-          "description": "The identifier of the destination node.",
+          "description": "The identifier of the destination element.",
           "value_type": "ref",
-          "ref_type": "node"
+          "ref_type": "program_unit"
+        },
+        "to_port": {
+          "description": "The port index of the destination element.",
+          "value_type": "uint"
         },
         "thickness": {
           "description": "The thickness of this <this>.",
