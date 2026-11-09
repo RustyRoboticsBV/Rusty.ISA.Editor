@@ -4,7 +4,6 @@
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
-using Godot;
 using System;
 
 namespace Rusty.ActionGraph.Serialization;
@@ -15,14 +14,14 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class FieldElement : ArgumentElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 23;
+    public const int ELEMENT_INDEX = 25;
     public const string ELEMENT_NAME = "field";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 5;
+    public override int AttributeCount => 3;
     /// <summary>
     /// The unique identifier of this field.
     /// </summary>
@@ -35,14 +34,6 @@ internal sealed class FieldElement : ArgumentElement
     /// The non-localized value of this field.
     /// </summary>
     public string Value { get; set; } = "";
-    /// <summary>
-    /// The annotation of this field.
-    /// </summary>
-    public override string Text { get; set; } = "";
-    /// <summary>
-    /// The color of this field.
-    /// </summary>
-    public override Color Color { get; set; }
     
     public override bool AllowsChildren => true;
     
@@ -57,10 +48,6 @@ internal sealed class FieldElement : ArgumentElement
                 return 1;
             case "value":
                 return 2;
-            case "text":
-                return 3;
-            case "color":
-                return 4;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -77,10 +64,6 @@ internal sealed class FieldElement : ArgumentElement
                 return "definition";
             case 2:
                 return "value";
-            case 3:
-                return "text";
-            case 4:
-                return "color";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -96,10 +79,6 @@ internal sealed class FieldElement : ArgumentElement
                 return Definition.GetType();
             case 2:
                 return Value.GetType();
-            case 3:
-                return Text.GetType();
-            case 4:
-                return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -115,10 +94,6 @@ internal sealed class FieldElement : ArgumentElement
                 return Definition;
             case 2:
                 return Value;
-            case 3:
-                return Text;
-            case 4:
-                return Color;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -136,12 +111,6 @@ internal sealed class FieldElement : ArgumentElement
                 break;
             case 2:
                 Value = (string)value;
-                break;
-            case 3:
-                Text = (string)value;
-                break;
-            case 4:
-                Color = (Color)value;
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");

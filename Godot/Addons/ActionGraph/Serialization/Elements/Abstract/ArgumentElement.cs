@@ -4,8 +4,6 @@
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
-using Godot;
-
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
@@ -18,12 +16,4 @@ internal abstract class ArgumentElement : Element
     /// The identifier of the associated argument definition.
     /// </summary>
     public abstract string Definition { get; set; }
-    /// <summary>
-    /// The annotation of this argument.
-    /// </summary>
-    public abstract string Text { get; set; }
-    /// <summary>
-    /// The color of this argument.
-    /// </summary>
-    public abstract Color Color { get; set; }
 }

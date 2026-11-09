@@ -4,8 +4,6 @@
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
-using Godot;
-
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
@@ -22,12 +20,4 @@ internal abstract class InspectorElement : Element
     /// Whether this inspector has been folded.
     /// </summary>
     public abstract bool Folded { get; set; }
-    /// <summary>
-    /// The annotation of this inspector.
-    /// </summary>
-    public abstract string Text { get; set; }
-    /// <summary>
-    /// The color of this inspector.
-    /// </summary>
-    public abstract Color Color { get; set; }
 }

@@ -4,7 +4,6 @@
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
-using Godot;
 using System;
 
 namespace Rusty.ActionGraph.Serialization;
@@ -12,17 +11,17 @@ namespace Rusty.ActionGraph.Serialization;
 /// <summary>
 /// An editor node.
 /// </summary>
-internal sealed class NodeElement : Element
+internal sealed class NodeElement : ProgramUnitElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 13;
+    public const int ELEMENT_INDEX = 14;
     public const string ELEMENT_NAME = "node";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 11;
+    public override int AttributeCount => 9;
     /// <summary>
     /// The unique identifier of this node.
     /// </summary>
@@ -30,39 +29,31 @@ internal sealed class NodeElement : Element
     /// <summary>
     /// The identifier of the associated node definition.
     /// </summary>
-    public string Definition { get; set; } = "";
+    public override string Definition { get; set; } = "";
     /// <summary>
     /// The x-position of this node on the graph.
     /// </summary>
-    public int X { get; set; }
+    public override int X { get; set; }
     /// <summary>
     /// The y-position of this node on the graph.
     /// </summary>
-    public int Y { get; set; }
+    public override int Y { get; set; }
     /// <summary>
     /// The width of this node on the graph.
     /// </summary>
-    public uint Width { get; set; }
+    public override uint Width { get; set; }
     /// <summary>
     /// The height of this node on the graph.
     /// </summary>
-    public uint Height { get; set; }
+    public override uint Height { get; set; }
     /// <summary>
-    /// Whether this node has been folded.
+    /// Whether this node's inspector has been folded.
     /// </summary>
-    public bool Folded { get; set; }
+    public override bool Folded { get; set; }
     /// <summary>
     /// The identifier of the parent frame.
     /// </summary>
-    public string ParentFrame { get; set; } = "";
-    /// <summary>
-    /// The annotation of this node.
-    /// </summary>
-    public string Text { get; set; } = "";
-    /// <summary>
-    /// The color of this node.
-    /// </summary>
-    public Color Color { get; set; }
+    public override string ParentFrame { get; set; } = "";
     /// <summary>
     /// The unique start point name, from which runtime execution of the graph can begin.
     /// </summary>
@@ -91,12 +82,8 @@ internal sealed class NodeElement : Element
                 return 6;
             case "parent_frame":
                 return 7;
-            case "text":
-                return 8;
-            case "color":
-                return 9;
             case "start_point_name":
-                return 10;
+                return 8;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -124,10 +111,6 @@ internal sealed class NodeElement : Element
             case 7:
                 return "parent_frame";
             case 8:
-                return "text";
-            case 9:
-                return "color";
-            case 10:
                 return "start_point_name";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -155,10 +138,6 @@ internal sealed class NodeElement : Element
             case 7:
                 return ParentFrame.GetType();
             case 8:
-                return Text.GetType();
-            case 9:
-                return Color.GetType();
-            case 10:
                 return StartPointName.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -186,10 +165,6 @@ internal sealed class NodeElement : Element
             case 7:
                 return ParentFrame;
             case 8:
-                return Text;
-            case 9:
-                return Color;
-            case 10:
                 return StartPointName;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -225,12 +200,6 @@ internal sealed class NodeElement : Element
                 ParentFrame = (string)value;
                 break;
             case 8:
-                Text = (string)value;
-                break;
-            case 9:
-                Color = (Color)value;
-                break;
-            case 10:
                 StartPointName = (string)value;
                 break;
             default:

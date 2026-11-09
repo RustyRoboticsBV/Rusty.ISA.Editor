@@ -15,7 +15,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class MemoElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 14;
+    public const int ELEMENT_INDEX = 15;
     public const string ELEMENT_NAME = "memo";
     
     /* Public properties. */
@@ -44,7 +44,7 @@ internal sealed class MemoElement : Element
     /// </summary>
     public uint Height { get; set; }
     /// <summary>
-    /// Whether this memo has been folded.
+    /// Whether this memo's inspector has been folded.
     /// </summary>
     public bool Folded { get; set; }
     /// <summary>
@@ -52,7 +52,7 @@ internal sealed class MemoElement : Element
     /// </summary>
     public string ParentFrame { get; set; } = "";
     /// <summary>
-    /// The text of this memo.
+    /// The commentary text of this memo.
     /// </summary>
     public string Text { get; set; } = "";
     /// <summary>

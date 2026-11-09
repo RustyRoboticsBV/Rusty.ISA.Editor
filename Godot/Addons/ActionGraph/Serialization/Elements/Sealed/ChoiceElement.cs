@@ -4,7 +4,6 @@
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
-using Godot;
 using System;
 
 namespace Rusty.ActionGraph.Serialization;
@@ -15,14 +14,14 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class ChoiceElement : InspectorElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 20;
+    public const int ELEMENT_INDEX = 21;
     public const string ELEMENT_NAME = "choice";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 6;
+    public override int AttributeCount => 4;
     /// <summary>
     /// The unique identifier of this choice.
     /// </summary>
@@ -39,14 +38,6 @@ internal sealed class ChoiceElement : InspectorElement
     /// Whether this choice has been folded.
     /// </summary>
     public override bool Folded { get; set; }
-    /// <summary>
-    /// The annotation of this choice.
-    /// </summary>
-    public override string Text { get; set; } = "";
-    /// <summary>
-    /// The color of this choice.
-    /// </summary>
-    public override Color Color { get; set; }
     
     public override bool AllowsChildren => true;
     
@@ -63,10 +54,6 @@ internal sealed class ChoiceElement : InspectorElement
                 return 2;
             case "folded":
                 return 3;
-            case "text":
-                return 4;
-            case "color":
-                return 5;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -85,10 +72,6 @@ internal sealed class ChoiceElement : InspectorElement
                 return "selected";
             case 3:
                 return "folded";
-            case 4:
-                return "text";
-            case 5:
-                return "color";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -106,10 +89,6 @@ internal sealed class ChoiceElement : InspectorElement
                 return Selected.GetType();
             case 3:
                 return Folded.GetType();
-            case 4:
-                return Text.GetType();
-            case 5:
-                return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -127,10 +106,6 @@ internal sealed class ChoiceElement : InspectorElement
                 return Selected;
             case 3:
                 return Folded;
-            case 4:
-                return Text;
-            case 5:
-                return Color;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -151,12 +126,6 @@ internal sealed class ChoiceElement : InspectorElement
                 break;
             case 3:
                 Folded = (bool)value;
-                break;
-            case 4:
-                Text = (string)value;
-                break;
-            case 5:
-                Color = (Color)value;
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");

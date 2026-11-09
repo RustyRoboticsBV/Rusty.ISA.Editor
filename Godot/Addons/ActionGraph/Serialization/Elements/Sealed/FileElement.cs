@@ -170,9 +170,11 @@ internal sealed class FileElement : Element
             case LanguageDefinitionElement:
             case InstructionDefinitionElement:
             case NodeDefinitionElement:
+            case SubgraphDefinitionElement:
             case NodeElement:
             case FrameElement:
             case MemoElement:
+            case SubgraphElement:
             case EdgeElement:
                 Children.Add(child);
                 break;

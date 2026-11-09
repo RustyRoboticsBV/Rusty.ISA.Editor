@@ -12,7 +12,7 @@
 |Index|`0` (`0x00`)|
 |Description|The root element.|
 |Allowed parents|*(None)*|
-|Allowed children|`metadata`, `language_definition`, `instruction_definition`, `node_definition`, `node`, `frame`, `memo`, `edge`|
+|Allowed children|`metadata`, `language_definition`, `instruction_definition`, `node_definition`, `subgraph_definition`, `node`, `frame`, `memo`, `subgraph`, `edge`|
 |Multiple children allowed?|true|
 
 **Attributes:**
@@ -104,26 +104,10 @@
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this node definition.|
 ---
 
-### `form_definition`
-|Property|Value|
-|-|-|
-|Index|`6` (`0x06`)|
-|Description|A definition for an instruction inspector.|
-|Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
-|Allowed children|`field_definition`, `port_definition`|
-|Multiple children allowed?|true|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this form definition.|
-|`1` (`0x01`)|`instruction`|`string`|The identifier of the associated instruction definition.|
----
-
 ### `option_definition`
 |Property|Value|
 |-|-|
-|Index|`7` (`0x07`)|
+|Index|`6` (`0x06`)|
 |Description|A definition for an option inspector.|
 |Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
 |Allowed children|`form_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
@@ -138,7 +122,7 @@
 ### `choice_definition`
 |Property|Value|
 |-|-|
-|Index|`8` (`0x08`)|
+|Index|`7` (`0x07`)|
 |Description|A definition for a choice inspector.|
 |Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
 |Allowed children|`form_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
@@ -153,7 +137,7 @@
 ### `tuple_definition`
 |Property|Value|
 |-|-|
-|Index|`9` (`0x09`)|
+|Index|`8` (`0x08`)|
 |Description|A definition for a tuple inspector.|
 |Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
 |Allowed children|`form_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
@@ -168,7 +152,7 @@
 ### `list_definition`
 |Property|Value|
 |-|-|
-|Index|`10` (`0x0A`)|
+|Index|`9` (`0x09`)|
 |Description|A definition for a list inspector.|
 |Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
 |Allowed children|`form_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
@@ -178,6 +162,22 @@
 |Index|Name|Type|Description|
 |-|-|-|-|
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this list definition.|
+---
+
+### `form_definition`
+|Property|Value|
+|-|-|
+|Index|`10` (`0x0A`)|
+|Description|A definition for an instruction inspector.|
+|Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
+|Allowed children|`field_definition`, `port_definition`|
+|Multiple children allowed?|true|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this form definition.|
+|`1` (`0x01`)|`instruction`|`string`|The identifier of the associated instruction definition.|
 ---
 
 ### `field_definition`
@@ -213,12 +213,28 @@
 |`2` (`0x02`)|`remove_default_port`|`bool`|Whether this port's presence removes a node's default port.|
 ---
 
-### `node`
+### `subgraph_definition`
 |Property|Value|
 |-|-|
 |Index|`13` (`0x0D`)|
-|Description|An editor node.|
+|Description|A definition for a subgraph, containing various graph elements.|
 |Allowed parents|`file`|
+|Allowed children|`node`, `frame`, `memo`, `subgraph`, `edge`|
+|Multiple children allowed?|true|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this subgraph definition.|
+|`1` (`0x01`)|`text`|`string`|The title text of this subgraph definition.|
+---
+
+### `node`
+|Property|Value|
+|-|-|
+|Index|`14` (`0x0E`)|
+|Description|An editor node.|
+|Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
 |Multiple children allowed?|true|
 
@@ -231,19 +247,17 @@
 |`3` (`0x03`)|`y`|`int`|The y-position of this node on the graph.|
 |`4` (`0x04`)|`width`|`uint`|The width of this node on the graph.|
 |`5` (`0x05`)|`height`|`uint`|The height of this node on the graph.|
-|`6` (`0x06`)|`folded`|`bool`|Whether this node has been folded.|
+|`6` (`0x06`)|`folded`|`bool`|Whether this node's inspector has been folded.|
 |`7` (`0x07`)|`parent_frame`|`string`|The identifier of the parent frame.|
-|`8` (`0x08`)|`text`|`string`|The annotation of this node.|
-|`9` (`0x09`)|`color`|`color`|The color of this node.|
-|`10` (`0x0A`)|`start_point_name`|`string`|The unique start point name, from which runtime execution of the graph can begin.|
+|`8` (`0x08`)|`start_point_name`|`string`|The unique start point name, from which runtime execution of the graph can begin.|
 ---
 
 ### `memo`
 |Property|Value|
 |-|-|
-|Index|`14` (`0x0E`)|
+|Index|`15` (`0x0F`)|
 |Description|An editor sticky note.|
-|Allowed parents|`file`|
+|Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
 |Multiple children allowed?|false|
 
@@ -255,18 +269,18 @@
 |`2` (`0x02`)|`y`|`int`|The y-position of this memo on the graph.|
 |`3` (`0x03`)|`width`|`uint`|The width of this memo on the graph.|
 |`4` (`0x04`)|`height`|`uint`|The height of this memo on the graph.|
-|`5` (`0x05`)|`folded`|`bool`|Whether this memo has been folded.|
+|`5` (`0x05`)|`folded`|`bool`|Whether this memo's inspector has been folded.|
 |`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
-|`7` (`0x07`)|`text`|`string`|The text of this memo.|
+|`7` (`0x07`)|`text`|`string`|The commentary text of this memo.|
 |`8` (`0x08`)|`color`|`color`|The text color of this memo.|
 ---
 
 ### `frame`
 |Property|Value|
 |-|-|
-|Index|`15` (`0x0F`)|
+|Index|`16` (`0x10`)|
 |Description|A visual element grouping in the editor.|
-|Allowed parents|`file`|
+|Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
 |Multiple children allowed?|false|
 
@@ -278,18 +292,40 @@
 |`2` (`0x02`)|`y`|`int`|The y-position of this frame on the graph.|
 |`3` (`0x03`)|`width`|`uint`|The width of this frame on the graph.|
 |`4` (`0x04`)|`height`|`uint`|The height of this frame on the graph.|
-|`5` (`0x05`)|`folded`|`bool`|Whether this frame has been folded.|
+|`5` (`0x05`)|`folded`|`bool`|Whether this frame's inspector has been folded.|
 |`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
 |`7` (`0x07`)|`text`|`string`|The title text of this frame.|
 |`8` (`0x08`)|`color`|`color`|The color of this frame.|
 ---
 
+### `subgraph`
+|Property|Value|
+|-|-|
+|Index|`17` (`0x11`)|
+|Description|A subgraph instance.|
+|Allowed parents|`file`, `subgraph_definition`|
+|Allowed children|*(None)*|
+|Multiple children allowed?|false|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this subgraph.|
+|`1` (`0x01`)|`definition`|`string`|The identifier of the associated subgraph definition.|
+|`2` (`0x02`)|`x`|`int`|The x-position of the subgraph on the graph.|
+|`3` (`0x03`)|`y`|`int`|The y-position of this subgraph on the graph.|
+|`4` (`0x04`)|`width`|`uint`|The width of this subgraph on the graph.|
+|`5` (`0x05`)|`height`|`uint`|The height of this subgraph on the graph.|
+|`6` (`0x06`)|`folded`|`bool`|Whether this subgraph's inspector has been folded.|
+|`7` (`0x07`)|`parent_frame`|`string`|The identifier of the parent frame.|
+---
+
 ### `edge`
 |Property|Value|
 |-|-|
-|Index|`16` (`0x10`)|
+|Index|`18` (`0x12`)|
 |Description|An editor graph edge.|
-|Allowed parents|`file`|
+|Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|`joint`|
 |Multiple children allowed?|true|
 
@@ -301,14 +337,13 @@
 |`2` (`0x02`)|`port`|`uint`|The port index on the source node.|
 |`3` (`0x03`)|`to`|`string`|The identifier of the destination node.|
 |`4` (`0x04`)|`thickness`|`uint`|The thickness of this edge.|
-|`5` (`0x05`)|`text`|`string`|The label of this edge.|
-|`6` (`0x06`)|`color`|`color`|The color of this edge.|
+|`5` (`0x05`)|`color`|`color`|The color of this edge.|
 ---
 
 ### `joint`
 |Property|Value|
 |-|-|
-|Index|`17` (`0x11`)|
+|Index|`19` (`0x13`)|
 |Description|A visual edge joint in the editor.|
 |Allowed parents|`edge`|
 |Allowed children|*(None)*|
@@ -322,33 +357,12 @@
 |`2` (`0x02`)|`y`|`int`|The y-position of this joint.|
 |`3` (`0x03`)|`size`|`uint`|The size of this joint.|
 |`4` (`0x04`)|`parent_frame`|`string`|The identifier of the parent frame.|
-|`5` (`0x05`)|`text`|`string`|The annotation of this joint.|
-|`6` (`0x06`)|`color`|`color`|The color of this joint.|
----
-
-### `form`
-|Property|Value|
-|-|-|
-|Index|`18` (`0x12`)|
-|Description|A form inspector, which represennts the state of an instruction.|
-|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
-|Allowed children|`field`, `port`|
-|Multiple children allowed?|true|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this form.|
-|`1` (`0x01`)|`definition`|`string`|The identifier of the associated form definition.|
-|`2` (`0x02`)|`folded`|`bool`|Whether this form has been folded.|
-|`3` (`0x03`)|`text`|`string`|The annotation of this form.|
-|`4` (`0x04`)|`color`|`color`|The color of this form.|
 ---
 
 ### `option`
 |Property|Value|
 |-|-|
-|Index|`19` (`0x13`)|
+|Index|`20` (`0x14`)|
 |Description|An option inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
@@ -361,14 +375,12 @@
 |`1` (`0x01`)|`definition`|`string`|The identifier of the associated option definition.|
 |`2` (`0x02`)|`enabled`|`bool`|Whether this option has been enabled.|
 |`3` (`0x03`)|`folded`|`bool`|Whether this option has been folded.|
-|`4` (`0x04`)|`text`|`string`|The annotation of this option.|
-|`5` (`0x05`)|`color`|`color`|The color of this option.|
 ---
 
 ### `choice`
 |Property|Value|
 |-|-|
-|Index|`20` (`0x14`)|
+|Index|`21` (`0x15`)|
 |Description|A choice inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
@@ -381,14 +393,12 @@
 |`1` (`0x01`)|`definition`|`string`|The identifier of the associated choice definition.|
 |`2` (`0x02`)|`selected`|`string`|The identifier of the selected item.|
 |`3` (`0x03`)|`folded`|`bool`|Whether this choice has been folded.|
-|`4` (`0x04`)|`text`|`string`|The annotation of this choice.|
-|`5` (`0x05`)|`color`|`color`|The color of this choice.|
 ---
 
 ### `tuple`
 |Property|Value|
 |-|-|
-|Index|`21` (`0x15`)|
+|Index|`22` (`0x16`)|
 |Description|A tuple inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
@@ -400,14 +410,12 @@
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this tuple.|
 |`1` (`0x01`)|`definition`|`string`|The identifier of the associated tuple definition.|
 |`2` (`0x02`)|`folded`|`bool`|Whether this tuple has been folded.|
-|`3` (`0x03`)|`text`|`string`|The annotation of this tuple.|
-|`4` (`0x04`)|`color`|`color`|The color of this tuple.|
 ---
 
 ### `list`
 |Property|Value|
 |-|-|
-|Index|`22` (`0x16`)|
+|Index|`23` (`0x17`)|
 |Description|A list inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
@@ -419,14 +427,29 @@
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this list.|
 |`1` (`0x01`)|`definition`|`string`|The identifier of the associated list definition.|
 |`2` (`0x02`)|`folded`|`bool`|Whether this list has been folded.|
-|`3` (`0x03`)|`text`|`string`|The annotation of this list.|
-|`4` (`0x04`)|`color`|`color`|The color of this list.|
+---
+
+### `form`
+|Property|Value|
+|-|-|
+|Index|`24` (`0x18`)|
+|Description|A form inspector, which represennts the state of an instruction.|
+|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
+|Allowed children|`field`, `port`|
+|Multiple children allowed?|true|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this form.|
+|`1` (`0x01`)|`definition`|`string`|The identifier of the associated form definition.|
+|`2` (`0x02`)|`folded`|`bool`|Whether this form has been folded.|
 ---
 
 ### `field`
 |Property|Value|
 |-|-|
-|Index|`23` (`0x17`)|
+|Index|`25` (`0x19`)|
 |Description|A field inspector, which represents the state of an instruction argument.|
 |Allowed parents|`form`|
 |Allowed children|`localized_value`|
@@ -438,14 +461,12 @@
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this field.|
 |`1` (`0x01`)|`definition`|`string`|The identifier of the associated field definition.|
 |`2` (`0x02`)|`value`|`string`|The non-localized value of this field.|
-|`3` (`0x03`)|`text`|`string`|The annotation of this field.|
-|`4` (`0x04`)|`color`|`color`|The color of this field.|
 ---
 
 ### `port`
 |Property|Value|
 |-|-|
-|Index|`24` (`0x18`)|
+|Index|`26` (`0x1A`)|
 |Description|A node output port, which represents the state of an instruction argument.|
 |Allowed parents|`form`|
 |Allowed children|*(None)*|
@@ -457,14 +478,12 @@
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this port.|
 |`1` (`0x01`)|`definition`|`string`|The identifier of the associated port definition.|
 |`2` (`0x02`)|`index`|`uint`|The index of this port on its parent node.|
-|`3` (`0x03`)|`text`|`string`|The annotation of this port port.|
-|`4` (`0x04`)|`color`|`color`|The color of this port port.|
 ---
 
 ### `localized_value`
 |Property|Value|
 |-|-|
-|Index|`25` (`0x19`)|
+|Index|`27` (`0x1B`)|
 |Description|A field's value when localized to a specific language.|
 |Allowed parents|`metadata`, `field`|
 |Allowed children|*(None)*|

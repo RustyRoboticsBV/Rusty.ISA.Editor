@@ -4,7 +4,6 @@
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
-using Godot;
 using System;
 
 namespace Rusty.ActionGraph.Serialization;
@@ -15,14 +14,14 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class ListElement : InspectorElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 22;
+    public const int ELEMENT_INDEX = 23;
     public const string ELEMENT_NAME = "list";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 5;
+    public override int AttributeCount => 3;
     /// <summary>
     /// The unique identifier of this list.
     /// </summary>
@@ -35,14 +34,6 @@ internal sealed class ListElement : InspectorElement
     /// Whether this list has been folded.
     /// </summary>
     public override bool Folded { get; set; }
-    /// <summary>
-    /// The annotation of this list.
-    /// </summary>
-    public override string Text { get; set; } = "";
-    /// <summary>
-    /// The color of this list.
-    /// </summary>
-    public override Color Color { get; set; }
     
     public override bool AllowsChildren => true;
     
@@ -57,10 +48,6 @@ internal sealed class ListElement : InspectorElement
                 return 1;
             case "folded":
                 return 2;
-            case "text":
-                return 3;
-            case "color":
-                return 4;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -77,10 +64,6 @@ internal sealed class ListElement : InspectorElement
                 return "definition";
             case 2:
                 return "folded";
-            case 3:
-                return "text";
-            case 4:
-                return "color";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -96,10 +79,6 @@ internal sealed class ListElement : InspectorElement
                 return Definition.GetType();
             case 2:
                 return Folded.GetType();
-            case 3:
-                return Text.GetType();
-            case 4:
-                return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -115,10 +94,6 @@ internal sealed class ListElement : InspectorElement
                 return Definition;
             case 2:
                 return Folded;
-            case 3:
-                return Text;
-            case 4:
-                return Color;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -136,12 +111,6 @@ internal sealed class ListElement : InspectorElement
                 break;
             case 2:
                 Folded = (bool)value;
-                break;
-            case 3:
-                Text = (string)value;
-                break;
-            case 4:
-                Color = (Color)value;
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");

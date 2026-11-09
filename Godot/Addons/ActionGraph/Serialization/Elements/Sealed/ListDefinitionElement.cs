@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class ListDefinitionElement : InspectorDefinitionElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 10;
+    public const int ELEMENT_INDEX = 9;
     public const string ELEMENT_NAME = "list_definition";
     
     /* Public properties. */

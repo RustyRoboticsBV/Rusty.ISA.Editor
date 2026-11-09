@@ -15,7 +15,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class FrameElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 15;
+    public const int ELEMENT_INDEX = 16;
     public const string ELEMENT_NAME = "frame";
     
     /* Public properties. */
@@ -44,7 +44,7 @@ internal sealed class FrameElement : Element
     /// </summary>
     public uint Height { get; set; }
     /// <summary>
-    /// Whether this frame has been folded.
+    /// Whether this frame's inspector has been folded.
     /// </summary>
     public bool Folded { get; set; }
     /// <summary>

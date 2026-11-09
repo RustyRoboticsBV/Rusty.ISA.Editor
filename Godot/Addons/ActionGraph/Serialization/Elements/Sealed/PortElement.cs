@@ -4,7 +4,6 @@
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
-using Godot;
 using System;
 
 namespace Rusty.ActionGraph.Serialization;
@@ -15,14 +14,14 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class PortElement : ArgumentElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 24;
+    public const int ELEMENT_INDEX = 26;
     public const string ELEMENT_NAME = "port";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 5;
+    public override int AttributeCount => 3;
     /// <summary>
     /// The unique identifier of this port.
     /// </summary>
@@ -35,14 +34,6 @@ internal sealed class PortElement : ArgumentElement
     /// The index of this port on its parent node.
     /// </summary>
     public uint Index { get; set; }
-    /// <summary>
-    /// The annotation of this port port.
-    /// </summary>
-    public override string Text { get; set; } = "";
-    /// <summary>
-    /// The color of this port port.
-    /// </summary>
-    public override Color Color { get; set; }
     
     public override bool AllowsChildren => false;
     
@@ -57,10 +48,6 @@ internal sealed class PortElement : ArgumentElement
                 return 1;
             case "index":
                 return 2;
-            case "text":
-                return 3;
-            case "color":
-                return 4;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -77,10 +64,6 @@ internal sealed class PortElement : ArgumentElement
                 return "definition";
             case 2:
                 return "index";
-            case 3:
-                return "text";
-            case 4:
-                return "color";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -96,10 +79,6 @@ internal sealed class PortElement : ArgumentElement
                 return Definition.GetType();
             case 2:
                 return Index.GetType();
-            case 3:
-                return Text.GetType();
-            case 4:
-                return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -115,10 +94,6 @@ internal sealed class PortElement : ArgumentElement
                 return Definition;
             case 2:
                 return Index;
-            case 3:
-                return Text;
-            case 4:
-                return Color;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -136,12 +111,6 @@ internal sealed class PortElement : ArgumentElement
                 break;
             case 2:
                 Index = (uint)value;
-                break;
-            case 3:
-                Text = (string)value;
-                break;
-            case 4:
-                Color = (Color)value;
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");

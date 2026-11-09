@@ -15,14 +15,14 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class EdgeElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 16;
+    public const int ELEMENT_INDEX = 18;
     public const string ELEMENT_NAME = "edge";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 7;
+    public override int AttributeCount => 6;
     /// <summary>
     /// The unique identifier of this edge.
     /// </summary>
@@ -43,10 +43,6 @@ internal sealed class EdgeElement : Element
     /// The thickness of this edge.
     /// </summary>
     public uint Thickness { get; set; }
-    /// <summary>
-    /// The label of this edge.
-    /// </summary>
-    public string Text { get; set; } = "";
     /// <summary>
     /// The color of this edge.
     /// </summary>
@@ -69,10 +65,8 @@ internal sealed class EdgeElement : Element
                 return 3;
             case "thickness":
                 return 4;
-            case "text":
-                return 5;
             case "color":
-                return 6;
+                return 5;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -94,8 +88,6 @@ internal sealed class EdgeElement : Element
             case 4:
                 return "thickness";
             case 5:
-                return "text";
-            case 6:
                 return "color";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -117,8 +109,6 @@ internal sealed class EdgeElement : Element
             case 4:
                 return Thickness.GetType();
             case 5:
-                return Text.GetType();
-            case 6:
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -140,8 +130,6 @@ internal sealed class EdgeElement : Element
             case 4:
                 return Thickness;
             case 5:
-                return Text;
-            case 6:
                 return Color;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -168,9 +156,6 @@ internal sealed class EdgeElement : Element
                 Thickness = (uint)value;
                 break;
             case 5:
-                Text = (string)value;
-                break;
-            case 6:
                 Color = (Color)value;
                 break;
             default:

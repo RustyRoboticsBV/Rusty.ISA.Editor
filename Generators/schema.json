@@ -1,6 +1,9 @@
 {
   "schema_version": "1.0.0",
   "abstract_types": {
+    "program_unit": {
+      "description": "A base class for elements that represent a graph element with connection ports."
+    },
     "inspector_definition": {
       "description": "A base class for elements that represent an editor inspector definition."
     },
@@ -50,9 +53,11 @@
         "language_definition",
         "instruction_definition",
         "node_definition",
+        "subgraph_definition",
         "node",
         "frame",
         "memo",
+        "subgraph",
         "edge"
       ],
       "allow_multiple_children": true
@@ -142,27 +147,6 @@
       ],
       "allow_multiple_children": true
     },
-    "form_definition": {
-      "description": "A definition for an instruction inspector.",
-      "color": "74ede9",
-      "inherits_abstract": "inspector_definition",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "instruction": {
-          "description": "The identifier of the associated <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "instruction_definition"
-        }
-      },
-      "allowed_children": [
-        "field_definition",
-        "port_definition"
-      ],
-      "allow_multiple_children": true
-    },
     "option_definition": {
       "description": "A definition for an option inspector.",
       "color": "ba9d95",
@@ -239,6 +223,27 @@
       ],
       "allow_multiple_children": false
     },
+    "form_definition": {
+      "description": "A definition for an instruction inspector.",
+      "color": "74ede9",
+      "inherits_abstract": "inspector_definition",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "instruction": {
+          "description": "The identifier of the associated <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "instruction_definition"
+        }
+      },
+      "allowed_children": [
+        "field_definition",
+        "port_definition"
+      ],
+      "allow_multiple_children": true
+    },
     "field_definition": {
       "description": "A definition for a field inspector, which corresponds to a parameter.",
       "color": "e16397",
@@ -279,10 +284,33 @@
       "allowed_children": [],
       "allow_multiple_children": false
     },
+    "subgraph_definition": {
+      "description": "A definition for a subgraph, containing various graph elements.",
+      "color": "333330",
+      "inherits_abstract": "none",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "text": {
+          "description": "The title text of this <this>.",
+          "value_type": "string"
+        }
+      },
+      "allowed_children": [
+        "node",
+        "frame",
+        "memo",
+        "subgraph",
+        "edge"
+      ],
+      "allow_multiple_children": true
+    },
     "node": {
       "description": "An editor node.",
       "color": "67e527",
-      "inherits_abstract": "none",
+      "inherits_abstract": "program_unit",
       "attributes": {
         "id": {
           "description": "The unique identifier of this <this>.",
@@ -310,21 +338,13 @@
           "value_type": "uint"
         },
         "folded": {
-          "description": "Whether this <this> has been folded.",
+          "description": "Whether this <this>'s inspector has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
           "description": "The identifier of the parent <ref_type>.",
           "value_type": "ref",
           "ref_type": "frame"
-        },
-        "text": {
-          "description": "The annotation of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
         },
         "start_point_name": {
           "description": "The unique start point name, from which runtime execution of the graph can begin.",
@@ -366,7 +386,7 @@
           "value_type": "uint"
         },
         "folded": {
-          "description": "Whether this <this> has been folded.",
+          "description": "Whether this <this>'s inspector has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
@@ -375,7 +395,7 @@
           "ref_type": "frame"
         },
         "text": {
-          "description": "The text of this <this>.",
+          "description": "The commentary text of this <this>.",
           "value_type": "string"
         },
         "color": {
@@ -412,7 +432,7 @@
           "value_type": "uint"
         },
         "folded": {
-          "description": "Whether this <this> has been folded.",
+          "description": "Whether this <this>'s inspector has been folded.",
           "value_type": "bool"
         },
         "parent_frame": {
@@ -432,6 +452,49 @@
       "allowed_children": [],
       "allow_multiple_children": false
     },
+    "subgraph": {
+      "description": "A subgraph instance.",
+      "color": "000000",
+      "inherits_abstract": "program_unit",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "definition": {
+          "description": "The identifier of the associated <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "subgraph_definition"
+        },
+        "x": {
+          "description": "The x-position of the <this> on the graph.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
     "edge": {
       "description": "An editor graph edge.",
       "color": "3646f5",
@@ -444,7 +507,7 @@
         "from": {
           "description": "The identifier of the source node.",
           "value_type": "ref",
-          "ref_type": "edge"
+          "ref_type": "node"
         },
         "port": {
           "description": "The port index on the source node.",
@@ -453,22 +516,18 @@
         "to": {
           "description": "The identifier of the destination node.",
           "value_type": "ref",
-          "ref_type": "edge"
+          "ref_type": "node"
         },
         "thickness": {
           "description": "The thickness of this <this>.",
           "value_type": "uint"
-        },
-        "text": {
-          "description": "The label of this <this>.",
-          "value_type": "string"
         },
         "color": {
           "description": "The color of this <this>.",
           "value_type": "color"
         }
       },
-      "allowed_children": ["joint"],
+      "allowed_children": [ "joint" ],
       "allow_multiple_children": true
     },
     "joint": {
@@ -496,52 +555,10 @@
           "description": "The identifier of the parent <ref_type>.",
           "value_type": "ref",
           "ref_type": "frame"
-        },
-        "text": {
-          "description": "The annotation of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
         }
       },
       "allowed_children": [],
       "allow_multiple_children": false
-    },
-    "form": {
-      "description": "A form inspector, which represennts the state of an instruction.",
-      "color": "13ace9",
-      "inherits_abstract": "inspector",
-      "collection_type": "argument",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "definition": {
-          "description": "The identifier of the associated <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "form_definition"
-        },
-        "folded": {
-          "description": "Whether this <this> has been folded.",
-          "value_type": "bool"
-        },
-        "text": {
-          "description": "The annotation of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
-        }
-      },
-      "allowed_children": [
-        "field",
-        "port"
-      ],
-      "allow_multiple_children": true
     },
     "option": {
       "description": "An option inspector.",
@@ -564,14 +581,6 @@
         "folded": {
           "description": "Whether this <this> has been folded.",
           "value_type": "bool"
-        },
-        "text": {
-          "description": "The annotation of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
         }
       },
       "allowed_children": [
@@ -605,14 +614,6 @@
         "folded": {
           "description": "Whether this <this> has been folded.",
           "value_type": "bool"
-        },
-        "text": {
-          "description": "The annotation of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
         }
       },
       "allowed_children": [
@@ -641,14 +642,6 @@
         "folded": {
           "description": "Whether this <this> has been folded.",
           "value_type": "bool"
-        },
-        "text": {
-          "description": "The annotation of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
         }
       },
       "allowed_children": [
@@ -677,14 +670,6 @@
         "folded": {
           "description": "Whether this <this> has been folded.",
           "value_type": "bool"
-        },
-        "text": {
-          "description": "The annotation of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
         }
       },
       "allowed_children": [
@@ -693,6 +678,31 @@
         "choice",
         "tuple",
         "list"
+      ],
+      "allow_multiple_children": true
+    },
+    "form": {
+      "description": "A form inspector, which represennts the state of an instruction.",
+      "color": "13ace9",
+      "inherits_abstract": "inspector",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "definition": {
+          "description": "The identifier of the associated <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "form_definition"
+        },
+        "folded": {
+          "description": "Whether this <this> has been folded.",
+          "value_type": "bool"
+        }
+      },
+      "allowed_children": [
+        "field",
+        "port"
       ],
       "allow_multiple_children": true
     },
@@ -713,14 +723,6 @@
         "value": {
           "description": "The non-localized value of this <this>.",
           "value_type": "string"
-        },
-        "text": {
-          "description": "The annotation of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
         }
       },
       "allowed_children": [ "localized_value" ],
@@ -743,14 +745,6 @@
         "index": {
           "description": "The index of this <this> on its parent node.",
           "value_type": "uint"
-        },
-        "text": {
-          "description": "The annotation of this <this> port.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this> port.",
-          "value_type": "color"
         }
       },
       "allowed_children": [],

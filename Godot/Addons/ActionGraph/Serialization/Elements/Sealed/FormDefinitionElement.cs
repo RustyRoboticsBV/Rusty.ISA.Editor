@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class FormDefinitionElement : InspectorDefinitionElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 6;
+    public const int ELEMENT_INDEX = 10;
     public const string ELEMENT_NAME = "form_definition";
     
     /* Public properties. */

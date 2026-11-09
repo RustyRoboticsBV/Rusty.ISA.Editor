@@ -4,7 +4,6 @@
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
-using Godot;
 using System;
 
 namespace Rusty.ActionGraph.Serialization;
@@ -15,14 +14,14 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class JointElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 17;
+    public const int ELEMENT_INDEX = 19;
     public const string ELEMENT_NAME = "joint";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 7;
+    public override int AttributeCount => 5;
     /// <summary>
     /// The unique identifier of this joint.
     /// </summary>
@@ -43,14 +42,6 @@ internal sealed class JointElement : Element
     /// The identifier of the parent frame.
     /// </summary>
     public string ParentFrame { get; set; } = "";
-    /// <summary>
-    /// The annotation of this joint.
-    /// </summary>
-    public string Text { get; set; } = "";
-    /// <summary>
-    /// The color of this joint.
-    /// </summary>
-    public Color Color { get; set; }
     
     public override bool AllowsChildren => false;
     
@@ -69,10 +60,6 @@ internal sealed class JointElement : Element
                 return 3;
             case "parent_frame":
                 return 4;
-            case "text":
-                return 5;
-            case "color":
-                return 6;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -93,10 +80,6 @@ internal sealed class JointElement : Element
                 return "size";
             case 4:
                 return "parent_frame";
-            case 5:
-                return "text";
-            case 6:
-                return "color";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -116,10 +99,6 @@ internal sealed class JointElement : Element
                 return Size.GetType();
             case 4:
                 return ParentFrame.GetType();
-            case 5:
-                return Text.GetType();
-            case 6:
-                return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -139,10 +118,6 @@ internal sealed class JointElement : Element
                 return Size;
             case 4:
                 return ParentFrame;
-            case 5:
-                return Text;
-            case 6:
-                return Color;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -166,12 +141,6 @@ internal sealed class JointElement : Element
                 break;
             case 4:
                 ParentFrame = (string)value;
-                break;
-            case 5:
-                Text = (string)value;
-                break;
-            case 6:
-                Color = (Color)value;
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
