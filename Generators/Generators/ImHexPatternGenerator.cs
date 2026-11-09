@@ -60,21 +60,15 @@
 
         return @$"{Notice}
 
-#pragma name {Magic.c0}{Magic.c1}{Magic.c2}{Magic.c3}
+#pragma name {Magic.formatName}
 #pragma description ActionGraph Binary Program
 #pragma magic [ {Magic.h0} {Magic.h1} {Magic.h2} {Magic.h3} {Magic.h4} {Magic.h5} {Magic.h6} {Magic.h7} ] @ 0x00
 
 import type.leb128;
-import type.color;
+import std.core;
 
 using uint = type::uLEB128;
 using int = type::sLEB128;
-using color = type::RGBA8;
-
-struct string {{
-    uint length;
-    char value[length];
-}} [[single_color]];
 
 // Base.
 struct Element {{

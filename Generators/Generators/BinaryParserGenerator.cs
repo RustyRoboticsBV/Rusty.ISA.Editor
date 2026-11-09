@@ -1,4 +1,4 @@
-﻿public class BinaryParserGenerator : BinaryGenerator
+﻿public class BinaryParserGenerator : Generator
 {
     public string Generate(Schema schema)
     {
@@ -20,8 +20,8 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class BinaryParser
 {{
     /* Constants. */
-    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes(""{magic}"");
-    private const string Version = ""{version}"";
+    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes(""{Magic.binaryHeader}"");
+    private const string Version = ""{Magic.version}"";
 
     /* Public methods. */
     /// <summary>

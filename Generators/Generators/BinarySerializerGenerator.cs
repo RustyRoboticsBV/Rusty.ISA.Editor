@@ -1,4 +1,4 @@
-﻿public class BinarySerializerGenerator : BinaryGenerator
+﻿public class BinarySerializerGenerator : Generator
 {
     public string Generate(Schema schema)
     {
@@ -21,8 +21,8 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class BinarySerializer
 {{
     /* Constants. */
-    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes(""{magic}"");
-    private const string Version = ""{version}"";
+    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes(""{Magic.binaryHeader}"");
+    private const string Version = ""{Magic.version}"";
 
     /// <summary>
     /// Serialize a {fileElement} to a string of XML.

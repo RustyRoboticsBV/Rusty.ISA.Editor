@@ -9,16 +9,10 @@
 #pragma magic [ 41 47 42 50 00 00 00 00 ] @ 0x00
 
 import type.leb128;
-import type.color;
+import std.core;
 
 using uint = type::uLEB128;
 using int = type::sLEB128;
-using color = type::RGBA8;
-
-struct string {
-    uint length;
-    char value[length];
-} [[single_color]];
 
 // Base.
 struct Element {
