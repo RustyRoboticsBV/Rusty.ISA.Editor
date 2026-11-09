@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class FieldElement : ArgumentElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 25;
+    public const int ELEMENT_INDEX = 27;
     public const string ELEMENT_NAME = "field";
     
     /* Public properties. */

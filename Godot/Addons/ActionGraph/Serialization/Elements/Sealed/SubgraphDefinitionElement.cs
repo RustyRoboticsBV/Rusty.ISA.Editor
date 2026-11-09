@@ -110,6 +110,8 @@ internal sealed class SubgraphDefinitionElement : Element
             case FrameElement:
             case MemoElement:
             case SubgraphElement:
+            case InElement:
+            case OutElement:
             case EdgeElement:
                 Children.Add(child);
                 break;

@@ -29,7 +29,7 @@ internal sealed class SubgraphElement : ProgramUnitElement
     /// <summary>
     /// The identifier of the associated subgraph definition.
     /// </summary>
-    public override string Definition { get; set; } = "";
+    public string Definition { get; set; } = "";
     /// <summary>
     /// The x-position of the subgraph on the graph.
     /// </summary>

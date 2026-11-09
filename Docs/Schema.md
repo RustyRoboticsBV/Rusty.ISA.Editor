@@ -219,7 +219,7 @@
 |Index|`13` (`0x0D`)|
 |Description|A definition for a subgraph, containing various graph elements.|
 |Allowed parents|`file`|
-|Allowed children|`node`, `frame`, `memo`, `subgraph`, `edge`|
+|Allowed children|`node`, `frame`, `memo`, `subgraph`, `in`, `out`, `edge`|
 |Multiple children allowed?|true|
 
 **Attributes:**
@@ -320,10 +320,52 @@
 |`7` (`0x07`)|`parent_frame`|`string`|The identifier of the parent frame.|
 ---
 
-### `edge`
+### `in`
 |Property|Value|
 |-|-|
 |Index|`18` (`0x12`)|
+|Description|A subgraph instance input.|
+|Allowed parents|`subgraph_definition`|
+|Allowed children|*(None)*|
+|Multiple children allowed?|false|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this in.|
+|`1` (`0x01`)|`x`|`int`|The x-position of the in on the graph.|
+|`2` (`0x02`)|`y`|`int`|The y-position of this in on the graph.|
+|`3` (`0x03`)|`width`|`uint`|The width of this in on the graph.|
+|`4` (`0x04`)|`height`|`uint`|The height of this in on the graph.|
+|`5` (`0x05`)|`folded`|`bool`|Whether this in's inspector has been folded.|
+|`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
+---
+
+### `out`
+|Property|Value|
+|-|-|
+|Index|`19` (`0x13`)|
+|Description|A subgraph instance output.|
+|Allowed parents|`subgraph_definition`|
+|Allowed children|*(None)*|
+|Multiple children allowed?|false|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this out.|
+|`1` (`0x01`)|`x`|`int`|The x-position of the out on the graph.|
+|`2` (`0x02`)|`y`|`int`|The y-position of this out on the graph.|
+|`3` (`0x03`)|`width`|`uint`|The width of this out on the graph.|
+|`4` (`0x04`)|`height`|`uint`|The height of this out on the graph.|
+|`5` (`0x05`)|`folded`|`bool`|Whether this out's inspector has been folded.|
+|`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
+---
+
+### `edge`
+|Property|Value|
+|-|-|
+|Index|`20` (`0x14`)|
 |Description|An editor graph edge.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|`joint`|
@@ -343,7 +385,7 @@
 ### `joint`
 |Property|Value|
 |-|-|
-|Index|`19` (`0x13`)|
+|Index|`21` (`0x15`)|
 |Description|A visual edge joint in the editor.|
 |Allowed parents|`edge`|
 |Allowed children|*(None)*|
@@ -362,7 +404,7 @@
 ### `option`
 |Property|Value|
 |-|-|
-|Index|`20` (`0x14`)|
+|Index|`22` (`0x16`)|
 |Description|An option inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
@@ -380,7 +422,7 @@
 ### `choice`
 |Property|Value|
 |-|-|
-|Index|`21` (`0x15`)|
+|Index|`23` (`0x17`)|
 |Description|A choice inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
@@ -398,7 +440,7 @@
 ### `tuple`
 |Property|Value|
 |-|-|
-|Index|`22` (`0x16`)|
+|Index|`24` (`0x18`)|
 |Description|A tuple inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
@@ -415,7 +457,7 @@
 ### `list`
 |Property|Value|
 |-|-|
-|Index|`23` (`0x17`)|
+|Index|`25` (`0x19`)|
 |Description|A list inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
@@ -432,7 +474,7 @@
 ### `form`
 |Property|Value|
 |-|-|
-|Index|`24` (`0x18`)|
+|Index|`26` (`0x1A`)|
 |Description|A form inspector, which represennts the state of an instruction.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`field`, `port`|
@@ -449,7 +491,7 @@
 ### `field`
 |Property|Value|
 |-|-|
-|Index|`25` (`0x19`)|
+|Index|`27` (`0x1B`)|
 |Description|A field inspector, which represents the state of an instruction argument.|
 |Allowed parents|`form`|
 |Allowed children|`localized_value`|
@@ -466,7 +508,7 @@
 ### `port`
 |Property|Value|
 |-|-|
-|Index|`26` (`0x1A`)|
+|Index|`28` (`0x1C`)|
 |Description|A node output port, which represents the state of an instruction argument.|
 |Allowed parents|`form`|
 |Allowed children|*(None)*|
@@ -483,7 +525,7 @@
 ### `localized_value`
 |Property|Value|
 |-|-|
-|Index|`27` (`0x1B`)|
+|Index|`29` (`0x1D`)|
 |Description|A field's value when localized to a specific language.|
 |Allowed parents|`metadata`, `field`|
 |Allowed children|*(None)*|

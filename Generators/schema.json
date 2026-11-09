@@ -303,6 +303,8 @@
         "frame",
         "memo",
         "subgraph",
+        "in",
+        "out",
         "edge"
       ],
       "allow_multiple_children": true
@@ -465,6 +467,82 @@
           "description": "The identifier of the associated <ref_type>.",
           "value_type": "ref",
           "ref_type": "subgraph_definition"
+        },
+        "x": {
+          "description": "The x-position of the <this> on the graph.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
+    "in": {
+      "description": "A subgraph instance input.",
+      "color": "000000",
+      "inherits_abstract": "program_unit",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "x": {
+          "description": "The x-position of the <this> on the graph.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
+    "out": {
+      "description": "A subgraph instance output.",
+      "color": "000000",
+      "inherits_abstract": "program_unit",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
         },
         "x": {
           "description": "The x-position of the <this> on the graph.",

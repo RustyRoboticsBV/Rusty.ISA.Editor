@@ -13,10 +13,6 @@ internal abstract class ProgramUnitElement : Element
 {
     /* Public properties. */
     /// <summary>
-    /// The identifier of the associated <ref_type>.
-    /// </summary>
-    public abstract string Definition { get; set; }
-    /// <summary>
     /// The x-position of this program unit on the graph.
     /// </summary>
     public abstract int X { get; set; }

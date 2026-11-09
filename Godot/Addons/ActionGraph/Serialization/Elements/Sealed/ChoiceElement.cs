@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class ChoiceElement : InspectorElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 21;
+    public const int ELEMENT_INDEX = 23;
     public const string ELEMENT_NAME = "choice";
     
     /* Public properties. */

@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class LocalizedValueElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 27;
+    public const int ELEMENT_INDEX = 29;
     public const string ELEMENT_NAME = "localized_value";
     
     /* Public properties. */

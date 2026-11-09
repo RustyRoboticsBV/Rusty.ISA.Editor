@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class Elements
 {
     /* Public constants. */
-    public const int ELEMENT_COUNT = 28;
+    public const int ELEMENT_COUNT = 30;
     
     /* Public methods. */
     /// <summary>
@@ -40,6 +40,8 @@ internal static class Elements
         MemoElement.ELEMENT_NAME => MemoElement.ELEMENT_INDEX,
         FrameElement.ELEMENT_NAME => FrameElement.ELEMENT_INDEX,
         SubgraphElement.ELEMENT_NAME => SubgraphElement.ELEMENT_INDEX,
+        InElement.ELEMENT_NAME => InElement.ELEMENT_INDEX,
+        OutElement.ELEMENT_NAME => OutElement.ELEMENT_INDEX,
         EdgeElement.ELEMENT_NAME => EdgeElement.ELEMENT_INDEX,
         JointElement.ELEMENT_NAME => JointElement.ELEMENT_INDEX,
         OptionElement.ELEMENT_NAME => OptionElement.ELEMENT_INDEX,
@@ -76,6 +78,8 @@ internal static class Elements
         MemoElement.ELEMENT_INDEX => MemoElement.ELEMENT_NAME,
         FrameElement.ELEMENT_INDEX => FrameElement.ELEMENT_NAME,
         SubgraphElement.ELEMENT_INDEX => SubgraphElement.ELEMENT_NAME,
+        InElement.ELEMENT_INDEX => InElement.ELEMENT_NAME,
+        OutElement.ELEMENT_INDEX => OutElement.ELEMENT_NAME,
         EdgeElement.ELEMENT_INDEX => EdgeElement.ELEMENT_NAME,
         JointElement.ELEMENT_INDEX => JointElement.ELEMENT_NAME,
         OptionElement.ELEMENT_INDEX => OptionElement.ELEMENT_NAME,
@@ -112,6 +116,8 @@ internal static class Elements
         MemoElement.ELEMENT_INDEX => typeof(MemoElement),
         FrameElement.ELEMENT_INDEX => typeof(FrameElement),
         SubgraphElement.ELEMENT_INDEX => typeof(SubgraphElement),
+        InElement.ELEMENT_INDEX => typeof(InElement),
+        OutElement.ELEMENT_INDEX => typeof(OutElement),
         EdgeElement.ELEMENT_INDEX => typeof(EdgeElement),
         JointElement.ELEMENT_INDEX => typeof(JointElement),
         OptionElement.ELEMENT_INDEX => typeof(OptionElement),

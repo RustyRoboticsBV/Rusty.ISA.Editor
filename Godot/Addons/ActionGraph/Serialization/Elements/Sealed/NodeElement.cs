@@ -29,7 +29,7 @@ internal sealed class NodeElement : ProgramUnitElement
     /// <summary>
     /// The identifier of the associated node definition.
     /// </summary>
-    public override string Definition { get; set; } = "";
+    public string Definition { get; set; } = "";
     /// <summary>
     /// The x-position of this node on the graph.
     /// </summary>

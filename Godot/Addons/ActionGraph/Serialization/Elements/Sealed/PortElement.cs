@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class PortElement : ArgumentElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 26;
+    public const int ELEMENT_INDEX = 28;
     public const string ELEMENT_NAME = "port";
     
     /* Public properties. */
