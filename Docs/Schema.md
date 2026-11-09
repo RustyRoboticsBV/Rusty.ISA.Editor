@@ -12,7 +12,7 @@
 |Index|`0` (`0x00`)|
 |Description|The root element.|
 |Allowed parents|*(None)*|
-|Allowed children|`metadata`, `language_definition`, `instruction_definition`, `node_definition`, `node`, `frame`, `memo`, `joint`, `edge`|
+|Allowed children|`metadata`, `language_definition`, `instruction_definition`, `node_definition`, `node`, `frame`, `memo`, `edge`|
 |Multiple children allowed?|true|
 
 **Attributes:**
@@ -284,36 +284,14 @@
 |`8` (`0x08`)|`color`|`color`|The color of this frame.|
 ---
 
-### `joint`
-|Property|Value|
-|-|-|
-|Index|`16` (`0x10`)|
-|Description|A visual edge joint in the editor.|
-|Allowed parents|`file`|
-|Allowed children|*(None)*|
-|Multiple children allowed?|false|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this joint.|
-|`1` (`0x01`)|`edge`|`string`|The identifier of the associated edge.|
-|`2` (`0x02`)|`x`|`int`|The x-position of this joint.|
-|`3` (`0x03`)|`y`|`int`|The y-position of this joint.|
-|`4` (`0x04`)|`size`|`uint`|The size of this joint.|
-|`5` (`0x05`)|`parent_frame`|`string`|The identifier of the parent frame.|
-|`6` (`0x06`)|`text`|`string`|The annotation of this joint.|
-|`7` (`0x07`)|`color`|`color`|The color of this joint.|
----
-
 ### `edge`
 |Property|Value|
 |-|-|
-|Index|`17` (`0x11`)|
+|Index|`16` (`0x10`)|
 |Description|An editor graph edge.|
 |Allowed parents|`file`|
-|Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Allowed children|`joint`|
+|Multiple children allowed?|true|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -325,6 +303,27 @@
 |`4` (`0x04`)|`thickness`|`uint`|The thickness of this edge.|
 |`5` (`0x05`)|`text`|`string`|The label of this edge.|
 |`6` (`0x06`)|`color`|`color`|The color of this edge.|
+---
+
+### `joint`
+|Property|Value|
+|-|-|
+|Index|`17` (`0x11`)|
+|Description|A visual edge joint in the editor.|
+|Allowed parents|`edge`|
+|Allowed children|*(None)*|
+|Multiple children allowed?|false|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this joint.|
+|`1` (`0x01`)|`x`|`int`|The x-position of this joint.|
+|`2` (`0x02`)|`y`|`int`|The y-position of this joint.|
+|`3` (`0x03`)|`size`|`uint`|The size of this joint.|
+|`4` (`0x04`)|`parent_frame`|`string`|The identifier of the parent frame.|
+|`5` (`0x05`)|`text`|`string`|The annotation of this joint.|
+|`6` (`0x06`)|`color`|`color`|The color of this joint.|
 ---
 
 ### `form`

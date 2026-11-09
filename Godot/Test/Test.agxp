@@ -103,9 +103,9 @@
     </list>
 </node>
 
-<edge id="edge-001" from="node-001" port="0" to="node-002" thickness="3" text="Next calculation" color="#34495e"/>
-
-<joint id="joint-001" edge="edge-001" x="380" y="150" size="8" parent_frame="frame-001" text="Connection waypoint" color="#e74c3c"/>
+<edge id="edge-001" from="node-001" port="0" to="node-002" thickness="3" text="Next calculation" color="#34495e">
+    <joint id="joint-001" x="380" y="150" size="8" parent_frame="frame-001" text="Connection waypoint" color="#e74c3c"/>
+</edge>
 
 <frame id="frame-001" x="50" y="50" width="700" height="450" folded="false" text="Calculator Workflow" color="#3498db"/>
 

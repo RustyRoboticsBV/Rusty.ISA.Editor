@@ -173,7 +173,6 @@ internal sealed class FileElement : Element
             case NodeElement:
             case FrameElement:
             case MemoElement:
-            case JointElement:
             case EdgeElement:
                 Children.Add(child);
                 break;

@@ -53,14 +53,13 @@
         "node",
         "frame",
         "memo",
-        "joint",
         "edge"
       ],
       "allow_multiple_children": true
     },
     "language_definition": {
       "description": "A definition for a localization language.",
-      "color": "3f8c6d",
+      "color": "ffd400",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -68,11 +67,12 @@
           "value_type": "string"
         }
       },
-      "allowed_children": []
+      "allowed_children": [],
+      "allow_multiple_children": false
     },
     "metadata": {
       "description": "A metadata entry.",
-      "color": "a94fc4",
+      "color": "814a08",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -120,7 +120,8 @@
           "value_type": "bool"
         }
       },
-      "allowed_children": []
+      "allowed_children": [],
+      "allow_multiple_children": false
     },
     "node_definition": {
       "description": "A definition for a graph node.",
@@ -253,7 +254,8 @@
           "ref_type": "parameter_definition"
         }
       },
-      "allowed_children": []
+      "allowed_children": [],
+      "allow_multiple_children": false
     },
     "port_definition": {
       "description": "A definition for a node output port, which corresponds to a parameter.",
@@ -274,7 +276,8 @@
           "value_type": "bool"
         }
       },
-      "allowed_children": []
+      "allowed_children": [],
+      "allow_multiple_children": false
     },
     "node": {
       "description": "An editor node.",
@@ -339,7 +342,7 @@
     },
     "memo": {
       "description": "An editor sticky note.",
-      "color": "fff373",
+      "color": "159102",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
@@ -380,7 +383,8 @@
           "value_type": "color"
         }
       },
-      "allowed_children": []
+      "allowed_children": [],
+      "allow_multiple_children": false
     },
     "frame": {
       "description": "A visual element grouping in the editor.",
@@ -425,49 +429,8 @@
           "value_type": "color"
         }
       },
-      "allowed_children": []
-    },
-    "joint": {
-      "description": "A visual edge joint in the editor.",
-      "color": "b0b6f5",
-      "inherits_abstract": "none",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "edge": {
-          "description": "The identifier of the associated <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "edge"
-        },
-        "x": {
-          "description": "The x-position of this <this>.",
-          "value_type": "int"
-        },
-        "y": {
-          "description": "The y-position of this <this>.",
-          "value_type": "int"
-        },
-        "size": {
-          "description": "The size of this <this>.",
-          "value_type": "uint"
-        },
-        "parent_frame": {
-          "description": "The identifier of the parent <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "frame"
-        },
-        "text": {
-          "description": "The annotation of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
-        }
-      },
-      "allowed_children": []
+      "allowed_children": [],
+      "allow_multiple_children": false
     },
     "edge": {
       "description": "An editor graph edge.",
@@ -505,7 +468,46 @@
           "value_type": "color"
         }
       },
-      "allowed_children": []
+      "allowed_children": ["joint"],
+      "allow_multiple_children": true
+    },
+    "joint": {
+      "description": "A visual edge joint in the editor.",
+      "color": "b0b6f5",
+      "inherits_abstract": "none",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "x": {
+          "description": "The x-position of this <this>.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this>.",
+          "value_type": "int"
+        },
+        "size": {
+          "description": "The size of this <this>.",
+          "value_type": "uint"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        },
+        "text": {
+          "description": "The annotation of this <this>.",
+          "value_type": "string"
+        },
+        "color": {
+          "description": "The color of this <this>.",
+          "value_type": "color"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
     },
     "form": {
       "description": "A form inspector, which represennts the state of an instruction.",
@@ -751,7 +753,8 @@
           "value_type": "color"
         }
       },
-      "allowed_children": []
+      "allowed_children": [],
+      "allow_multiple_children": false
     },
     "localized_value": {
       "description": "A field's value when localized to a specific language.",
@@ -772,7 +775,8 @@
           "value_type": "string"
         }
       },
-      "allowed_children": []
+      "allowed_children": [],
+      "allow_multiple_children": false
     }
   }
 }

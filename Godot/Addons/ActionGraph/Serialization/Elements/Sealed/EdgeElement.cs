@@ -15,7 +15,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class EdgeElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 17;
+    public const int ELEMENT_INDEX = 16;
     public const string ELEMENT_NAME = "edge";
     
     /* Public properties. */
@@ -52,7 +52,7 @@ internal sealed class EdgeElement : Element
     /// </summary>
     public Color Color { get; set; }
     
-    public override bool AllowsChildren => false;
+    public override bool AllowsChildren => true;
     
     /* Public methods. */
     public override int IndexOfAttribute(string name)
@@ -178,5 +178,15 @@ internal sealed class EdgeElement : Element
         }
     }
     
-    public override void AddChild(Element child) => throw new NotImplementedException($"Elements of type {GetType().Name} do not allow child elements.");
+    public override void AddChild(Element child)
+    {
+        switch (child)
+        {
+            case JointElement:
+                Children.Add(child);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException($"Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}.");
+        }
+    }
 }

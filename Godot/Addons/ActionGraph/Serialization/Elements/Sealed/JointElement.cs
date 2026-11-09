@@ -15,22 +15,18 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class JointElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 16;
+    public const int ELEMENT_INDEX = 17;
     public const string ELEMENT_NAME = "joint";
     
     /* Public properties. */
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 8;
+    public override int AttributeCount => 7;
     /// <summary>
     /// The unique identifier of this joint.
     /// </summary>
     public override string ID { get; set; } = "";
-    /// <summary>
-    /// The identifier of the associated edge.
-    /// </summary>
-    public string Edge { get; set; } = "";
     /// <summary>
     /// The x-position of this joint.
     /// </summary>
@@ -65,20 +61,18 @@ internal sealed class JointElement : Element
         {
             case "id":
                 return 0;
-            case "edge":
-                return 1;
             case "x":
-                return 2;
+                return 1;
             case "y":
-                return 3;
+                return 2;
             case "size":
-                return 4;
+                return 3;
             case "parent_frame":
-                return 5;
+                return 4;
             case "text":
-                return 6;
+                return 5;
             case "color":
-                return 7;
+                return 6;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -92,18 +86,16 @@ internal sealed class JointElement : Element
             case 0:
                 return "id";
             case 1:
-                return "edge";
-            case 2:
                 return "x";
-            case 3:
+            case 2:
                 return "y";
-            case 4:
+            case 3:
                 return "size";
-            case 5:
+            case 4:
                 return "parent_frame";
-            case 6:
+            case 5:
                 return "text";
-            case 7:
+            case 6:
                 return "color";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -117,18 +109,16 @@ internal sealed class JointElement : Element
             case 0:
                 return ID.GetType();
             case 1:
-                return Edge.GetType();
-            case 2:
                 return X.GetType();
-            case 3:
+            case 2:
                 return Y.GetType();
-            case 4:
+            case 3:
                 return Size.GetType();
-            case 5:
+            case 4:
                 return ParentFrame.GetType();
-            case 6:
+            case 5:
                 return Text.GetType();
-            case 7:
+            case 6:
                 return Color.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -142,18 +132,16 @@ internal sealed class JointElement : Element
             case 0:
                 return ID;
             case 1:
-                return Edge;
-            case 2:
                 return X;
-            case 3:
+            case 2:
                 return Y;
-            case 4:
+            case 3:
                 return Size;
-            case 5:
+            case 4:
                 return ParentFrame;
-            case 6:
+            case 5:
                 return Text;
-            case 7:
+            case 6:
                 return Color;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -168,24 +156,21 @@ internal sealed class JointElement : Element
                 ID = (string)value;
                 break;
             case 1:
-                Edge = (string)value;
-                break;
-            case 2:
                 X = (int)value;
                 break;
-            case 3:
+            case 2:
                 Y = (int)value;
                 break;
-            case 4:
+            case 3:
                 Size = (uint)value;
                 break;
-            case 5:
+            case 4:
                 ParentFrame = (string)value;
                 break;
-            case 6:
+            case 5:
                 Text = (string)value;
                 break;
-            case 7:
+            case 6:
                 Color = (Color)value;
                 break;
             default:

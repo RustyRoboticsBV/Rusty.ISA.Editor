@@ -39,18 +39,18 @@ struct Element {
             std::core::set_display_name(this, "file");
         }
         (1): {
-            uint id_length [[color("3f8c6d")]];
-            char id_text[id_length] [[color("3f8c6d")]];
+            uint id_length [[color("ffd400")]];
+            char id_text[id_length] [[color("ffd400")]];
             
             std::core::set_display_name(this, "language_definition");
         }
         (2): {
-            uint id_length [[color("a94fc4")]];
-            char id_text[id_length] [[color("a94fc4")]];
-            uint value_length [[color("C283D5")]];
-            char value_text[value_length] [[color("C283D5")]];
+            uint id_length [[color("814a08")]];
+            char id_text[id_length] [[color("814a08")]];
+            uint value_length [[color("A68052")]];
+            char value_text[value_length] [[color("A68052")]];
             
-            uint child_count [[color("873F9C")]];
+            uint child_count [[color("673B06")]];
             Element children[child_count];
             
             std::core::set_display_name(this, "metadata");
@@ -173,21 +173,21 @@ struct Element {
             std::core::set_display_name(this, "node");
         }
         (14): {
-            uint id_length [[color("fff373")]];
-            char id_text[id_length] [[color("fff373")]];
-            int x [[color("FFF69D")]];
-            int y [[color("fff373")]];
-            uint width [[color("FFF69D")]];
-            uint height [[color("fff373")]];
-            bool folded [[color("FFF69D")]];
-            uint parent_frame_length [[color("fff373")]];
-            char parent_frame_text[parent_frame_length] [[color("fff373")]];
-            uint text_length [[color("FFF69D")]];
-            char text_text[text_length] [[color("FFF69D")]];
-            u8 color_r [[color("fff373")]];
-            u8 color_g [[color("fff373")]];
-            u8 color_b [[color("fff373")]];
-            u8 color_a [[color("fff373")]];
+            uint id_length [[color("159102")]];
+            char id_text[id_length] [[color("159102")]];
+            int x [[color("5BB24D")]];
+            int y [[color("159102")]];
+            uint width [[color("5BB24D")]];
+            uint height [[color("159102")]];
+            bool folded [[color("5BB24D")]];
+            uint parent_frame_length [[color("159102")]];
+            char parent_frame_text[parent_frame_length] [[color("159102")]];
+            uint text_length [[color("5BB24D")]];
+            char text_text[text_length] [[color("5BB24D")]];
+            u8 color_r [[color("159102")]];
+            u8 color_g [[color("159102")]];
+            u8 color_b [[color("159102")]];
+            u8 color_a [[color("159102")]];
             
             std::core::set_display_name(this, "memo");
         }
@@ -211,25 +211,6 @@ struct Element {
             std::core::set_display_name(this, "frame");
         }
         (16): {
-            uint id_length [[color("b0b6f5")]];
-            char id_text[id_length] [[color("b0b6f5")]];
-            uint edge_length [[color("C7CBF8")]];
-            char edge_text[edge_length] [[color("C7CBF8")]];
-            int x [[color("b0b6f5")]];
-            int y [[color("C7CBF8")]];
-            uint size [[color("b0b6f5")]];
-            uint parent_frame_length [[color("C7CBF8")]];
-            char parent_frame_text[parent_frame_length] [[color("C7CBF8")]];
-            uint text_length [[color("b0b6f5")]];
-            char text_text[text_length] [[color("b0b6f5")]];
-            u8 color_r [[color("C7CBF8")]];
-            u8 color_g [[color("C7CBF8")]];
-            u8 color_b [[color("C7CBF8")]];
-            u8 color_a [[color("C7CBF8")]];
-            
-            std::core::set_display_name(this, "joint");
-        }
-        (17): {
             uint id_length [[color("3646f5")]];
             char id_text[id_length] [[color("3646f5")]];
             uint from_length [[color("727DF8")]];
@@ -245,7 +226,27 @@ struct Element {
             u8 color_b [[color("3646f5")]];
             u8 color_a [[color("3646f5")]];
             
+            uint child_count [[color("2B38C4")]];
+            Element children[child_count];
+            
             std::core::set_display_name(this, "edge");
+        }
+        (17): {
+            uint id_length [[color("b0b6f5")]];
+            char id_text[id_length] [[color("b0b6f5")]];
+            int x [[color("C7CBF8")]];
+            int y [[color("b0b6f5")]];
+            uint size [[color("C7CBF8")]];
+            uint parent_frame_length [[color("b0b6f5")]];
+            char parent_frame_text[parent_frame_length] [[color("b0b6f5")]];
+            uint text_length [[color("C7CBF8")]];
+            char text_text[text_length] [[color("C7CBF8")]];
+            u8 color_r [[color("b0b6f5")]];
+            u8 color_g [[color("b0b6f5")]];
+            u8 color_b [[color("b0b6f5")]];
+            u8 color_a [[color("b0b6f5")]];
+            
+            std::core::set_display_name(this, "joint");
         }
         (18): {
             uint id_length [[color("13ace9")]];

@@ -11,7 +11,7 @@ public static class Colors
             hex = string.Concat(hex.Select(c => $"{c}{c}"));
 
         if (hex.Length != 6)
-            throw new ArgumentException("Invalid hex color.", nameof(hex));
+            throw new ArgumentException($"Invalid hex color '{hex}'.", nameof(hex));
 
         int r = Convert.ToInt32(hex.Substring(0, 2), 16);
         int g = Convert.ToInt32(hex.Substring(2, 2), 16);
