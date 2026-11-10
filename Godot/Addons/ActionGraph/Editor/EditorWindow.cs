@@ -65,10 +65,10 @@ public abstract partial class EditorWindow : VBoxContainer
         MouseLabel mouseLabel = new();
         mouseLabel.Name = "MouseLabel";
         mouseLabel.Graph = Graph;
-        mouseLabel.AnchorRight = 1;
         mouseLabel.AnchorTop = 1;
         mouseLabel.AnchorBottom = 1;
         mouseLabel.Position = new(8, -36);
+        mouseLabel.Size = new(136f, mouseLabel.Size.Y);
         graphContainer.AddChild(mouseLabel);
 
         Console = new();
