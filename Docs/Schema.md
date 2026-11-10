@@ -1,4 +1,4 @@
-# Schema
+# ActionGraph Program Schema
 
 This schema defines the structure of ActionGraph files, including its supported element types, attributes, and hierarchy.
 It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) files.
@@ -88,7 +88,6 @@ It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) f
 |Index|Name|Type|Description|
 |-|-|-|-|
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this parameter definition.|
-|`1` (`0x01`)|`localizable`|`bool`|Whether this parameter can be localized.|
 ---
 
 ### `node_definition`
@@ -196,6 +195,7 @@ It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) f
 |-|-|-|-|
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this field definition.|
 |`1` (`0x01`)|`parameter`|`string`|The identifier of the associated parameter definition.|
+|`2` (`0x02`)|`localizable`|`bool`|Whether this parameter can be localized.|
 ---
 
 ### `port_definition`
@@ -231,54 +231,10 @@ It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) f
 |`1` (`0x01`)|`text`|`string`|The title text of this subgraph definition.|
 ---
 
-### `input`
-|Property|Value|
-|-|-|
-|Index|`14` (`0x0E`)|
-|Description|A subgraph instance entry point.|
-|Allowed parents|`subgraph_definition`|
-|Allowed children|*(None)*|
-|Multiple children allowed?|No|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this input.|
-|`1` (`0x01`)|`x`|`int`|The x-position of this input on the graph.|
-|`2` (`0x02`)|`y`|`int`|The y-position of this input on the graph.|
-|`3` (`0x03`)|`width`|`uint`|The width of this input on the graph.|
-|`4` (`0x04`)|`height`|`uint`|The height of this input on the graph.|
-|`5` (`0x05`)|`folded`|`bool`|Whether this input's inspector has been folded.|
-|`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
-|`7` (`0x07`)|`index`|`uint`|The index of this input on the subgraph's external connection layer.|
----
-
-### `output`
-|Property|Value|
-|-|-|
-|Index|`15` (`0x0F`)|
-|Description|A subgraph instance exit point.|
-|Allowed parents|`subgraph_definition`|
-|Allowed children|*(None)*|
-|Multiple children allowed?|No|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this output.|
-|`1` (`0x01`)|`x`|`int`|The x-position of this output on the graph.|
-|`2` (`0x02`)|`y`|`int`|The y-position of this output on the graph.|
-|`3` (`0x03`)|`width`|`uint`|The width of this output on the graph.|
-|`4` (`0x04`)|`height`|`uint`|The height of this output on the graph.|
-|`5` (`0x05`)|`folded`|`bool`|Whether this output's inspector has been folded.|
-|`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
-|`7` (`0x07`)|`index`|`uint`|The index of this output on the subgraph's external connection layer.|
----
-
 ### `start_point`
 |Property|Value|
 |-|-|
-|Index|`16` (`0x10`)|
+|Index|`14` (`0x0E`)|
 |Description|A graph entry point, from which execution can begin.|
 |Allowed parents|`file`|
 |Allowed children|*(None)*|
@@ -298,7 +254,7 @@ It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) f
 ### `node`
 |Property|Value|
 |-|-|
-|Index|`17` (`0x11`)|
+|Index|`15` (`0x0F`)|
 |Description|An editor node.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
@@ -317,10 +273,148 @@ It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) f
 |`7` (`0x07`)|`parent_frame`|`string`|The identifier of the parent frame.|
 ---
 
-### `memo`
+### `option`
+|Property|Value|
+|-|-|
+|Index|`16` (`0x10`)|
+|Description|An option inspector.|
+|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
+|Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
+|Multiple children allowed?|No|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this option.|
+|`1` (`0x01`)|`definition`|`string`|The identifier of the associated option definition.|
+|`2` (`0x02`)|`enabled`|`bool`|Whether this option has been enabled.|
+|`3` (`0x03`)|`folded`|`bool`|Whether this option has been folded.|
+---
+
+### `choice`
+|Property|Value|
+|-|-|
+|Index|`17` (`0x11`)|
+|Description|A choice inspector.|
+|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
+|Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
+|Multiple children allowed?|No|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this choice.|
+|`1` (`0x01`)|`definition`|`string`|The identifier of the associated choice definition.|
+|`2` (`0x02`)|`selected`|`string`|The identifier of the selected item.|
+|`3` (`0x03`)|`folded`|`bool`|Whether this choice has been folded.|
+---
+
+### `tuple`
 |Property|Value|
 |-|-|
 |Index|`18` (`0x12`)|
+|Description|A tuple inspector.|
+|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
+|Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
+|Multiple children allowed?|Yes|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this tuple.|
+|`1` (`0x01`)|`definition`|`string`|The identifier of the associated tuple definition.|
+|`2` (`0x02`)|`folded`|`bool`|Whether this tuple has been folded.|
+---
+
+### `list`
+|Property|Value|
+|-|-|
+|Index|`19` (`0x13`)|
+|Description|A list inspector.|
+|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
+|Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
+|Multiple children allowed?|Yes|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this list.|
+|`1` (`0x01`)|`definition`|`string`|The identifier of the associated list definition.|
+|`2` (`0x02`)|`folded`|`bool`|Whether this list has been folded.|
+---
+
+### `form`
+|Property|Value|
+|-|-|
+|Index|`20` (`0x14`)|
+|Description|A form inspector, which represennts the state of an instruction.|
+|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
+|Allowed children|`field`, `port`|
+|Multiple children allowed?|Yes|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this form.|
+|`1` (`0x01`)|`definition`|`string`|The identifier of the associated form definition.|
+|`2` (`0x02`)|`folded`|`bool`|Whether this form has been folded.|
+---
+
+### `field`
+|Property|Value|
+|-|-|
+|Index|`21` (`0x15`)|
+|Description|A field inspector, which represents the state of an instruction argument.|
+|Allowed parents|`form`|
+|Allowed children|`localized_value`|
+|Multiple children allowed?|Yes|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this field.|
+|`1` (`0x01`)|`definition`|`string`|The identifier of the associated field definition.|
+|`2` (`0x02`)|`value`|`string`|The non-localized value of this field.|
+---
+
+### `localized_value`
+|Property|Value|
+|-|-|
+|Index|`22` (`0x16`)|
+|Description|A field's value when localized to a specific language.|
+|Allowed parents|`metadata`, `field`|
+|Allowed children|*(None)*|
+|Multiple children allowed?|No|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this localized value.|
+|`1` (`0x01`)|`language`|`string`|The identifier of the associated language definition.|
+|`2` (`0x02`)|`value`|`string`|The localized value.|
+---
+
+### `port`
+|Property|Value|
+|-|-|
+|Index|`23` (`0x17`)|
+|Description|A node output port, which represents the state of an instruction argument.|
+|Allowed parents|`form`|
+|Allowed children|*(None)*|
+|Multiple children allowed?|No|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this port.|
+|`1` (`0x01`)|`definition`|`string`|The identifier of the associated port definition.|
+|`2` (`0x02`)|`index`|`uint`|The index of this port on its parent node.|
+---
+
+### `memo`
+|Property|Value|
+|-|-|
+|Index|`24` (`0x18`)|
 |Description|An editor sticky note.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
@@ -343,7 +437,7 @@ It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) f
 ### `frame`
 |Property|Value|
 |-|-|
-|Index|`19` (`0x13`)|
+|Index|`25` (`0x19`)|
 |Description|A visual element grouping in the editor.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
@@ -366,7 +460,7 @@ It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) f
 ### `subgraph`
 |Property|Value|
 |-|-|
-|Index|`20` (`0x14`)|
+|Index|`26` (`0x1A`)|
 |Description|A subgraph instance.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
@@ -385,10 +479,54 @@ It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) f
 |`7` (`0x07`)|`parent_frame`|`string`|The identifier of the parent frame.|
 ---
 
+### `input`
+|Property|Value|
+|-|-|
+|Index|`27` (`0x1B`)|
+|Description|A subgraph instance entry point.|
+|Allowed parents|`subgraph_definition`|
+|Allowed children|*(None)*|
+|Multiple children allowed?|No|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this input.|
+|`1` (`0x01`)|`x`|`int`|The x-position of this input on the graph.|
+|`2` (`0x02`)|`y`|`int`|The y-position of this input on the graph.|
+|`3` (`0x03`)|`width`|`uint`|The width of this input on the graph.|
+|`4` (`0x04`)|`height`|`uint`|The height of this input on the graph.|
+|`5` (`0x05`)|`folded`|`bool`|Whether this input's inspector has been folded.|
+|`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
+|`7` (`0x07`)|`index`|`uint`|The index of this input on the subgraph's external connection layer.|
+---
+
+### `output`
+|Property|Value|
+|-|-|
+|Index|`28` (`0x1C`)|
+|Description|A subgraph instance exit point.|
+|Allowed parents|`subgraph_definition`|
+|Allowed children|*(None)*|
+|Multiple children allowed?|No|
+
+**Attributes:**
+|Index|Name|Type|Description|
+|-|-|-|-|
+|`0` (`0x00`)|`id`|`string`|The unique identifier of this output.|
+|`1` (`0x01`)|`x`|`int`|The x-position of this output on the graph.|
+|`2` (`0x02`)|`y`|`int`|The y-position of this output on the graph.|
+|`3` (`0x03`)|`width`|`uint`|The width of this output on the graph.|
+|`4` (`0x04`)|`height`|`uint`|The height of this output on the graph.|
+|`5` (`0x05`)|`folded`|`bool`|Whether this output's inspector has been folded.|
+|`6` (`0x06`)|`parent_frame`|`string`|The identifier of the parent frame.|
+|`7` (`0x07`)|`index`|`uint`|The index of this output on the subgraph's external connection layer.|
+---
+
 ### `edge`
 |Property|Value|
 |-|-|
-|Index|`21` (`0x15`)|
+|Index|`29` (`0x1D`)|
 |Description|An editor graph edge.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|`joint`|
@@ -409,7 +547,7 @@ It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) f
 ### `joint`
 |Property|Value|
 |-|-|
-|Index|`22` (`0x16`)|
+|Index|`30` (`0x1E`)|
 |Description|A visual edge joint in the editor.|
 |Allowed parents|`edge`|
 |Allowed children|*(None)*|
@@ -424,142 +562,4 @@ It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) f
 |`3` (`0x03`)|`size`|`uint`|The size of this joint.|
 |`4` (`0x04`)|`parent_frame`|`string`|The identifier of the parent frame.|
 |`5` (`0x05`)|`color`|`color`|The color of this joint.|
----
-
-### `option`
-|Property|Value|
-|-|-|
-|Index|`23` (`0x17`)|
-|Description|An option inspector.|
-|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
-|Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
-|Multiple children allowed?|No|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this option.|
-|`1` (`0x01`)|`definition`|`string`|The identifier of the associated option definition.|
-|`2` (`0x02`)|`enabled`|`bool`|Whether this option has been enabled.|
-|`3` (`0x03`)|`folded`|`bool`|Whether this option has been folded.|
----
-
-### `choice`
-|Property|Value|
-|-|-|
-|Index|`24` (`0x18`)|
-|Description|A choice inspector.|
-|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
-|Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
-|Multiple children allowed?|No|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this choice.|
-|`1` (`0x01`)|`definition`|`string`|The identifier of the associated choice definition.|
-|`2` (`0x02`)|`selected`|`string`|The identifier of the selected item.|
-|`3` (`0x03`)|`folded`|`bool`|Whether this choice has been folded.|
----
-
-### `tuple`
-|Property|Value|
-|-|-|
-|Index|`25` (`0x19`)|
-|Description|A tuple inspector.|
-|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
-|Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
-|Multiple children allowed?|Yes|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this tuple.|
-|`1` (`0x01`)|`definition`|`string`|The identifier of the associated tuple definition.|
-|`2` (`0x02`)|`folded`|`bool`|Whether this tuple has been folded.|
----
-
-### `list`
-|Property|Value|
-|-|-|
-|Index|`26` (`0x1A`)|
-|Description|A list inspector.|
-|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
-|Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
-|Multiple children allowed?|Yes|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this list.|
-|`1` (`0x01`)|`definition`|`string`|The identifier of the associated list definition.|
-|`2` (`0x02`)|`folded`|`bool`|Whether this list has been folded.|
----
-
-### `form`
-|Property|Value|
-|-|-|
-|Index|`27` (`0x1B`)|
-|Description|A form inspector, which represennts the state of an instruction.|
-|Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
-|Allowed children|`field`, `port`|
-|Multiple children allowed?|Yes|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this form.|
-|`1` (`0x01`)|`definition`|`string`|The identifier of the associated form definition.|
-|`2` (`0x02`)|`folded`|`bool`|Whether this form has been folded.|
----
-
-### `field`
-|Property|Value|
-|-|-|
-|Index|`28` (`0x1C`)|
-|Description|A field inspector, which represents the state of an instruction argument.|
-|Allowed parents|`form`|
-|Allowed children|`localized_value`|
-|Multiple children allowed?|Yes|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this field.|
-|`1` (`0x01`)|`definition`|`string`|The identifier of the associated field definition.|
-|`2` (`0x02`)|`value`|`string`|The non-localized value of this field.|
----
-
-### `port`
-|Property|Value|
-|-|-|
-|Index|`29` (`0x1D`)|
-|Description|A node output port, which represents the state of an instruction argument.|
-|Allowed parents|`form`|
-|Allowed children|*(None)*|
-|Multiple children allowed?|No|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this port.|
-|`1` (`0x01`)|`definition`|`string`|The identifier of the associated port definition.|
-|`2` (`0x02`)|`index`|`uint`|The index of this port on its parent node.|
----
-
-### `localized_value`
-|Property|Value|
-|-|-|
-|Index|`30` (`0x1E`)|
-|Description|A field's value when localized to a specific language.|
-|Allowed parents|`metadata`, `field`|
-|Allowed children|*(None)*|
-|Multiple children allowed?|No|
-
-**Attributes:**
-|Index|Name|Type|Description|
-|-|-|-|-|
-|`0` (`0x00`)|`id`|`string`|The unique identifier of this localized value.|
-|`1` (`0x01`)|`language`|`string`|The identifier of the associated language definition.|
-|`2` (`0x02`)|`value`|`string`|The localized value.|
 ---

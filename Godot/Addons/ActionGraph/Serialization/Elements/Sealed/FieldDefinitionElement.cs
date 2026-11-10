@@ -21,7 +21,7 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 2;
+    public override int AttributeCount => 3;
     /// <summary>
     /// The unique identifier of this field definition.
     /// </summary>
@@ -30,6 +30,10 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
     /// The identifier of the associated parameter definition.
     /// </summary>
     public override string Parameter { get; set; } = "";
+    /// <summary>
+    /// Whether this parameter can be localized.
+    /// </summary>
+    public bool Localizable { get; set; }
     
     public override bool AllowsChildren => false;
     
@@ -42,6 +46,8 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
                 return 0;
             case "parameter":
                 return 1;
+            case "localizable":
+                return 2;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -56,6 +62,8 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
                 return "id";
             case 1:
                 return "parameter";
+            case 2:
+                return "localizable";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -69,6 +77,8 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
                 return ID.GetType();
             case 1:
                 return Parameter.GetType();
+            case 2:
+                return Localizable.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -82,6 +92,8 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
                 return ID;
             case 1:
                 return Parameter;
+            case 2:
+                return Localizable;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -96,6 +108,9 @@ internal sealed class FieldDefinitionElement : ArgumentDefinitionElement
                 break;
             case 1:
                 Parameter = (string)value;
+                break;
+            case 2:
+                Localizable = (bool)value;
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");

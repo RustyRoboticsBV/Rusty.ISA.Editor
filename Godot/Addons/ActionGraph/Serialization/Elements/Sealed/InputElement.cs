@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class InputElement : ProgramUnitElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 14;
+    public const int ELEMENT_INDEX = 27;
     public const string ELEMENT_NAME = "input";
     
     /* Public properties. */

@@ -15,7 +15,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class JointElement : Element
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 22;
+    public const int ELEMENT_INDEX = 30;
     public const string ELEMENT_NAME = "joint";
     
     /* Public properties. */

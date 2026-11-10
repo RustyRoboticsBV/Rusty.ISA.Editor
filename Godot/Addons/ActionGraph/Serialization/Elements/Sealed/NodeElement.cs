@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class NodeElement : ProgramUnitElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 17;
+    public const int ELEMENT_INDEX = 15;
     public const string ELEMENT_NAME = "node";
     
     /* Public properties. */

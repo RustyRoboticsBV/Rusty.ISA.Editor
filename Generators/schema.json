@@ -116,10 +116,6 @@
         "id": {
           "description": "The unique identifier of this <this>.",
           "value_type": "string"
-        },
-        "localizable": {
-          "description": "Whether this parameter can be localized.",
-          "value_type": "bool"
         }
       },
       "allowed_children": [],
@@ -254,6 +250,10 @@
           "description": "The identifier of the associated <ref_type>.",
           "value_type": "ref",
           "ref_type": "parameter_definition"
+        },
+        "localizable": {
+          "description": "Whether this parameter can be localized.",
+          "value_type": "bool"
         }
       },
       "allowed_children": [],
@@ -305,90 +305,6 @@
         "edge"
       ],
       "allow_multiple_children": true
-    },
-    "input": {
-      "description": "A subgraph instance entry point.",
-      "color": "000000",
-      "inherits_abstract": "program_unit",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "x": {
-          "description": "The x-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "y": {
-          "description": "The y-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "width": {
-          "description": "The width of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "height": {
-          "description": "The height of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "folded": {
-          "description": "Whether this <this>'s inspector has been folded.",
-          "value_type": "bool"
-        },
-        "parent_frame": {
-          "description": "The identifier of the parent <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "frame"
-        },
-        "index": {
-          "description": "The index of this <this> on the subgraph's external connection layer.",
-          "value_type": "uint"
-        }
-      },
-      "allowed_children": [],
-      "allow_multiple_children": false
-    },
-    "output": {
-      "description": "A subgraph instance exit point.",
-      "color": "000000",
-      "inherits_abstract": "program_unit",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "x": {
-          "description": "The x-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "y": {
-          "description": "The y-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "width": {
-          "description": "The width of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "height": {
-          "description": "The height of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "folded": {
-          "description": "Whether this <this>'s inspector has been folded.",
-          "value_type": "bool"
-        },
-        "parent_frame": {
-          "description": "The identifier of the parent <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "frame"
-        },
-        "index": {
-          "description": "The index of this <this> on the subgraph's external connection layer.",
-          "value_type": "uint"
-        }
-      },
-      "allowed_children": [],
-      "allow_multiple_children": false
     },
     "start_point": {
       "description": "A graph entry point, from which execution can begin.",
@@ -471,214 +387,6 @@
         "list"
       ],
       "allow_multiple_children": true
-    },
-    "memo": {
-      "description": "An editor sticky note.",
-      "color": "159102",
-      "inherits_abstract": "none",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "x": {
-          "description": "The x-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "y": {
-          "description": "The y-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "width": {
-          "description": "The width of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "height": {
-          "description": "The height of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "folded": {
-          "description": "Whether this <this>'s inspector has been folded.",
-          "value_type": "bool"
-        },
-        "parent_frame": {
-          "description": "The identifier of the parent <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "frame"
-        },
-        "text": {
-          "description": "The commentary text of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The text color of this <this>.",
-          "value_type": "color"
-        }
-      },
-      "allowed_children": [],
-      "allow_multiple_children": false
-    },
-    "frame": {
-      "description": "A visual element grouping in the editor.",
-      "color": "8068f6",
-      "inherits_abstract": "none",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "x": {
-          "description": "The x-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "y": {
-          "description": "The y-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "width": {
-          "description": "The width of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "height": {
-          "description": "The height of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "folded": {
-          "description": "Whether this <this>'s inspector has been folded.",
-          "value_type": "bool"
-        },
-        "parent_frame": {
-          "description": "The identifier of the parent <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "frame"
-        },
-        "text": {
-          "description": "The title text of this <this>.",
-          "value_type": "string"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
-        }
-      },
-      "allowed_children": [],
-      "allow_multiple_children": false
-    },
-    "subgraph": {
-      "description": "A subgraph instance.",
-      "color": "000000",
-      "inherits_abstract": "program_unit",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "definition": {
-          "description": "The identifier of the associated <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "subgraph_definition"
-        },
-        "x": {
-          "description": "The x-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "y": {
-          "description": "The y-position of this <this> on the graph.",
-          "value_type": "int"
-        },
-        "width": {
-          "description": "The width of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "height": {
-          "description": "The height of this <this> on the graph.",
-          "value_type": "uint"
-        },
-        "folded": {
-          "description": "Whether this <this>'s inspector has been folded.",
-          "value_type": "bool"
-        },
-        "parent_frame": {
-          "description": "The identifier of the parent <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "frame"
-        }
-      },
-      "allowed_children": [],
-      "allow_multiple_children": false
-    },
-    "edge": {
-      "description": "An editor graph edge.",
-      "color": "3646f5",
-      "inherits_abstract": "none",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "from": {
-          "description": "The identifier of the source element.",
-          "value_type": "ref",
-          "ref_type": "program_unit"
-        },
-        "from_port": {
-          "description": "The port index on the source element.",
-          "value_type": "uint"
-        },
-        "to": {
-          "description": "The identifier of the destination element.",
-          "value_type": "ref",
-          "ref_type": "program_unit"
-        },
-        "to_port": {
-          "description": "The port index of the destination element.",
-          "value_type": "uint"
-        },
-        "thickness": {
-          "description": "The thickness of this <this>.",
-          "value_type": "uint"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
-        }
-      },
-      "allowed_children": [ "joint" ],
-      "allow_multiple_children": true
-    },
-    "joint": {
-      "description": "A visual edge joint in the editor.",
-      "color": "b0b6f5",
-      "inherits_abstract": "none",
-      "attributes": {
-        "id": {
-          "description": "The unique identifier of this <this>.",
-          "value_type": "string"
-        },
-        "x": {
-          "description": "The x-position of this <this>.",
-          "value_type": "int"
-        },
-        "y": {
-          "description": "The y-position of this <this>.",
-          "value_type": "int"
-        },
-        "size": {
-          "description": "The size of this <this>.",
-          "value_type": "uint"
-        },
-        "parent_frame": {
-          "description": "The identifier of the parent <ref_type>.",
-          "value_type": "ref",
-          "ref_type": "frame"
-        },
-        "color": {
-          "description": "The color of this <this>.",
-          "value_type": "color"
-        }
-      },
-      "allowed_children": [],
-      "allow_multiple_children": false
     },
     "option": {
       "description": "An option inspector.",
@@ -848,6 +556,28 @@
       "allowed_children": [ "localized_value" ],
       "allow_multiple_children": true
     },
+    "localized_value": {
+      "description": "A field's value when localized to a specific language.",
+      "color": "d6bc6b",
+      "inherits_abstract": "none",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "language": {
+          "description": "The identifier of the associated language definition.",
+          "value_type": "ref",
+          "ref_type": "language_definition"
+        },
+        "value": {
+          "description": "The localized value.",
+          "value_type": "string"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
     "port": {
       "description": "A node output port, which represents the state of an instruction argument.",
       "color": "f07400",
@@ -870,23 +600,293 @@
       "allowed_children": [],
       "allow_multiple_children": false
     },
-    "localized_value": {
-      "description": "A field's value when localized to a specific language.",
-      "color": "d6bc6b",
+    "memo": {
+      "description": "An editor sticky note.",
+      "color": "159102",
       "inherits_abstract": "none",
       "attributes": {
         "id": {
           "description": "The unique identifier of this <this>.",
           "value_type": "string"
         },
-        "language": {
-          "description": "The identifier of the associated language definition.",
-          "value_type": "ref",
-          "ref_type": "language_definition"
+        "x": {
+          "description": "The x-position of this <this> on the graph.",
+          "value_type": "int"
         },
-        "value": {
-          "description": "The localized value.",
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        },
+        "text": {
+          "description": "The commentary text of this <this>.",
           "value_type": "string"
+        },
+        "color": {
+          "description": "The text color of this <this>.",
+          "value_type": "color"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
+    "frame": {
+      "description": "A visual element grouping in the editor.",
+      "color": "8068f6",
+      "inherits_abstract": "none",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "x": {
+          "description": "The x-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        },
+        "text": {
+          "description": "The title text of this <this>.",
+          "value_type": "string"
+        },
+        "color": {
+          "description": "The color of this <this>.",
+          "value_type": "color"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
+    "subgraph": {
+      "description": "A subgraph instance.",
+      "color": "000000",
+      "inherits_abstract": "program_unit",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "definition": {
+          "description": "The identifier of the associated <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "subgraph_definition"
+        },
+        "x": {
+          "description": "The x-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
+    "input": {
+      "description": "A subgraph instance entry point.",
+      "color": "000000",
+      "inherits_abstract": "program_unit",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "x": {
+          "description": "The x-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        },
+        "index": {
+          "description": "The index of this <this> on the subgraph's external connection layer.",
+          "value_type": "uint"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
+    "output": {
+      "description": "A subgraph instance exit point.",
+      "color": "000000",
+      "inherits_abstract": "program_unit",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "x": {
+          "description": "The x-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this> on the graph.",
+          "value_type": "int"
+        },
+        "width": {
+          "description": "The width of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "height": {
+          "description": "The height of this <this> on the graph.",
+          "value_type": "uint"
+        },
+        "folded": {
+          "description": "Whether this <this>'s inspector has been folded.",
+          "value_type": "bool"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        },
+        "index": {
+          "description": "The index of this <this> on the subgraph's external connection layer.",
+          "value_type": "uint"
+        }
+      },
+      "allowed_children": [],
+      "allow_multiple_children": false
+    },
+    "edge": {
+      "description": "An editor graph edge.",
+      "color": "3646f5",
+      "inherits_abstract": "none",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "from": {
+          "description": "The identifier of the source element.",
+          "value_type": "ref",
+          "ref_type": "program_unit"
+        },
+        "from_port": {
+          "description": "The port index on the source element.",
+          "value_type": "uint"
+        },
+        "to": {
+          "description": "The identifier of the destination element.",
+          "value_type": "ref",
+          "ref_type": "program_unit"
+        },
+        "to_port": {
+          "description": "The port index of the destination element.",
+          "value_type": "uint"
+        },
+        "thickness": {
+          "description": "The thickness of this <this>.",
+          "value_type": "uint"
+        },
+        "color": {
+          "description": "The color of this <this>.",
+          "value_type": "color"
+        }
+      },
+      "allowed_children": [ "joint" ],
+      "allow_multiple_children": true
+    },
+    "joint": {
+      "description": "A visual edge joint in the editor.",
+      "color": "b0b6f5",
+      "inherits_abstract": "none",
+      "attributes": {
+        "id": {
+          "description": "The unique identifier of this <this>.",
+          "value_type": "string"
+        },
+        "x": {
+          "description": "The x-position of this <this>.",
+          "value_type": "int"
+        },
+        "y": {
+          "description": "The y-position of this <this>.",
+          "value_type": "int"
+        },
+        "size": {
+          "description": "The size of this <this>.",
+          "value_type": "uint"
+        },
+        "parent_frame": {
+          "description": "The identifier of the parent <ref_type>.",
+          "value_type": "ref",
+          "ref_type": "frame"
+        },
+        "color": {
+          "description": "The color of this <this>.",
+          "value_type": "color"
         }
       },
       "allowed_children": [],

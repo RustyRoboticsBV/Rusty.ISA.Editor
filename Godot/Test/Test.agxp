@@ -24,7 +24,7 @@
         <parameter_definition id="b"/>
     </instruction_definition>
     <instruction_definition id="log" execution_handler="LogHandler">
-        <parameter_definition id="message" localizable="true"/>
+        <parameter_definition id="message"/>
     </instruction_definition>
     <instruction_definition id="jump" execution_handler="JumpHandler">
         <parameter_definition id="target"/>
@@ -35,7 +35,7 @@
             <tuple_definition id="step">
                 <option_definition id="log_option">
                     <form_definition id="log_form" instruction="log">
-                        <field_definition id="message_field" parameter="message"/>
+                        <field_definition id="message_field" parameter="message" localizable="true"/>
                     </form_definition>
                 </option_definition>
                 <choice_definition id="operation_choice">

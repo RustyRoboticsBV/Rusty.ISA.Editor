@@ -21,15 +21,11 @@ internal sealed class ParameterDefinitionElement : Element
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 2;
+    public override int AttributeCount => 1;
     /// <summary>
     /// The unique identifier of this parameter definition.
     /// </summary>
     public override string ID { get; set; } = "";
-    /// <summary>
-    /// Whether this parameter can be localized.
-    /// </summary>
-    public bool Localizable { get; set; }
     
     public override bool AllowsChildren => false;
     
@@ -40,8 +36,6 @@ internal sealed class ParameterDefinitionElement : Element
         {
             case "id":
                 return 0;
-            case "localizable":
-                return 1;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -54,8 +48,6 @@ internal sealed class ParameterDefinitionElement : Element
         {
             case 0:
                 return "id";
-            case 1:
-                return "localizable";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -67,8 +59,6 @@ internal sealed class ParameterDefinitionElement : Element
         {
             case 0:
                 return ID.GetType();
-            case 1:
-                return Localizable.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -80,8 +70,6 @@ internal sealed class ParameterDefinitionElement : Element
         {
             case 0:
                 return ID;
-            case 1:
-                return Localizable;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
         }
@@ -93,9 +81,6 @@ internal sealed class ParameterDefinitionElement : Element
         {
             case 0:
                 ID = (string)value;
-                break;
-            case 1:
-                Localizable = (bool)value;
                 break;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");

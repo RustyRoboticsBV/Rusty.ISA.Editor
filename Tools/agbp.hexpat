@@ -67,7 +67,6 @@ struct Element {
         (4): {
             uint id_length [[color("cf7474")]];
             char id_text[id_length] [[color("cf7474")]];
-            bool localizable [[color("DD9D9D")]];
             
             std::core::set_display_name(this, "parameter_definition");
         }
@@ -132,6 +131,7 @@ struct Element {
             char id_text[id_length] [[color("e16397")]];
             uint parameter_length [[color("EA91B6")]];
             char parameter_text[parameter_length] [[color("EA91B6")]];
+            bool localizable [[color("e16397")]];
             
             std::core::set_display_name(this, "field_definition");
         }
@@ -163,38 +163,10 @@ struct Element {
             uint width [[color("4C4C4C")]];
             uint height [[color("000000")]];
             bool folded [[color("4C4C4C")]];
-            uint parent_frame_length [[color("000000")]];
-            char parent_frame_text[parent_frame_length] [[color("000000")]];
-            uint index [[color("4C4C4C")]];
-            
-            std::core::set_display_name(this, "input");
-        }
-        (15): {
-            uint id_length [[color("000000")]];
-            char id_text[id_length] [[color("000000")]];
-            int x [[color("4C4C4C")]];
-            int y [[color("000000")]];
-            uint width [[color("4C4C4C")]];
-            uint height [[color("000000")]];
-            bool folded [[color("4C4C4C")]];
-            uint parent_frame_length [[color("000000")]];
-            char parent_frame_text[parent_frame_length] [[color("000000")]];
-            uint index [[color("4C4C4C")]];
-            
-            std::core::set_display_name(this, "output");
-        }
-        (16): {
-            uint id_length [[color("000000")]];
-            char id_text[id_length] [[color("000000")]];
-            int x [[color("4C4C4C")]];
-            int y [[color("000000")]];
-            uint width [[color("4C4C4C")]];
-            uint height [[color("000000")]];
-            bool folded [[color("4C4C4C")]];
             
             std::core::set_display_name(this, "start_point");
         }
-        (17): {
+        (15): {
             uint id_length [[color("67e527")]];
             char id_text[id_length] [[color("67e527")]];
             uint definition_length [[color("94EC67")]];
@@ -212,7 +184,102 @@ struct Element {
             
             std::core::set_display_name(this, "node");
         }
+        (16): {
+            uint id_length [[color("ba9d95")]];
+            char id_text[id_length] [[color("ba9d95")]];
+            uint definition_length [[color("CEBAB4")]];
+            char definition_text[definition_length] [[color("CEBAB4")]];
+            bool enabled [[color("ba9d95")]];
+            bool folded [[color("CEBAB4")]];
+            
+            uint child_count [[color("947D77")]];
+            Element children[child_count];
+            
+            std::core::set_display_name(this, "option");
+        }
+        (17): {
+            uint id_length [[color("b4ba95")]];
+            char id_text[id_length] [[color("b4ba95")]];
+            uint definition_length [[color("CACEB4")]];
+            char definition_text[definition_length] [[color("CACEB4")]];
+            uint selected_length [[color("b4ba95")]];
+            char selected_text[selected_length] [[color("b4ba95")]];
+            bool folded [[color("CACEB4")]];
+            
+            uint child_count [[color("909477")]];
+            Element children[child_count];
+            
+            std::core::set_display_name(this, "choice");
+        }
         (18): {
+            uint id_length [[color("95baa5")]];
+            char id_text[id_length] [[color("95baa5")]];
+            uint definition_length [[color("B4CEC0")]];
+            char definition_text[definition_length] [[color("B4CEC0")]];
+            bool folded [[color("95baa5")]];
+            
+            uint child_count [[color("779484")]];
+            Element children[child_count];
+            
+            std::core::set_display_name(this, "tuple");
+        }
+        (19): {
+            uint id_length [[color("95b0ba")]];
+            char id_text[id_length] [[color("95b0ba")]];
+            uint definition_length [[color("B4C7CE")]];
+            char definition_text[definition_length] [[color("B4C7CE")]];
+            bool folded [[color("95b0ba")]];
+            
+            uint child_count [[color("778C94")]];
+            Element children[child_count];
+            
+            std::core::set_display_name(this, "list");
+        }
+        (20): {
+            uint id_length [[color("13ace9")]];
+            char id_text[id_length] [[color("13ace9")]];
+            uint definition_length [[color("59C4EF")]];
+            char definition_text[definition_length] [[color("59C4EF")]];
+            bool folded [[color("13ace9")]];
+            
+            uint child_count [[color("0F89BA")]];
+            Element children[child_count];
+            
+            std::core::set_display_name(this, "form");
+        }
+        (21): {
+            uint id_length [[color("f00000")]];
+            char id_text[id_length] [[color("f00000")]];
+            uint definition_length [[color("F44C4C")]];
+            char definition_text[definition_length] [[color("F44C4C")]];
+            uint value_length [[color("f00000")]];
+            char value_text[value_length] [[color("f00000")]];
+            
+            uint child_count [[color("C00000")]];
+            Element children[child_count];
+            
+            std::core::set_display_name(this, "field");
+        }
+        (22): {
+            uint id_length [[color("d6bc6b")]];
+            char id_text[id_length] [[color("d6bc6b")]];
+            uint language_length [[color("E2D097")]];
+            char language_text[language_length] [[color("E2D097")]];
+            uint value_length [[color("d6bc6b")]];
+            char value_text[value_length] [[color("d6bc6b")]];
+            
+            std::core::set_display_name(this, "localized_value");
+        }
+        (23): {
+            uint id_length [[color("f07400")]];
+            char id_text[id_length] [[color("f07400")]];
+            uint definition_length [[color("F49D4C")]];
+            char definition_text[definition_length] [[color("F49D4C")]];
+            uint index [[color("f07400")]];
+            
+            std::core::set_display_name(this, "port");
+        }
+        (24): {
             uint id_length [[color("159102")]];
             char id_text[id_length] [[color("159102")]];
             int x [[color("5BB24D")]];
@@ -231,7 +298,7 @@ struct Element {
             
             std::core::set_display_name(this, "memo");
         }
-        (19): {
+        (25): {
             uint id_length [[color("8068f6")]];
             char id_text[id_length] [[color("8068f6")]];
             int x [[color("A695F8")]];
@@ -250,7 +317,7 @@ struct Element {
             
             std::core::set_display_name(this, "frame");
         }
-        (20): {
+        (26): {
             uint id_length [[color("000000")]];
             char id_text[id_length] [[color("000000")]];
             uint definition_length [[color("4C4C4C")]];
@@ -265,7 +332,35 @@ struct Element {
             
             std::core::set_display_name(this, "subgraph");
         }
-        (21): {
+        (27): {
+            uint id_length [[color("000000")]];
+            char id_text[id_length] [[color("000000")]];
+            int x [[color("4C4C4C")]];
+            int y [[color("000000")]];
+            uint width [[color("4C4C4C")]];
+            uint height [[color("000000")]];
+            bool folded [[color("4C4C4C")]];
+            uint parent_frame_length [[color("000000")]];
+            char parent_frame_text[parent_frame_length] [[color("000000")]];
+            uint index [[color("4C4C4C")]];
+            
+            std::core::set_display_name(this, "input");
+        }
+        (28): {
+            uint id_length [[color("000000")]];
+            char id_text[id_length] [[color("000000")]];
+            int x [[color("4C4C4C")]];
+            int y [[color("000000")]];
+            uint width [[color("4C4C4C")]];
+            uint height [[color("000000")]];
+            bool folded [[color("4C4C4C")]];
+            uint parent_frame_length [[color("000000")]];
+            char parent_frame_text[parent_frame_length] [[color("000000")]];
+            uint index [[color("4C4C4C")]];
+            
+            std::core::set_display_name(this, "output");
+        }
+        (29): {
             uint id_length [[color("3646f5")]];
             char id_text[id_length] [[color("3646f5")]];
             uint from_length [[color("727DF8")]];
@@ -285,7 +380,7 @@ struct Element {
             
             std::core::set_display_name(this, "edge");
         }
-        (22): {
+        (30): {
             uint id_length [[color("b0b6f5")]];
             char id_text[id_length] [[color("b0b6f5")]];
             int x [[color("C7CBF8")]];
@@ -299,101 +394,6 @@ struct Element {
             u8 color_a [[color("C7CBF8")]];
             
             std::core::set_display_name(this, "joint");
-        }
-        (23): {
-            uint id_length [[color("ba9d95")]];
-            char id_text[id_length] [[color("ba9d95")]];
-            uint definition_length [[color("CEBAB4")]];
-            char definition_text[definition_length] [[color("CEBAB4")]];
-            bool enabled [[color("ba9d95")]];
-            bool folded [[color("CEBAB4")]];
-            
-            uint child_count [[color("947D77")]];
-            Element children[child_count];
-            
-            std::core::set_display_name(this, "option");
-        }
-        (24): {
-            uint id_length [[color("b4ba95")]];
-            char id_text[id_length] [[color("b4ba95")]];
-            uint definition_length [[color("CACEB4")]];
-            char definition_text[definition_length] [[color("CACEB4")]];
-            uint selected_length [[color("b4ba95")]];
-            char selected_text[selected_length] [[color("b4ba95")]];
-            bool folded [[color("CACEB4")]];
-            
-            uint child_count [[color("909477")]];
-            Element children[child_count];
-            
-            std::core::set_display_name(this, "choice");
-        }
-        (25): {
-            uint id_length [[color("95baa5")]];
-            char id_text[id_length] [[color("95baa5")]];
-            uint definition_length [[color("B4CEC0")]];
-            char definition_text[definition_length] [[color("B4CEC0")]];
-            bool folded [[color("95baa5")]];
-            
-            uint child_count [[color("779484")]];
-            Element children[child_count];
-            
-            std::core::set_display_name(this, "tuple");
-        }
-        (26): {
-            uint id_length [[color("95b0ba")]];
-            char id_text[id_length] [[color("95b0ba")]];
-            uint definition_length [[color("B4C7CE")]];
-            char definition_text[definition_length] [[color("B4C7CE")]];
-            bool folded [[color("95b0ba")]];
-            
-            uint child_count [[color("778C94")]];
-            Element children[child_count];
-            
-            std::core::set_display_name(this, "list");
-        }
-        (27): {
-            uint id_length [[color("13ace9")]];
-            char id_text[id_length] [[color("13ace9")]];
-            uint definition_length [[color("59C4EF")]];
-            char definition_text[definition_length] [[color("59C4EF")]];
-            bool folded [[color("13ace9")]];
-            
-            uint child_count [[color("0F89BA")]];
-            Element children[child_count];
-            
-            std::core::set_display_name(this, "form");
-        }
-        (28): {
-            uint id_length [[color("f00000")]];
-            char id_text[id_length] [[color("f00000")]];
-            uint definition_length [[color("F44C4C")]];
-            char definition_text[definition_length] [[color("F44C4C")]];
-            uint value_length [[color("f00000")]];
-            char value_text[value_length] [[color("f00000")]];
-            
-            uint child_count [[color("C00000")]];
-            Element children[child_count];
-            
-            std::core::set_display_name(this, "field");
-        }
-        (29): {
-            uint id_length [[color("f07400")]];
-            char id_text[id_length] [[color("f07400")]];
-            uint definition_length [[color("F49D4C")]];
-            char definition_text[definition_length] [[color("F49D4C")]];
-            uint index [[color("f07400")]];
-            
-            std::core::set_display_name(this, "port");
-        }
-        (30): {
-            uint id_length [[color("d6bc6b")]];
-            char id_text[id_length] [[color("d6bc6b")]];
-            uint language_length [[color("E2D097")]];
-            char language_text[language_length] [[color("E2D097")]];
-            uint value_length [[color("d6bc6b")]];
-            char value_text[value_length] [[color("d6bc6b")]];
-            
-            std::core::set_display_name(this, "localized_value");
         }
     }
 };

@@ -14,7 +14,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal sealed class StartPointElement : ProgramUnitElement
 {
     /* Public constants. */
-    public const int ELEMENT_INDEX = 16;
+    public const int ELEMENT_INDEX = 14;
     public const string ELEMENT_NAME = "start_point";
     
     /* Public properties. */

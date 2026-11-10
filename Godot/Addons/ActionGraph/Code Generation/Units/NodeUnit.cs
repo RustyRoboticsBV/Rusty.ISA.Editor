@@ -38,7 +38,7 @@ internal sealed class NodeUnit : Unit
     public override string ToString() => (ElementPrinter.ToString(Element, true) ?? "") + " " + OutputData.ToString();
 
     /// <summary>
-    /// Connect an output port
+    /// Connect an output port.
     /// </summary>
     public void ConnectTo(uint port, Unit to)
     {
