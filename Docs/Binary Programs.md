@@ -9,7 +9,7 @@ The format defines four primary data types:
 - `uint`: an unsigned integer of any bytesize, in ULEB128 encoding.
 - `int`: a signed integer of any bytesize, in SLEB128 encoding.
 - `string`: a length-prefixed UTF-8 string. The length is encoded as a `uint`, and is followed by the UTF-8 string of that length.
-- `color`: a RGBA8 color value, encoded as RRGGBBAA.
+- `color`: a RGBA8 color value.
 
 
 ### Document structure
