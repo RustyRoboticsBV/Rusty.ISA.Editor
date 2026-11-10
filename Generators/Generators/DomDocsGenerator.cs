@@ -59,14 +59,14 @@
             elementTypes.Line("---");
         }
 
-        return @$"# Schema
+        return @$"# ActionGraph Program Schema
 
 This schema defines the structure of ActionGraph files, including its supported element types, attributes, and hierarchy.
-It applies to both [XML](Docs/AGXP.md) and [binary](Docs/AGBP.md) files.
+It applies to both [XML](<XML Programs.md>) and [binary](<Binary Programs.md>) files.
 
 ## General Rules
 - Each file must have a `{fileSnake}` element as the root.
-- All `{schema.GlobalAttributes[0].Name}` attributes must be unique among elements with the same tag within their scope.
+- All `{schema.GlobalAttributes[0].Name}` attributes must be unique among sibling elements with the same parent.
 
 ## Element Types{elementTypes}";
     }

@@ -40,5 +40,6 @@ An import plugin that takes the files created by the graph editor and converts t
 ## Documentation
 View the following docs for more information:
 - Graph file formats:
-  - [XML-based](<Docs/AGXP File Format.md>)
-  - [Binary](<Docs/AGBP File Format.md>)
+  - [Schema](<Docs/Schema.md>)
+  - [XML](<Docs/XML Programs.md>)
+  - [Binary](<Docs/Binary Programs.md>)

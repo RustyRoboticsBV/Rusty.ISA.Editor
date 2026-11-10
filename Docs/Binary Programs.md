@@ -19,6 +19,8 @@ The format always begins with:
 - The format version `string`.
 - The root element.
 
+The element hierarchy follows the rules outlined in the [schema](Schema.md).
+
 
 ### Element structure
 
