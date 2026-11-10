@@ -21,7 +21,7 @@ internal sealed class FileElement : Element
     public override int ElementIndex => ELEMENT_INDEX;
     public override string ElementName => ELEMENT_NAME;
     
-    public override int AttributeCount => 6;
+    public override int AttributeCount => 5;
     /// <summary>
     /// The unique identifier of this file.
     /// </summary>
@@ -34,10 +34,6 @@ internal sealed class FileElement : Element
     /// The ActionGraph schema version.
     /// </summary>
     public string SchemaVersion { get; set; } = "";
-    /// <summary>
-    /// The file format version.
-    /// </summary>
-    public string FormatVersion { get; set; } = "";
     /// <summary>
     /// The ID of the default language when no localization is applied. This must NOT match any language definition IDs.
     /// </summary>
@@ -60,12 +56,10 @@ internal sealed class FileElement : Element
                 return 1;
             case "schema_version":
                 return 2;
-            case "format_version":
-                return 3;
             case "default_language":
-                return 4;
+                return 3;
             case "checksum":
-                return 5;
+                return 4;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
         }
@@ -83,10 +77,8 @@ internal sealed class FileElement : Element
             case 2:
                 return "schema_version";
             case 3:
-                return "format_version";
-            case 4:
                 return "default_language";
-            case 5:
+            case 4:
                 return "checksum";
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -104,10 +96,8 @@ internal sealed class FileElement : Element
             case 2:
                 return SchemaVersion.GetType();
             case 3:
-                return FormatVersion.GetType();
-            case 4:
                 return DefaultLanguage.GetType();
-            case 5:
+            case 4:
                 return Checksum.GetType();
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -125,10 +115,8 @@ internal sealed class FileElement : Element
             case 2:
                 return SchemaVersion;
             case 3:
-                return FormatVersion;
-            case 4:
                 return DefaultLanguage;
-            case 5:
+            case 4:
                 return Checksum;
             default:
                 throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
@@ -149,12 +137,9 @@ internal sealed class FileElement : Element
                 SchemaVersion = (string)value;
                 break;
             case 3:
-                FormatVersion = (string)value;
-                break;
-            case 4:
                 DefaultLanguage = (string)value;
                 break;
-            case 5:
+            case 4:
                 Checksum = (string)value;
                 break;
             default:

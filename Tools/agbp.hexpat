@@ -26,12 +26,10 @@ struct Element {
             char editor_text[editor_length] [[color("70706E")]];
             uint schema_version_length [[color("333330")]];
             char schema_version_text[schema_version_length] [[color("333330")]];
-            uint format_version_length [[color("70706E")]];
-            char format_version_text[format_version_length] [[color("70706E")]];
-            uint default_language_length [[color("333330")]];
-            char default_language_text[default_language_length] [[color("333330")]];
-            uint checksum_length [[color("70706E")]];
-            char checksum_text[checksum_length] [[color("70706E")]];
+            uint default_language_length [[color("70706E")]];
+            char default_language_text[default_language_length] [[color("70706E")]];
+            uint checksum_length [[color("333330")]];
+            char checksum_text[checksum_length] [[color("333330")]];
             
             uint child_count [[color("282826")]];
             Element children[child_count];

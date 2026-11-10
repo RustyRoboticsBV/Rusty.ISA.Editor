@@ -41,7 +41,7 @@
             elementTypes.Line($"|Description|{element.Description}|");
             elementTypes.Line($"|Allowed parents|{parents}|");
             elementTypes.Line($"|Allowed children|{children}|");
-            elementTypes.Line($"|Multiple children allowed?|{element.MultipleChildren.ToString().ToLowerInvariant()}|");
+            elementTypes.Line($"|Multiple children allowed?|{(element.MultipleChildren ? "Yes" : "No")}|");
 
             elementTypes.Line();
             elementTypes.Line("**Attributes:**");
@@ -60,6 +60,9 @@
         }
 
         return @$"# Schema
+
+This schema defines the structure of ActionGraph files, including its supported element types, attributes, and hierarchy.
+It applies to both [XML](Docs/AGXP.md) and [binary](Docs/AGBP.md) files.
 
 ## General Rules
 - Each file must have a `{fileSnake}` element as the root.

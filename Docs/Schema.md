@@ -1,5 +1,8 @@
 # Schema
 
+This schema defines the structure of ActionGraph files, including its supported element types, attributes, and hierarchy.
+It applies to both [XML](Docs/AGXP.md) and [binary](Docs/AGBP.md) files.
+
 ## General Rules
 - Each file must have a `file` element as the root.
 - All `id` attributes must be unique among elements with the same tag within their scope.
@@ -13,7 +16,7 @@
 |Description|The root element.|
 |Allowed parents|*(None)*|
 |Allowed children|`metadata`, `language_definition`, `instruction_definition`, `node_definition`, `subgraph_definition`, `start_point`, `node`, `frame`, `memo`, `subgraph`, `edge`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -21,9 +24,8 @@
 |`0` (`0x00`)|`id`|`string`|The unique identifier of this file.|
 |`1` (`0x01`)|`editor`|`string`|The name of the editor that generated this file.|
 |`2` (`0x02`)|`schema_version`|`string`|The ActionGraph schema version.|
-|`3` (`0x03`)|`format_version`|`string`|The file format version.|
-|`4` (`0x04`)|`default_language`|`string`|The ID of the default language when no localization is applied. This must NOT match any language definition IDs.|
-|`5` (`0x05`)|`checksum`|`string`|The checksum of this file.|
+|`3` (`0x03`)|`default_language`|`string`|The ID of the default language when no localization is applied. This must NOT match any language definition IDs.|
+|`4` (`0x04`)|`checksum`|`string`|The checksum of this file.|
 ---
 
 ### `language_definition`
@@ -33,7 +35,7 @@
 |Description|A definition for a localization language.|
 |Allowed parents|`file`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -48,7 +50,7 @@
 |Description|A metadata entry.|
 |Allowed parents|`file`|
 |Allowed children|`localized_value`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -64,7 +66,7 @@
 |Description|A definition for a form inspector, which represents an instruction's state.|
 |Allowed parents|`file`|
 |Allowed children|`parameter_definition`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -80,7 +82,7 @@
 |Description|A definition for an instruction parameter.|
 |Allowed parents|`instruction_definition`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -96,7 +98,7 @@
 |Description|A definition for a graph node.|
 |Allowed parents|`file`|
 |Allowed children|`form_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -111,7 +113,7 @@
 |Description|A definition for an option inspector.|
 |Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
 |Allowed children|`form_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -126,7 +128,7 @@
 |Description|A definition for a choice inspector.|
 |Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
 |Allowed children|`form_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -141,7 +143,7 @@
 |Description|A definition for a tuple inspector.|
 |Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
 |Allowed children|`form_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -156,7 +158,7 @@
 |Description|A definition for a list inspector.|
 |Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
 |Allowed children|`form_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -171,7 +173,7 @@
 |Description|A definition for an instruction inspector.|
 |Allowed parents|`node_definition`, `option_definition`, `choice_definition`, `tuple_definition`, `list_definition`|
 |Allowed children|`field_definition`, `port_definition`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -187,7 +189,7 @@
 |Description|A definition for a field inspector, which corresponds to a parameter.|
 |Allowed parents|`form_definition`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -203,7 +205,7 @@
 |Description|A definition for a node output port, which corresponds to a parameter.|
 |Allowed parents|`form_definition`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -220,7 +222,7 @@
 |Description|A definition for a subgraph, containing various graph elements.|
 |Allowed parents|`file`|
 |Allowed children|`node`, `frame`, `memo`, `subgraph`, `input`, `output`, `edge`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -236,7 +238,7 @@
 |Description|A subgraph instance entry point.|
 |Allowed parents|`subgraph_definition`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -258,7 +260,7 @@
 |Description|A subgraph instance exit point.|
 |Allowed parents|`subgraph_definition`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -280,7 +282,7 @@
 |Description|A graph entry point, from which execution can begin.|
 |Allowed parents|`file`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -300,7 +302,7 @@
 |Description|An editor node.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -322,7 +324,7 @@
 |Description|An editor sticky note.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -345,7 +347,7 @@
 |Description|A visual element grouping in the editor.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -368,7 +370,7 @@
 |Description|A subgraph instance.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -390,7 +392,7 @@
 |Description|An editor graph edge.|
 |Allowed parents|`file`, `subgraph_definition`|
 |Allowed children|`joint`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -411,7 +413,7 @@
 |Description|A visual edge joint in the editor.|
 |Allowed parents|`edge`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -431,7 +433,7 @@
 |Description|An option inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -449,7 +451,7 @@
 |Description|A choice inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -467,7 +469,7 @@
 |Description|A tuple inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -484,7 +486,7 @@
 |Description|A list inspector.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`form`, `option`, `choice`, `tuple`, `list`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -501,7 +503,7 @@
 |Description|A form inspector, which represennts the state of an instruction.|
 |Allowed parents|`node`, `option`, `choice`, `tuple`, `list`|
 |Allowed children|`field`, `port`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -518,7 +520,7 @@
 |Description|A field inspector, which represents the state of an instruction argument.|
 |Allowed parents|`form`|
 |Allowed children|`localized_value`|
-|Multiple children allowed?|true|
+|Multiple children allowed?|Yes|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -535,7 +537,7 @@
 |Description|A node output port, which represents the state of an instruction argument.|
 |Allowed parents|`form`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|
@@ -552,7 +554,7 @@
 |Description|A field's value when localized to a specific language.|
 |Allowed parents|`metadata`, `field`|
 |Allowed children|*(None)*|
-|Multiple children allowed?|false|
+|Multiple children allowed?|No|
 
 **Attributes:**
 |Index|Name|Type|Description|

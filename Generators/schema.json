@@ -35,10 +35,6 @@
           "description": "The ActionGraph schema version.",
           "value_type": "string"
         },
-        "format_version": {
-          "description": "The file format version.",
-          "value_type": "string"
-        },
         "default_language": {
           "description": "The ID of the default language when no localization is applied. This must NOT match any language definition IDs.",
           "value_type": "string"
