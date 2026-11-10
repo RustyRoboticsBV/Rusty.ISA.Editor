@@ -4,9 +4,6 @@ using Rusty.ActionGraph.Serialization;
 
 namespace Rusty.ActionGraph.CodeGen;
 
-using Labels = Dictionary<Unit, string>;
-using LocalizedValues = Godot.Collections.Dictionary<string, string>;
-
 /// <summary>
 /// A utility that takes a file codec and converts it into an instruction program.
 /// </summary>
@@ -69,7 +66,7 @@ internal static class CodeGenerator
         }
 
         // Generate a label for each jump target.
-        Labels labels = [];
+        Dictionary<Unit, string> labels = new();
         int nextLabel = 0;
 
         foreach (Unit target in jumpTargets)
@@ -202,7 +199,8 @@ internal static class CodeGenerator
     /// <summary>
     /// Compile a unit's instructions.
     /// </summary>
-    private static void CompileNode(NodeUnit unit, FileElement file, List<Instruction> instructions, Labels labels)
+    private static void CompileNode(NodeUnit unit, FileElement file, List<Instruction> instructions,
+        Dictionary<Unit, string> labels)
     {
         // Find node definition.
         NodeElement node = unit.Element;
@@ -227,7 +225,7 @@ internal static class CodeGenerator
     /// Compile an inspector's instructions.
     /// </summary>
     private static void CompileInspector(NodeUnit node, Element parentDefinition, Element parent, InspectorElement current,
-        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+        List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
     {
         // Find inspector definition.
         var currentDefinition = Find<InspectorDefinitionElement>(parentDefinition, current.Definition);
@@ -260,7 +258,7 @@ internal static class CodeGenerator
     /// Compile an option.
     /// </summary>
     private static void CompileOption(NodeUnit node, OptionDefinitionElement odef, OptionElement option,
-        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+        List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
     {
         InspectorElement child = FindFirst<InspectorElement>(option);
         if (!option.Enabled && option.ChildCount > 0)
@@ -280,7 +278,7 @@ internal static class CodeGenerator
     /// Compile a choice.
     /// </summary>
     private static void CompileChoice(NodeUnit node, ChoiceDefinitionElement cdef, ChoiceElement choice,
-        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+        List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
     {
         InspectorElement child = Find<InspectorElement>(choice, choice.Selected);
         if (child == null)
@@ -292,7 +290,7 @@ internal static class CodeGenerator
     /// Compile a tuple.
     /// </summary>
     private static void CompileTuple(NodeUnit node, TupleDefinitionElement tdef, TupleElement tuple,
-        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+        List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
     {
         if (tdef.ChildCount != tuple.ChildCount)
             throw ChildCountError(tuple, tdef);
@@ -308,7 +306,7 @@ internal static class CodeGenerator
     /// Compile a list.
     /// </summary>
     private static void CompileList(NodeUnit node, ListDefinitionElement ldef, ListElement list,
-        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+        List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
     {
         for (int i = 0; i < list.ChildCount; i++)
         {
@@ -321,7 +319,7 @@ internal static class CodeGenerator
     /// Compile a form.
     /// </summary>
     private static void CompileForm(NodeUnit node, FormDefinitionElement fdef, FormElement form,
-        List<Instruction> instructions, Labels labels, ref int handledOutputArgs)
+        List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
     {
         if (fdef.ChildCount != form.ChildCount)
             throw ChildCountError(form, fdef);
@@ -337,7 +335,7 @@ internal static class CodeGenerator
                 string unlocalized = field.Value;
 
                 // Find localized values.
-                LocalizedValues localized = new();
+                Dictionary<string, string> localized = new();
                 for (int j = 0; j < field.ChildCount; j++)
                 {
                     if (field.GetChild(j) is LocalizedValueElement loc)

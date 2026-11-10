@@ -3,6 +3,8 @@ using Godot.Collections;
 
 namespace Rusty.ActionGraph;
 
+using IDictionaryStringString = System.Collections.Generic.IDictionary<string, string>;
+
 /// <summary>
 /// An argument of a generic instruction.
 /// </summary>
@@ -22,10 +24,16 @@ public sealed partial class InstructionArgument : Resource
     /* Constructors. */
     public InstructionArgument() : this("", null) { }
 
-    public InstructionArgument(string value, Dictionary<string, string> localized = null)
+    public InstructionArgument(string value, IDictionaryStringString localized = null)
     {
         Value = value;
-        Localized = localized ?? new();
+        if (localized != null)
+        {
+            foreach (var pair in localized)
+            {
+                Localized[pair.Key] = pair.Value;
+            }
+        }
         ResourceName = ToString();
     }
 
