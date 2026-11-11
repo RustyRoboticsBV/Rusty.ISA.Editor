@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -9,7 +9,7 @@ using System;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// The root element.
+/// A definition for an option inspector.
 /// </summary>
 internal sealed class FileElement : Element
 {
@@ -46,82 +46,46 @@ internal sealed class FileElement : Element
     public override bool AllowsChildren => true;
     
     /* Public methods. */
-    public override int IndexOfAttribute(string name)
+    public override int IndexOfAttribute(string name) => name switch
     {
-        switch (name)
-        {
-            case "id":
-                return 0;
-            case "editor":
-                return 1;
-            case "schema_version":
-                return 2;
-            case "default_language":
-                return 3;
-            case "checksum":
-                return 4;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
-        }
-    }
+        "id" => 0,
+        "editor" => 1,
+        "schema_version" => 2,
+        "default_language" => 3,
+        "checksum" => 4,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.")
+    };
     
     
-    public override string NameOfAttribute(int index)
+    public override string NameOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return "id";
-            case 1:
-                return "editor";
-            case 2:
-                return "schema_version";
-            case 3:
-                return "default_language";
-            case 4:
-                return "checksum";
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => "id",
+        1 => "editor",
+        2 => "schema_version",
+        3 => "default_language",
+        4 => "checksum",
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override Type TypeOfAttribute(int index)
+    public override Type TypeOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID.GetType();
-            case 1:
-                return Editor.GetType();
-            case 2:
-                return SchemaVersion.GetType();
-            case 3:
-                return DefaultLanguage.GetType();
-            case 4:
-                return Checksum.GetType();
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID.GetType(),
+        1 => Editor.GetType(),
+        2 => SchemaVersion.GetType(),
+        3 => DefaultLanguage.GetType(),
+        4 => Checksum.GetType(),
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override object GetAttribute(int index)
+    public override object GetAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID;
-            case 1:
-                return Editor;
-            case 2:
-                return SchemaVersion;
-            case 3:
-                return DefaultLanguage;
-            case 4:
-                return Checksum;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID,
+        1 => Editor,
+        2 => SchemaVersion,
+        3 => DefaultLanguage,
+        4 => Checksum,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
     public override void SetAttribute(int index, object value)
     {
@@ -165,7 +129,7 @@ internal sealed class FileElement : Element
                 Children.Add(child);
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}.");
+                throw new ArgumentOutOfRangeException($"Elements of type '{ElementName}' cannot have children of type '{child.ElementName}'.");
         }
     }
 }

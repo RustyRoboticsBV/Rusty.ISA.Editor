@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -9,9 +9,9 @@ using System;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// An editor node.
+/// A definition for an option inspector.
 /// </summary>
-internal sealed class NodeElement : ProgramUnitElement
+internal sealed class NodeElement : Element, IProgramUnitElement
 {
     /* Public constants. */
     public const int ELEMENT_INDEX = 15;
@@ -33,23 +33,23 @@ internal sealed class NodeElement : ProgramUnitElement
     /// <summary>
     /// The x-position of this node on the graph.
     /// </summary>
-    public override int X { get; set; }
+    public int X { get; set; }
     /// <summary>
     /// The y-position of this node on the graph.
     /// </summary>
-    public override int Y { get; set; }
+    public int Y { get; set; }
     /// <summary>
     /// The width of this node on the graph.
     /// </summary>
-    public override uint Width { get; set; }
+    public uint Width { get; set; }
     /// <summary>
     /// The height of this node on the graph.
     /// </summary>
-    public override uint Height { get; set; }
+    public uint Height { get; set; }
     /// <summary>
     /// Whether this node's inspector has been folded.
     /// </summary>
-    public override bool Folded { get; set; }
+    public bool Folded { get; set; }
     /// <summary>
     /// The identifier of the parent frame.
     /// </summary>
@@ -58,106 +58,58 @@ internal sealed class NodeElement : ProgramUnitElement
     public override bool AllowsChildren => true;
     
     /* Public methods. */
-    public override int IndexOfAttribute(string name)
+    public override int IndexOfAttribute(string name) => name switch
     {
-        switch (name)
-        {
-            case "id":
-                return 0;
-            case "definition":
-                return 1;
-            case "x":
-                return 2;
-            case "y":
-                return 3;
-            case "width":
-                return 4;
-            case "height":
-                return 5;
-            case "folded":
-                return 6;
-            case "parent_frame":
-                return 7;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
-        }
-    }
+        "id" => 0,
+        "definition" => 1,
+        "x" => 2,
+        "y" => 3,
+        "width" => 4,
+        "height" => 5,
+        "folded" => 6,
+        "parent_frame" => 7,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.")
+    };
     
     
-    public override string NameOfAttribute(int index)
+    public override string NameOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return "id";
-            case 1:
-                return "definition";
-            case 2:
-                return "x";
-            case 3:
-                return "y";
-            case 4:
-                return "width";
-            case 5:
-                return "height";
-            case 6:
-                return "folded";
-            case 7:
-                return "parent_frame";
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => "id",
+        1 => "definition",
+        2 => "x",
+        3 => "y",
+        4 => "width",
+        5 => "height",
+        6 => "folded",
+        7 => "parent_frame",
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override Type TypeOfAttribute(int index)
+    public override Type TypeOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID.GetType();
-            case 1:
-                return Definition.GetType();
-            case 2:
-                return X.GetType();
-            case 3:
-                return Y.GetType();
-            case 4:
-                return Width.GetType();
-            case 5:
-                return Height.GetType();
-            case 6:
-                return Folded.GetType();
-            case 7:
-                return ParentFrame.GetType();
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID.GetType(),
+        1 => Definition.GetType(),
+        2 => X.GetType(),
+        3 => Y.GetType(),
+        4 => Width.GetType(),
+        5 => Height.GetType(),
+        6 => Folded.GetType(),
+        7 => ParentFrame.GetType(),
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override object GetAttribute(int index)
+    public override object GetAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID;
-            case 1:
-                return Definition;
-            case 2:
-                return X;
-            case 3:
-                return Y;
-            case 4:
-                return Width;
-            case 5:
-                return Height;
-            case 6:
-                return Folded;
-            case 7:
-                return ParentFrame;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID,
+        1 => Definition,
+        2 => X,
+        3 => Y,
+        4 => Width,
+        5 => Height,
+        6 => Folded,
+        7 => ParentFrame,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
     public override void SetAttribute(int index, object value)
     {
@@ -204,7 +156,7 @@ internal sealed class NodeElement : ProgramUnitElement
                 Children.Add(child);
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}.");
+                throw new ArgumentOutOfRangeException($"Elements of type '{ElementName}' cannot have children of type '{child.ElementName}'.");
         }
     }
 }

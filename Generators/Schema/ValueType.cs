@@ -1,1 +1,1 @@
-﻿public enum ValueType { Bool, Uint, Int, Color, String, Ref }
+﻿public enum ValueType { Bool, Uint, Int, Double, Color, String, Ref }

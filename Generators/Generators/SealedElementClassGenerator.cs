@@ -1,262 +1,169 @@
-﻿using System.Collections.Generic;
-
-public sealed class SealedElementClassGenerator : Generator
+﻿public sealed class SealedElementClassGenerator : Generator
 {
     public string Generate(Schema schema, Sealed @sealed)
     {
-        bool needGodot = false;
-
-        Class @class = Class(AccessType.Internal, ModifierType.Sealed, Names.ElementName(@sealed.Name));
-        @class.Summary = Summary(@sealed.Description);
-        if (@sealed.Inherits != null)
-            @class.Base = Type(Names.ElementName(@sealed.Inherits.Name));
-        else
-            @class.Base = Type("Element");
-
-        // Constants.
-        @class.Members.Add(MultilineComment("Public constants."));
-        @class.Members.Add(new Code($"public const int ELEMENT_INDEX = {schema.Sealeds.IndexOf(@sealed)};"));
-        @class.Members.Add(new Code($"public const string ELEMENT_NAME = \"{@sealed.Name}\";"));
-
-        // Properties.
-        @class.Members.Add(new Empty());
-        @class.Members.Add(MultilineComment("Public properties."));
-
-        @class.Members.Add(Property(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("int"),
-            Id("ElementIndex"),
-            Getter(Return(Id("ELEMENT_INDEX")))
-        ));
-
-        @class.Members.Add(Property(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("string"),
-            Id("ElementName"),
-            Getter(Return(Id("ELEMENT_NAME")))
-        ));
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Property(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("int"),
-            Id("AttributeCount"),
-            Getter(Return(Int(@sealed.Attributes.Count)))
-        ));
-
-        foreach (Attribute attribute in @sealed.Attributes)
+        // Generate script.
+        bool needsGodot = false;
+        CodeWriter properties = new();
+        CodeWriter indexOf = new();
+        CodeWriter nameOf = new();
+        CodeWriter typeOf = new();
+        CodeWriter get = new();
+        CodeWriter set = new();
+        properties.Indent = 1;
+        indexOf.Indent = 2;
+        nameOf.Indent = 2;
+        typeOf.Indent = 2;
+        get.Indent = 2;
+        set.Indent = 3;
+        for (int i = 0; i < @sealed.Attributes.Count; i++)
         {
-            bool isShared = schema.HasGlobalAttribute(attribute)
-                || (@sealed.Inherits != null ? @sealed.Inherits.HasAttribute(attribute) : false);
-
-            @class.Members.Add(Property(
-                Summary(attribute.Description),
-                AccessType.Public,
-                isShared ? ModifierType.Override : ModifierType.None,
-                Types.Get(attribute.ValueType),
-                Id(Names.CamelCase(attribute.Name)),
-                Getter(),
-                Setter(),
-                attribute.ValueType >= ValueType.String ? String("") : null
-            ));
-
+            Attribute attribute = @sealed.Attributes[i];
+            string name = attribute.Name;
+            string property = Names.CamelCase(name);
+            string type = Types.Get(attribute.ValueType);
+            string @default = Types.GetDefault(attribute.ValueType);
             if (attribute.ValueType == ValueType.Color)
-                needGodot = true;
+                needsGodot = true;
+
+            properties.Line("/// <summary>");
+            properties.Line($"/// {attribute.Description}");
+            properties.Line("/// </summary>");
+            if (schema.HasGlobalAttribute(attribute))
+                properties.Line($"public override {type} {property} {{ get; set; }}");
+            else
+                properties.Line($"public {type} {property} {{ get; set; }}");
+            if (@default != null)
+                properties.Append($" = {@default};");
+
+            indexOf.Line($"\"{name}\" => {i},");
+            nameOf.Line($"{i} => \"{name}\",");
+            typeOf.Line($"{i} => {property}.GetType(),");
+            get.Line($"{i} => {property},");
+            set.Line($"case {i}:");
+            set.Indent++;
+            set.Line($"{property} = ({type})value;");
+            set.Line($"break;");
+            set.Indent--;
         }
 
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Property(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("bool"),
-            Id("AllowsChildren"),
-            Getter(Return(Bool(@sealed.Children.Count > 0)))
-        ));
+        string interfaces = "";
+        if (@sealed.Inherits != null)
+            interfaces = $", I{Names.ClassName(@sealed.Inherits.Name)}";
 
-        // Methods.
-        @class.Members.Add(new Empty());
-        @class.Members.Add(MultilineComment("Public methods."));
+        return $@"{Notice}
 
-        List<Case> indexOfAttribute = new();
-        foreach (Attribute attribute in @sealed.Attributes)
+{(needsGodot ? "using Godot;\n" : "")}using System;
+
+namespace Rusty.ActionGraph.Serialization;
+
+/// <summary>
+/// A definition for an option inspector.
+/// </summary>
+internal sealed class {Names.ClassName(@sealed.Name)} : Element{interfaces}
+{{
+    /* Public constants. */
+    public const int ELEMENT_INDEX = {@sealed.Index};
+    public const string ELEMENT_NAME = ""{@sealed.Name}"";
+    
+    /* Public properties. */
+    public override int ElementIndex => ELEMENT_INDEX;
+    public override string ElementName => ELEMENT_NAME;
+    
+    public override int AttributeCount => {@sealed.Attributes.Count};
+{properties}
+    
+    public override bool AllowsChildren => {(@sealed.Children.Count > 0 ? "true" : "false")};
+    
+    /* Public methods. */
+    public override int IndexOfAttribute(string name) => name switch
+    {{
+{indexOf}
+        _ => throw new ArgumentOutOfRangeException($""No attribute corresponds to the name '{{name}}'."")
+    }};
+    
+    
+    public override string NameOfAttribute(int index) => index switch
+    {{
+{nameOf}
+        _ => throw new ArgumentOutOfRangeException($""No attribute corresponds to the index {{index}}."")
+    }};
+    
+    public override Type TypeOfAttribute(int index) => index switch
+    {{
+{typeOf}
+        _ => throw new ArgumentOutOfRangeException($""No attribute corresponds to the index {{index}}."")
+    }};
+    
+    public override object GetAttribute(int index) => index switch
+    {{
+{get}
+        _ => throw new ArgumentOutOfRangeException($""No attribute corresponds to the index {{index}}."")
+    }};
+    
+    public override void SetAttribute(int index, object value)
+    {{
+        switch (index)
+        {{
+{set}
+            default:
+                throw new ArgumentOutOfRangeException($""No attribute corresponds to the index {{index}}."");
+        }}
+    }}
+    
+    public override void AddChild(Element child)
+{AddChild(@sealed)}
+}}";
+    }
+
+    private static CodeWriter AddChild(Sealed @sealed)
+    {
+        CodeWriter w = new();
+
+        if (@sealed.Children.Count == 0)
         {
-            String name = String(attribute.Name);
-            Int index = Int(indexOfAttribute.Count);
-            indexOfAttribute.Add(Case(name, Return(index)));
+            w.Indent = 2;
+            w.Line($" => throw new NotImplementedException($\"Elements of type '{{ElementName}}' cannot have child elements.\");");
+            return w;
         }
 
-        @class.Members.Add(Method(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("int"),
-            Id("IndexOfAttribute"),
-            Parameter(Type("string"), Id("name")),
-            Switch(
-                Id("name"),
-                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the name '{name}'."))),
-                indexOfAttribute.ToArray()
-            )
-        ));
+        w.Indent = 1;
+        w.Line("{");
 
-
-        @class.Members.Add(new Empty());
-        List<Case> nameOfAttribute = new();
-        foreach (Attribute attribute in @sealed.Attributes)
+        w.Indent++;
+        if (!@sealed.MultipleChildren)
         {
-            Int index = Int(nameOfAttribute.Count);
-            String str = String(attribute.Name);
-            nameOfAttribute.Add(Case(index, Return(str)));
-        }
-        
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("string"),
-            Id("NameOfAttribute"),
-            Parameter(Type("int"), Id("index")),
-            Switch(
-                Id("index"),
-                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the index {index}."))),
-                nameOfAttribute.ToArray()
-            )
-        ));
-
-
-        List<Case> typeOfAttribute = new();
-        foreach (Attribute attribute in @sealed.Attributes)
-        {
-            Int index = Int(typeOfAttribute.Count);
-            Id type = Id(Names.CamelCase(attribute.Name) + ".GetType()");
-            typeOfAttribute.Add(Case(index, Return(type)));
+            w.Line("if (Children.Count > 0)");
+            w.Indent++;
+            w.Line("throw new InvalidOperationException($\"Elements of type '{ElementName}' cannot have multiple child elements.\");");
+            w.Indent--;
+            w.Line();
         }
 
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("Type"),
-            Id("TypeOfAttribute"),
-            Parameter(Type("int"), Id("index")),
-            Switch(
-                Id("index"),
-                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the index {index}."))),
-                typeOfAttribute.ToArray()
-            )
-        ));
+        w.Line("switch (child)");
+        w.Line("{");
 
-
-        List<Case> getAttribute = new();
-        foreach (Attribute attribute in @sealed.Attributes)
-        {
-            Int index = Int(getAttribute.Count);
-            Id id = Id(Names.CamelCase(attribute.Name));
-            getAttribute.Add(Case(index, Return(id)));
-        }
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("object"),
-            Id("GetAttribute"),
-            Parameter(Type("int"), Id("index")),
-            Switch(
-                Id("index"),
-                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the index {index}."))),
-                getAttribute.ToArray()
-            )
-        ));
-
-
-        List<Case> setAttribute = new();
-        foreach (Attribute attribute in @sealed.Attributes)
-        {
-            Int index = Int(setAttribute.Count);
-            Id id = Id(Names.CamelCase(attribute.Name));
-            TypeName type = Types.Get(attribute.ValueType);
-            setAttribute.Add(Case(index, Assign(id, Cast(type, Id("value")))));
-        }
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("void"),
-            Id("SetAttribute"),
-            Parameter(Type("int"), Id("index")),
-            Parameter(Type("object"), Id("value")),
-            Switch(
-                Id("index"),
-                Default(Throw(Type("ArgumentOutOfRangeException"), IString("No attribute corresponds to the index {index}."))),
-                setAttribute.ToArray()
-            )
-        ));
-
-
-        List<Case> addChild = new();
+        w.Indent++;
         foreach (string child in @sealed.Children)
         {
-            Id type = Id(Names.ElementName(child));
-            addChild.Add(Case(type, []));
-            addChild[^1].OmitBreak = true;
+            w.Line($"case {Names.ClassName(child)}:");
         }
+        w.Indent++;
+        w.Line($"Children.Add(child);");
+        w.Line($"break;");
+        w.Indent--;
 
-        if (addChild.Count > 0)
-        {
-            addChild[^1].Statements.Add(new CallStatement()
-            {
-                Call = new()
-                {
-                    Name = "Children.Add",
-                    Arguments = new()
-                    {
-                        Arguments = [Id("child")]
-                    }
-                }
-            });
-            addChild[^1].OmitBreak = false;
-        }
+        w.Line("default:");
+        w.Indent++;
+        w.Line($"throw new ArgumentOutOfRangeException($\"Elements of type '{{ElementName}}' cannot have children of type '{{child.ElementName}}'.\");");
+        w.Indent--;
+        w.Indent--;
 
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            AccessType.Public,
-            ModifierType.Override,
-            Type("void"),
-            Id("AddChild"),
-            Parameter(Type("Element"), Id("child")),
-            @sealed.Children.Count > 0
-                ? Switch(
-                    Id("child"),
-                    Default(Throw(Type("ArgumentOutOfRangeException"), IString("Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}."))),
-                    addChild.ToArray()
-                )
-                : Throw(Type("NotImplementedException"), IString("Elements of type {GetType().Name} do not allow child elements."))
-        ));
+        w.Line("}");
+        w.Indent--;
 
-        if (@sealed.Children.Count > 0 && !@sealed.MultipleChildren)
-        {
-            var s = If(Greater(Id("Children.Count"), Int(0)),
-                Throw(Type("InvalidOperationException"), IString("Elements of type {GetType().Name} do not allow multiple child elements."))
-            );
-            ((Method)@class.Members[^1]).Implementation.Statements.Insert(0, s);
-            ((Method)@class.Members[^1]).Implementation.Statements.Insert(1, new Empty());
-        }
+        w.Line("}");
 
-        CodeWriter w = new();
-        w.Line(Notice);
-        w.Line();
-        if (needGodot)
-            Using("Godot").Generate(w);
-        Using("System").Generate(w);
-        w.Line();
-        Namespace("Rusty", "ActionGraph", "Serialization").Generate(w);
-        w.Line();
-        w.Line();
-        @class.Generate(w);
-        return w.ToString();
+        return w;
     }
 }

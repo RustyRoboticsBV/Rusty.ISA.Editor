@@ -6,7 +6,7 @@
         indexOfCases.Indent = 2;
         foreach (Sealed @sealed in schema.Sealeds)
         {
-            string name = Names.ElementName(@sealed.Name);
+            string name = Names.ClassName(@sealed.Name);
             indexOfCases.Line($"{name}.ELEMENT_NAME => {name}.ELEMENT_INDEX,");
         }
 
@@ -14,7 +14,7 @@
         nameOfCases.Indent = 2;
         foreach (Sealed @sealed in schema.Sealeds)
         {
-            string name = Names.ElementName(@sealed.Name);
+            string name = Names.ClassName(@sealed.Name);
             nameOfCases.Line($"{name}.ELEMENT_INDEX => {name}.ELEMENT_NAME,");
         }
 
@@ -22,7 +22,7 @@
         typeOfCases.Indent = 2;
         foreach (Sealed @sealed in schema.Sealeds)
         {
-            string name = Names.ElementName(@sealed.Name);
+            string name = Names.ClassName(@sealed.Name);
             typeOfCases.Line($"{name}.ELEMENT_INDEX => typeof({name}),");
         }
 

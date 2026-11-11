@@ -3,7 +3,7 @@
     public string Generate(Schema schema)
     {
         string fileSnake = schema.Sealeds[0].Name;
-        string fileElement = Names.ElementName(fileSnake);
+        string fileElement = Names.ClassName(fileSnake);
 
         return @$"{Notice}
 
@@ -104,6 +104,8 @@ internal static class BinaryParser
                 element.SetAttribute(i, ReadUint(reader));
             else if (element.TypeOfAttribute(i) == typeof(int))
                 element.SetAttribute(i, ReadInt(reader));
+            else if (element.TypeOfAttribute(i) == typeof(double))
+                element.SetAttribute(i, ReadDouble(reader));
             else if (element.TypeOfAttribute(i) == typeof(string))
                 element.SetAttribute(i, ReadString(reader));
             else if (element.TypeOfAttribute(i) == typeof(Color))
@@ -167,6 +169,15 @@ internal static class BinaryParser
         while ((@byte & 0x80) != 0);
 
         return result;
+    }}
+
+    /// <summary>
+    /// Read an IEEE 754 Binary64 (little-endian) value.
+    /// </summary>
+    private static double ReadDouble(BinaryReader reader)
+    {{
+        ulong bits = reader.ReadUInt64();
+        return BitConverter.UInt64BitsToDouble(bits);
     }}
 
     /// <summary>

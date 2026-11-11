@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -11,7 +11,7 @@ namespace Rusty.ActionGraph.Serialization;
 /// <summary>
 /// A definition for an option inspector.
 /// </summary>
-internal sealed class OptionDefinitionElement : InspectorDefinitionElement
+internal sealed class OptionDefinitionElement : Element, IInspectorDefinitionElement
 {
     /* Public constants. */
     public const int ELEMENT_INDEX = 6;
@@ -30,50 +30,30 @@ internal sealed class OptionDefinitionElement : InspectorDefinitionElement
     public override bool AllowsChildren => true;
     
     /* Public methods. */
-    public override int IndexOfAttribute(string name)
+    public override int IndexOfAttribute(string name) => name switch
     {
-        switch (name)
-        {
-            case "id":
-                return 0;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
-        }
-    }
+        "id" => 0,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.")
+    };
     
     
-    public override string NameOfAttribute(int index)
+    public override string NameOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return "id";
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => "id",
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override Type TypeOfAttribute(int index)
+    public override Type TypeOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID.GetType();
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID.GetType(),
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override object GetAttribute(int index)
+    public override object GetAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
     public override void SetAttribute(int index, object value)
     {
@@ -90,7 +70,7 @@ internal sealed class OptionDefinitionElement : InspectorDefinitionElement
     public override void AddChild(Element child)
     {
         if (Children.Count > 0)
-            throw new InvalidOperationException($"Elements of type {GetType().Name} do not allow multiple child elements.");
+            throw new InvalidOperationException($"Elements of type '{ElementName}' cannot have multiple child elements.");
         
         switch (child)
         {
@@ -102,7 +82,7 @@ internal sealed class OptionDefinitionElement : InspectorDefinitionElement
                 Children.Add(child);
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}.");
+                throw new ArgumentOutOfRangeException($"Elements of type '{ElementName}' cannot have children of type '{child.ElementName}'.");
         }
     }
 }

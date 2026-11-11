@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -9,9 +9,9 @@ using System;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A definition for a node output port, which corresponds to a parameter.
+/// A definition for an option inspector.
 /// </summary>
-internal sealed class PortDefinitionElement : ArgumentDefinitionElement
+internal sealed class PortDefinitionElement : Element, IArgumentDefinitionElement
 {
     /* Public constants. */
     public const int ELEMENT_INDEX = 12;
@@ -29,7 +29,7 @@ internal sealed class PortDefinitionElement : ArgumentDefinitionElement
     /// <summary>
     /// The identifier of the associated parameter definition.
     /// </summary>
-    public override string Parameter { get; set; } = "";
+    public string Parameter { get; set; } = "";
     /// <summary>
     /// Whether this port's presence removes a node's default port.
     /// </summary>
@@ -38,66 +38,38 @@ internal sealed class PortDefinitionElement : ArgumentDefinitionElement
     public override bool AllowsChildren => false;
     
     /* Public methods. */
-    public override int IndexOfAttribute(string name)
+    public override int IndexOfAttribute(string name) => name switch
     {
-        switch (name)
-        {
-            case "id":
-                return 0;
-            case "parameter":
-                return 1;
-            case "remove_default_port":
-                return 2;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
-        }
-    }
+        "id" => 0,
+        "parameter" => 1,
+        "remove_default_port" => 2,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.")
+    };
     
     
-    public override string NameOfAttribute(int index)
+    public override string NameOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return "id";
-            case 1:
-                return "parameter";
-            case 2:
-                return "remove_default_port";
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => "id",
+        1 => "parameter",
+        2 => "remove_default_port",
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override Type TypeOfAttribute(int index)
+    public override Type TypeOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID.GetType();
-            case 1:
-                return Parameter.GetType();
-            case 2:
-                return RemoveDefaultPort.GetType();
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID.GetType(),
+        1 => Parameter.GetType(),
+        2 => RemoveDefaultPort.GetType(),
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override object GetAttribute(int index)
+    public override object GetAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID;
-            case 1:
-                return Parameter;
-            case 2:
-                return RemoveDefaultPort;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID,
+        1 => Parameter,
+        2 => RemoveDefaultPort,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
     public override void SetAttribute(int index, object value)
     {
@@ -117,5 +89,6 @@ internal sealed class PortDefinitionElement : ArgumentDefinitionElement
         }
     }
     
-    public override void AddChild(Element child) => throw new NotImplementedException($"Elements of type {GetType().Name} do not allow child elements.");
+    public override void AddChild(Element child)
+         => throw new NotImplementedException($"Elements of type '{ElementName}' cannot have child elements.");
 }

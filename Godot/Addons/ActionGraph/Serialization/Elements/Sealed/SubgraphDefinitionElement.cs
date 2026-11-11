@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -9,7 +9,7 @@ using System;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A definition for a subgraph, containing various graph elements.
+/// A definition for an option inspector.
 /// </summary>
 internal sealed class SubgraphDefinitionElement : Element
 {
@@ -34,58 +34,34 @@ internal sealed class SubgraphDefinitionElement : Element
     public override bool AllowsChildren => true;
     
     /* Public methods. */
-    public override int IndexOfAttribute(string name)
+    public override int IndexOfAttribute(string name) => name switch
     {
-        switch (name)
-        {
-            case "id":
-                return 0;
-            case "text":
-                return 1;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
-        }
-    }
+        "id" => 0,
+        "text" => 1,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.")
+    };
     
     
-    public override string NameOfAttribute(int index)
+    public override string NameOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return "id";
-            case 1:
-                return "text";
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => "id",
+        1 => "text",
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override Type TypeOfAttribute(int index)
+    public override Type TypeOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID.GetType();
-            case 1:
-                return Text.GetType();
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID.GetType(),
+        1 => Text.GetType(),
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override object GetAttribute(int index)
+    public override object GetAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID;
-            case 1:
-                return Text;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID,
+        1 => Text,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
     public override void SetAttribute(int index, object value)
     {
@@ -116,7 +92,7 @@ internal sealed class SubgraphDefinitionElement : Element
                 Children.Add(child);
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}.");
+                throw new ArgumentOutOfRangeException($"Elements of type '{ElementName}' cannot have children of type '{child.ElementName}'.");
         }
     }
 }

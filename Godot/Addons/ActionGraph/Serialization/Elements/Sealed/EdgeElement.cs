@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -10,7 +10,7 @@ using System;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// An editor graph edge.
+/// A definition for an option inspector.
 /// </summary>
 internal sealed class EdgeElement : Element
 {
@@ -55,98 +55,54 @@ internal sealed class EdgeElement : Element
     public override bool AllowsChildren => true;
     
     /* Public methods. */
-    public override int IndexOfAttribute(string name)
+    public override int IndexOfAttribute(string name) => name switch
     {
-        switch (name)
-        {
-            case "id":
-                return 0;
-            case "from":
-                return 1;
-            case "from_port":
-                return 2;
-            case "to":
-                return 3;
-            case "to_port":
-                return 4;
-            case "thickness":
-                return 5;
-            case "color":
-                return 6;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
-        }
-    }
+        "id" => 0,
+        "from" => 1,
+        "from_port" => 2,
+        "to" => 3,
+        "to_port" => 4,
+        "thickness" => 5,
+        "color" => 6,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.")
+    };
     
     
-    public override string NameOfAttribute(int index)
+    public override string NameOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return "id";
-            case 1:
-                return "from";
-            case 2:
-                return "from_port";
-            case 3:
-                return "to";
-            case 4:
-                return "to_port";
-            case 5:
-                return "thickness";
-            case 6:
-                return "color";
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => "id",
+        1 => "from",
+        2 => "from_port",
+        3 => "to",
+        4 => "to_port",
+        5 => "thickness",
+        6 => "color",
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override Type TypeOfAttribute(int index)
+    public override Type TypeOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID.GetType();
-            case 1:
-                return From.GetType();
-            case 2:
-                return FromPort.GetType();
-            case 3:
-                return To.GetType();
-            case 4:
-                return ToPort.GetType();
-            case 5:
-                return Thickness.GetType();
-            case 6:
-                return Color.GetType();
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID.GetType(),
+        1 => From.GetType(),
+        2 => FromPort.GetType(),
+        3 => To.GetType(),
+        4 => ToPort.GetType(),
+        5 => Thickness.GetType(),
+        6 => Color.GetType(),
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override object GetAttribute(int index)
+    public override object GetAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID;
-            case 1:
-                return From;
-            case 2:
-                return FromPort;
-            case 3:
-                return To;
-            case 4:
-                return ToPort;
-            case 5:
-                return Thickness;
-            case 6:
-                return Color;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID,
+        1 => From,
+        2 => FromPort,
+        3 => To,
+        4 => ToPort,
+        5 => Thickness,
+        6 => Color,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
     public override void SetAttribute(int index, object value)
     {
@@ -186,7 +142,7 @@ internal sealed class EdgeElement : Element
                 Children.Add(child);
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}.");
+                throw new ArgumentOutOfRangeException($"Elements of type '{ElementName}' cannot have children of type '{child.ElementName}'.");
         }
     }
 }

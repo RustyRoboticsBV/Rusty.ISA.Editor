@@ -37,6 +37,7 @@ public class Schema
         foreach (var obj in elements.EnumerateObject())
         {
             Sealed element = new();
+            element.Index = Sealeds.Count;
             element.Name = obj.Name;
             element.Description = obj.Value.GetProperty("description").GetString();
             element.Color = obj.Value.GetProperty("color").GetString();

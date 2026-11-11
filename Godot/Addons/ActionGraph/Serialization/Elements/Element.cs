@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A serializer element, representing a node in the ActionGraph document tree.
+/// A serializer element, representing a node in an ActionGraph document tree.
 /// </summary>
 internal abstract class Element
 {
@@ -28,9 +28,9 @@ internal abstract class Element
     /// The number of attributes of this element.
     /// </summary>
     public abstract int AttributeCount { get; }
-    /// <summary>
-    /// The unique identifier of this element.
-    /// </summary>
+    // <summary>
+    // The unique identifier of this element.
+    // </summary>
     public abstract string ID { get; set; }
     
     /// <summary>
@@ -77,17 +77,45 @@ internal abstract class Element
     public abstract void SetAttribute(int index, object value);
     
     /// <summary>
-    /// Add a child node.
+    /// Add a child element.
     /// </summary>
     public abstract void AddChild(Element child);
     
     /// <summary>
-    /// Get a child node by its index.
+    /// Get a child element by its index.
     /// </summary>
     public Element GetChild(int index)
     {
         if (index < 0 || index >= ChildCount)
             throw new ArgumentOutOfRangeException($"The child index {index} was out of range (0-{ChildCount}).");
         return Children[index];
+    }
+
+    /// <summary>
+    /// Get the first child element of the return type. Returns null if the child element cannot be found.
+    /// </summary>
+    public ElementT Find<ElementT>()
+        where ElementT : Element
+    {
+        for (int i = 0; i < ChildCount; i++)
+        {
+            if (GetChild(i) is ElementT child)
+                return child;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Get a child element of the return type with a specific ID. Returns null if the child element cannot be found.
+    /// </summary>
+    public ElementT Find<ElementT>(string id)
+        where ElementT : Element
+    {
+        for (int i = 0; i < ChildCount; i++)
+        {
+            if (GetChild(i) is ElementT child && child.ID == id)
+                return child;
+        }
+        return null;
     }
 }

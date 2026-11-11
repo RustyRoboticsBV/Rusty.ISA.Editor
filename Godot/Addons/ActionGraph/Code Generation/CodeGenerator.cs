@@ -212,7 +212,7 @@ internal static class CodeGenerator
         int handledOutputArgs = 0;
         for (int i = 0; i < node.ChildCount; i++)
         {
-            if (node.GetChild(i) is InspectorElement inspector)
+            if (node.GetChild(i) is IInspectorElement inspector)
                 CompileInspector(unit, ndef, node, inspector, instructions, labels, ref handledOutputArgs);
         }
 
@@ -224,7 +224,7 @@ internal static class CodeGenerator
     /// <summary>
     /// Compile an inspector's instructions.
     /// </summary>
-    private static void CompileInspector(NodeUnit node, Element parentDefinition, Element parent, InspectorElement current,
+    private static void CompileInspector(NodeUnit node, Element parentDefinition, Element parent, IInspectorElement current,
         List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
     {
         // Find inspector definition.
@@ -260,7 +260,7 @@ internal static class CodeGenerator
     private static void CompileOption(NodeUnit node, OptionDefinitionElement odef, OptionElement option,
         List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
     {
-        InspectorElement child = FindFirst<InspectorElement>(option);
+        IInspectorElement child = FindFirst<IInspectorElement>(option);
         if (!option.Enabled && option.ChildCount > 0)
             throw FormatError(option, $"option is disabled and may not have any children (it has {option.ChildCount}).");
 
@@ -280,7 +280,7 @@ internal static class CodeGenerator
     private static void CompileChoice(NodeUnit node, ChoiceDefinitionElement cdef, ChoiceElement choice,
         List<Instruction> instructions, Dictionary<Unit, string> labels, ref int handledOutputArgs)
     {
-        InspectorElement child = Find<InspectorElement>(choice, choice.Selected);
+        IInspectorElement child = Find<IInspectorElement>(choice, choice.Selected);
         if (child == null)
             throw FormatError(choice, $"cannot find selected inspector '{choice.Selected}'");
         CompileInspector(node, cdef, choice, child, instructions, labels, ref handledOutputArgs);
@@ -297,7 +297,7 @@ internal static class CodeGenerator
 
         for (int i = 0; i < tuple.ChildCount; i++)
         {
-            if (tuple.GetChild(i) is InspectorElement child)
+            if (tuple.GetChild(i) is IInspectorElement child)
                 CompileInspector(node, tdef, tuple, child, instructions, labels, ref handledOutputArgs);
         }
     }
@@ -310,7 +310,7 @@ internal static class CodeGenerator
     {
         for (int i = 0; i < list.ChildCount; i++)
         {
-            if (list.GetChild(i) is InspectorElement child)
+            if (list.GetChild(i) is IInspectorElement child)
                 CompileInspector(node, ldef, list, child, instructions, labels, ref handledOutputArgs);
         }
     }

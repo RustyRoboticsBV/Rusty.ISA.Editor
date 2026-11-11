@@ -2,182 +2,135 @@
 {
     public string Generate(Schema schema)
     {
-        Class @class = Class(AccessType.Internal, ModifierType.Abstract, "Element");
-        @class.Summary = Summary("A serializer element, representing a node in the ActionGraph document tree.");
+        // Get ID names.
+        string id = schema.GlobalAttributes[0].Name;
+        string idCaps = Names.CamelCase(id);
 
-        // Properties.
-        @class.Members.Add(MultilineComment("Public properties."));
-
-        @class.Members.Add(Property(
-            Summary("The index of this element type."),
-            AccessType.Public,
-            ModifierType.Abstract,
-            Type("int"),
-            Id("ElementIndex"),
-            Getter()
-        ));
-        @class.Members.Add(Property(
-            Summary("The name of this element type."),
-            AccessType.Public,
-            ModifierType.Abstract,
-            Type("string"),
-            Id("ElementName"),
-            Getter()
-        ));
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Property(
-            Summary("The number of attributes of this element."),
-            AccessType.Public,
-            ModifierType.Abstract,
-            Type("int"),
-            Id("AttributeCount"),
-            Getter()
-        ));
-
+        // Generate global attribute properties.
+        CodeWriter globals = new();
+        globals.Indent++;
         foreach (Attribute shared in schema.GlobalAttributes)
         {
-            @class.Members.Add(Property(
-                Summary(shared.Description),
-                AccessType.Public,
-                ModifierType.Abstract,
-                Types.Get(shared.ValueType),
-                Id(Names.CamelCase(shared.Name)),
-                Getter(),
-                Setter()
-            ));
+            globals.Line($"// <summary>");
+            globals.Line($"// {shared.Description}");
+            globals.Line($"// </summary>");
+            globals.Line($"public abstract string {Names.CamelCase(shared.Name)} {{ get; set; }}");
         }
-        
 
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Property(
-            Summary("Whether or not this element can have child elements."),
-            AccessType.Public,
-            ModifierType.Abstract,
-            Type("bool"),
-            Id("AllowsChildren"),
-            Getter()
-        ));
+        // Generate script.
+        return $@"{Notice}
 
-        @class.Members.Add(Property(
-            Summary("The number of child elements contained within this element."),
-            AccessType.Public,
-            Type("int"),
-            Id("ChildCount"),
-            Getter(Return(Id("Children.Count")))
-        ));
+using System;
+using System.Collections.Generic;
 
+namespace Rusty.ActionGraph.Serialization;
 
-        @class.Members.Add(new Empty());
-        @class.Members.Add(MultilineComment("Protected properties."));
+/// <summary>
+/// A serializer element, representing a node in an ActionGraph document tree.
+/// </summary>
+internal abstract class Element
+{{
+    /* Public properties. */
+    /// <summary>
+    /// The index of this element type.
+    /// </summary>
+    public abstract int ElementIndex {{ get; }}
+    /// <summary>
+    /// The name of this element type.
+    /// </summary>
+    public abstract string ElementName {{ get; }}
+    
+    /// <summary>
+    /// The number of attributes of this element.
+    /// </summary>
+    public abstract int AttributeCount {{ get; }}
+{globals}
+    
+    /// <summary>
+    /// Whether or not this element can have child elements.
+    /// </summary>
+    public abstract bool AllowsChildren {{ get; }}
+    /// <summary>
+    /// The number of child elements contained within this element.
+    /// </summary>
+    public int ChildCount => Children.Count;
+    
+    /* Protected properties. */
+    /// <summary>
+    /// The child elements.
+    /// </summary>
+    protected List<Element> Children {{ get; }} = new();
+    
+    /* Public methods. */
+    public sealed override string ToString() => ElementPrinter.ToString(this);
+    
+    /// <summary>
+    /// Get the name of an attribute by its index.
+    /// </summary>
+    public abstract string NameOfAttribute(int index);
+    
+    /// <summary>
+    /// Get the type of an attribute by its index.
+    /// </summary>
+    public abstract Type TypeOfAttribute(int index);
+    
+    /// <summary>
+    /// Get the index of an attribute by its name.
+    /// </summary>
+    public abstract int IndexOfAttribute(string name);
+    
+    /// <summary>
+    /// Get the value of an attribute by its index.
+    /// </summary>
+    public abstract object GetAttribute(int index);
+    
+    /// <summary>
+    /// Set the value of an attribute by its index.
+    /// </summary>
+    public abstract void SetAttribute(int index, object value);
+    
+    /// <summary>
+    /// Add a child element.
+    /// </summary>
+    public abstract void AddChild(Element child);
+    
+    /// <summary>
+    /// Get a child element by its index.
+    /// </summary>
+    public Element GetChild(int index)
+    {{
+        if (index < 0 || index >= ChildCount)
+            throw new ArgumentOutOfRangeException($""The child index {{index}} was out of range (0-{{ChildCount}})."");
+        return Children[index];
+    }}
 
-        @class.Members.Add(Property(
-            Summary("The child elements."),
-            AccessType.Protected,
-            ModifierType.None,
-            Type("List<Element>"),
-            Id("Children"),
-            Getter(),
-            new New()
-        ));
+    /// <summary>
+    /// Get the first child element of the return type. Returns null if the child element cannot be found.
+    /// </summary>
+    public ElementT Find<ElementT>()
+        where ElementT : Element
+    {{
+        for (int i = 0; i < ChildCount; i++)
+        {{
+            if (GetChild(i) is ElementT child)
+                return child;
+        }}
+        return null;
+    }}
 
-        // Methods.
-        @class.Members.Add(new Empty());
-        @class.Members.Add(MultilineComment("Public methods."));
-
-        @class.Members.Add(Method(
-            AccessType.Public,
-            ModifierType.SealedOverride,
-            Type("string"),
-            Id("ToString"),
-            Return(Id("ElementPrinter.ToString(this)"))
-        ));
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            Summary("Get the name of an attribute by its index."),
-            AccessType.Public,
-            ModifierType.Abstract,
-            Type("string"),
-            Id("NameOfAttribute"),
-            Parameter(Type("int"), Id("index"))
-        ));
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            Summary("Get the type of an attribute by its index."),
-            AccessType.Public,
-            ModifierType.Abstract,
-            Type("Type"),
-            Id("TypeOfAttribute"),
-            Parameter(Type("int"), Id("index"))
-        ));
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            Summary("Get the index of an attribute by its name."),
-            AccessType.Public,
-            ModifierType.Abstract,
-            Type("int"),
-            Id("IndexOfAttribute"),
-            Parameter(Type("string"), Id("name"))
-        ));
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            Summary("Get the value of an attribute by its index."),
-            AccessType.Public,
-            ModifierType.Abstract,
-            Type("object"),
-            Id("GetAttribute"),
-            Parameter(Type("int"), Id("index"))
-        ));
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            Summary("Set the value of an attribute by its index."),
-            AccessType.Public,
-            ModifierType.Abstract,
-            Type("void"),
-            Id("SetAttribute"),
-            Parameter(Type("int"), Id("index")),
-            Parameter(Type("object"), Id("value"))
-        ));
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            Summary("Add a child node."),
-            AccessType.Public,
-            ModifierType.Abstract,
-            Type("void"),
-            Id("AddChild"),
-            Parameter(Type("Element"), Id("child"))
-        ));
-
-        @class.Members.Add(new Empty());
-        @class.Members.Add(Method(
-            Summary("Get a child node by its index."),
-            AccessType.Public,
-            Type("Element"),
-            Id("GetChild"),
-            Parameter(Type("int"), Id("index")),
-            If(
-                Or(Less(Id("index"), Int(0)), GreaterEqual(Id("index"), Id("ChildCount"))),
-                Throw(Type("ArgumentOutOfRangeException"), IString("The child index {index} was out of range (0-{ChildCount})."))
-            ),
-            Return(Id("Children[index]"))
-        ));
-
-        CodeWriter w = new();
-        w.Line(Notice);
-        w.Line();
-        Using("System").Generate(w);
-        Using("System", "Collections", "Generic").Generate(w);
-        w.Line();
-        Namespace("Rusty", "ActionGraph", "Serialization").Generate(w);
-        w.Line();
-        w.Line();
-        @class.Generate(w);
-        return w.ToString();
+    /// <summary>
+    /// Get a child element of the return type with a specific {idCaps}. Returns null if the child element cannot be found.
+    /// </summary>
+    public ElementT Find<ElementT>(string {id})
+        where ElementT : Element
+    {{
+        for (int i = 0; i < ChildCount; i++)
+        {{
+            if (GetChild(i) is ElementT child && child.{idCaps} == {id})
+                return child;
+        }}
+        return null;
+    }}
+}}";
     }
 }

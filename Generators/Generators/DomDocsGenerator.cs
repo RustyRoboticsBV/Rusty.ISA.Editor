@@ -3,7 +3,7 @@
     public string Generate(Schema schema)
     {
         string fileSnake = schema.Sealeds[0].Name;
-        string fileElement = Names.ElementName(fileSnake);
+        string fileElement = Names.ClassName(fileSnake);
 
         CodeWriter elementTypes = new();
         for (int i = 0; i < schema.Sealeds.Count; i++)

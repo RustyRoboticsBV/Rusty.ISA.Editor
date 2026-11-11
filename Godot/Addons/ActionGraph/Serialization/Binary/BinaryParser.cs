@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -101,6 +101,8 @@ internal static class BinaryParser
                 element.SetAttribute(i, ReadUint(reader));
             else if (element.TypeOfAttribute(i) == typeof(int))
                 element.SetAttribute(i, ReadInt(reader));
+            else if (element.TypeOfAttribute(i) == typeof(double))
+                element.SetAttribute(i, ReadDouble(reader));
             else if (element.TypeOfAttribute(i) == typeof(string))
                 element.SetAttribute(i, ReadString(reader));
             else if (element.TypeOfAttribute(i) == typeof(Color))
@@ -164,6 +166,15 @@ internal static class BinaryParser
         while ((@byte & 0x80) != 0);
 
         return result;
+    }
+
+    /// <summary>
+    /// Read an IEEE 754 Binary64 (little-endian) value.
+    /// </summary>
+    private static double ReadDouble(BinaryReader reader)
+    {
+        ulong bits = reader.ReadUInt64();
+        return BitConverter.UInt64BitsToDouble(bits);
     }
 
     /// <summary>

@@ -2,7 +2,7 @@
 
 internal static class Names
 {
-    public static string ElementName(string elementName)
+    public static string ClassName(string elementName)
     {
         return $"{CamelCase(elementName)}Element";
     }

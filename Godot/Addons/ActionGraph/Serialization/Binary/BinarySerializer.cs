@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -64,6 +64,9 @@ internal static class BinarySerializer
                     break;
                 case int @int:
                     WriteInt(writer, @int);
+                    break;
+                case double @double:
+                    WriteDouble(writer, @double);
                     break;
                 case Color color:
                     WriteColor(writer, color);
@@ -140,14 +143,23 @@ internal static class BinarySerializer
     }
 
     /// <summary>
+    /// Write a double to binary, using IEEE 754 Binary64 (little-endian) encoding.
+    /// </summary>
+    private static void WriteDouble(BinaryWriter writer, double value)
+    {
+        ulong bits = BitConverter.DoubleToUInt64Bits(value);
+        writer.Write(bits);
+    }
+
+    /// <summary>
     /// Write a string to binary, using ULEB128 length-prefixed UTF-8 encoding.
     /// </summary>
-    private static void WriteString(BinaryWriter writer, string str)
+    private static void WriteString(BinaryWriter writer, string value)
     {
-        if (str == null)
-            throw new ArgumentNullException(nameof(str));
+        if (value == null)
+            throw new ArgumentNullException(nameof(value));
 
-        byte[] bytes = Encoding.UTF8.GetBytes(str);
+        byte[] bytes = Encoding.UTF8.GetBytes(value);
         WriteUint(writer, (uint)bytes.Length);
         writer.Write(bytes);
     }
@@ -155,11 +167,11 @@ internal static class BinarySerializer
     /// <summary>
     /// Write a color to binary, using RGBA8 encoding.
     /// </summary>
-    private static void WriteColor(BinaryWriter writer, Color color)
+    private static void WriteColor(BinaryWriter writer, Color value)
     {
-        writer.Write((byte)color.R8);
-        writer.Write((byte)color.G8);
-        writer.Write((byte)color.B8);
-        writer.Write((byte)color.A8);
+        writer.Write((byte)value.R8);
+        writer.Write((byte)value.G8);
+        writer.Write((byte)value.B8);
+        writer.Write((byte)value.A8);
     }
 }

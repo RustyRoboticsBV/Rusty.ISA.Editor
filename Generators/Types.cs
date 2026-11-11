@@ -2,24 +2,27 @@
 
 internal class Types
 {
-    public static TypeName Get(ValueType valueType)
+    public static string Get(ValueType valueType) => valueType switch
     {
-        switch (valueType)
-        {
-            case ValueType.Bool:
-                return "bool";
-            case ValueType.Int:
-                return "int";
-            case ValueType.Uint:
-                return "uint";
-            case ValueType.String:
-                return "string";
-            case ValueType.Color:
-                return "Color";
-            case ValueType.Ref:
-                return "string";
-            default:
-                throw new Exception();
-        }
-    }
+        ValueType.Bool => "bool",
+        ValueType.Int => "int",
+        ValueType.Uint => "uint",
+        ValueType.Double => "double",
+        ValueType.String => "string",
+        ValueType.Color => "Color",
+        ValueType.Ref => "string",
+        _ => throw new ArgumentException("Invalid type.", nameof(valueType))
+    };
+
+    public static string GetDefault(ValueType valueType) => valueType switch
+    {
+        ValueType.Bool => null,
+        ValueType.Int => null,
+        ValueType.Uint => null,
+        ValueType.Double => null,
+        ValueType.String => "\"\"",
+        ValueType.Color => null,
+        ValueType.Ref => "\"\"",
+        _ => throw new ArgumentException("Invalid type.", nameof(valueType))
+    };
 }

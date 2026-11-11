@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -10,7 +10,7 @@ using System;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A visual edge joint in the editor.
+/// A definition for an option inspector.
 /// </summary>
 internal sealed class JointElement : Element
 {
@@ -51,90 +51,50 @@ internal sealed class JointElement : Element
     public override bool AllowsChildren => false;
     
     /* Public methods. */
-    public override int IndexOfAttribute(string name)
+    public override int IndexOfAttribute(string name) => name switch
     {
-        switch (name)
-        {
-            case "id":
-                return 0;
-            case "x":
-                return 1;
-            case "y":
-                return 2;
-            case "size":
-                return 3;
-            case "parent_frame":
-                return 4;
-            case "color":
-                return 5;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
-        }
-    }
+        "id" => 0,
+        "x" => 1,
+        "y" => 2,
+        "size" => 3,
+        "parent_frame" => 4,
+        "color" => 5,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.")
+    };
     
     
-    public override string NameOfAttribute(int index)
+    public override string NameOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return "id";
-            case 1:
-                return "x";
-            case 2:
-                return "y";
-            case 3:
-                return "size";
-            case 4:
-                return "parent_frame";
-            case 5:
-                return "color";
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => "id",
+        1 => "x",
+        2 => "y",
+        3 => "size",
+        4 => "parent_frame",
+        5 => "color",
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override Type TypeOfAttribute(int index)
+    public override Type TypeOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID.GetType();
-            case 1:
-                return X.GetType();
-            case 2:
-                return Y.GetType();
-            case 3:
-                return Size.GetType();
-            case 4:
-                return ParentFrame.GetType();
-            case 5:
-                return Color.GetType();
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID.GetType(),
+        1 => X.GetType(),
+        2 => Y.GetType(),
+        3 => Size.GetType(),
+        4 => ParentFrame.GetType(),
+        5 => Color.GetType(),
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override object GetAttribute(int index)
+    public override object GetAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID;
-            case 1:
-                return X;
-            case 2:
-                return Y;
-            case 3:
-                return Size;
-            case 4:
-                return ParentFrame;
-            case 5:
-                return Color;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID,
+        1 => X,
+        2 => Y,
+        3 => Size,
+        4 => ParentFrame,
+        5 => Color,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
     public override void SetAttribute(int index, object value)
     {
@@ -163,5 +123,6 @@ internal sealed class JointElement : Element
         }
     }
     
-    public override void AddChild(Element child) => throw new NotImplementedException($"Elements of type {GetType().Name} do not allow child elements.");
+    public override void AddChild(Element child)
+         => throw new NotImplementedException($"Elements of type '{ElementName}' cannot have child elements.");
 }

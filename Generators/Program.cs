@@ -28,12 +28,12 @@ BaseElementClassGenerator @base = new();
 Write(elementsFolder, "Element", @base.Generate(schema));
 
 // Generate base classes.
-const string abstractFolder = elementsFolder + "Abstract/";
-AbstractElementClassGenerator abstractGenerator = new();
+const string abstractFolder = elementsFolder + "Interfaces/";
+ElementInterfaceGenerator abstractGenerator = new();
 foreach (var @abstract in schema.Abstracts)
 {
     string code = abstractGenerator.Generate(schema, @abstract);
-    string className = Names.ElementName(@abstract.Name);
+    string className = 'I' + Names.ClassName(@abstract.Name);
     Write(abstractFolder, className, code);
 }
 
@@ -43,14 +43,9 @@ SealedElementClassGenerator sealedGenerator = new();
 foreach (var element in schema.Sealeds)
 {
     string code = sealedGenerator.Generate(schema, element);
-    string className = Names.ElementName(element.Name);
+    string className = Names.ClassName(element.Name);
     Write(sealedFolder, className, code);
 }
-
-// Generate interface class.
-GroupInterfaceGenerator interfaceGenerator = new();
-string interfaceCode = interfaceGenerator.Generate(schema);
-Write(elementsFolder, "IElementGroup", interfaceCode);
 
 // Generate schema class.
 SchemaGenerator schemaGenerator = new();

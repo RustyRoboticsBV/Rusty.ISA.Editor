@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // WARNING:                                                                   //
-// This is a generated script file. It should not be edited directly.         //
+// This is a generated file. It should not be edited directly.                //
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -9,9 +9,9 @@ using System;
 namespace Rusty.ActionGraph.Serialization;
 
 /// <summary>
-/// A form inspector, which represennts the state of an instruction.
+/// A definition for an option inspector.
 /// </summary>
-internal sealed class FormElement : InspectorElement
+internal sealed class FormElement : Element, IInspectorElement
 {
     /* Public constants. */
     public const int ELEMENT_INDEX = 20;
@@ -29,75 +29,47 @@ internal sealed class FormElement : InspectorElement
     /// <summary>
     /// The identifier of the associated form definition.
     /// </summary>
-    public override string Definition { get; set; } = "";
+    public string Definition { get; set; } = "";
     /// <summary>
     /// Whether this form has been folded.
     /// </summary>
-    public override bool Folded { get; set; }
+    public bool Folded { get; set; }
     
     public override bool AllowsChildren => true;
     
     /* Public methods. */
-    public override int IndexOfAttribute(string name)
+    public override int IndexOfAttribute(string name) => name switch
     {
-        switch (name)
-        {
-            case "id":
-                return 0;
-            case "definition":
-                return 1;
-            case "folded":
-                return 2;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.");
-        }
-    }
+        "id" => 0,
+        "definition" => 1,
+        "folded" => 2,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the name '{name}'.")
+    };
     
     
-    public override string NameOfAttribute(int index)
+    public override string NameOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return "id";
-            case 1:
-                return "definition";
-            case 2:
-                return "folded";
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => "id",
+        1 => "definition",
+        2 => "folded",
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override Type TypeOfAttribute(int index)
+    public override Type TypeOfAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID.GetType();
-            case 1:
-                return Definition.GetType();
-            case 2:
-                return Folded.GetType();
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID.GetType(),
+        1 => Definition.GetType(),
+        2 => Folded.GetType(),
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
-    public override object GetAttribute(int index)
+    public override object GetAttribute(int index) => index switch
     {
-        switch (index)
-        {
-            case 0:
-                return ID;
-            case 1:
-                return Definition;
-            case 2:
-                return Folded;
-            default:
-                throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.");
-        }
-    }
+        0 => ID,
+        1 => Definition,
+        2 => Folded,
+        _ => throw new ArgumentOutOfRangeException($"No attribute corresponds to the index {index}.")
+    };
     
     public override void SetAttribute(int index, object value)
     {
@@ -126,7 +98,7 @@ internal sealed class FormElement : InspectorElement
                 Children.Add(child);
                 break;
             default:
-                throw new ArgumentOutOfRangeException($"Elements of type {GetType().Name} do not allow children of type {child.GetType().Name}.");
+                throw new ArgumentOutOfRangeException($"Elements of type '{ElementName}' cannot have children of type '{child.ElementName}'.");
         }
     }
 }
