@@ -60,7 +60,7 @@
 
         return @$"{Notice}
 
-#pragma name {Magic.formatName}
+#pragma name {Magic.extension.ToUpperInvariant()}
 #pragma description ActionGraph Binary Program
 #pragma magic [ {Magic.h0} {Magic.h1} {Magic.h2} {Magic.h3} {Magic.h4} {Magic.h5} {Magic.h6} {Magic.h7} ] @ 0x00
 

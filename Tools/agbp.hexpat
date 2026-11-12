@@ -4,9 +4,9 @@
 // See the Generators/ directory to view the source generation module.        //
 ////////////////////////////////////////////////////////////////////////////////
 
-#pragma name AGBP
+#pragma name AGP
 #pragma description ActionGraph Binary Program
-#pragma magic [ 41 47 42 50 00 00 00 00 ] @ 0x00
+#pragma magic [ DF D8 41 47 0D 0A 1A 0A ] @ 0x00
 
 import type.leb128;
 import std.core;

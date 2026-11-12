@@ -21,7 +21,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class BinarySerializer
 {{
     /* Constants. */
-    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes(""{Magic.binaryHeader}"");
+    private static readonly byte[] MagicBytes = [0x{Magic.h0}, 0x{Magic.h1}, 0x{Magic.h2}, 0x{Magic.h3}, 0x{Magic.h4}, 0x{Magic.h5}, 0x{Magic.h6}, 0x{Magic.h7}];
     private const string Version = ""{Magic.version}"";
 
     /// <summary>

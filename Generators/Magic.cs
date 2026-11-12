@@ -3,20 +3,18 @@
 /// </summary>
 public static class Magic
 {
-    public static string formatName => "AGBP";
-    public static string binaryHeader => "AGBP" + "\\0\\0\\0\\0";
-    public static string extension => formatName.ToLowerInvariant();
+    public static string extension => "agp";
 
     public static string version = "1.0";
 
-    public static byte b0 => (byte)formatName[0];
-    public static byte b1 => (byte)formatName[1];
-    public static byte b2 => (byte)formatName[2];
-    public static byte b3 => (byte)formatName[3];
-    public static byte b4 => 0;
-    public static byte b5 => 0;
-    public static byte b6 => 0;
-    public static byte b7 => 0;
+    public static byte b0 => 0xDF;
+    public static byte b1 => 0xD8;
+    public static byte b2 => 0x41;
+    public static byte b3 => 0x47;
+    public static byte b4 => 0x0D;
+    public static byte b5 => 0x0A;
+    public static byte b6 => 0x1A;
+    public static byte b7 => 0x0A;
 
     public static string h0 => $"{b0:X2}";
     public static string h1 => $"{b1:X2}";

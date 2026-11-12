@@ -67,7 +67,7 @@
         "id": {
           "description": "The unique identifier of this <this>.",
           "value_type": "string",
-          "no_overlap_with_parent_attribute": "default_language"
+          "must_differ_from_parent_attribute": "default_language"
         }
       },
       "allowed_children": [],
@@ -311,6 +311,8 @@
       "description": "A graph entry point, from which execution can begin.",
       "color": "000000",
       "inherits_abstract": "program_unit",
+      "edge_source": true,
+      "edge_destination": false,
       "attributes": {
         "id": {
           "description": "The unique identifier of this <this>.",
@@ -344,6 +346,8 @@
       "description": "An editor node.",
       "color": "67e527",
       "inherits_abstract": "program_unit",
+      "edge_source": true,
+      "edge_destination": true,
       "attributes": {
         "id": {
           "description": "The unique identifier of this <this>.",
@@ -697,6 +701,8 @@
       "description": "A subgraph instance.",
       "color": "000000",
       "inherits_abstract": "program_unit",
+      "edge_source": true,
+      "edge_destination": true,
       "attributes": {
         "id": {
           "description": "The unique identifier of this <this>.",
@@ -740,6 +746,8 @@
       "description": "A subgraph instance entry point.",
       "color": "000000",
       "inherits_abstract": "program_unit",
+      "edge_source": true,
+      "edge_destination": false,
       "attributes": {
         "id": {
           "description": "The unique identifier of this <this>.",
@@ -782,6 +790,8 @@
       "description": "A subgraph instance exit point.",
       "color": "000000",
       "inherits_abstract": "program_unit",
+      "edge_source": false,
+      "edge_destination": true,
       "attributes": {
         "id": {
           "description": "The unique identifier of this <this>.",
@@ -832,7 +842,8 @@
         "from": {
           "description": "The identifier of the source element.",
           "value_type": "ref",
-          "ref_type": "program_unit"
+          "ref_type": "program_unit",
+          "ref_type_constraint": "edge_source"
         },
         "from_port": {
           "description": "The port index on the source element.",
@@ -841,7 +852,8 @@
         "to": {
           "description": "The identifier of the destination element.",
           "value_type": "ref",
-          "ref_type": "program_unit"
+          "ref_type": "program_unit",
+          "ref_type_constraint": "edge_destination"
         },
         "to_port": {
           "description": "The port index of the destination element.",

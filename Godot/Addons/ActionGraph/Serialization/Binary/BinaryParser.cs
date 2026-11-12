@@ -17,7 +17,7 @@ namespace Rusty.ActionGraph.Serialization;
 internal static class BinaryParser
 {
     /* Constants. */
-    private static readonly byte[] MagicBytes = Encoding.UTF8.GetBytes("AGBP\0\0\0\0");
+    private static readonly byte[] MagicBytes = [0xDF, 0xD8, 0x41, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
     private const string Version = "1.0";
 
     /* Public methods. */
